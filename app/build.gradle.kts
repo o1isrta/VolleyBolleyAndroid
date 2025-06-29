@@ -72,7 +72,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // DI (Koin)
-    implementation(libs.koin.androidx.compose)
+    implementation(libs.bundles.koin.di)
 
     // NETWORK
     implementation(libs.bundles.ktor.client)
