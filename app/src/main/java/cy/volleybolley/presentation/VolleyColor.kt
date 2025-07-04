@@ -2,7 +2,7 @@ package cy.volleybolley.presentation
 
 import androidx.compose.ui.graphics.Color
 
-class VolleyColor {
+object VolleyColor {
     val OrangeHard = Color(0xFFE6AC53)          // оранжевый (стрелки, звездочки, кнопка HARD)
     val YellowPro = Color(0xFFE6C953)           // желтый (кнопки, в том числе кнопка PRO)
     val YellowForGradient = Color(0xFFF4E998)   // желтый для градиента на кнопках
