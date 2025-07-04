@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Volleybolley</string>
+
+    <string name="avatar_content_description">User avatar</string>
+    <string name="top_bar_level_content_description">User level</string>
+
 </resources>
