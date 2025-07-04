@@ -1,5 +1,7 @@
 package cy.volleybolley.core.data.network.impl
 
+import android.util.Log
+import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.data.network.model.ApiRequest
 import cy.volleybolley.core.data.network.model.ApiResponse
@@ -13,10 +15,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
 import io.ktor.http.path
 
-/**
- * Наброски релизации NetworkClient.
- * До уточнения API реализация считается условной(!!!)
- */
 class KtorNetworkClient(
     private val httpClient: HttpClient,
 ) : NetworkClient {
@@ -35,13 +33,15 @@ class KtorNetworkClient(
             }
 
         }.onFailure { error ->
-            error.printStackTrace()
+            if (BuildConfig.DEBUG) {
+                Log.e(NETWORK_TAG, "error in getResponse() -> $error", error)
+            }
         }.getOrNull() ?: ApiResponse.BadResponse()
     }
 
     private suspend fun sendValidRequestByType(request: ApiRequest): HttpResponse {
         return when(request) {
-            is ApiRequest.ClassicAuthRequest -> {
+            is ApiRequest.ClassicRequest -> {
                 httpClient.request {
                     method = request.method
                     url {
@@ -64,5 +64,9 @@ class KtorNetworkClient(
                 }
             }
         }
+    }
+
+    companion object {
+        const val NETWORK_TAG = "NETWORK_TAG"
     }
 }

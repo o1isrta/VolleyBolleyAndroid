@@ -13,9 +13,9 @@ sealed class ApiRequest {
     abstract val parameters: ConcurrentHashMap<String, String>
     abstract val body: Any?
 
-    class ClassicAuthRequest(
-        override var protocol: URLProtocol = URLProtocol.HTTP,
-        override var method: HttpMethod = HttpMethod.Get,
+    class ClassicRequest(
+        override var protocol: URLProtocol,
+        override var method: HttpMethod,
         override var host: String? = null,
         override var path: String? = null,
         override val headers: ConcurrentHashMap<String, String> = ConcurrentHashMap<String, String>(),

@@ -71,10 +71,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // DI (Koin)
     implementation(libs.bundles.koin.di)
-
-    // NETWORK
     implementation(libs.bundles.ktor.client)
 
 }

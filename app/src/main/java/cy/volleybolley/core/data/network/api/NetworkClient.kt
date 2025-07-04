@@ -7,6 +7,6 @@ interface NetworkClient {
     suspend fun getResponse(request: ApiRequest): ApiResponse
 
     companion object {
-        const val TIMEOUT_MILLIS = 10_000L
+        const val TIMEOUT_MILLIS = 30_000L
     }
 }
