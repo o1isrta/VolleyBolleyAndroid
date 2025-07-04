@@ -19,7 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cy.volleybolley.VolleyTopBar.TopBar
 
 object VolleyTopBar {
 
@@ -28,13 +30,9 @@ object VolleyTopBar {
     // зелёный фон задать через ресурс, когда будут созданы цвета *******************************************************************
     private val BackgroundColor = Color(0xFF53A8A1) // Цвет фона TopBar
 
-    private val AvatarDiameter = 46.dp      // Диаметр аватарки
-    private val AvatarMarginStart = 8.dp    // Правый отступ аватарки
-    private val AvatarMarginBottom = 8.dp   // Нижний отступ аватарки
+    private val Diameter = 46.dp        // Диаметр иконок
+    private val MarginIcon = 8.dp       // Отступы иконок
 
-    private val LevelDiameter = 40.dp       // Диаметр иконки уровня игрока
-    private val LevelMarginEnd = 8.dp       // Левый отступ иконки уровня игрока
-    private val LevelMarginBottom = 11.dp   // Нижний отступ иконки уровня игрока
 
     @Composable
     fun TopBar(
@@ -60,13 +58,13 @@ object VolleyTopBar {
                 // Аватарка
                 Box(
                     modifier = Modifier
-                        .size(AvatarDiameter)
+                        .size(Diameter)
                         .align(Alignment.BottomStart)
-                        .offset(x = AvatarMarginStart, y = (-AvatarMarginBottom))
+                        .offset(x = MarginIcon, y = (-MarginIcon))
                 ) {
                     VolleyAvatar.CircularAvatar(
                         avatar = avatar,
-                        size = AvatarDiameter,
+                        size = Diameter,
                     )
                 }
 
@@ -85,12 +83,23 @@ object VolleyTopBar {
                     contentDescription = stringResource(id = R.string.top_bar_level_content_description),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(LevelDiameter)
+                        .size(Diameter)
                         .align(Alignment.BottomEnd)
-                        .offset(x = (-LevelMarginEnd), y = (-LevelMarginBottom))
+                        .offset(x = (-MarginIcon), y = (-MarginIcon))
                         .clip(CircleShape)
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun MyScreen() {
+    Box {
+        TopBar(
+            "https://avatars.mds.yandex.net/get-yapic/15298/aPbyeCWI9oijiql2AFh3GaX3xyg-1/orig",
+            2,
+        )
     }
 }

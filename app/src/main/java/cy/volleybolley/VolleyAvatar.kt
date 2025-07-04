@@ -33,6 +33,7 @@ object VolleyAvatar {
         onClick: () -> Unit = {}
     ) {
         val shape = CircleShape
+        // Плейс холдер временный - заменить, когда дизайнеры дадут векторный рисунок**************************************************
         val placehold = painterResource(id = R.drawable.ic_avatar_placeholder)
 
         Box(
@@ -52,7 +53,6 @@ object VolleyAvatar {
                 contentDescription = stringResource(id = R.string.avatar_content_description),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
-                // Плейс холдер временный - заменить, когда дизайнеры дадут векторный рисунок**************************************************
                 error = placehold,
                 placeholder = placehold
             )
