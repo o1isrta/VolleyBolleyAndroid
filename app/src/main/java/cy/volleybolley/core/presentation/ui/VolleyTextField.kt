@@ -3,7 +3,7 @@ package cy.volleybolley.core.presentation.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -160,8 +160,24 @@ object VolleyTextField {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun SearchField() {
+private fun PreviewGradientTextFields() {
     Root {
+        Column {
 
+            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
+
+            VolleyTextField.SearchField(
+                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+            ) {  }
+
+            VolleyTextField.NameTextField(
+                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+            ) {  }
+
+            VolleyTextField.SurnameTextField(
+                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+            ) {  }
+
+        }
     }
 }
