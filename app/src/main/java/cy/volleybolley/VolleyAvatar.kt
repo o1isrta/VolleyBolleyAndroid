@@ -1,6 +1,5 @@
 package cy.volleybolley
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -24,7 +23,7 @@ import cy.volleybolley.VolleyAvatar.CircularAvatar
 
 object VolleyAvatar {
 
-    private val AVATAR_BORDER_WIDTH = 1.dp  // Толщина обводки
+    private val AVATAR_BORDER_WIDTH = 1.dp
 
     @Composable
     fun CircularAvatar(
@@ -39,8 +38,6 @@ object VolleyAvatar {
         Box(
             modifier = Modifier
                 .size(size)
-                // зелёный фон задать через ресурс, когда будут созданы цвета**************************************************************
-                .background(color = Color(0xFF438B97), shape = shape)
                 .clip(shape)
                 .border(AVATAR_BORDER_WIDTH, Color.White, shape)
                 .clickable { onClick() }

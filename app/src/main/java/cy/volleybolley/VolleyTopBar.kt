@@ -15,21 +15,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.VolleyTopBar.TopBar
+import cy.volleybolley.ui.theme.TopBarBackgroundColor
 
 object VolleyTopBar {
 
     private val TopBarHeight = 106.dp   // Высота TopBar
     private val CornerRadius = 31.dp    // Радиусы скругления нижних углов TopBar
-    // зелёный фон задать через ресурс, когда будут созданы цвета *******************************************************************
-    private val BackgroundColor = Color(0xFF53A8A1) // Цвет фона TopBar
-
+    private val BackgroundColor = TopBarBackgroundColor // Цвет фона TopBar
     private val Diameter = 46.dp        // Диаметр иконок
     private val MarginIcon = 8.dp       // Отступы иконок
 
@@ -69,7 +67,7 @@ object VolleyTopBar {
                 }
 
                 // Иконка уровня игрока
-                // значения levelId предположительныу, уточнить когда будут реальные значения ***********************************************
+                // значения levelId предположительные(переписываюсь с беком), уточнить когда будут реальные значения ***********************************************
                 val levelIconRes = when (levelId) {
                     0 -> R.drawable.ic_level_light
                     1 -> R.drawable.ic_level_medium
