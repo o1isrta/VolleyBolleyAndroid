@@ -15,7 +15,8 @@ object VolleyType {
         Font(R.font.hero_bold_700, FontWeight.Bold),
     )
 
-    val TextStyleLight14 = TextStyle(
+    val TextStyleSearchField = TextStyle(
+        color = VolleyColor.TEXT_FIELD,
         fontSize = 14.sp,
         lineHeight = 18.sp,
         fontFamily = HeroFontFamily,
@@ -23,7 +24,8 @@ object VolleyType {
         letterSpacing = 0.sp,
     )
 
-    val TextStyleMedium16 = TextStyle(
+    val TextStyleGradientField = TextStyle(
+        color = VolleyColor.TEXT_FIELD,
         fontSize = 16.sp,
         lineHeight = 20.sp,
         fontFamily = HeroFontFamily,

@@ -15,5 +15,7 @@ object VolleyColor {
 
     val TEXT_FIELD = Color(0xFF7C7C7C)
     val TEXT_DARK = Color(0xFF423F39)
+    val TEXT_CALENDAR_DARK = Color(0xFF333333)
+    val TEXT_CALENDAR_LIGHT_GREY = Color(0xFFE0E0E0)
 
 }

@@ -2,6 +2,7 @@ package cy.volleybolley.core.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,8 +16,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,19 +43,23 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainer.Root
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
-import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleLight14
-import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleMedium16
+import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleSearchField
+import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleGradientField
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 object VolleyTextField {
 
     @Composable
     fun SearchField(
         modifier: Modifier = Modifier,
+        hint: String = stringResource(R.string.search_field_hint),
         actionOnInputComplete: (String) -> Unit,
     ) {
         TextFieldBaseGradient(
             isSearchField = true,
-            hint = stringResource(R.string.search_field_hint),
+            hint = hint,
             modifier = modifier,
         ) { string ->
             actionOnInputComplete(string)
@@ -118,7 +130,9 @@ object VolleyTextField {
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxSize().padding(VolleyDimens.DIMEN_16.dp, 0.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(VolleyDimens.DIMEN_16.dp, 0.dp)
                 ) {
                     if (isSearchField) {
                         Icon(
@@ -134,7 +148,7 @@ object VolleyTextField {
                         if (inputText.isEmpty()) {
                             Text(
                                 text = hint,
-                                style = if (isSearchField) TextStyleLight14 else TextStyleMedium16
+                                style = if (isSearchField) TextStyleSearchField else TextStyleGradientField
                             )
                         }
 
@@ -142,7 +156,7 @@ object VolleyTextField {
                             value = inputText,
                             onValueChange = { inputText = it },
                             singleLine = true,
-                            textStyle = if (isSearchField) TextStyleLight14 else TextStyleMedium16,
+                            textStyle = if (isSearchField) TextStyleSearchField else TextStyleGradientField,
                             cursorBrush = SolidColor(VolleyColor.TEXT_DARK),
                             keyboardOptions = KeyboardOptions(
                                 imeAction = if (isSearchField) ImeAction.Search else ImeAction.Done
@@ -154,6 +168,139 @@ object VolleyTextField {
                 }
             }
         }
+    }
+
+    @Composable
+    fun DataPickerField(
+        modifier: Modifier = Modifier,
+        cornerRadius: Int = VolleyDimens.DIMEN_16,
+        height: Int = VolleyDimens.DIMEN_52,
+        hint: String = stringResource(R.string.registration_date_of_birth_hint),
+    ) {
+        val shape = RoundedCornerShape(cornerRadius.dp)
+        var showModal by remember { mutableStateOf(false) }
+        var selectedDate by remember { mutableStateOf<Long?>(null) }
+
+        val correctText = selectedDate?.let { convertMillisToDate(it) } ?: hint
+
+        val gradientBrush = Brush.verticalGradient(
+            colors = listOf(VolleyColor.YELLOW_GRADIENT, VolleyColor.GREEN_GRADIENT)
+        )
+
+        Box(
+            modifier = modifier
+                .clickable(
+                    interactionSource = null,
+                    indication = null,
+                ) {
+                    showModal = true
+                }
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .height(height.dp)
+                    .background(
+                        color = Color.White,
+                        shape = shape
+                    )
+                    .border(
+                        width = 1.dp,
+                        brush = gradientBrush,
+                        shape = shape
+                    )
+                    .padding(22.dp, 0.dp)
+            ) {
+                Text(
+                    text = correctText,
+                    color = VolleyColor.TEXT_FIELD,
+                    style = TextStyleGradientField,
+                )
+            }
+        }
+
+        if (showModal) {
+            DatePickerModal(
+                onDateSelected = { date ->
+                    selectedDate = date
+                },
+                onDismiss = { showModal = false }
+            )
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun DatePickerModal(
+        onDateSelected: (Long?) -> Unit,
+        onDismiss: () -> Unit
+    ) {
+        val datePickerState = rememberDatePickerState()
+
+        DatePickerDialog(
+            shape = RoundedCornerShape(32.dp),
+            onDismissRequest = onDismiss,
+            confirmButton = {
+                TextButton(onClick = {
+                    onDateSelected(datePickerState.selectedDateMillis)
+                    onDismiss()
+                }) {
+                    Text(
+                        text = stringResource(R.string.registration_date_of_birth_ok),
+                        style = TextStyleGradientField,
+                        color = VolleyColor.GREEN_GRADIENT
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(
+                        text = stringResource(R.string.registration_date_of_birth_cancel),
+                        style = TextStyleGradientField,
+                        color = VolleyColor.GREEN_GRADIENT
+                    )
+                }
+            },
+            colors = DatePickerDefaults.colors(
+                containerColor = VolleyColor.WHITE,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(VolleyDimens.DIMEN_24.dp, 0.dp)
+        ) {
+            DatePicker(
+                title = null,
+                state = datePickerState,
+                colors = DatePickerDefaults.colors(
+                    containerColor = VolleyColor.WHITE,
+                    titleContentColor = VolleyColor.TEXT_CALENDAR_DARK,
+                    headlineContentColor = VolleyColor.TEXT_CALENDAR_DARK,
+                    weekdayContentColor = VolleyColor.TEXT_CALENDAR_DARK,
+                    navigationContentColor = VolleyColor.TEXT_CALENDAR_DARK,
+                    yearContentColor = VolleyColor.TEXT_CALENDAR_DARK,
+                    disabledYearContentColor = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
+                    currentYearContentColor = VolleyColor.GREEN_GRADIENT,
+                    selectedYearContentColor = VolleyColor.YELLOW_GRADIENT,
+                    disabledSelectedYearContentColor = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
+                    selectedYearContainerColor = VolleyColor.GREEN_GRADIENT,
+                    disabledSelectedYearContainerColor = VolleyColor.TEXT_DARK,
+                    dayContentColor = VolleyColor.TEXT_CALENDAR_DARK,
+                    disabledDayContentColor = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
+                    selectedDayContentColor = VolleyColor.YELLOW_GRADIENT,
+                    disabledSelectedDayContentColor = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
+                    selectedDayContainerColor = VolleyColor.GREEN_GRADIENT,
+                    disabledSelectedDayContainerColor = VolleyColor.TEXT_DARK,
+                    todayContentColor = VolleyColor.GREEN_GRADIENT,
+                    todayDateBorderColor = VolleyColor.GREEN_GRADIENT,
+                    dividerColor = VolleyColor.GREEN_GRADIENT,
+                ),
+            )
+        }
+    }
+
+    private fun convertMillisToDate(millis: Long): String {
+        val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+        return formatter.format(Date(millis))
     }
 
 }
@@ -168,15 +315,19 @@ private fun PreviewGradientTextFields() {
 
             VolleyTextField.SearchField(
                 modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
-            ) {  }
+            ) { }
 
             VolleyTextField.NameTextField(
                 modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
-            ) {  }
+            ) { }
 
             VolleyTextField.SurnameTextField(
                 modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
-            ) {  }
+            ) { }
+
+            VolleyTextField.DataPickerField(
+                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+            )
 
         }
     }
