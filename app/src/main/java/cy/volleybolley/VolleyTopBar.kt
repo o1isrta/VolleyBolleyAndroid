@@ -35,7 +35,7 @@ object VolleyTopBar {
     @Composable
     fun TopBar(
         avatar: String?,
-        levelId: Int
+        levelName: String?
     ) {
         val shape = RoundedCornerShape(
             topStart = CornerSize(0.dp),
@@ -67,12 +67,11 @@ object VolleyTopBar {
                 }
 
                 // Иконка уровня игрока
-                // значения levelId предположительные(переписываюсь с беком), уточнить когда будут реальные значения ***********************************************
-                val levelIconRes = when (levelId) {
-                    0 -> R.drawable.ic_level_light
-                    1 -> R.drawable.ic_level_medium
-                    2 -> R.drawable.ic_level_hard
-                    3 -> R.drawable.ic_level_pro
+                val levelIconRes = when {
+                    levelName?.contains("light", ignoreCase = true) == true -> R.drawable.ic_level_light
+                    levelName?.contains("medium", ignoreCase = true) == true -> R.drawable.ic_level_medium
+                    levelName?.contains("hard", ignoreCase = true) == true -> R.drawable.ic_level_hard
+                    levelName?.contains("pro", ignoreCase = true) == true -> R.drawable.ic_level_pro
                     else -> R.drawable.ic_level_light
                 }
 
@@ -97,7 +96,7 @@ private fun MyScreen() {
     Box {
         TopBar(
             "https://avatars.mds.yandex.net/get-yapic/15298/aPbyeCWI9oijiql2AFh3GaX3xyg-1/orig",
-            2,
+            "pro",
         )
     }
 }
