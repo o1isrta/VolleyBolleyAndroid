@@ -1,4 +1,4 @@
-package cy.volleybolley
+package cy.volleybolley.core.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
