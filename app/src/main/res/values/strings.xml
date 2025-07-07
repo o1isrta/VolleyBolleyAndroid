@@ -3,4 +3,5 @@
     <string name="search_field_hint">Search</string>
     <string name="text_field_hint_name">Name</string>
     <string name="text_field_hint_surname">Surname</string>
+    <string name="preview_container_text">Some content text</string>
 </resources>
