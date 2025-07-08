@@ -238,7 +238,7 @@ object VolleyTextField {
         val datePickerState = rememberDatePickerState()
 
         DatePickerDialog(
-            shape = RoundedCornerShape(32.dp),
+            shape = RoundedCornerShape(VolleyDimens.DIMEN_24.dp),
             onDismissRequest = onDismiss,
             confirmButton = {
                 TextButton(onClick = {
@@ -248,7 +248,7 @@ object VolleyTextField {
                     Text(
                         text = stringResource(R.string.registration_date_of_birth_ok),
                         style = TextStyleGradientField,
-                        color = VolleyColor.GREEN_GRADIENT
+                        color = VolleyColor.SEAWAVE_BACKGROUND
                     )
                 }
             },
@@ -257,7 +257,7 @@ object VolleyTextField {
                     Text(
                         text = stringResource(R.string.registration_date_of_birth_cancel),
                         style = TextStyleGradientField,
-                        color = VolleyColor.GREEN_GRADIENT
+                        color = VolleyColor.SEAWAVE_BACKGROUND
                     )
                 }
             },
@@ -279,7 +279,7 @@ object VolleyTextField {
                     navigationContentColor = VolleyColor.TEXT_CALENDAR_DARK,
                     yearContentColor = VolleyColor.TEXT_CALENDAR_DARK,
                     disabledYearContentColor = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
-                    currentYearContentColor = VolleyColor.GREEN_GRADIENT,
+                    currentYearContentColor = VolleyColor.SEAWAVE_BACKGROUND,
                     selectedYearContentColor = VolleyColor.YELLOW_GRADIENT,
                     disabledSelectedYearContentColor = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
                     selectedYearContainerColor = VolleyColor.GREEN_GRADIENT,
@@ -290,9 +290,9 @@ object VolleyTextField {
                     disabledSelectedDayContentColor = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
                     selectedDayContainerColor = VolleyColor.GREEN_GRADIENT,
                     disabledSelectedDayContainerColor = VolleyColor.TEXT_DARK,
-                    todayContentColor = VolleyColor.GREEN_GRADIENT,
-                    todayDateBorderColor = VolleyColor.GREEN_GRADIENT,
-                    dividerColor = VolleyColor.GREEN_GRADIENT,
+                    todayContentColor = VolleyColor.SEAWAVE_BACKGROUND,
+                    todayDateBorderColor = VolleyColor.SEAWAVE_BACKGROUND,
+                    dividerColor = VolleyColor.SEAWAVE_BACKGROUND,
                 ),
             )
         }
