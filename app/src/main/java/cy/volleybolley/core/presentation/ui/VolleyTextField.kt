@@ -39,14 +39,16 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainer.Root
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
-import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleSearchField
-import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleGradientField
+import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleGradientFieldLight
+import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleGradientFieldMedium
+import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleGradientFieldAlert
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -63,36 +65,53 @@ object VolleyTextField {
             isSearchField = true,
             hint = hint,
             modifier = modifier,
-        ) { string ->
-            actionOnInputComplete(string)
-        }
+            actionOnInputCompleteButton = { string -> actionOnInputComplete(string) },
+            actionToTransferContent = {}
+        )
     }
 
     @Composable
     fun NameTextField(
         modifier: Modifier = Modifier,
-        actionOnInputComplete: (String) -> Unit,
+        actionToTransferContent: (String) -> Unit,
     ) {
         TextFieldBaseGradient(
-            isSearchField = false,
             hint = stringResource(R.string.text_field_hint_name),
             modifier = modifier,
+            actionOnInputCompleteButton = {}
         ) { string ->
-            actionOnInputComplete(string)
+            actionToTransferContent(string)
         }
     }
 
     @Composable
     fun SurnameTextField(
         modifier: Modifier = Modifier,
-        actionOnInputComplete: (String) -> Unit,
+        actionToTransferContent: (String) -> Unit,
     ) {
         TextFieldBaseGradient(
-            isSearchField = false,
             hint = stringResource(R.string.text_field_hint_surname),
             modifier = modifier,
+            actionOnInputCompleteButton = {}
         ) { string ->
-            actionOnInputComplete(string)
+            actionToTransferContent(string)
+        }
+    }
+
+    @Composable
+    fun PhoneTextField(
+        modifier: Modifier = Modifier,
+        alertMessage: String,
+        actionToTransferContent: (String) -> Unit,
+    ) {
+        TextFieldBaseGradient(
+            isPhoneField = true,
+            hint = stringResource(R.string.registration_phone_field_hint),
+            modifier = modifier,
+            alertMessage = alertMessage,
+            actionOnInputCompleteButton = {}
+        ) { string ->
+            actionToTransferContent(string)
         }
     }
 
@@ -102,71 +121,112 @@ object VolleyTextField {
         cornerRadius: Int = VolleyDimens.DIMEN_16,
         height: Int = VolleyDimens.DIMEN_52,
         hint: String,
-        isSearchField: Boolean,
-        actionOnInputComplete: (String) -> Unit,
+        isSearchField: Boolean = false,
+        isPhoneField: Boolean = false,
+        isCodeField: Boolean = false,
+        alertMessage: String = "",
+        actionOnInputCompleteButton: (String) -> Unit = {},
+        actionToTransferContent: (String) -> Unit,
     ) {
         var inputText by remember { mutableStateOf("") }
-
-        val gradientBrush = Brush.verticalGradient(
-            colors = listOf(VolleyColor.YELLOW_GRADIENT, VolleyColor.GREEN_GRADIENT)
-        )
-
+        var alertMode = alertMessage.isNotEmpty()
         val setupHeight = if (isSearchField) VolleyDimens.DIMEN_44 else height
+
+        val gradientBrush = Brush
+            .verticalGradient(
+                colors = listOf(
+                    VolleyColor.YELLOW_GRADIENT,
+                    VolleyColor.GREEN_GRADIENT
+                )
+            )
+
+        val fieldTextStyleMedium =
+            if (alertMode) TextStyleGradientFieldMedium.copy(color = VolleyColor.ALERT) else TextStyleGradientFieldMedium
+
+        val fieldTextStyleLight =
+            if (alertMode) TextStyleGradientFieldLight.copy(color = VolleyColor.ALERT) else TextStyleGradientFieldLight
 
         Box(
             modifier = modifier
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(setupHeight.dp)
-                    .background(
-                        color = VolleyColor.WHITE,
-                        shape = RoundedCornerShape(cornerRadius.dp)
-                    )
-                    .border(
-                        width = VolleyDimens.DIMEN_1.dp,
-                        brush = gradientBrush,
-                        shape = RoundedCornerShape(cornerRadius.dp)
-                    ),
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+            Column {
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(VolleyDimens.DIMEN_16.dp, 0.dp)
-                ) {
-                    if (isSearchField) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_search),
-                            contentDescription = null,
-                            tint = VolleyColor.TEXT_DARK
+                        .fillMaxWidth()
+                        .height(setupHeight.dp)
+                        .background(
+                            color = VolleyColor.WHITE,
+                            shape = RoundedCornerShape(cornerRadius.dp)
                         )
-
-                        Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_8.dp))
-                    }
-
-                    Box {
-                        if (inputText.isEmpty()) {
-                            Text(
-                                text = hint,
-                                style = if (isSearchField) TextStyleSearchField else TextStyleGradientField
+                        .border(
+                            width = VolleyDimens.DIMEN_1.dp,
+                            brush = if (alertMode) SolidColor(VolleyColor.ALERT) else gradientBrush,
+                            shape = RoundedCornerShape(cornerRadius.dp)
+                        ),
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(VolleyDimens.DIMEN_16.dp, 0.dp)
+                    ) {
+                        if (isSearchField) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_search),
+                                contentDescription = null,
+                                tint = VolleyColor.TEXT_DARK
                             )
+
+                            Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_8.dp))
                         }
 
-                        BasicTextField(
-                            value = inputText,
-                            onValueChange = { inputText = it },
-                            singleLine = true,
-                            textStyle = if (isSearchField) TextStyleSearchField else TextStyleGradientField,
-                            cursorBrush = SolidColor(VolleyColor.TEXT_DARK),
-                            keyboardOptions = KeyboardOptions(
-                                imeAction = if (isSearchField) ImeAction.Search else ImeAction.Done
-                            ),
-                            keyboardActions = KeyboardActions { actionOnInputComplete(inputText) },
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        if (isPhoneField) {
+                            Text(
+                                text = stringResource(R.string.registration_phone_field_code_symbol),
+                                style = fieldTextStyleMedium,
+                                color = if (alertMode) VolleyColor.ALERT else Color.Unspecified
+                            )
+
+                            Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_4.dp))
+                        }
+
+                        Box {
+                            if (inputText.isEmpty()) {
+                                Text(
+                                    text = hint,
+                                    style = if (isSearchField || isPhoneField) fieldTextStyleLight else TextStyleGradientFieldMedium
+                                )
+                            }
+
+                            BasicTextField(
+                                value = inputText,
+                                onValueChange = {
+                                    if (alertMode && it.isEmpty()) { alertMode = false }
+                                    inputText = it
+                                    actionToTransferContent(it)
+                                },
+                                singleLine = true,
+                                textStyle = if (isSearchField) TextStyleGradientFieldLight else fieldTextStyleMedium,
+                                cursorBrush = SolidColor(VolleyColor.TEXT_DARK),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = if (isPhoneField || isCodeField) KeyboardType.Number else KeyboardType.Unspecified,
+                                    imeAction = if (isSearchField) ImeAction.Search else ImeAction.Done
+                                ),
+                                keyboardActions = KeyboardActions {
+                                    if (isSearchField) actionOnInputCompleteButton(inputText)
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
+                }
+
+                if (alertMode) {
+                    Spacer(Modifier.height(VolleyDimens.DIMEN_4.dp))
+                    Text(
+                        text = alertMessage,
+                        style = TextStyleGradientFieldAlert
+                    )
                 }
             }
         }
@@ -217,7 +277,7 @@ object VolleyTextField {
                 Text(
                     text = correctText,
                     color = VolleyColor.TEXT_FIELD,
-                    style = TextStyleGradientField,
+                    style = TextStyleGradientFieldMedium,
                 )
             }
         }
@@ -254,7 +314,7 @@ object VolleyTextField {
                 }) {
                     Text(
                         text = stringResource(R.string.registration_date_of_birth_ok),
-                        style = TextStyleGradientField,
+                        style = TextStyleGradientFieldMedium,
                         color = VolleyColor.SEAWAVE_BACKGROUND
                     )
                 }
@@ -263,7 +323,7 @@ object VolleyTextField {
                 TextButton(onClick = onDismiss) {
                     Text(
                         text = stringResource(R.string.registration_date_of_birth_cancel),
-                        style = TextStyleGradientField,
+                        style = TextStyleGradientFieldMedium,
                         color = VolleyColor.SEAWAVE_BACKGROUND
                     )
                 }
@@ -394,7 +454,7 @@ object VolleyTextField {
                 Text(
                     text = text,
                     color = VolleyColor.TEXT_FIELD,
-                    style = TextStyleGradientField,
+                    style = TextStyleGradientFieldMedium,
                 )
             }
         }
@@ -406,7 +466,7 @@ object VolleyTextField {
 @Composable
 private fun PreviewGradientTextFields() {
     Root {
-        Column(modifier = Modifier.background(VolleyColor.TEXT_CALENDAR_LIGHT_GREY)) {
+        Column(modifier = Modifier.background(VolleyColor.SEAWAVE_BACKGROUND)) {
 
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 
@@ -420,6 +480,16 @@ private fun PreviewGradientTextFields() {
 
             VolleyTextField.SurnameTextField(
                 modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+            ) { }
+
+            VolleyTextField.PhoneTextField(
+                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp),
+                alertMessage = "",
+            ) { }
+
+            VolleyTextField.PhoneTextField(
+                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp),
+                alertMessage = "Please enter valid phone number",
             ) { }
 
             VolleyTextField.DataPickerField(

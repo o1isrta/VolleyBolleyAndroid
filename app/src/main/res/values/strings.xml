@@ -7,4 +7,6 @@
     <string name="registration_date_of_birth_hint">__ /__ /____</string>
     <string name="registration_date_of_birth_ok">OK</string>
     <string name="registration_date_of_birth_cancel">Cancel</string>
+    <string name="registration_phone_field_code_symbol">+ </string>
+    <string name="registration_phone_field_hint">With the county code</string>
 </resources>
