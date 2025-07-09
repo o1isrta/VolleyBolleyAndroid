@@ -4,6 +4,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import cy.volleybolley.R
 
@@ -31,6 +32,16 @@ object VolleyType {
         fontFamily = HeroFontFamily,
         fontWeight = FontWeight.Medium,
         letterSpacing = 0.sp,
+    )
+
+    val TextStyleCodeField = TextStyle(
+        color = VolleyColor.TEXT_FIELD,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        fontFamily = HeroFontFamily,
+        fontWeight = FontWeight.Medium,
+        letterSpacing = 10.sp,
+        textAlign = TextAlign.Center
     )
 
     val TextStyleGradientFieldAlert = TextStyle(
