@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,13 +64,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import cy.volleybolley.R
 
-class IconPosition {
+/*class IconPosition {
     companion object {
         val POSITION_TOP = "top"
         val POSITION_RIGHT = "right"
         val POSITION_NO = "no"
     }
-}
+}*/
 
 val ActayWide700Font = FontFamily(
     Font(R.font.actay_wide_bold)
@@ -85,11 +86,12 @@ val Hero700Font = FontFamily(
 
 object VolleyButton {
     @Composable
+    @Stable
     fun ActiveButton(
-        onClick: () -> Unit,
         modifier: Modifier = Modifier,
         enabled: Boolean = true,
-        text: String
+        text: String,
+        onClick: () -> Unit
     ) {
         Button(
             enabled = enabled,
@@ -115,10 +117,11 @@ object VolleyButton {
     }
 
     @Composable
+    @Stable
     fun OutlinedActiveButton(
-        onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        text: String
+        text: String,
+        onClick: () -> Unit
     ) {
         OutlinedButton(
             onClick = onClick,
@@ -136,10 +139,11 @@ object VolleyButton {
     }
 
     @Composable
+    @Stable
     fun ActiveGradientButton(                     // градиентная кнопка без картинки
-        onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        text: String
+        text: String,
+        onClick: () -> Unit
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -169,10 +173,11 @@ object VolleyButton {
     }
 
     @Composable
+    @Stable
     fun OutlinedGradientButton(
-        onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        text: String
+        text: String,
+        onClick: () -> Unit
     ) {
         OutlinedButton(
             onClick = onClick,
@@ -196,18 +201,19 @@ object VolleyButton {
     }
 
     @Composable
+    @Stable
     fun CheckGradientButton(
-        onClick: () -> Unit,
         modifier: Modifier = Modifier,
         text: String,
-        isChecked: Boolean = false               // кнопка не выбрана
+        isChecked: Boolean = false,               // кнопка не выбрана
+        onClick: () -> Unit
     ) {
-        var _isChecked by remember { mutableStateOf(isChecked) }
+       // var _isChecked by remember { mutableStateOf(isChecked) }
 
-        if (_isChecked) {
+        if (isChecked) {
             ActiveGradientButton(
                 onClick = {
-                    _isChecked = !_isChecked
+                    //_isChecked = !_isChecked
                     onClick()
                 },
                 modifier = modifier,
@@ -216,7 +222,7 @@ object VolleyButton {
         } else {
             OutlinedGradientButton(
                 onClick = {
-                    _isChecked = !_isChecked
+                    //_isChecked = !_isChecked
                     onClick()
                 },
                 modifier = modifier,
@@ -226,15 +232,16 @@ object VolleyButton {
     }
 
     @Composable
+    @Stable
     fun CheckedGradientButtonRightImage(                // с картинкой справа
-        onClick: () -> Unit,
         modifier: Modifier = Modifier,
         text: String,
-        isChecked: Boolean = false//,
-        // iconResId: Int//? = null,                     // идентификатор иконки, null - иконки нет (по умолчанию)
+        isChecked: Boolean = false,
+                // iconResId: Int//? = null,                     // идентификатор иконки, null - иконки нет (по умолчанию)
+        onClick: () -> Unit
     ) {
-        var _isChecked by remember { mutableStateOf(isChecked) }
-        if (_isChecked) {
+       // var _isChecked by remember { mutableStateOf(isChecked) }
+        if (isChecked) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = modifier
@@ -302,15 +309,16 @@ object VolleyButton {
     }
 
     @Composable
+    @Stable
     fun CheckedGradientButtonTopImage(                // с картинкой наверху, вспомогательная функция для кнопок LevelUp, LevelDown, ConfirmLevel
-        onClick: () -> Unit,
         modifier: Modifier = Modifier,
         text: String,
         isChecked: Boolean = false,
-        iconResId: Int
+        iconResId: Int,
+        onClick: () -> Unit
     ) {
-        var _isChecked by remember { mutableStateOf(isChecked) }
-        if (_isChecked) {
+        //var _isChecked by remember { mutableStateOf(isChecked) }
+        if (isChecked) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = modifier
@@ -379,10 +387,11 @@ object VolleyButton {
     }
 
     @Composable
+    @Stable
     fun ButtonLevelUp(
-        onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        isChecked: Boolean = false
+        isChecked: Boolean = false,
+        onClick: () -> Unit
     ) {
         var iconResId : Int
         if(isChecked) iconResId = R.drawable.arrow_levelup_black
@@ -398,10 +407,11 @@ object VolleyButton {
     }
 
     @Composable
+    @Stable
     fun ButtonLevelDown(
-        onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        isChecked: Boolean = false
+        isChecked: Boolean = false,
+        onClick: () -> Unit
     ) {
         var iconResId : Int
         if(isChecked) iconResId = R.drawable.arrow_levelup_black
@@ -417,10 +427,11 @@ object VolleyButton {
     }
 
     @Composable
+    @Stable
     fun ButtonConfirmLevel(
-        onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        isChecked: Boolean = false
+        isChecked: Boolean = false,
+        onClick: () -> Unit
     ) {
         var iconResId : Int
         if(isChecked) iconResId = R.drawable.mark_black
@@ -431,10 +442,10 @@ object VolleyButton {
             modifier = modifier,
             text = "Confirm level",
             isChecked = isChecked,
-            iconResId =iconResId
+            iconResId = iconResId
         )
     }
-
+}
 /*    @Composable
     fun GroupGradientButtonsCheckAlone(buttons: List<@Composable () -> Unit>
     ){
@@ -462,8 +473,6 @@ object VolleyButton {
 
     ){*/
 
-    }
-}
             /*   {
             when(iconPosition) {
                 "no" -> {}
@@ -552,6 +561,7 @@ object VolleyButton {
                 modifier = Modifier.align(Alignment.Center)
             )
         }*/
+
 
 
 @Preview(showBackground = true, showSystemUi = true)
