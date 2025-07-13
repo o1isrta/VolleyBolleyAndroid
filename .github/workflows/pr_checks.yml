@@ -68,12 +68,6 @@ jobs:
             -   name: Grant execute permission for gradlew
                 run: chmod +x gradlew
 
-            -   name: Setup environment
-                env:
-                    GH_HH_ACCESS_TOKEN: ${{ secrets.GH_HH_ACCESS_TOKEN }}
-                run: |
-                    sh ci/setup_env.sh
-
             -   name: Assemble app
                 run: ./gradlew :app:assembleDebug $commonGradleFlags
 
