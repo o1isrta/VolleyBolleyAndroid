@@ -28,7 +28,7 @@
 )
 @file:org.gradle.api.Generated
 
-package gradle.kotlin.dsl.plugins._dba59a9de9099f42619c6602b9f0d9e1
+package gradle.kotlin.dsl.plugins._5f74cc25d43a3d10546e96b269cca051
 
 import org.gradle.plugin.use.PluginDependenciesSpec
 import org.gradle.plugin.use.PluginDependencySpec

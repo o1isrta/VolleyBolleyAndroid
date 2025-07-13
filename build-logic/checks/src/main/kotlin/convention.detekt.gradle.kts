@@ -15,7 +15,7 @@ fun Detekt.setupCommonDetektSettings() {
 
     // workaround for https://github.com/gradle/gradle/issues/15383
     project.withVersionCatalog { libs ->
-        jvmTarget = JavaVersion.valueOf(libs.versions.javaVersion.get()).toString()
+        jvmTarget = "17"
     }
 
     // Setup sources for run
@@ -70,7 +70,7 @@ val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektPro
 
     // workaround for https://github.com/gradle/gradle/issues/15383
     project.withVersionCatalog { libs ->
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 
     // Configuration

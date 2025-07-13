@@ -5,7 +5,7 @@ compileSdk = "35"
 targetSdk = "35"
 versionName = "1.0.0"
 versionCode = "1"
-javaVersion = "11"
+javaVersion = "17"
 # Plugins
 agp = "8.10.1"
 kotlin = "2.1.21"
