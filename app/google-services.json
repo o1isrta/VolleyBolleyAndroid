@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "205454542068",
+    "project_id": "volleybolley-684ae",
+    "storage_bucket": "volleybolley-684ae.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205454542068:android:5435fa912c4941ab458aa1",
+        "android_client_info": {
+          "package_name": "cy.volleybolley"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205454542068-7jg4e4htvehoj01ltk0ja2o8n372e73q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cy.volleybolley",
+            "certificate_hash": "3b147f68336cf05fb8cab793c5191598c4c32fc4"
+          }
+        },
+        {
+          "client_id": "205454542068-7khd857vpe4l47tbs6k5t3e5dvqsfo1n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWTWf5Dr38oyv4BuFcRaNz4IF9_8jsUgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205454542068-7khd857vpe4l47tbs6k5t3e5dvqsfo1n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
