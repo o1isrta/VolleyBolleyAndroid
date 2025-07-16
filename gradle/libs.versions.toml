@@ -2,6 +2,9 @@
 # Config
 firebaseAuth = "23.2.1"
 firebaseBom = "33.16.0"
+koinAndroid = "4.1.0"
+koinAndroidxCompose = "4.1.0"
+koinAndroidxViewmodel = "3.5.3"
 minSdk = "24"
 compileSdk = "35"
 playServicesAuth = "21.3.0"
@@ -39,6 +42,9 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
+koin-androidx-viewmodel = { module = "io.insert-koin:koin-androidx-viewmodel", version.ref = "koinAndroidxViewmodel" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 
 [plugins]
