@@ -8,8 +8,8 @@ import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.tasks.await
 
 class GoogleSignInHelper(
-    private val context: Context,
-    private val clientId: String
+    context: Context,
+    clientId: String
 ) {
     private val oneTapClient = Identity.getSignInClient(context)
 
