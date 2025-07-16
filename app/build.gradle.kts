@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.serialization)
     id("com.google.gms.google-services")
 }
 
@@ -70,6 +71,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    
+    implementation(libs.bundles.koin.di)
+    implementation(libs.bundles.ktor.client)
 
     implementation (libs.play.services.auth)
     implementation(libs.firebase.auth)
@@ -78,4 +82,5 @@ dependencies {
 
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+
 }
