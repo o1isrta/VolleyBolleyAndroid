@@ -1,5 +1,6 @@
 package cy.volleybolley.core.data.network.model
 
+import cy.volleybolley.authorization.data.dto.AuthorizationRequestBody
 import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import java.util.concurrent.ConcurrentHashMap
@@ -23,6 +24,15 @@ sealed class ApiRequest {
         override val body: Any? = null,
     ): ApiRequest()
 
+    class AuthorizationRequest(
+        override var protocol: URLProtocol = URLProtocol.HTTP,
+        override var method: HttpMethod = HttpMethod.Post,
+        override var host: String? = null,
+        override var path: String? = "users",
+        override val headers: ConcurrentHashMap<String, String> = ConcurrentHashMap<String, String>(),
+        override val parameters: ConcurrentHashMap<String, String> = ConcurrentHashMap<String, String>(),
+        override val body: AuthorizationRequestBody,
+    ): ApiRequest()
 }
 
 

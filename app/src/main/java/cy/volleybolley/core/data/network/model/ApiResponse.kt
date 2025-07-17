@@ -1,6 +1,8 @@
 package cy.volleybolley.core.data.network.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import cy.volleybolley.authorization.data.dto.UserDto
 
 sealed interface ApiResponse {
 
@@ -14,6 +16,13 @@ sealed interface ApiResponse {
     class AuthResponse(
         val someId: Int,
         val someToken: String,
+    ): ApiResponse
+
+    @Serializable
+    class AuthorizationResponse(
+        @SerialName("access_token") val accessToken: String,
+        @SerialName("refresh_token") val refreshToken: String,
+        val user: UserDto
     ): ApiResponse
 
 }

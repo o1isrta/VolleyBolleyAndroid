@@ -24,7 +24,10 @@ class KtorNetworkClient(
             val httpResponse = sendValidRequestByType(request)
 
             if (httpResponse.status.isSuccess()) {
-                httpResponse.body<ApiResponse.AuthResponse>()
+                when (request) {
+                    is ApiRequest.ClassicRequest -> httpResponse.body<ApiResponse.AuthResponse>()
+                    is ApiRequest.AuthorizationRequest -> httpResponse.body<ApiResponse.AuthorizationResponse>()
+                }
             } else {
                 ApiResponse.BadResponse(
                     responseStatusCode = httpResponse.status.value,
@@ -40,28 +43,24 @@ class KtorNetworkClient(
     }
 
     private suspend fun sendValidRequestByType(request: ApiRequest): HttpResponse {
-        return when(request) {
-            is ApiRequest.ClassicRequest -> {
-                httpClient.request {
-                    method = request.method
-                    url {
-                        protocol = request.protocol
-                        request.host?.let { host = it }
-                        request.path?.let { path(it) }
+        return  httpClient.request {
+            method = request.method
+            url {
+                protocol = request.protocol
+                request.host?.let { host = it }
+                request.path?.let { path(it) }
 
-                        if (request.headers.isNotEmpty()) {
-                            headers {
-                                request.headers.forEach { name, value -> append(name, value) }
-                            }
-                        }
-
-                        if (request.parameters.isNotEmpty()) {
-                            request.parameters.forEach { key, value -> parameter(key, value) }
-                        }
-
-                        request.body?.let { setBody(it) }
+                if (request.headers.isNotEmpty()) {
+                    headers {
+                        request.headers.forEach { name, value -> append(name, value) }
                     }
                 }
+
+                if (request.parameters.isNotEmpty()) {
+                    request.parameters.forEach { key, value -> parameter(key, value) }
+                }
+
+                request.body?.let { setBody(it) }
             }
         }
     }
