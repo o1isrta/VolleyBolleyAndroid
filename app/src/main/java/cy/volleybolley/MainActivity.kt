@@ -4,69 +4,379 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cy.volleybolley.presentation.VolleyButton
+import cy.volleybolley.presentation.VolleyColor
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+//        setContent {
+//            VolleybolleyTheme {
+//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+//                    Greeting(
+//                        name = "Android",
+//                        modifier = Modifier.padding(innerPadding)
+//                    )
+//                }
+//            }
+//            /* VolleyButton.ActiveButton(
+//                 onClick = {},
+//                 Modifier.padding(5.dp),
+//                 true, "111"//, false
+//             )*/
+//        }
+
+
+//        setContent {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .background(color = VolleyColor.TurquoiseDark)
+//            ) {
+//                Column {
+//                    VolleyButton.ActiveButton(
+//                        modifier = Modifier
+//                            // .padding(it)
+//                            .padding(24.dp)
+//                            .height(44.dp)
+//                            .fillMaxWidth(),
+//                        text = "ACTIVE BUTTON",
+//                        onClick = {}
+//                    )
+//                    VolleyButton.OutlinedActiveButton(
+//                        modifier = Modifier
+//                            .padding(24.dp)
+//                            .height(44.dp)
+//                            .fillMaxWidth(),
+//                        text = "OUTLINED BUTTON",
+//                        onClick = {}
+//                    )
+//                    VolleyButton.ActiveGradientButton(
+//                        modifier = Modifier
+//                            .padding(24.dp)
+//                            .height(44.dp)
+//                            .fillMaxWidth(),
+//                        text = "Gradient button",
+//                        onClick = {}
+//                    )
+//                }
+//            }
+//        }
+
         setContent {
-            VolleybolleyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .background(color = VolleyColor.TurquoiseDark)
+//            ) {
+                LazyColumn(
+                    //state = rememberLazyListState(),
+                    modifier = Modifier.fillMaxSize()
+                        .background(color = VolleyColor.TurquoiseDark)
+                ) {
+                    item {
+                    VolleyButton.ActiveButton(
+                        modifier = Modifier
+                            // .padding(it)
+                            .padding(24.dp)
+                            .height(44.dp)
+                            .fillMaxWidth(),
+                        text = "ACTIVE BUTTON",
+                        onClick = {}
+                    )}
+                    item {
+                    VolleyButton.OutlinedActiveButton(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .height(44.dp)
+                            .fillMaxWidth(),
+                        text = "OUTLINED BUTTON",
+                        onClick = {}
+                    )}
+                    item {VolleyButton.ActiveGradientButton(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .height(44.dp)
+                            .fillMaxWidth(),
+                        text = "Gradient button",
+                        onClick = {}
+                    )}
+                    item {
+                        VolleyButton.OutlinedGradientButton(
+                            modifier = Modifier
+                                .padding(24.dp)
+                                .height(44.dp)
+                                .fillMaxWidth(),
+                            text = "Outlined gradient button",
+                            onClick = {}
+                        )
+                    }
+                    item {
+                        VolleyButton.CheckGradientButton(
+                            modifier = Modifier
+                                .padding(24.dp)
+                                .height(44.dp)
+                                .fillMaxWidth(),
+                            text = "CheckGradientButton. Checked = true",
+                            onClick = {},
+                            isChecked = true
+                        )
+                    }
+                    item {
+                        VolleyButton.CheckGradientButton(
+                            modifier = Modifier
+                                .padding(24.dp)
+                                .height(44.dp)
+                                .fillMaxWidth(),
+                            text = "CheckGradientButton. Checked = false",
+                            onClick = {},
+                            isChecked = false
+                        )
+                    }
+                    item {
+                        VolleyButton.CheckedGradientButtonRightImage(
+                            modifier = Modifier
+                                 .padding(24.dp)
+                                .height(44.dp)
+                                .fillMaxWidth(),
+                            text = "isChecked = true",
+                            onClick = {},
+                            isChecked = true
+                        )
+                    }
+                    item {
+                        VolleyButton.CheckedGradientButtonRightImage(
+                            modifier = Modifier
+                                .padding(24.dp)
+                                .height(44.dp)
+                                .fillMaxWidth(),
+                            text = "isChecked = false",
+                            onClick = {},
+                            isChecked = false
+                        )
+                    }
+                    item {
+                        VolleyButton.CheckedGradientButtonTopImage(
+                            modifier = Modifier
+                                .padding(horizontal = 24.dp)
+                                .height(63.dp)
+                                .fillMaxWidth(),
+                            text = "isChecked = true",
+                            onClick = {},
+                            isChecked = true,
+                            //iconResId = R.drawable.mark_black
+                            iconPainter = painterResource(R.drawable.mark_black)
+                        )
+                    }
+//                    item {
+//                        VolleyButton.CheckedGradientButtonTopImage(
+//                            modifier = Modifier
+//                                .padding(horizontal = 24.dp)
+//                                .height(63.dp)
+//                                .fillMaxWidth(),
+//                            text = "isChecked = false",
+//                            onClick = {},
+//                            isChecked = false,
+//                            //iconResId = R.drawable.mark_gradient
+//                            iconPainter = painterResource(id = R.drawable.mark_gradient)
+//                        )
+//                    }
+                }
+                    //}
+        }
+    }
+}
+
+    @Composable
+    fun Greeting(name: String, modifier: Modifier = Modifier) {
+        Text(
+            text = "Hello $name!",
+            modifier = modifier
+        )
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun GreetingPreview() {
+        VolleybolleyTheme {
+            Greeting("Android")
+        }
+    }
+
+    @Composable
+    fun Root1(content: @Composable (PaddingValues) -> Unit) {
+        VolleybolleyTheme {
+            Surface(modifier = Modifier.fillMaxSize()) {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { paddingValues ->
+                    content(paddingValues)
+
                 }
             }
-           /* VolleyButton.ActiveButton(
-                onClick = {},
-                Modifier.padding(5.dp),
-                true, "111"//, false
-            )*/
-        }
-
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    VolleybolleyTheme {
-        Greeting("Android")
-    }
-}
-
-@Composable
-fun Root(content: @Composable (PaddingValues) -> Unit) {
-    VolleybolleyTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            Scaffold(
-                modifier = Modifier.fillMaxSize()
-            ) { paddingValues ->
-                content(paddingValues)
-
-            }
         }
     }
-}
+
+//    @Composable
+//    fun
+//            Demo() {
+//        Root {
+//            val lazyListState = rememberLazyListState()
+//
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .background(color = VolleyColor.TurquoiseDark)
+//
+//                // .scrollState(scrollState)
+//                //.verticalScroll(scrollState)
+//            ) {
+//                LazyColumn(
+//                    state = lazyListState,
+//                    modifier = Modifier.fillMaxSize()
+//                ) {
+//                    item {
+//                        VolleyButton.ActiveButton(
+//                            modifier = Modifier
+//                                .padding(it)
+//                                .padding(horizontal = 24.dp)
+//                                .height(44.dp)
+//                                .fillMaxWidth(),
+//                            text = "ACTIVE BUTTON",
+//                            onClick = {}
+//                        )
+//                    }
+//                    item {
+//                        VolleyButton.OutlinedActiveButton(
+//                            modifier = Modifier
+//                                .padding(it)
+//                                .padding(horizontal = 24.dp)
+//                                .height(44.dp)
+//                                .fillMaxWidth(),
+//                            text = "OUTLINED BUTTON",
+//                            onClick = {}
+//                        )
+//                    }
+//                    item {
+//                        VolleyButton.ActiveGradientButton(
+//                            modifier = Modifier
+//                                .padding(it)
+//                                .padding(horizontal = 24.dp)
+//                                .height(44.dp)
+//                                .fillMaxWidth(),
+//                            text = "Gradient button",
+//                            onClick = {}
+//                        )
+//                    }
+//                    item {
+//                        VolleyButton.OutlinedGradientButton(
+//                            modifier = Modifier
+//                                .padding(it)
+//                                .padding(horizontal = 24.dp)
+//                                .height(44.dp)
+//                                .fillMaxWidth(),
+//                            text = "Outlined gradient button",
+//                            onClick = {}
+//                        )
+//                    }
+//                    item {
+//                        VolleyButton.CheckGradientButton(
+//                            modifier = Modifier
+//                                .padding(it)
+//                                .padding(horizontal = 24.dp)
+//                                .height(44.dp)
+//                                .fillMaxWidth(),
+//                            text = "CheckGradientButton. Checked = true",
+//                            onClick = {},
+//                            isChecked = true
+//                        )
+//                    }
+//                    item {
+//                        VolleyButton.CheckGradientButton(
+//                            modifier = Modifier
+//                                .padding(it)
+//                                .padding(horizontal = 24.dp)
+//                                .height(44.dp)
+//                                .fillMaxWidth(),
+//                            text = "CheckGradientButton. Checked = false",
+//                            onClick = {},
+//                            isChecked = false
+//                        )
+//                    }
+//                    item {
+//                        VolleyButton.CheckedGradientButtonRightImage(
+//                            modifier = Modifier
+//                                .padding(it)
+//                                .padding(horizontal = 24.dp)
+//                                .height(44.dp)
+//                                .fillMaxWidth(),
+//                            text = "isChecked = true",
+//                            onClick = {},
+//                            isChecked = true
+//                        )
+//                    }
+//                    item {
+//                        VolleyButton.CheckedGradientButtonRightImage(
+//                            modifier = Modifier
+//                                .padding(it)
+//                                .padding(horizontal = 24.dp)
+//                                .height(44.dp)
+//                                .fillMaxWidth(),
+//                            text = "isChecked = false",
+//                            onClick = {},
+//                            isChecked = false
+//                        )
+//                    }
+//                    item {
+//                        VolleyButton.CheckedGradientButtonTopImage(
+//                            modifier = Modifier
+//                                .padding(it)
+//                                .padding(horizontal = 24.dp)
+//                                .height(63.dp)
+//                                .fillMaxWidth(),
+//                            text = "isChecked = true",
+//                            onClick = {},
+//                            isChecked = true,
+//                            //iconResId = R.drawable.mark_black
+//                            iconPainter = painterResource(id = R.drawable.mark_black)
+//                        )
+//                    }
+//                    item {
+//                        VolleyButton.CheckedGradientButtonTopImage(
+//                            modifier = Modifier
+//                                .padding(it)
+//                                .padding(horizontal = 24.dp)
+//                                .height(63.dp)
+//                                .fillMaxWidth(),
+//                            text = "isChecked = false",
+//                            onClick = {},
+//                            isChecked = false,
+//                            //iconResId = R.drawable.mark_gradient
+//                            iconPainter = painterResource(id = R.drawable.mark_gradient)
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//    }
