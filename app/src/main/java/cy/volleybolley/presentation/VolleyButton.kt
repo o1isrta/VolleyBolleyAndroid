@@ -556,6 +556,8 @@ private fun PreviewActiveButton() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = VolleyColor.TurquoiseDark)
+                .padding(it)
+                .padding(horizontal = 24.dp)
 
                // .scrollState(scrollState)
                 //.verticalScroll(scrollState)
@@ -566,38 +568,44 @@ private fun PreviewActiveButton() {
             ){
                item{ VolleyButton.ActiveButton(
                     modifier = Modifier
-                        .padding(it)
-                        .padding(horizontal = 24.dp)
-                        .height(44.dp)
-                        .fillMaxWidth(),
+                        //.padding(it)
+                        //.padding(horizontal = 24.dp)
+                        .padding(vertical = 12.dp)
+                        .height(44.dp),
+                        //.fillMaxWidth(),
                     text = "ACTIVE BUTTON",
                     onClick = {}
                 )}
                 item{ VolleyButton.OutlinedActiveButton(
                     modifier = Modifier
-                        .padding(it)
-                        .padding(horizontal = 24.dp)
-                        .height(44.dp)
-                        .fillMaxWidth(),
+                        //.padding(it)
+                       // .padding(horizontal = 24.dp)
+                        .padding(vertical = 12.dp)
+                        .height(44.dp),
+                        //.fillMaxWidth(),
                     text = "OUTLINED BUTTON",
                     onClick = {}
                 )}
                 item{ VolleyButton.ActiveGradientButton(
                     modifier = Modifier
-                        .padding(it)
-                        .padding(horizontal = 24.dp)
+                       // .padding(it)
+                       // .padding(horizontal = 24.dp)
+                         .padding(vertical = 12.dp)
                         .height(44.dp)
-                        .fillMaxWidth(),
+                       // .fillMaxWidth(),
+                            ,
                     text = "Gradient button",
                     onClick = {}
                 )}
                 item{VolleyButton.GroupButtonsForLevel(
                     //2,
                     modifier = Modifier
-                        .padding(it)
-                        .padding(horizontal = 24.dp)
+                        //.padding(it)
+                       // .padding(horizontal = 24.dp)
+                        .padding(vertical = 0.dp)
                         .height(63.dp)
-                        .fillMaxWidth(),
+                        //.fillMaxWidth()
+                    ,
                     onSelected = {}
                 )}
                 item {
@@ -658,9 +666,10 @@ private fun PreviewActiveButton() {
                     ),
                         false,
                         modifier = Modifier
-                            .padding(it)
-                            .padding(horizontal = 24.dp)
-                            .fillMaxWidth(),
+                            .padding(vertical = 12.dp),
+                            //.padding(it)
+                            //.padding(horizontal = 24.dp)
+                           // .fillMaxWidth(),
                         onSelected = {}
                     )
                 }
