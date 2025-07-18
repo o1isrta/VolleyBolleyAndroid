@@ -7,10 +7,11 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import android.util.Log
 
-abstract class BaseViewModel<State, Event, UiEffect> : ViewModel() {
+abstract class BaseViewModel<State, Event, UiEffect>(
+    initialState: State
+) : ViewModel() {
 
     // region Abstract
-    protected abstract val initialState: State
     abstract val tag: String
     abstract fun obtainEvent(event: Event)
     // endregion
@@ -19,9 +20,6 @@ abstract class BaseViewModel<State, Event, UiEffect> : ViewModel() {
     private val _uiState = MutableStateFlow(initialState)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    protected fun setState(reducer: State.() -> State) {
-        _uiState.value = _uiState.value.reducer()
-    }
     // endregion
 
     // region One-time Events
@@ -37,10 +35,11 @@ abstract class BaseViewModel<State, Event, UiEffect> : ViewModel() {
 
     // region Safe Launch
     protected fun launchSafe(
+        dispatcher: CoroutineDispatcher = Dispatchers.IO,
         onError: (Throwable) -> Unit = { Log.e(tag, "Error in launchSafe", it) },
         block: suspend () -> Unit
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 block()
             } catch (e: Exception) {
