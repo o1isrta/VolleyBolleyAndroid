@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,8 +22,12 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -121,7 +123,6 @@ object VolleyButton {
         onClick: () -> Unit
     ) {
         Box(
-            contentAlignment = Alignment.Center,
             modifier = modifier
                 .clickable(onClick = onClick)
                 .background(
@@ -134,7 +135,8 @@ object VolleyButton {
                         end = Offset(0f, 100f)
                     ),
                     shape = RoundedCornerShape(16.dp),
-                )
+                ),
+            contentAlignment = Alignment.Center
         )
         {
             Text(
@@ -320,7 +322,6 @@ object VolleyButton {
                         painter = iconPainter,
                         contentDescription = null
                     )
-                   // Spacer(modifier = Modifier.size(2.dp))
                     Text(
                         text = text,
                         color = VolleyColor.BlackText,
@@ -353,7 +354,6 @@ object VolleyButton {
                         painter = iconPainter,
                         contentDescription = null
                     )
-                   // Spacer(modifier = Modifier.size(2.dp))
                     Text(
                         text = text,
                         color = VolleyColor.White,
@@ -440,7 +440,6 @@ object VolleyButton {
         isExclusive: Boolean = true, // true  - только одна кнопка в группе может быть выбрана (false - любое количество)
         onSelected: (Int) -> Unit
     ){
-        //val state = rememberSaveable { mutableStateOf<Set<Int>>(emptySet())}
         var checkSet : Set<Int> = emptySet()
         items.forEach { item ->
             if (item.isChecked){
@@ -450,7 +449,6 @@ object VolleyButton {
         val state = rememberSaveable { mutableStateOf<Set<Int>>(checkSet)}
 
         Row(modifier, horizontalArrangement = Arrangement.Start)
-        //Row(modifier = modifier.a)
         {
             items.forEach { item ->
                 val isCheck = state.value.contains(item.id)
@@ -475,49 +473,6 @@ object VolleyButton {
         }
     }
 
-    // группа кнопок, равных по ширине и занимающих всю предоставляемую ширину
-    @Composable
-    fun EqualButtonsGroup(
-        items: List<ButtonItem>,     // список кнопок
-        modifier: Modifier = Modifier,
-        isExclusive: Boolean = true, // true  - только одна кнопка в группе может быть выбрана (false - любое количество)
-        onSelected: (Int) -> Unit
-    ){
-        //val state = rememberSaveable { mutableStateOf<Set<Int>>(emptySet())}
-        var checkSet : Set<Int> = emptySet()
-        items.forEach { item ->
-            if (item.isChecked){
-                checkSet = checkSet + item.id
-            }
-        }
-        val state = rememberSaveable { mutableStateOf<Set<Int>>(checkSet)}
-
-        Row(modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Absolute.Center)//.spacedBy(8.dp))
-        {
-            items.forEach { item ->
-                val isCheck = state.value.contains(item.id)
-                val onClick = {
-                    if(isExclusive){ // добавить текущий элемент, удалив остальные/ удалить элемент
-                        state.value =
-                            if (isCheck)
-                                state.value - item.id
-                            else setOf(item.id)
-                    } else { // добавить/удалить текущий элемент
-                        state.value =
-                            if (isCheck)
-                                state.value - item.id
-                            else
-                                state.value + item.id
-                    }
-                    onSelected(item.id)
-                }
-                item.button(modifier.weight(1f), isCheck, onClick)
-                //Spacer(modifier = Modifier.size(8.dp))
-            }
-        }
-    }
-
     @Composable
     fun GroupButtonsForChangeLevel(checkId: Int, modifier: Modifier, onSelected: (Int) -> Unit)
     {
@@ -529,7 +484,6 @@ object VolleyButton {
                     {
                     _, isChecked, onClick ->
                         ButtonLevelDown(
-                            //modifier = modifier,
                             isChecked = isChecked,
                             onClick = onClick
                         )
@@ -542,7 +496,6 @@ object VolleyButton {
                     {
                     _, isChecked, onClick ->
                         ButtonConfirmLevel(
-                            //modifier = modifier,
                             isChecked = isChecked,
                             onClick = onClick
                         )
@@ -555,7 +508,6 @@ object VolleyButton {
                     {
                     _, isChecked, onClick ->
                         ButtonLevelUp(
-                            //modifier = modifier,
                             isChecked = isChecked,
                             onClick = onClick
                         )
@@ -580,7 +532,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton (
-                            //modifier = modifier,
                             text = "Today",
                             isChecked = isChecked,
                             onClick = onClick
@@ -594,7 +545,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckedGradientButtonRightImage(
-                            //modifier = modifier,
                             text = "Pick date",
                             isChecked = isChecked,
                             onClick = onClick
@@ -620,7 +570,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton (
-                            //modifier = modifier,
                             text = "Today",
                             isChecked = isChecked,
                             onClick = onClick
@@ -634,7 +583,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton (
-                            //modifier = modifier,
                             text = "Tomorrow",
                             isChecked = isChecked,
                             onClick = onClick
@@ -648,7 +596,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton(
-                            //modifier = modifier,
                             text = "Pick date",
                             isChecked = isChecked,
                             onClick = onClick
@@ -674,7 +621,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton (
-                            //modifier = modifier,
                             text = "Public",
                             isChecked = isChecked,
                             onClick = onClick
@@ -688,7 +634,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckedGradientButtonRightImage(
-                            //modifier = modifier,
                             text = "Private",
                             isChecked = isChecked,
                             onClick = onClick
@@ -714,7 +659,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton (
-                            //modifier = modifier,
                             text = "Mix",
                             isChecked = isChecked,
                             onClick = onClick
@@ -728,7 +672,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton (
-                            //modifier = modifier,
                             text = "Men",
                             isChecked = isChecked,
                             onClick = onClick
@@ -742,7 +685,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton(
-                            //modifier = modifier,
                             text = "Women",
                             isChecked = isChecked,
                             onClick = onClick
@@ -769,7 +711,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton (
-                            //modifier = modifier,
                             text = "Male",
                             isChecked = isChecked,
                             paddingValues = paddingValues,
@@ -784,7 +725,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton (
-                            //modifier = modifier,
                             text = "Female",
                             isChecked = isChecked,
                             paddingValues = paddingValues,
@@ -812,7 +752,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton (
-                            //modifier = modifier,
                             text = "Light",
                             isChecked = isChecked,
                             paddingValues = paddingValues,
@@ -827,7 +766,6 @@ object VolleyButton {
                     {
                             _, isChecked, onClick ->
                         CheckGradientButton (
-                            //modifier = modifier,
                             text = "Medium",
                             isChecked = isChecked,
                             paddingValues = paddingValues,
@@ -874,77 +812,32 @@ object VolleyButton {
 
     // группа кнопок выбора Tourney Type (из 2 кнопок: Individual, Team)
     @Composable
-    fun GroupButtonsForTourneyType(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit)
-    {
-        val paddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp)
-        EqualButtonsGroup(listOf(
-            object: ButtonItem {
-                override val id = 1
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                           // modifier = Modifier.weight(1f),
-                            text = "Individual",
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 2
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                          //  modifier = Modifier.weight(1f),
-                            text = "Team",
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-            }
-        ),
-            modifier = modifier.height(44.dp),
-            true,
-            onSelected = onSelected
-        )
+    fun GroupButtonsForTourneyType(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
+        var selectedButton by remember { mutableIntStateOf(checkId) }
+
+        Row(modifier= modifier.height(44.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            CheckGradientButton(
+                modifier = Modifier.weight(1f),
+                text = "Individual",
+                isChecked = (selectedButton == 1),
+                onClick = {
+                    selectedButton = 1
+                    onSelected(selectedButton)
+                }
+            )
+            CheckGradientButton(
+                modifier = Modifier.weight(1f),
+                text = "Team",
+                isChecked = (selectedButton == 2),
+                onClick = {
+                    selectedButton = 2
+                    onSelected(selectedButton)
+                }
+            )
+        }
     }
-
-
 }
-//    @Composable
-//    fun GroupGradientButtonsCheckAlone(buttons: List<@Composable () -> Unit>
-//    ){
-//        var selectedId by remember { mutableStateOf<Int?>(null) }
-//
-//        Row{
-//            ButtonsGroup()
-//        }
-////        Row(
-////            modifier = Modifier
-////                .fillMaxWidth()
-////                .padding(8.dp),
-////            horizontalArrangement = Arrangement.Start //Arrangement.spacedBy(8.dp)
-////        ) {
-////            buttons.forEach { button ->
-////                button()
-////            }
-////        }
-//    }
-//
-//    @Composable
-//    fun GroupGradientButtonsCheckMany(
-//
-//    ){
-//
-//    }
-
-
 
 
 
@@ -953,27 +846,21 @@ object VolleyButton {
 @Composable
 private fun PreviewActiveButton() {
     Root1 {
-        //val lazyListState = rememberLazyListState()
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = VolleyColor.TurquoiseDark)
                 .padding(it)
                 .padding(horizontal = 24.dp)
-
         ) {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
                 VolleyButton.ActiveButton(
                     modifier = Modifier
-                        //.padding(it)
-                        //.padding(horizontal = 24.dp)
                         .padding(vertical = 12.dp)
                         .height(44.dp)
                         .align(Alignment.CenterHorizontally),
-                    //.fillMaxWidth(),
                     text = "ACTIVE BUTTON",
                     onClick = {}
                 )
@@ -997,7 +884,6 @@ private fun PreviewActiveButton() {
                     1,
                     modifier = Modifier
                         .padding(vertical = 12.dp)
-                        //.height(63.dp)
                         .align(Alignment.CenterHorizontally),
                     onSelected = {}
                 )
@@ -1012,7 +898,6 @@ private fun PreviewActiveButton() {
                 VolleyButton.GroupButtonsForDate2(
                     modifier = Modifier
                         .padding(vertical = 12.dp)
-                        //.height(44.dp)
                         .align(Alignment.Start),
                     onSelected = {}
                 )
@@ -1020,28 +905,24 @@ private fun PreviewActiveButton() {
                     3,
                     modifier = Modifier
                         .padding(vertical = 12.dp)
-                        //.height(44.dp)
                         .align(Alignment.Start),
                     onSelected = {}
                 )
                 VolleyButton.GroupButtonsForPrivacy(
                     modifier = Modifier
                         .padding(vertical = 12.dp)
-                        //.height(44.dp)
                         .align(Alignment.Start),
                     onSelected = {}
                 )
                 VolleyButton.GroupButtonsForGender3(
                     modifier = Modifier
                         .padding(vertical = 12.dp)
-                        //.height(44.dp)
                         .align(Alignment.Start),
                     onSelected = {}
                 )
                 VolleyButton.GroupButtonsForGender2(
                     modifier = Modifier
                         .padding(vertical = 12.dp)
-                        //.height(39.dp)
                         .align(Alignment.Start),
                     onSelected = {}
                 )
@@ -1049,34 +930,17 @@ private fun PreviewActiveButton() {
                     2,
                     modifier = Modifier
                         .padding(vertical = 12.dp)
-                        //.height(39.dp)
                         .align(Alignment.Start),
                     onSelected = {}
                 )
                 VolleyButton.GroupButtonsForTourneyType(
                     modifier = Modifier
                         .padding(vertical = 12.dp)
-                        //.height(39.dp)
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth(),
                     onSelected = {}
                 )
 
-
-                /* Image(
-                    painter = painterResource(id = R.drawable.mark_black),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp)
-                        .graphicsLayer(alpha = 0.99f)
-                        .drawWithContent {
-                            drawContent()
-                            drawRect(brush = Brush.linearGradient(
-                                colors = listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient),
-                                start = Offset(0f, 0f),
-                                end = Offset(0f, 100f)
-                            ), blendMode = BlendMode.SrcAtop)
-                        }
-                )*/
             }
         }
     }
