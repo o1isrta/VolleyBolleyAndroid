@@ -92,6 +92,75 @@ object VolleyButton {
 
     @Composable
     @Stable
+    fun ActiveButtonSmallText( // такую кнопку только одну нашла: с текстом "Add payment"
+        modifier: Modifier = Modifier,
+        //enabled: Boolean = true,
+        text: String,
+        paddingValues: PaddingValues = PaddingValues(16.dp,8.dp,16.dp,8.dp),
+        onClick: () -> Unit
+    ) {
+        Button(
+           // enabled = enabled,
+            modifier = modifier,
+            onClick = onClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = VolleyColor.YellowPro//,
+                //disabledContainerColor = VolleyColor.GreyDisabled
+            ),
+            shape = RoundedCornerShape(16.dp),
+            contentPadding = paddingValues
+        ) {
+            Text(
+//                text = text.uppercase(),
+//                color = if (enabled) {
+//                    VolleyColor.BlackText
+//                } else {
+//                    VolleyColor.White
+//                },
+                text = text,
+                color = VolleyColor.BlackText,
+                fontSize = 16.sp,
+                fontFamily = Hero400Font
+            )
+        }
+    }
+    @Composable
+    @Stable
+    fun ActiveButtonMap( // такую кнопку только одну нашла: с текстом "Map"
+        modifier: Modifier = Modifier,
+        //enabled: Boolean = true,
+        text: String,
+        paddingValues: PaddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp),
+        onClick: () -> Unit
+    ) {
+        Button(
+            // enabled = enabled,
+            modifier = modifier,
+            onClick = onClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = VolleyColor.OrangeHard//,
+                //disabledContainerColor = VolleyColor.GreyDisabled
+            ),
+            shape = RoundedCornerShape(16.dp),
+            contentPadding = paddingValues
+        ) {
+            Text(
+//                text = text.uppercase(),
+//                color = if (enabled) {
+//                    VolleyColor.BlackText
+//                } else {
+//                    VolleyColor.White
+//                },
+                text = text,
+                color = VolleyColor.BlackText,
+                fontSize = 16.sp,
+                fontFamily = Hero400Font
+            )
+        }
+    }
+
+    @Composable
+    @Stable
     fun OutlinedActiveButton(
         modifier: Modifier = Modifier,
         text: String,
@@ -864,22 +933,22 @@ private fun PreviewActiveButton() {
                     text = "ACTIVE BUTTON",
                     onClick = {}
                 )
-                VolleyButton.OutlinedActiveButton(
-                    modifier = Modifier
-                        .padding(vertical = 12.dp)
-                        .height(44.dp)
-                        .align(Alignment.CenterHorizontally),
-                    text = "OUTLINED BUTTON",
-                    onClick = {}
-                )
-                VolleyButton.ActiveGradientButton(
-                    modifier = Modifier
-                        .padding(vertical = 12.dp)
-                        .height(44.dp)
-                        .align(Alignment.CenterHorizontally),
-                    text = "Gradient button",
-                    onClick = {}
-                )
+//                VolleyButton.OutlinedActiveButton(
+//                    modifier = Modifier
+//                        .padding(vertical = 12.dp)
+//                        .height(44.dp)
+//                        .align(Alignment.CenterHorizontally),
+//                    text = "OUTLINED BUTTON",
+//                    onClick = {}
+//                )
+//                VolleyButton.ActiveGradientButton(
+//                    modifier = Modifier
+//                        .padding(vertical = 12.dp)
+//                        .height(44.dp)
+//                        .align(Alignment.CenterHorizontally),
+//                    text = "Gradient button",
+//                    onClick = {}
+//                )
                 VolleyButton.GroupButtonsForChangeLevel(
                     1,
                     modifier = Modifier
@@ -940,7 +1009,22 @@ private fun PreviewActiveButton() {
                         .fillMaxWidth(),
                     onSelected = {}
                 )
-
+                VolleyButton.ActiveButtonSmallText(
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .height(35.dp)
+                        .align(Alignment.CenterHorizontally),
+                    text = "Add payment",
+                    onClick = {}
+                )
+                VolleyButton.ActiveButtonMap(
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .height(44.dp)
+                        .align(Alignment.CenterHorizontally),
+                    text = "Map",
+                    onClick = {}
+                )
             }
         }
     }
