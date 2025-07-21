@@ -14,25 +14,43 @@ jobs:
     pr-checks:
         runs-on: ubuntu-latest
         steps:
-            -   name: Clone repo
-                uses: actions/checkout@v2
+            -   name: Checkout
+                uses: actions/checkout@v3
+
+            -   name: Cleanup Github-Actions bot comments
+                continue-on-error: true
+                run: |
+                    sh ./ci/github_comments_cleanup.sh "${{ github.repository_owner }}" "${{ github.event.repository.name }}" "${{ github.event.number }}" "github-actions[bot]" "${{ secrets.GITHUB_TOKEN }}"
+
+            -   name: Setup Reviewdog
+                uses: reviewdog/action-setup@v1
                 with:
-                    fetch-depth: 1
-                    ref: ${{ github.head_ref }}
+                    reviewdog_version: latest
+
+            -   name: Setup JDK 17 for build
+                uses: actions/setup-java@v3
+                with:
+                    java-version: '17'
+                    distribution: 'temurin'
+                    cache: gradle
+
+            -   name: Grant execute permission for gradlew
+                run: chmod +x gradlew
+
+            -   name: Run detekt
+                run: ./gradlew detektAll $commonGradleFlags
 
             -   name: Run Reviewdog for Detekt as Github Review
-                uses: alaegin/Detekt-Action@v1.23.7
-                with:
-                    github_token: ${{ secrets.GITHUB_TOKEN }}
-                    reviewdog_reporter: github-pr-review
-                    detekt_config: ./conf/detekt.yml
+                env:
+                    REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: |
+                    reviewdog $reviewdogSetup -reporter=github-pr-review <$detektReportPath
 
             -   name: Run Reviewdog for Detekt as Github CHECK
-                uses: alaegin/Detekt-Action@v1.23.7
-                with:
-                    github_token: ${{ secrets.GITHUB_TOKEN }}
-                    reviewdog_reporter: github-pr-check
-                    detekt_config: ./conf/detekt.yml
+                env:
+                    REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: |
+                    reviewdog $reviewdogSetup -reporter=github-pr-check <$detektReportPath
 
     assemble:
         runs-on: ubuntu-latest
