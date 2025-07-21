@@ -5,13 +5,13 @@ sealed interface VolleyResult<Data, Error> {
     val isFailure: Boolean
 
     data class Success<Data, Error>(val data: Data) : VolleyResult<Data, Error> {
-        override val isSuccess: Boolean get() = true
-        override val isFailure: Boolean get() = false
+        override val isSuccess = true
+        override val isFailure = false
     }
 
     data class Failure<Data, Error>(val error: Error) : VolleyResult<Data, Error> {
-        override val isSuccess: Boolean get() = false
-        override val isFailure: Boolean get() = true
+        override val isSuccess = false
+        override val isFailure = true
     }
 }
 

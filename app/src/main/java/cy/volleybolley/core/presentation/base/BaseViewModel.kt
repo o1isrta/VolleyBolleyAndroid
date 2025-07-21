@@ -6,8 +6,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import android.util.Log
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
-abstract class BaseViewModel<State, Event, UiEffect>(
+abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect>(
     initialState: State
 ) : ViewModel() {
 
@@ -23,10 +25,10 @@ abstract class BaseViewModel<State, Event, UiEffect>(
     // endregion
 
     // region One-time Events
-    private val _effect = Channel<UiEffect>(Channel.BUFFERED)
-    val uiEffect: Flow<UiEffect> = _effect.receiveAsFlow()
+    private val _effect = Channel<Effect>(Channel.BUFFERED)
+    val uiEffect: Flow<Effect> = _effect.receiveAsFlow()
 
-    protected fun sendUiEffect(effect: UiEffect) {
+    protected fun sendUiEffect(effect: Effect) {
         viewModelScope.launch {
             _effect.send(effect)
         }
@@ -36,7 +38,7 @@ abstract class BaseViewModel<State, Event, UiEffect>(
     // region Safe Launch
     protected fun launchSafe(
         dispatcher: CoroutineDispatcher = Dispatchers.IO,
-        onError: (Throwable) -> Unit = { Log.e(tag, "Error in launchSafe", it) },
+        onError: suspend (Throwable) -> Unit = { Log.e(tag, "Error in launchSafe", it) },
         block: suspend () -> Unit
     ) {
         viewModelScope.launch(dispatcher) {
