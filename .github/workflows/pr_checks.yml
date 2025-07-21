@@ -20,12 +20,14 @@ jobs:
                     fetch-depth: 1
                     ref: ${{ github.head_ref }}
 
+            -   name: Cat detekt
+                run: cat ./conf/detekt.yml
+
             -   name: Run Reviewdog for Detekt as Github Review
                 uses: alaegin/Detekt-Action@v1.23.7
                 with:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
                     reviewdog_reporter: github-pr-review
-                    detekt_config: ./conf/detekt.yml
 
             -   name: Run Reviewdog for Detekt as Github CHECK
                 uses: alaegin/Detekt-Action@v1.23.7
