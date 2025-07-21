@@ -14,13 +14,11 @@ jobs:
     pr-checks:
         runs-on: ubuntu-latest
         steps:
-            -   name: Checkout
-                uses: actions/checkout@v3
-
-            -   name: Cleanup Github-Actions bot comments
-                continue-on-error: true
-                run: |
-                    sh ./ci/github_comments_cleanup.sh "${{ github.repository_owner }}" "${{ github.event.repository.name }}" "${{ github.event.number }}" "github-actions[bot]" "${{ secrets.GITHUB_TOKEN }}"
+            -   name: Clone repo
+                uses: actions/checkout@v2
+                with:
+                    fetch-depth: 1
+                    ref: ${{ github.head_ref }}
 
             -   name: Run Reviewdog for Detekt as Github Review
                 uses: alaegin/Detekt-Action@v1.23.7
