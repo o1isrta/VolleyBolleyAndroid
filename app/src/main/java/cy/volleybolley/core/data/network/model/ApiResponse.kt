@@ -14,6 +14,6 @@ sealed interface ApiResponse {
     class AuthResponse(
         val someId: Int,
         val someToken: String,
-    ): ApiResponse
+    ) : ApiResponse
 
 }

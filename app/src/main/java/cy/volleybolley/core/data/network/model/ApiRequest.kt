@@ -21,12 +21,6 @@ sealed class ApiRequest {
         override val headers: ConcurrentHashMap<String, String> = ConcurrentHashMap<String, String>(),
         override val parameters: ConcurrentHashMap<String, String> = ConcurrentHashMap<String, String>(),
         override val body: Any? = null,
-    ): ApiRequest()
+    ) : ApiRequest()
 
 }
-
-
-
-
-
-

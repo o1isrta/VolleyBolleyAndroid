@@ -40,7 +40,7 @@ class KtorNetworkClient(
     }
 
     private suspend fun sendValidRequestByType(request: ApiRequest): HttpResponse {
-        return when(request) {
+        return when (request) {
             is ApiRequest.ClassicRequest -> {
                 httpClient.request {
                     method = request.method
