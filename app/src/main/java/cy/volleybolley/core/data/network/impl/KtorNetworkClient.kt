@@ -3,68 +3,57 @@ package cy.volleybolley.core.data.network.impl
 import android.util.Log
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.api.NetworkClient
-import cy.volleybolley.core.data.network.model.ApiRequest
-import cy.volleybolley.core.data.network.model.ApiResponse
+import cy.volleybolley.core.data.network.model.Response
+import cy.volleybolley.core.data.network.model.StatusCode
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.headers
-import io.ktor.client.request.parameter
-import io.ktor.client.request.request
-import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
-import io.ktor.http.path
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class KtorNetworkClient(
-    private val httpClient: HttpClient,
-) : NetworkClient {
+abstract class KtorNetworkClient<SealedRequest, SealedResponse> : KoinComponent, NetworkClient<SealedRequest, SealedResponse> {
 
-    override suspend fun getResponse(request: ApiRequest): ApiResponse {
+    protected val httpClient: HttpClient by inject()
+
+    override suspend fun getResponse(sealedRequest: SealedRequest): Response<SealedResponse> {
         return runCatching {
-            val httpResponse = sendValidRequestByType(request)
-
-            if (httpResponse.status.isSuccess()) {
-                httpResponse.body<ApiResponse.AuthResponse>()
-            } else {
-                ApiResponse.BadResponse(
-                    responseStatusCode = httpResponse.status.value,
-                    message = httpResponse.status.description
-                )
-            }
-
+            obtainResponse(
+                requestType = sealedRequest,
+                httpResponse = sendResponseByType(sealedRequest)
+            )
         }.onFailure { error ->
             if (BuildConfig.DEBUG) {
                 Log.e(NETWORK_TAG, "error in getResponse() -> $error", error)
             }
-        }.getOrNull() ?: ApiResponse.BadResponse()
+        }.getOrNull() ?: Response()
     }
 
-    private suspend fun sendValidRequestByType(request: ApiRequest): HttpResponse {
-        return when(request) {
-            is ApiRequest.ClassicRequest -> {
-                httpClient.request {
-                    method = request.method
-                    url {
-                        protocol = request.protocol
-                        request.host?.let { host = it }
-                        request.path?.let { path(it) }
-
-                        if (request.headers.isNotEmpty()) {
-                            headers {
-                                request.headers.forEach { name, value -> append(name, value) }
-                            }
-                        }
-
-                        if (request.parameters.isNotEmpty()) {
-                            request.parameters.forEach { key, value -> parameter(key, value) }
-                        }
-
-                        request.body?.let { setBody(it) }
-                    }
-                }
-            }
+    private suspend fun obtainResponse(
+        requestType: SealedRequest,
+        httpResponse: HttpResponse
+    ): Response<SealedResponse> {
+        Log.v(NETWORK_TAG, "body = ${httpResponse.bodyAsText()}")
+        return if (httpResponse.status.isSuccess()) {
+            Response(
+                isSuccess = true,
+                resultCode = StatusCode(httpResponse.status.value),
+                body = getResponseBodyByRequestType(requestType, httpResponse)
+            )
+        } else {
+            Response(
+                isSuccess = false,
+                resultCode = StatusCode(httpResponse.status.value)
+            )
         }
     }
+
+    protected abstract suspend fun sendResponseByType(request: SealedRequest): HttpResponse
+
+    protected abstract suspend fun getResponseBodyByRequestType(
+        requestType: SealedRequest,
+        httpResponse: HttpResponse
+    ): SealedResponse
 
     companion object {
         const val NETWORK_TAG = "NETWORK_TAG"
