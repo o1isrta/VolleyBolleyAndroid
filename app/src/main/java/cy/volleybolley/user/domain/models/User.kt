@@ -1,4 +1,4 @@
-package cy.volleybolley.user.data.models
+package cy.volleybolley.user.domain.models
 
 data class User (
     val userId: Int,
