@@ -1,4 +1,4 @@
-package cy.volleybolley.user.data.db.dto
+package cy.volleybolley.user.data.dto
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
