@@ -176,41 +176,10 @@
     <string name="take_photo">Take photo</string>
     <string name="delete_photo">Delete photo</string>
     <string name="save">SAVE</string>
-    <string name="faq_registration">
-    To find the right games and teammates, choose your current skill level:\n
-    Options:\n
-    • Light (L1–L3) – Beginner\n
-    • Medium (M1–M3) – Confident amateur\n
-    • Hard (H1–H3) – Advanced\n
-    • Pro (P1–P3) – Professional\n
-    The higher the number, the higher the skill. Your level may change later based on player ratings.
-</string>
     <string name="post_game_ratings">Post-Game Ratings</string>
-    <string name="faq_post_game_ratings">
-    After each game, teammates can rate your level.\n
-    Once you receive 6 ratings, your level may change:\n
-    • 5+ positive ratings → promoted one step\n
-    • 5+ negative ratings → demoted one step\n
-    • Mixed feedback → level stays the same
-</string>
     <string name="the_next_category">Want to move to the next category?</string>
-    <string name="faq_the_next_category">Earn 10 points from higher-level players within the last 60 days. The higher the evaluator’s level, the more weight their rating carries.</string>
     <string name="levels_can_drop">Levels can drop due to:</string>
-    <string name="faq_levels_can_drop">
-    Ratings (6 within 60 days, 5+ down = demotion)\n
-    Inactivity:\n
-    • 90 days = minus 1 step\n
-    • 180 days = reset to lowest level in current category
-</string>
     <string name="fair_play_policy">Fair Play Policy</string>
-    <string name="faq_fair_play_policy">
-    We ensure a fair system:\n
-    • Ratings are anonymous\n
-    • Max 2 ratings from the same player in 60 days\n
-    • Light has minimal impact on Hard and Pro levels\n
-    • Pro levels are harder to reach\n
-    Play fair — your level will speak for itself.
-</string>
     <string name="log_out_question">Are you sure you want to log out of your account?</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
