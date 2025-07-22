@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "ru.practicum.android.buildlogic"
+group = "cy.volleybolley.buildlogic"
 
 dependencies {
     // workaround for https://github.com/gradle/gradle/issues/15383

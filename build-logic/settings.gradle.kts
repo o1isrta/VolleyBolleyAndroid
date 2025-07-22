@@ -31,5 +31,4 @@ dependencyResolutionManagement {
  * build was fine however
  */
 include("gradle-ext")
-include(":develop-properties")
 include(":checks")
