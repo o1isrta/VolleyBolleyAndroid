@@ -67,6 +67,9 @@ comments:
 # Правила для регулирования сложности кода.
 complexity:
     active: true
+    CognitiveComplexMethod:
+        active: true
+        threshold: 15
     ComplexCondition:
         active: true
         threshold: 4
@@ -76,9 +79,6 @@ complexity:
         threshold: 10
         includeStaticDeclarations: false
         includePrivateDeclarations: false
-    CognitiveComplexMethod:
-        active: true
-        threshold: 15
     CyclomaticComplexMethod:
         active: true
         threshold: 10
@@ -91,7 +91,7 @@ complexity:
         ignoredLabels: [ ]
     LargeClass:
         active: true
-        threshold: 200
+        threshold: 300
     LongMethod:
         active: true
         threshold: 40
@@ -106,7 +106,7 @@ complexity:
         ignoreAnnotated: [ "Inject", "InjectConstructor", "Composable" ]
     MethodOverloading:
         active: true
-        threshold: 6
+        threshold: 4
     NamedArguments:
         active: true
         threshold: 3
@@ -119,15 +119,16 @@ complexity:
         active: true
         threshold: 3
         ignoreAnnotation: true
-        excludeStringsWithLessThan5Characters: true
+        excludeStringsWithLessThan5Characters: false
         ignoreStringsRegex: '$^'
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**', '**/*.kts' ]
     TooManyFunctions:
         active: true
-        thresholdInFiles: 51
-        thresholdInClasses: 51
+        thresholdInFiles: 21
+        thresholdInClasses: 21
         thresholdInInterfaces: 11
-        thresholdInObjects: 51
+        # Увеличено для Ui-библиотеки
+        thresholdInObjects: 31
         thresholdInEnums: 6
         ignoreDeprecated: true
         ignorePrivate: true
@@ -144,6 +145,8 @@ coroutines:
     SleepInsteadOfDelay:
         active: true
     SuspendFunWithFlowReturnType:
+        active: true
+    SuspendFunSwallowedCancellation:
         active: true
 
 # Правила для регулирования пустых блоков кода.
@@ -419,10 +422,8 @@ naming:
         active: false
         maximumFunctionNameLength: 30
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
-    # Правило выключено, потому что бывают функции, которые в определённом
-    # контексте имеют право называться коротким именем (в 1 символ)
     FunctionMinLength:
-        active: false
+        active: true
         minimumFunctionNameLength: 3
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
     FunctionNaming:
@@ -467,19 +468,13 @@ naming:
         propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
         privatePropertyPattern: '_?[A-Za-z][_A-Za-z0-9]*'
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
-
-        # Правило выключено, потому что иногда возникает необходимость в длинном
-        # имени переменной
     VariableMaxLength:
-        active: false
+        active: true
         maximumVariableNameLength: 64
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
-
-        # Правило выключено, потому что иногда возникает необходимость в коротком
-        # имени переменной
     VariableMinLength:
-        active: false
-        minimumVariableNameLength: 1
+        active: true
+        minimumVariableNameLength: 3
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
     VariableNaming:
         active: true
@@ -493,6 +488,9 @@ performance:
     active: true
     ArrayPrimitive:
         active: true
+    CouldBeSequence:
+        active: true
+        threshold: 3
     ForEachOnRange:
         active: true
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
@@ -505,12 +503,18 @@ performance:
 # Набор правил для анализа кода на потенциальные баги.
 potential-bugs:
     active: true
+    CastNullableToNonNullableType:
+        active: true
     CastToNullableType:
         active: true
     Deprecation:
-        active: true
+        active: false
     DontDowncastCollectionTypes:
         active: true
+    DoubleMutabilityForCollection:
+        active: true
+    ElseCaseInsteadOfExhaustiveWhen:
+        active: false
     EqualsAlwaysReturnsTrueOrFalse:
         active: true
     EqualsWithHashCodeExist:
@@ -543,7 +547,14 @@ potential-bugs:
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
     MapGetWithNotNullAssertionOperator:
         active: true
+    MissingPackageDeclaration:
+        active: true
+        excludes: [ '**.gradle.kts' ]
+    NullCheckOnMutableProperty:
+        active: true
     NullableToStringCall:
+        active: true
+    PropertyUsedBeforeDeclaration:
         active: true
     UnconditionalJumpStatementInLoop:
         active: true
@@ -571,6 +582,14 @@ style:
     active: true
     # Выключено, потому что мы нигде не соблюдаем порядок модификаторов
     # видимости, указанный в "kotlin convention"
+    BracesOnIfStatements:
+        active: true
+        singleLine: 'never'
+        multiLine: 'always'
+    # Выключено, потому что по нашему код-стайлу даже в единичных выражениях
+    # внутри when мы иногда ставим фигурные скобки
+    BracesOnWhenStatements:
+        active: false
     ClassOrdering:
         active: false
     CollapsibleIfStatements:
@@ -640,10 +659,6 @@ style:
         ignoreRanges: false
         ignoreExtensionFunctions: true
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
-    BracesOnIfStatements:
-        active: true
-        singleLine: 'never'
-        multiLine: 'always'
     MandatoryBracesLoops:
         active: true
     MaxLineLength:
@@ -669,10 +684,6 @@ style:
     OptionalAbstractKeyword:
         active: true
     OptionalUnit:
-        active: false
-    # Выключено, потому что по нашему код-стайлу даже в единичных выражениях
-    # внутри when мы иногда ставим фигурные скобки
-    BracesOnWhenStatements:
         active: false
     # Выключено, потому что мы обычно используем явные конструкторы Pair-а, где
     # нужно, а где можно - используем оператор to.
@@ -729,6 +740,9 @@ style:
     # Правило выключено, потому что дублируется правилом formatting:NoUnusedImports
     UnusedImports:
         active: false
+    UnusedParameter:
+        active: true
+        allowedNames: 'ignored|expected'
     UnusedPrivateClass:
         active: true
     UnusedPrivateMember:
