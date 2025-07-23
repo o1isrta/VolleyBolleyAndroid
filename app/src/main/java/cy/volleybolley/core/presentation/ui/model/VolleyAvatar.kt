@@ -1,4 +1,4 @@
-package cy.volleybolley
+package cy.volleybolley.core.presentation.ui.model
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -19,28 +20,27 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import cy.volleybolley.VolleyAvatar.CircularAvatar
+import cy.volleybolley.R
+import cy.volleybolley.core.presentation.ui.model.VolleyAvatar.CircularAvatar
 
 object VolleyAvatar {
 
-    private val AVATAR_BORDER_WIDTH = 1.dp
-
     @Composable
+    @Stable
     fun CircularAvatar(
         avatar: String?,
         size: Dp,
         onClick: () -> Unit = {}
     ) {
-        val shape = CircleShape
         // Плейс холдер временный - заменить, когда дизайнеры дадут векторный рисунок**************************************************
         val placehold = painterResource(id = R.drawable.ic_avatar_placeholder)
 
         Box(
             modifier = Modifier
                 .size(size)
-                .clip(shape)
-                .border(AVATAR_BORDER_WIDTH, Color.White, shape)
-                .clickable { onClick() }
+                .clip(CircleShape)
+                .border(1.dp, Color.White, CircleShape)
+                .clickable(onClick = onClick)
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -56,9 +56,6 @@ object VolleyAvatar {
         }
     }
 }
-
-// К сожалению Preview не хочет подкачивать изображения, поэтому показывает заглушку
-// Но на устройстве все работает, проверил, тестил с правильным url, с кривым url и с url= null. Все ОК
 @Preview
 @Composable
 private fun MyScreen() {
@@ -69,3 +66,4 @@ private fun MyScreen() {
         )
     }
 }
+

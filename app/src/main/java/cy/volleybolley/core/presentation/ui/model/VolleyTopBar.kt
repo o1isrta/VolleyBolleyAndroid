@@ -1,4 +1,4 @@
-package cy.volleybolley
+package cy.volleybolley.core.presentation.ui.model
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -6,36 +6,43 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cy.volleybolley.VolleyTopBar.TopBar
-import cy.volleybolley.ui.theme.TopBarBackgroundColor
+import cy.volleybolley.R
+import cy.volleybolley.core.presentation.ui.model.VolleyTopBar.TopBar
 
 object VolleyTopBar {
 
     private val TopBarHeight = 106.dp   // Высота TopBar
-    private val CornerRadius = 31.dp    // Радиусы скругления нижних углов TopBar
-    private val BackgroundColor = TopBarBackgroundColor // Цвет фона TopBar
+    private val CornerRadius = 32.dp    // Радиусы скругления нижних углов TopBar
+    private val BackgroundColor = Colors.ColorHeader // Цвет фона TopBar
     private val Diameter = 46.dp        // Диаметр иконок
     private val MarginIcon = 8.dp       // Отступы иконок
 
 
     @Composable
+    @Stable
     fun TopBar(
+        firstName: String?,
         avatar: String?,
-        levelName: String?
+        levelName: String,
+        levelIconResolver: (String?) -> LevelIcon = LevelIcon.Companion::fromLevelName
     ) {
         val shape = RoundedCornerShape(
             topStart = CornerSize(0.dp),
@@ -43,6 +50,7 @@ object VolleyTopBar {
             bottomStart = CornerSize(CornerRadius),
             bottomEnd = CornerSize(CornerRadius)
         )
+        val levelIcon = levelIconResolver(levelName)
 
         Surface(
             modifier = Modifier
@@ -53,6 +61,23 @@ object VolleyTopBar {
             shadowElevation = 4.dp
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
+                // Имя
+                if (!firstName.isNullOrEmpty()) {
+                    VolleyText.TitleMedium(
+                        text = firstName,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = 71.dp,
+                                end = 71.dp,
+                                top = 63.dp
+                            ),
+                        color = Colors.White,
+                        textAlign = TextAlign.Left,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
                 // Аватарка
                 Box(
                     modifier = Modifier
@@ -67,16 +92,8 @@ object VolleyTopBar {
                 }
 
                 // Иконка уровня игрока
-                val levelIconRes = when {
-                    levelName?.contains("light", ignoreCase = true) == true -> R.drawable.ic_level_light
-                    levelName?.contains("medium", ignoreCase = true) == true -> R.drawable.ic_level_medium
-                    levelName?.contains("hard", ignoreCase = true) == true -> R.drawable.ic_level_hard
-                    levelName?.contains("pro", ignoreCase = true) == true -> R.drawable.ic_level_pro
-                    else -> R.drawable.ic_level_light
-                }
-
                 Image(
-                    painter = painterResource(id = levelIconRes),
+                    painter = painterResource(id = levelIcon.resId),
                     contentDescription = stringResource(id = R.string.top_bar_level_content_description),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -95,6 +112,7 @@ object VolleyTopBar {
 private fun MyScreen() {
     Box {
         TopBar(
+            "Artem",
             "https://avatars.mds.yandex.net/get-yapic/15298/aPbyeCWI9oijiql2AFh3GaX3xyg-1/orig",
             "pro",
         )
