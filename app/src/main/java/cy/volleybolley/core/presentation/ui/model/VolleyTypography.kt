@@ -4,10 +4,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import cy.volleybolley.R
 
-object VolleyCustomTypography {
+object VolleyTypography {
 
     // --- Шрифты ---
     val Actay = FontFamily(
@@ -127,5 +128,43 @@ object VolleyCustomTypography {
         fontSize = 36.sp,
         lineHeight = 36.sp,
         letterSpacing = 0.sp
+    )
+
+    // --- Поля ввода ---
+    val TextStyleGradientFieldMedium = TextStyle(
+        color = VolleyColor.TEXT_FIELD,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        fontFamily = Hero,
+        fontWeight = FontWeight.Normal,
+        letterSpacing = 0.sp,
+    )
+
+    val TextStyleCodeField = TextStyle(
+        color = VolleyColor.TEXT_FIELD,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        fontFamily = Hero,
+        fontWeight = FontWeight.Normal,
+        letterSpacing = 10.sp,
+        textAlign = TextAlign.Center
+    )
+
+    val TextStyleGradientFieldLight = TextStyle(
+        color = VolleyColor.TEXT_FIELD,
+        fontSize = 14.sp,
+        lineHeight = 16.8.sp,
+        fontFamily = Hero,
+        fontWeight = FontWeight.W200,
+        letterSpacing = 0.sp,
+    )
+
+    val TextStyleGradientFieldAlert = TextStyle(
+        color = VolleyColor.WHITE,
+        fontSize = 14.sp,
+        lineHeight = 16.8.sp,
+        fontFamily = Hero,
+        fontWeight = FontWeight.W200,
+        letterSpacing = 0.sp,
     )
 }

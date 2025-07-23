@@ -46,10 +46,10 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainer.Root
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
-import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleCodeField
-import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleGradientFieldLight
-import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleGradientFieldMedium
-import cy.volleybolley.core.presentation.ui.model.VolleyType.TextStyleGradientFieldAlert
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography.TextStyleCodeField
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography.TextStyleGradientFieldLight
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography.TextStyleGradientFieldMedium
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography.TextStyleGradientFieldAlert
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
