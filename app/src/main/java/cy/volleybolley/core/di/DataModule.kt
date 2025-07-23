@@ -9,8 +9,6 @@ import org.koin.dsl.module
 
 val dataModule = module {
     single<NetworkClient<CourtsRequest, CourtsResponse>>(named("courts")) {
-        CourtsNetworkClient(
-            baseUrl = "http://158.160.175.32/api/"
-        )
+        CourtsNetworkClient()
     }
 }

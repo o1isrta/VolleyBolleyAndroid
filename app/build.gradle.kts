@@ -28,6 +28,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "release-proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_URL", "\"http://158.160.175.32/api/\"")
         }
         debug {
             isMinifyEnabled = true
@@ -36,6 +37,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "debug-proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_URL", "\"http://158.160.175.32/api/\"")
         }
     }
     val javaVersion = libs.versions.javaVersion.get()
