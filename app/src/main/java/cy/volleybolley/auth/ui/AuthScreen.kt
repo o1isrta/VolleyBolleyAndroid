@@ -13,16 +13,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cy.volleybolley.auth.ui.presentation.AuthViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AuthScreen(clientId: String, onTokenReceived: (String) -> Unit) {
     val context = LocalContext.current
-    val viewModel: AuthViewModel = viewModel()
+    val viewModel: AuthViewModel = koinViewModel()
     val googleHelper = remember { GoogleSignInHelper(context, clientId) }
 
     val launcher = rememberLauncherForActivityResult(
