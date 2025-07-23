@@ -10,21 +10,29 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import org.koin.java.KoinJavaComponent.inject
+import kotlin.coroutines.cancellation.CancellationException
 
-abstract class KtorNetworkClient<SealedRequest, SealedResponse> : KoinComponent, NetworkClient<SealedRequest, SealedResponse> {
+abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
+    private val lazyHttpClient: Lazy<HttpClient> = inject(HttpClient::class.java)
+) : KoinComponent, NetworkClient<SealedRequest, SealedResponse> {
 
-    protected val httpClient: HttpClient by inject()
+    protected val httpClient: HttpClient
+        get() = lazyHttpClient.value
 
     override suspend fun getResponse(sealedRequest: SealedRequest): Response<SealedResponse> {
         return runCatching {
             obtainResponse(
                 requestType = sealedRequest,
-                httpResponse = sendResponseByType(sealedRequest)
+                httpResponse = sendRequestByType(sealedRequest)
             )
         }.onFailure { error ->
             if (BuildConfig.DEBUG) {
                 Log.e(NETWORK_TAG, "error in getResponse() -> $error", error)
+            }
+
+            if (error is CancellationException) {
+                throw CancellationException()
             }
         }.getOrNull() ?: Response()
     }
@@ -33,7 +41,10 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse> : KoinComponent,
         requestType: SealedRequest,
         httpResponse: HttpResponse
     ): Response<SealedResponse> {
-        Log.v(NETWORK_TAG, "body = ${httpResponse.bodyAsText()}")
+        if (BuildConfig.DEBUG) {
+            Log.v(NETWORK_TAG, "Response body = ${httpResponse.bodyAsText()}")
+        }
+
         return if (httpResponse.status.isSuccess()) {
             Response(
                 isSuccess = true,
@@ -48,7 +59,7 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse> : KoinComponent,
         }
     }
 
-    protected abstract suspend fun sendResponseByType(request: SealedRequest): HttpResponse
+    protected abstract suspend fun sendRequestByType(request: SealedRequest): HttpResponse
 
     protected abstract suspend fun getResponseBodyByRequestType(
         requestType: SealedRequest,
