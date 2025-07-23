@@ -7,5 +7,5 @@ sealed interface CourtsResponse {
     @Serializable
     class GetCourtsResponse(
         val courts: List<CourtDto>
-    ): CourtsResponse
+    ) : CourtsResponse
 }

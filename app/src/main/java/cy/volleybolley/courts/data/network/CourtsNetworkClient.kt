@@ -1,18 +1,17 @@
 package cy.volleybolley.courts.data.network
 
-import android.R.attr.path
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.ProxyBuilder.http
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.isSuccess
 import io.ktor.http.path
 
-class CourtsNetworkClient() : KtorNetworkClient<CourtsRequest, CourtsResponse>() {
+class CourtsNetworkClient(
+    val baseUrl: String,
+) : KtorNetworkClient<CourtsRequest, CourtsResponse>() {
     override suspend fun sendResponseByType(request: CourtsRequest): HttpResponse {
-        return httpClient.get(BASE_URL) {
+        return httpClient.get(baseUrl) {
             when (request) {
                 is CourtsRequest.GetCourtsRequest -> {
                     url {
@@ -22,7 +21,6 @@ class CourtsNetworkClient() : KtorNetworkClient<CourtsRequest, CourtsResponse>()
                 }
             }
         }
-
     }
 
     override suspend fun getResponseBodyByRequestType(
@@ -31,12 +29,8 @@ class CourtsNetworkClient() : KtorNetworkClient<CourtsRequest, CourtsResponse>()
     ): CourtsResponse {
         return when (requestType) {
             is CourtsRequest.GetCourtsRequest -> {
-                httpResponse.body()
+                httpResponse.body<CourtsResponse.GetCourtsResponse>()
             }
         }
-    }
-
-    companion object {
-        const val BASE_URL = "http://158.160.175.32/api/"
     }
 }
