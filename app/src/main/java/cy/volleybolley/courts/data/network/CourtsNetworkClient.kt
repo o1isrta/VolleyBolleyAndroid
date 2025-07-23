@@ -10,7 +10,7 @@ import io.ktor.http.path
 class CourtsNetworkClient(
     val baseUrl: String,
 ) : KtorNetworkClient<CourtsRequest, CourtsResponse>() {
-    override suspend fun sendResponseByType(request: CourtsRequest): HttpResponse {
+    override suspend fun sendRequestByType(request: CourtsRequest): HttpResponse {
         return httpClient.get(baseUrl) {
             when (request) {
                 is CourtsRequest.GetCourtsRequest -> {
