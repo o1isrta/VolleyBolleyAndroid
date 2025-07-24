@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.model
+package cy.volleybolley.core.presentation.ui.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.model.VolleyAvatar.CircularAvatar
+import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
 
 object VolleyAvatar {
 

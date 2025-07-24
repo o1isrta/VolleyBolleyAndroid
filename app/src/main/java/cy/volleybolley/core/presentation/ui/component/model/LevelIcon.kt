@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.model
+package cy.volleybolley.core.presentation.ui.component.model
 
 import cy.volleybolley.R
 

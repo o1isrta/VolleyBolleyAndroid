@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.model
+package cy.volleybolley.core.presentation.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -25,7 +25,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.model.VolleyTopBar.TopBar
+import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBar
+import cy.volleybolley.core.presentation.ui.component.model.LevelIcon
+import cy.volleybolley.core.presentation.ui.model.Colors
+import cy.volleybolley.core.presentation.ui.model.VolleyText
 
 object VolleyTopBar {
 
