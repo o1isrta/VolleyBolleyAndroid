@@ -3,7 +3,6 @@ package cy.volleybolley.core.di
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
-import cy.volleybolley.core.util.Constants.TIMEOUT_MILLIS
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -15,6 +14,8 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
+
+const val TIMEOUT_MILLIS = 30_000L
 
 val coreModule = module {
 

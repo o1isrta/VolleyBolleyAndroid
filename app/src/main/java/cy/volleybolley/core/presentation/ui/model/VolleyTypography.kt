@@ -11,12 +11,12 @@ import cy.volleybolley.R
 object VolleyTypography {
 
     // --- Шрифты ---
-    val Actay = FontFamily(
+    val ActayFamily = FontFamily(
         Font(R.font.actay_regular, FontWeight.Normal),
         Font(R.font.actay_wide_bold, FontWeight.Bold)
     )
 
-    val Hero = FontFamily(
+    val HeroFamily = FontFamily(
         Font(R.font.hero_regular, FontWeight.Normal),
         Font(R.font.hero_light, FontWeight.W200),
         Font(R.font.hero_bold, FontWeight.Bold)
@@ -24,7 +24,7 @@ object VolleyTypography {
 
     // --- Заголовки ---
     val TitleXL = TextStyle(
-        fontFamily = Actay,
+        fontFamily = ActayFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 36.sp,
         lineHeight = 54.sp,
@@ -32,7 +32,7 @@ object VolleyTypography {
     )
 
     val TitleXLAlt = TextStyle(
-        fontFamily = Actay,
+        fontFamily = ActayFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 36.sp,
         lineHeight = 54.sp,
@@ -40,7 +40,7 @@ object VolleyTypography {
     )
 
     val TitleLarge = TextStyle(
-        fontFamily = Actay,
+        fontFamily = ActayFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
         lineHeight = 24.sp,
@@ -48,7 +48,7 @@ object VolleyTypography {
     )
 
     val TitleMedium = TextStyle(
-        fontFamily = Actay,
+        fontFamily = ActayFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 24.sp,
@@ -57,7 +57,7 @@ object VolleyTypography {
 
     // --- Текст ---
     val BodyBoldMedium = TextStyle(
-        fontFamily = Hero,
+        fontFamily = HeroFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 18.sp,
         lineHeight = 18.sp,
@@ -65,7 +65,7 @@ object VolleyTypography {
     )
 
     val BodyBold = TextStyle(
-        fontFamily = Hero,
+        fontFamily = HeroFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 19.2.sp,
@@ -73,7 +73,7 @@ object VolleyTypography {
     )
 
     val BodyRegular = TextStyle(
-        fontFamily = Hero,
+        fontFamily = HeroFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 19.2.sp,
@@ -81,7 +81,7 @@ object VolleyTypography {
     )
 
     val BodySmall = TextStyle(
-        fontFamily = Hero,
+        fontFamily = HeroFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 16.8.sp,
@@ -89,7 +89,7 @@ object VolleyTypography {
     )
 
     val BodyLight = TextStyle(
-        fontFamily = Hero,
+        fontFamily = HeroFamily,
         fontWeight = FontWeight.W200,
         fontSize = 14.sp,
         lineHeight = 16.8.sp,
@@ -97,7 +97,7 @@ object VolleyTypography {
     )
 
     val BodyBoldSmall = TextStyle(
-        fontFamily = Hero,
+        fontFamily = HeroFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         lineHeight = 14.4.sp,
@@ -105,7 +105,7 @@ object VolleyTypography {
     )
 
     val BodyTiny = TextStyle(
-        fontFamily = Hero,
+        fontFamily = HeroFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 10.sp,
         lineHeight = 10.sp,
@@ -114,7 +114,7 @@ object VolleyTypography {
 
     // --- Кнопки ---
     val ButtonText = TextStyle(
-        fontFamily = Actay,
+        fontFamily = ActayFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 19.2.sp,
@@ -123,7 +123,7 @@ object VolleyTypography {
 
     // --- Лого ---
     val LogoDisplay = TextStyle(
-        fontFamily = Actay,
+        fontFamily = ActayFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 36.sp,
         lineHeight = 36.sp,
@@ -131,40 +131,40 @@ object VolleyTypography {
     )
 
     // --- Поля ввода ---
-    val TextStyleGradientFieldMedium = TextStyle(
+    val GradientFieldMedium = TextStyle(
         color = VolleyColor.TEXT_FIELD,
         fontSize = 16.sp,
         lineHeight = 20.sp,
-        fontFamily = Hero,
+        fontFamily = HeroFamily,
         fontWeight = FontWeight.Normal,
         letterSpacing = 0.sp,
     )
 
-    val TextStyleCodeField = TextStyle(
-        color = VolleyColor.TEXT_FIELD,
-        fontSize = 16.sp,
-        lineHeight = 20.sp,
-        fontFamily = Hero,
-        fontWeight = FontWeight.Normal,
-        letterSpacing = 10.sp,
-        textAlign = TextAlign.Center
-    )
-
-    val TextStyleGradientFieldLight = TextStyle(
+    val GradientFieldLight = TextStyle(
         color = VolleyColor.TEXT_FIELD,
         fontSize = 14.sp,
         lineHeight = 16.8.sp,
-        fontFamily = Hero,
+        fontFamily = HeroFamily,
         fontWeight = FontWeight.W200,
         letterSpacing = 0.sp,
     )
 
-    val TextStyleGradientFieldAlert = TextStyle(
+    val GradientFieldAlert = TextStyle(
         color = VolleyColor.WHITE,
         fontSize = 14.sp,
         lineHeight = 16.8.sp,
-        fontFamily = Hero,
+        fontFamily = HeroFamily,
         fontWeight = FontWeight.W200,
         letterSpacing = 0.sp,
+    )
+
+    val CodeField = TextStyle(
+        color = VolleyColor.TEXT_FIELD,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        fontFamily = HeroFamily,
+        fontWeight = FontWeight.Normal,
+        letterSpacing = 10.sp,
+        textAlign = TextAlign.Center
     )
 }

@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,10 +47,10 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainer.Root
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
-import cy.volleybolley.core.presentation.ui.model.VolleyTypography.TextStyleCodeField
-import cy.volleybolley.core.presentation.ui.model.VolleyTypography.TextStyleGradientFieldLight
-import cy.volleybolley.core.presentation.ui.model.VolleyTypography.TextStyleGradientFieldMedium
-import cy.volleybolley.core.presentation.ui.model.VolleyTypography.TextStyleGradientFieldAlert
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography.CodeField
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldLight
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldMedium
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldAlert
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -66,7 +67,7 @@ object VolleyTextField {
             isSearchField = true,
             hint = hint,
             modifier = modifier,
-            actionOnInputCompleteButton = { string -> actionOnInputComplete(string) },
+            actionOnInputCompleteButton = actionOnInputComplete,
             actionToTransferContent = {}
         )
     }
@@ -138,6 +139,7 @@ object VolleyTextField {
         modifier: Modifier = Modifier,
         cornerRadius: Int = VolleyDimens.DIMEN_16,
         height: Int = VolleyDimens.DIMEN_52,
+        textInputValue: String = "",
         hint: String,
         isSearchField: Boolean = false,
         isPhoneField: Boolean = false,
@@ -146,26 +148,28 @@ object VolleyTextField {
         actionOnInputCompleteButton: (String) -> Unit = {},
         actionToTransferContent: (String) -> Unit,
     ) {
-        var inputText by remember { mutableStateOf("") }
+        var inputText by remember { mutableStateOf(textInputValue) }
         val alertMode = alertMessage.isNotEmpty()
         val setupHeight = if (isSearchField) VolleyDimens.DIMEN_44 else height
 
-        val gradientBrush = Brush
-            .verticalGradient(
-                colors = listOf(
-                    VolleyColor.YELLOW_GRADIENT,
-                    VolleyColor.GREEN_GRADIENT
+        val gradientBrush = remember {
+            Brush
+                .verticalGradient(
+                    colors = listOf(
+                        VolleyColor.YELLOW_GRADIENT,
+                        VolleyColor.GREEN_GRADIENT
+                    )
                 )
-            )
+        }
 
         val fieldTextStyleMedium =
-            if (alertMode) TextStyleGradientFieldMedium.copy(color = VolleyColor.ALERT) else TextStyleGradientFieldMedium
+            if (alertMode) GradientFieldMedium.copy(color = VolleyColor.ALERT) else GradientFieldMedium
 
         val fieldTextStyleLight =
-            if (alertMode) TextStyleGradientFieldLight.copy(color = VolleyColor.ALERT) else TextStyleGradientFieldLight
+            if (alertMode) GradientFieldLight.copy(color = VolleyColor.ALERT) else GradientFieldLight
 
         val fieldTextStyleCode =
-            if (alertMode) TextStyleCodeField.copy(color = VolleyColor.ALERT) else TextStyleCodeField
+            if (alertMode) CodeField.copy(color = VolleyColor.ALERT) else CodeField
 
         Box(
             modifier = modifier
@@ -260,7 +264,7 @@ object VolleyTextField {
                     Spacer(Modifier.height(VolleyDimens.DIMEN_4.dp))
                     Text(
                         text = alertMessage,
-                        style = TextStyleGradientFieldAlert,
+                        style = GradientFieldAlert,
                         modifier = if (isCodeField) Modifier.align(Alignment.CenterHorizontally) else Modifier
                     )
                 }
@@ -313,7 +317,7 @@ object VolleyTextField {
                 Text(
                     text = correctText,
                     color = VolleyColor.TEXT_FIELD,
-                    style = TextStyleGradientFieldMedium,
+                    style = GradientFieldMedium,
                 )
             }
         }
@@ -351,7 +355,7 @@ object VolleyTextField {
                 }) {
                     Text(
                         text = stringResource(R.string.registration_date_of_birth_ok),
-                        style = TextStyleGradientFieldMedium,
+                        style = GradientFieldMedium,
                         color = VolleyColor.SEAWAVE_BACKGROUND
                     )
                 }
@@ -360,7 +364,7 @@ object VolleyTextField {
                 TextButton(onClick = onDismiss) {
                     Text(
                         text = stringResource(R.string.registration_date_of_birth_cancel),
-                        style = TextStyleGradientFieldMedium,
+                        style = GradientFieldMedium,
                         color = VolleyColor.SEAWAVE_BACKGROUND
                     )
                 }
@@ -415,7 +419,7 @@ object VolleyTextField {
         actionToTransferCount: (Int) -> Unit,
     ) {
 
-        var count by remember { mutableIntStateOf(minimumCount) }
+        var count by rememberSaveable { mutableIntStateOf(minimumCount) }
 
         Box(
             contentAlignment = Alignment.Center,
@@ -491,7 +495,7 @@ object VolleyTextField {
                 Text(
                     text = text,
                     color = VolleyColor.TEXT_FIELD,
-                    style = TextStyleGradientFieldMedium,
+                    style = GradientFieldMedium,
                 )
             }
         }
