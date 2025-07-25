@@ -29,5 +29,10 @@ fun SignUpScreen(navController: NavHostController) {
         }) {
             Text("Go to Registration Screen")
         }
+        Button(onClick = {
+            navController.navigate(NavMap.RegistrationByPhoneScreen.route)
+        }) {
+            Text("Go to Registration By Phone Screen")
+        }
     }
 }

@@ -1,8 +1,13 @@
 package cy.volleybolley.core.presentation.ui.screens.home
 
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
 @Composable
 fun SearchCourtScreen(navController: NavHostController) {
+    Button(onClick = { navController.popBackStack() }) {
+        Text("Назад")
+    }
 }

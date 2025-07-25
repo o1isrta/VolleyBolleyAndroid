@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization
+package cy.volleybolley.core.presentation.ui.screens.createNewGame
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +15,7 @@ import androidx.navigation.NavHostController
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 
 @Composable
-fun AboutLevelsScreen(navController: NavHostController){
+fun BasicGameSetupScreen(navController: NavHostController) {
     Button(onClick = { navController.popBackStack() }) {
         Text("Назад")
     }

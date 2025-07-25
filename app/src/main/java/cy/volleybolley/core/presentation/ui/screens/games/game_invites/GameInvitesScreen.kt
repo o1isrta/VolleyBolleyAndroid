@@ -1,8 +1,0 @@
-package cy.volleybolley.core.presentation.ui.screens.games.game_invites
-
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
-
-@Composable
-fun GameInvitesScreen(navController: NavHostController) {
-}
