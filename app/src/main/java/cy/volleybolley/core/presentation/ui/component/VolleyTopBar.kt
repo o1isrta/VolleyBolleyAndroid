@@ -31,11 +31,11 @@ import cy.volleybolley.core.presentation.ui.model.Colors
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 
 object VolleyTopBar {
-    private val TopBarHeight = 106.dp                   // Высота TopBar
-    private val CornerRadius = 32.dp                    // Радиусы скругления нижних углов TopBar
-    private val BackgroundColor = Colors.ColorHeader    // Цвет фона TopBar
-    private val Diameter = 46.dp                        // Диаметр иконок
-    private val MarginIcon = 8.dp                       // Отступы иконок
+    private val TopBarHeight = 106.dp
+    private val CornerRadius = 32.dp
+    private val BackgroundColor = Colors.ColorHeader
+    private val Diameter = 46.dp
+    private val MarginIcon = 8.dp
 
     @Composable
     @Stable
