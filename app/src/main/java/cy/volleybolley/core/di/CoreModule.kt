@@ -48,6 +48,4 @@ val coreModule = module {
         }
     }
 
-    single<NetworkClient> { KtorNetworkClient(get()) }
-
 }
