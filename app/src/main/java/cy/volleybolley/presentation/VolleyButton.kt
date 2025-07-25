@@ -315,7 +315,7 @@ object VolleyButton {
                     )
                     Spacer(modifier = Modifier.size(8.dp))
                     Image(
-                        painter = painterResource(id = R.drawable.arrow_right_black),
+                        painter = painterResource(R.drawable.arrow_right_black),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp)
                     )
@@ -347,7 +347,7 @@ object VolleyButton {
                     )
                     Spacer(modifier = Modifier.size(8.dp))
                     Image(
-                        painter = painterResource(id = R.drawable.arrow_right_white),
+                        painter = painterResource(R.drawable.arrow_right_white),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp)
                     )
@@ -442,8 +442,8 @@ object VolleyButton {
         onClick: () -> Unit = {}
     ) {
         var iconPainter : Painter
-        if(isChecked) iconPainter = painterResource(id = R.drawable.arrow_levelup_black)
-        else iconPainter = painterResource(id = R.drawable.arrow_levelup_gradient)
+        if(isChecked) iconPainter = painterResource(R.drawable.arrow_levelup_black)
+        else iconPainter = painterResource(R.drawable.arrow_levelup_gradient)
 
         CheckedGradientButtonTopImage(
                 onClick = onClick,
@@ -462,9 +462,8 @@ object VolleyButton {
         onClick: () -> Unit
     ) {
         var iconPainter : Painter
-        if(isChecked) iconPainter = painterResource(id = R.drawable.arrow_leveldown_black)
-        else iconPainter = painterResource(id = R.drawable.arrow_leveldown_gradient)
-
+        if(isChecked) iconPainter = painterResource(R.drawable.arrow_leveldown_black)
+        else iconPainter = painterResource(R.drawable.arrow_leveldown_gradient)
 
         CheckedGradientButtonTopImage(
             onClick = onClick,
@@ -483,8 +482,8 @@ object VolleyButton {
         onClick: () -> Unit
     ) {
         var iconPainter : Painter
-        if(isChecked) iconPainter = painterResource(id = R.drawable.mark_black)
-        else iconPainter = painterResource(id = R.drawable.mark_gradient)
+        if(isChecked) iconPainter = painterResource(R.drawable.mark_black)
+        else iconPainter = painterResource(R.drawable.mark_gradient)
 
         CheckedGradientButtonTopImage(
             onClick = onClick,
@@ -949,13 +948,6 @@ private fun PreviewActiveButton() {
 //                    text = "Gradient button",
 //                    onClick = {}
 //                )
-                VolleyButton.GroupButtonsForChangeLevel(
-                    1,
-                    modifier = Modifier
-                        .padding(vertical = 12.dp)
-                        .align(Alignment.CenterHorizontally),
-                    onSelected = {}
-                )
 //                VolleyButton.OutlinedGradientButton(
 //                    modifier = Modifier
 //                        .padding(vertical = 12.dp)
@@ -964,6 +956,13 @@ private fun PreviewActiveButton() {
 //                    text = "Outlined gradient button",
 //                    onClick = {}
 //                )
+                VolleyButton.GroupButtonsForChangeLevel(
+                    1,
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .align(Alignment.CenterHorizontally),
+                    onSelected = {}
+                )
                 VolleyButton.GroupButtonsForDate2(
                     modifier = Modifier
                         .padding(vertical = 12.dp)
