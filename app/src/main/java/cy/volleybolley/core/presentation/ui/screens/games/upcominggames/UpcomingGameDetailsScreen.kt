@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization
+package cy.volleybolley.core.presentation.ui.screens.games.upcominggames
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
 @Composable
-fun AboutLevelsScreen(navController: NavHostController) {
+fun UpcomingGameDetailsScreen(navController: NavHostController) {
     Button(onClick = { navController.popBackStack() }) {
         Text("Назад")
     }

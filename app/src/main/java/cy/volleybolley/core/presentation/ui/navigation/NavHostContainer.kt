@@ -11,37 +11,37 @@ import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScre
 import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.SignUpScreen
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.BasicGameSetupScreen
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.GameCreatedScreen
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.GameEnteringConditionsScreen
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.PrivacyOptionsScreen
-import cy.volleybolley.core.presentation.ui.screens.createNewTourney.BasicTourneySetupScreen
-import cy.volleybolley.core.presentation.ui.screens.createNewTourney.TourneyCreatedScreen
-import cy.volleybolley.core.presentation.ui.screens.createNewTourney.TourneyEnteringConditionsScreen
-import cy.volleybolley.core.presentation.ui.screens.findAGame.JoinTheGameScreen
-import cy.volleybolley.core.presentation.ui.screens.findAGame.JoinedTheGameScreen
-import cy.volleybolley.core.presentation.ui.screens.findATourney.ChooseTeamScreen
-import cy.volleybolley.core.presentation.ui.screens.findATourney.IndividualPlayersScreen
-import cy.volleybolley.core.presentation.ui.screens.findATourney.InvitePlayersScreen
-import cy.volleybolley.core.presentation.ui.screens.findATourney.JoinIndividualScreen
-import cy.volleybolley.core.presentation.ui.screens.findATourney.JoinTeamScreen
-import cy.volleybolley.core.presentation.ui.screens.findATourney.JoinedTheTourneyScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameCreatedScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyCreatedScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
+import cy.volleybolley.core.presentation.ui.screens.findagame.JoinTheGameScreen
+import cy.volleybolley.core.presentation.ui.screens.findagame.JoinedTheGameScreen
+import cy.volleybolley.core.presentation.ui.screens.findatourney.ChooseTeamScreen
+import cy.volleybolley.core.presentation.ui.screens.findatourney.IndividualPlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.findatourney.InvitePlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinIndividualScreen
+import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinTeamScreen
+import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinedTheTourneyScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.ArchiveScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.PastGameScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.PastTourneyScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.TeamsScreen
-import cy.volleybolley.core.presentation.ui.screens.games.gameInvites.GameInvitesScreen
-import cy.volleybolley.core.presentation.ui.screens.games.gameInvites.JoinTheTourneyScreen
-import cy.volleybolley.core.presentation.ui.screens.games.myGames.ChangeTeamScreen
-import cy.volleybolley.core.presentation.ui.screens.games.myGames.GameHomeScreen
-import cy.volleybolley.core.presentation.ui.screens.games.myGames.ManagePlayersScreen
-import cy.volleybolley.core.presentation.ui.screens.games.myGames.MyGameScreen
-import cy.volleybolley.core.presentation.ui.screens.games.myGames.MyGamesScreen
-import cy.volleybolley.core.presentation.ui.screens.games.myGames.MyTourneyScreen
-import cy.volleybolley.core.presentation.ui.screens.games.upcomingGames.JoinedPlayersScreen
-import cy.volleybolley.core.presentation.ui.screens.games.upcomingGames.UpcomingGameDetailsScreen
-import cy.volleybolley.core.presentation.ui.screens.games.upcomingGames.UpcomingGamesScreen
-import cy.volleybolley.core.presentation.ui.screens.games.upcomingGames.UpcomingTourneyDetailsScreen
+import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.GameInvitesScreen
+import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.JoinTheTourneyScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.ChangeTeamScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.GameHomeScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.ManagePlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.MyGameScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.MyGamesScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.MyTourneyScreen
+import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.JoinedPlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGameDetailsScreen
+import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreen
+import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.AboutScreen
@@ -66,7 +66,6 @@ fun NavHostContainer(
         startDestination = startDestination.route,
         modifier = modifier
     ) {
-
         // authorization flow
         composable(NavMap.OnboardingScreen.route) {
             OnboardingScreen(navController)
