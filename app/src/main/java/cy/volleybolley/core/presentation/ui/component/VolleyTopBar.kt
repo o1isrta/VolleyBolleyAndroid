@@ -84,7 +84,7 @@ object VolleyTopBar {
                     modifier = Modifier
                         .size(Diameter)
                         .align(Alignment.BottomStart)
-                        .offset(x = MarginIcon, y = (-MarginIcon))
+                        .offset(x = MarginIcon, y = -MarginIcon)
                 ) {
                     VolleyAvatar.CircularAvatar(
                         avatar = avatar,
@@ -100,7 +100,7 @@ object VolleyTopBar {
                     modifier = Modifier
                         .size(Diameter)
                         .align(Alignment.BottomEnd)
-                        .offset(x = (-MarginIcon), y = (-MarginIcon))
+                        .offset(x = -MarginIcon, y = -MarginIcon)
                         .clip(CircleShape)
                 )
             }
