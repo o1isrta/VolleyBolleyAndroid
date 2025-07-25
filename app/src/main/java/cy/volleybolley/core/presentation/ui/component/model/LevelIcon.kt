@@ -10,7 +10,7 @@ enum class LevelIcon(val resId: Int) {
 
     companion object {
         // Функция по умолчанию для определения иконки по строке levelName
-        fun fromLevelName(levelName: String?): LevelIcon {
+        fun fromLevelName(levelName: String): LevelIcon {
             val name = levelName.orEmpty()
             return when {
                 name.contains("light", ignoreCase = true) -> LIGHT
