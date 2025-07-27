@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.substring
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
@@ -218,7 +219,8 @@ object VolleyTextFieldGradient {
                                     inputText = if (maxTextLength == null) {
                                         text
                                     } else {
-                                        if (text.length <= maxTextLength) text else text.substring(0..(maxTextLength - 1))
+                                        val substringRange = 0..maxTextLength - 1
+                                        if (text.length <= maxTextLength) text else text.substring(substringRange)
                                     }
                                     actionToTransferContent(inputText)
                                 },
@@ -256,7 +258,6 @@ object VolleyTextFieldGradient {
 private fun PreviewGradientTextFields() {
     Root {
         Column(modifier = Modifier.background(VolleyColor.SEAWAVE_BACKGROUND)) {
-
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 
             VolleyTextFieldGradient.SearchField(

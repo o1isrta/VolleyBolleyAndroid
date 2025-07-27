@@ -54,7 +54,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 object VolleyContainer {
-
     const val GRADIENT_COLOR_STOP_MARK_1 = 0.0f
     const val GRADIENT_COLOR_STOP_MARK_2 = 0.65f
     const val GRADIENT_COLOR_STOP_MARK_3 = 1.0f
@@ -62,7 +61,6 @@ object VolleyContainer {
     const val GRADIENT_COLOR_STOP_VALUE_2 = 0.2f
     const val GRADIENT_COLOR_STOP_VALUE_3 = 0.4f
     const val GRADIENT_BORDER_ALPHA = 0.05f
-
 
     @Composable
     fun Root(content: @Composable (PaddingValues) -> Unit) {
@@ -225,8 +223,6 @@ object VolleyContainer {
                         )
                         capturedImage = cropped
                     } catch (e: IllegalArgumentException) {
-                        Log.e("UI_LOG", "Error cropping bitmap: ${e.message}")
-                    } catch (e: Exception) {
                         Log.e("UI_LOG", "Error cropping bitmap: ${e.message}")
                     }
                 }
