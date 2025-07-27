@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
 @Composable
-fun RevolutScreen(navController: NavHostController) {
+fun EnterPaymentDataScreen(navController: NavHostController) {
     Button(onClick = { navController.popBackStack() }) {
         Text("Назад")
     }

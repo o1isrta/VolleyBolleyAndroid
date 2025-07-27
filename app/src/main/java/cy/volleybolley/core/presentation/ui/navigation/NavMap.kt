@@ -165,6 +165,10 @@ sealed interface NavMap {
         override val route = "home/SearchCourtScreen"
     }
 
+    object RatePlayersScreen : NavMap {
+        override val route = "home/RatePlayersScreen"
+    }
+
     // profile flow
     object AboutScreen : NavMap {
         override val route = "profile/AboutScreen"
@@ -198,16 +202,8 @@ sealed interface NavMap {
         override val route = "profile/ProfileScreen"
     }
 
-    object RevolutScreen : NavMap {
-        override val route = "profile/RevolutScreen"
+    object EnterPaymentDataScreen : NavMap {
+        override val route = "profile/EnterPaymentDataScreen"
     }
 
-    object ThaiBankScreen : NavMap {
-        override val route = "profile/ThaiBankScreen"
-    }
-
-    // RatePlayersScreen
-    object RatePlayersScreen : NavMap {
-        override val route = "screens/RatePlayersScreen"
-    }
 }

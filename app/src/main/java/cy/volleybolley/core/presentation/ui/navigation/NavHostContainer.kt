@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import cy.volleybolley.core.presentation.ui.screens.RatePlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.AboutLevelsScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationByPhoneScreen
@@ -46,14 +46,13 @@ import cy.volleybolley.core.presentation.ui.screens.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.AboutScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.FaqScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PaymentsScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PersonalDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.RevolutScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.ThaiBankScreen
 
 @Composable
 fun NavHostContainer(
@@ -199,6 +198,9 @@ fun NavHostContainer(
         composable(NavMap.SearchCourtScreen.route) {
             SearchCourtScreen(navController)
         }
+        composable(NavMap.RatePlayersScreen.route) {
+            RatePlayersScreen(navController)
+        }
 
         // profile flow
         composable(NavMap.AboutScreen.route) {
@@ -225,16 +227,8 @@ fun NavHostContainer(
         composable(NavMap.ProfileScreen.route) {
             ProfileScreen(navController)
         }
-        composable(NavMap.RevolutScreen.route) {
-            RevolutScreen(navController)
-        }
-        composable(NavMap.ThaiBankScreen.route) {
-            ThaiBankScreen(navController)
-        }
-
-        // RatePlayersScreen
-        composable(NavMap.RatePlayersScreen.route) {
-            RatePlayersScreen(navController)
+        composable(NavMap.EnterPaymentDataScreen.route) {
+            EnterPaymentDataScreen(navController)
         }
     }
 }
