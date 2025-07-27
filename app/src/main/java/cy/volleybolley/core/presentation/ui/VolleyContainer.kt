@@ -55,6 +55,15 @@ import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 object VolleyContainer {
 
+    const val GRADIENT_COLOR_STOP_MARK_1 = 0.0f
+    const val GRADIENT_COLOR_STOP_MARK_2 = 0.65f
+    const val GRADIENT_COLOR_STOP_MARK_3 = 1.0f
+    const val GRADIENT_COLOR_STOP_VALUE_1 = 0.02f
+    const val GRADIENT_COLOR_STOP_VALUE_2 = 0.2f
+    const val GRADIENT_COLOR_STOP_VALUE_3 = 0.4f
+    const val GRADIENT_BORDER_ALPHA = 0.05f
+
+
     @Composable
     fun Root(content: @Composable (PaddingValues) -> Unit) {
         VolleybolleyTheme {
@@ -105,7 +114,6 @@ object VolleyContainer {
             modifier = modifier
                 .clip(shape)
         ) {
-
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -145,7 +153,6 @@ object VolleyContainer {
             modifier = modifier
                 .clip(shape)
         ) {
-
             Box(
                 modifier = Modifier
                     .onSizeChanged { size ->
@@ -156,9 +163,9 @@ object VolleyContainer {
                     .background(
                         shape = shape,
                         brush = Brush.radialGradient(
-                            0.0f to VolleyColor.WHITE.copy(alpha = 0.02f),
-                            0.65f to VolleyColor.WHITE.copy(alpha = 0.2f),
-                            1.0f to VolleyColor.WHITE.copy(alpha = 0.4f),
+                            GRADIENT_COLOR_STOP_MARK_1 to VolleyColor.WHITE.copy(alpha = GRADIENT_COLOR_STOP_VALUE_1),
+                            GRADIENT_COLOR_STOP_MARK_2 to VolleyColor.WHITE.copy(alpha = GRADIENT_COLOR_STOP_VALUE_2),
+                            GRADIENT_COLOR_STOP_MARK_3 to VolleyColor.WHITE.copy(alpha = GRADIENT_COLOR_STOP_VALUE_3),
                             center = Offset(containerSize.width / 2f, containerSize.height / 2f),
                             radius = gradientRadius,
                         )
@@ -166,7 +173,7 @@ object VolleyContainer {
                     .clip(shape)
                     .border(
                         width = VolleyDimens.DIMEN_1.dp,
-                        color = VolleyColor.WHITE.copy(alpha = 0.05f),
+                        color = VolleyColor.WHITE.copy(alpha = GRADIENT_BORDER_ALPHA),
                         shape = shape
                     )
             )
@@ -217,13 +224,14 @@ object VolleyContainer {
                             containerSize.height
                         )
                         capturedImage = cropped
+                    } catch (e: IllegalArgumentException) {
+                        Log.e("UI_LOG", "Error cropping bitmap: ${e.message}")
                     } catch (e: Exception) {
                         Log.e("UI_LOG", "Error cropping bitmap: ${e.message}")
                     }
                 }
 
         ) {
-
             capturedImage?.let { backgroundImage ->
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                     LegacyBlurImage(
@@ -251,7 +259,6 @@ object VolleyContainer {
         }
     }
 
-
     @Composable
     private fun LegacyBlurImage(
         bitmap: Bitmap,
@@ -269,7 +276,6 @@ object VolleyContainer {
         renderScript.destroy()
         BlurImage(bitmap, modifier)
     }
-
 
     @Composable
     private fun BlurImage(
@@ -300,7 +306,6 @@ private fun PreviewContainers() {
                 .background(VolleyColor.SEAWAVE_BACKGROUND)
         ) {
             Column {
-
                 VolleyContainer.TransparentContainer(
                     modifier = Modifier
                         .padding(VolleyDimens.DIMEN_20.dp)
@@ -347,7 +352,6 @@ private fun PreviewContainersInsideOtherContainer() {
                     .fillMaxSize()
             ) {
                 Column {
-
                     VolleyContainer.TransparentContainer(
                         modifier = Modifier
                             .padding(VolleyDimens.DIMEN_20.dp)
