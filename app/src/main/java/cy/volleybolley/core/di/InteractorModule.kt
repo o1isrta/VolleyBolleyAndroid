@@ -1,10 +1,11 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.courts.domain.CourtsInteractorImpl
+import cy.volleybolley.courts.domain.api.CourtsInteractor
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val interactorModule = module {
-    singleOf(::CourtsInteractorImpl).bind()
+    singleOf(::CourtsInteractorImpl) bind CourtsInteractor::class
 }
