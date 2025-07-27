@@ -5,6 +5,7 @@ import cy.volleybolley.core.di.coreModule
 
 object DiProvider {
     val modules = listOf(
-        coreModule, authViewModelModule
+        coreModule,
+        authViewModelModule
     )
 }

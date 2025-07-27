@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.IntentSender
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.common.api.ApiException
+import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.tasks.await
 
 class GoogleSignInHelper(
@@ -27,6 +29,10 @@ class GoogleSignInHelper(
     suspend fun launch(): IntentSender? = try {
         val result = oneTapClient.beginSignIn(signInRequest).await()
         result.pendingIntent.intentSender
+    } catch (e: ApiException) {
+        null
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
         null
     }
@@ -34,7 +40,7 @@ class GoogleSignInHelper(
     fun extractIdToken(intent: Intent?): String? = try {
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)
         credential.googleIdToken
-    } catch (e: Exception) {
+    } catch (e: ApiException) {
         null
     }
 }
