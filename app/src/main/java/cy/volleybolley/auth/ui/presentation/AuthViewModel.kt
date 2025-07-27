@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
-class AuthViewModel() : ViewModel() {
+class AuthViewModel : ViewModel() {
     private val _idToken = MutableSharedFlow<String>()
     val idToken: SharedFlow<String> = _idToken
 

@@ -42,5 +42,9 @@ class GoogleSignInHelper(
         credential.googleIdToken
     } catch (e: ApiException) {
         null
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        null
     }
 }
