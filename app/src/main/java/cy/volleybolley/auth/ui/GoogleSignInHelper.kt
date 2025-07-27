@@ -14,6 +14,10 @@ class GoogleSignInHelper(
     context: Context,
     clientId: String
 ) {
+    companion object {
+        private const val E_TAG = "SignIn"
+        private const val E_MESSAGE = "Sign-in failed"
+    }
     private val oneTapClient = Identity.getSignInClient(context)
 
     private val signInRequest = BeginSignInRequest.builder()
@@ -31,10 +35,10 @@ class GoogleSignInHelper(
         val result = oneTapClient.beginSignIn(signInRequest).await()
         result.pendingIntent.intentSender
     } catch (e: ApiException) {
-        Log.w("SignIn", "Sign-in failed", e)
+        Log.w(E_TAG, E_MESSAGE, e)
         null
     } catch (e: CancellationException) {
-        Log.w("SignIn", "Sign-in failed", e)
+        Log.w(E_TAG, E_MESSAGE, e)
         throw e
     }
 
@@ -42,10 +46,10 @@ class GoogleSignInHelper(
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)
         credential.googleIdToken
     } catch (e: ApiException) {
-        Log.w("SignIn", "Sign-in failed", e)
+        Log.w(E_TAG, E_MESSAGE, e)
         null
     } catch (e: CancellationException) {
-        Log.w("SignIn", "Sign-in failed", e)
+        Log.w(E_TAG, E_MESSAGE, e)
         throw e
     }
 }
