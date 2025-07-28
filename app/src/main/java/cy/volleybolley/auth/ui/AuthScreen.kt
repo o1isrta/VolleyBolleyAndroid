@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,6 +25,7 @@ fun AuthScreen(clientId: String, onTokenReceived: (String) -> Unit) {
     val context = LocalContext.current
     val viewModel: AuthViewModel = koinViewModel()
     val googleHelper = remember { GoogleSignInHelper(context, clientId) }
+    val coroutineScope = rememberCoroutineScope()
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
@@ -43,7 +45,7 @@ fun AuthScreen(clientId: String, onTokenReceived: (String) -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Button(onClick = {
-            CoroutineScope(Dispatchers.Main).launch {
+            coroutineScope.launch {
                 val sender = googleHelper.launch()
                 sender?.let {
                     launcher.launch(IntentSenderRequest.Builder(it).build())

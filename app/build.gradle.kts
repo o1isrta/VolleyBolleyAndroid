@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.serialization)
-    id("com.google.gms.google-services")
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -79,7 +79,7 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.firebase.auth)
     implementation(platform(libs.firebase.bom))
-    implementation(libs.google.firebase.auth)
+    //implementation(libs.google.firebase.auth)
 
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
