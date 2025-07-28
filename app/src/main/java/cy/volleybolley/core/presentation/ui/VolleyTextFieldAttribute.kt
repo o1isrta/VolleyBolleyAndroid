@@ -37,7 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.VolleyContainer.Root
+import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldMedium
