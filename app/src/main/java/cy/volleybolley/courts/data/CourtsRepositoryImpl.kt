@@ -9,10 +9,9 @@ import cy.volleybolley.courts.data.network.CourtsRequest
 import cy.volleybolley.courts.data.network.CourtsResponse
 import cy.volleybolley.courts.domain.api.CourtsRepository
 import cy.volleybolley.courts.domain.model.Court
-import org.koin.core.annotation.Named
 
 class CourtsRepositoryImpl(
-    @Named("courts") val networkClient: NetworkClient<CourtsRequest, CourtsResponse>
+    val networkClient: NetworkClient<CourtsRequest, CourtsResponse>
 ) : CourtsRepository {
 
     override suspend fun getCourts(searchQuery: String): VolleyResult<List<Court>, ErrorType> {
