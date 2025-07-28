@@ -216,12 +216,7 @@ object VolleyTextFieldGradient {
                             BasicTextField(
                                 value = inputText,
                                 onValueChange = { text ->
-                                    inputText = if (maxTextLength == null) {
-                                        text
-                                    } else {
-                                        val substringRange = 0..maxTextLength - 1
-                                        if (text.length <= maxTextLength) text else text.substring(substringRange)
-                                    }
+                                    inputText = getLimitedText(maxTextLength, text)
                                     actionToTransferContent(inputText)
                                 },
                                 singleLine = true,
@@ -249,6 +244,15 @@ object VolleyTextFieldGradient {
                     )
                 }
             }
+        }
+    }
+
+    private fun getLimitedText(symbolLimit: Int?, text: String): String {
+        return if (symbolLimit == null) {
+            text
+        } else {
+            val substringRange = 0 until symbolLimit
+            if (text.length <= symbolLimit) text else text.substring(substringRange)
         }
     }
 }
