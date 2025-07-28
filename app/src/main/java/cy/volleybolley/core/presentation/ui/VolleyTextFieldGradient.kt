@@ -32,7 +32,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.substring
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
@@ -174,8 +173,8 @@ object VolleyTextFieldGradient {
             )
         }
 
-        val realHintTextStyle = if (alertMode) hintTextStyle.copy(color = VolleyColor.ALERT) else hintTextStyle
-        val realFieldTextStyle = if (alertMode) fieldTextStyle.copy(color = VolleyColor.ALERT) else fieldTextStyle
+        val realHintTextStyle = getTextStyleByAlertMode(alertMode, hintTextStyle)
+        val realFieldTextStyle = getTextStyleByAlertMode(alertMode, fieldTextStyle)
 
         Box(
             modifier = modifier
@@ -245,6 +244,10 @@ object VolleyTextFieldGradient {
                 }
             }
         }
+    }
+
+    private fun getTextStyleByAlertMode(alertMode: Boolean, baseTextStyle: TextStyle): TextStyle {
+        return if (alertMode) baseTextStyle.copy(color = VolleyColor.ALERT) else baseTextStyle
     }
 
     private fun getLimitedText(symbolLimit: Int?, text: String): String {
