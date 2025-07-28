@@ -1,9 +1,7 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
-import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.data.network.api.NetworkClient.Companion.TIMEOUT_MILLIS
-import cy.volleybolley.core.data.network.impl.KtorNetworkClient
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -46,7 +44,5 @@ val coreModule = module {
             }
         }
     }
-
-    single<NetworkClient> { KtorNetworkClient(get()) }
 
 }
