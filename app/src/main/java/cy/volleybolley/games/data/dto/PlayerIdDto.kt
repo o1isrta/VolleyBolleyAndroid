@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PlayerId(
+data class PlayerIdDto(
     @SerialName("player_id") val playerId: Int,
 )

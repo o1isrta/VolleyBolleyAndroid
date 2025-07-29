@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Game (
+data class GameDto (
     @SerialName("court_id") val courtId: Int,
     @SerialName("message") val message: String,
     @SerialName("start_time") val startTime: String,
@@ -16,5 +16,5 @@ data class Game (
     @SerialName("price_per_person") val price: String,
     @SerialName("payment_type") val paymentType: String,
     @SerialName("currency_type") val currencyType: String,
-    @SerialName("players") val players: List<PlayerId>,
+    @SerialName("players") val players: List<PlayerIdDto>,
 )
