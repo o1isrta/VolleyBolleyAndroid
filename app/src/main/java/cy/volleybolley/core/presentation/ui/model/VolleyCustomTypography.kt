@@ -120,6 +120,22 @@ object VolleyCustomTypography {
         letterSpacing = 0.sp
     )
 
+    val ButtonSText = TextStyle(
+        fontFamily = Hero,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 19.2.sp,
+        letterSpacing = 0.sp
+    )
+
+    val ButtonXSText = TextStyle(
+        fontFamily = Hero,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 19.2.sp,
+        letterSpacing = 0.sp
+    )
+
     // --- Лого ---
     val LogoDisplay = TextStyle(
         fontFamily = Actay,

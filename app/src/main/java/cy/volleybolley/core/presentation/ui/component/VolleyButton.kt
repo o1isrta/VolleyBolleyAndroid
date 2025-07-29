@@ -1,4 +1,4 @@
-package cy.volleybolley.presentation.ui.component
+package cy.volleybolley.core.presentation.ui.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -40,11 +40,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cy.volleybolley.R
-import cy.volleybolley.Root1
-import cy.volleybolley.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.Root1
+import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonSText
+import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonText
+import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonXSText
 
 
-val ActayWide700Font = FontFamily(
+/*val ActayWide700Font = FontFamily(
     Font(R.font.actay_wide_bold)
 )
 
@@ -54,7 +57,7 @@ val Hero400Font = FontFamily(
 
 val Hero700Font = FontFamily(
     Font(R.font.hero_bold)
-)
+)*/
 
 object VolleyButton {
     @Composable
@@ -85,8 +88,9 @@ object VolleyButton {
                 } else {
                     VolleyColor.White
                 },
-                fontSize = 16.sp,
-                fontFamily = ActayWide700Font
+              //
+               // fontFamily = ActayWide700Font
+                style = ButtonText
             )
         }
     }
@@ -120,8 +124,9 @@ object VolleyButton {
 //                },
                 text = text,
                 color = VolleyColor.BlackText,
-                fontSize = 16.sp,
-                fontFamily = Hero400Font
+                //fontSize = 16.sp,
+                //fontFamily = Hero400Font
+                style = ButtonSText
             )
         }
     }
@@ -154,8 +159,9 @@ object VolleyButton {
 //                },
                 text = text,
                 color = VolleyColor.BlackText,
-                fontSize = 16.sp,
-                fontFamily = Hero400Font
+                //fontSize = 16.sp,
+                //fontFamily = Hero400Font
+                style = ButtonSText
             )
         }
     }
@@ -178,8 +184,9 @@ object VolleyButton {
             Text(
                 text = text.uppercase(),
                 color = VolleyColor.White,
-                fontSize = 16.sp,
-                fontFamily = ActayWide700Font
+                //fontSize = 16.sp,
+                //fontFamily = ActayWide700Font
+                style = ButtonText
             )
         }
     }
@@ -212,8 +219,9 @@ object VolleyButton {
             Text(
                 text = text,
                 color = VolleyColor.BlackText,
-                fontFamily = Hero400Font,
-                fontSize = 16.sp,
+                //fontFamily = Hero400Font,
+                //fontSize = 16.sp,
+                style = ButtonSText,
                 modifier = Modifier.padding(paddingValues)
             )
         }
@@ -243,8 +251,9 @@ object VolleyButton {
             Text(
                 text = text,
                 color = VolleyColor.White,
-                fontFamily = Hero400Font,
-                fontSize = 16.sp
+                //fontFamily = Hero400Font,
+               // fontSize = 16.sp
+                style = ButtonSText
             )
         }
     }
@@ -311,8 +320,9 @@ object VolleyButton {
                     Text(
                         text = text,
                         color = VolleyColor.BlackText,
-                        fontFamily = Hero400Font,
-                        fontSize = 16.sp
+                       // fontFamily = Hero400Font,
+                       // fontSize = 16.sp
+                        style =  ButtonSText
                     )
                     Spacer(modifier = Modifier.size(8.dp))
                     Image(
@@ -343,8 +353,9 @@ object VolleyButton {
                     Text(
                         text = text,
                         color = VolleyColor.White,
-                        fontFamily = Hero400Font,
-                        fontSize = 16.sp
+                        //fontFamily = Hero400Font,
+                        //fontSize = 16.sp
+                        style = ButtonSText
                     )
                     Spacer(modifier = Modifier.size(8.dp))
                     Image(
@@ -395,7 +406,8 @@ object VolleyButton {
                     Text(
                         text = text,
                         color = VolleyColor.BlackText,
-                        fontFamily = Hero400Font,
+                        //fontFamily = Hero400Font,
+                        style = ButtonXSText,
                         fontSize = 14.sp
                     )
                 }
@@ -427,8 +439,9 @@ object VolleyButton {
                     Text(
                         text = text,
                         color = VolleyColor.White,
-                        fontFamily = Hero400Font,
-                        fontSize = 14.sp
+                        //fontFamily = Hero400Font,
+                        //fontSize = 14.sp
+                        style = ButtonXSText
                     )
                 }
             }

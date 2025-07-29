@@ -19,8 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cy.volleybolley.presentation.ui.component.VolleyButton
-import cy.volleybolley.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 class MainActivity : ComponentActivity() {
