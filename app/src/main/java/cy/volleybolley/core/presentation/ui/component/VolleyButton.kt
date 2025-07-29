@@ -328,7 +328,7 @@ object VolleyButton {
                     Image(
                         painter = painterResource(R.drawable.arrow_right_black),
                         contentDescription = null,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(17.dp, 16.dp)
                     )
                 }
             }
@@ -361,7 +361,7 @@ object VolleyButton {
                     Image(
                         painter = painterResource(R.drawable.arrow_right_white),
                         contentDescription = null,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(17.dp, 16.dp)
                     )
                 }
             }
@@ -401,7 +401,8 @@ object VolleyButton {
                 {
                     Image(
                         painter = iconPainter,
-                        contentDescription = null
+                        contentDescription = null,
+                        modifier = modifier.size(57.dp, 30.dp)
                     )
                     Text(
                         text = text,
@@ -434,7 +435,8 @@ object VolleyButton {
                 {
                     Image(
                         painter = iconPainter,
-                        contentDescription = null
+                        contentDescription = null,
+                        modifier = modifier.size(57.dp, 30.dp)
                     )
                     Text(
                         text = text,
@@ -455,7 +457,7 @@ object VolleyButton {
         isChecked: Boolean = false,
         onClick: () -> Unit = {}
     ) {
-        var iconPainter : Painter
+        val iconPainter : Painter
         if(isChecked) iconPainter = painterResource(R.drawable.arrow_levelup_black)
         else iconPainter = painterResource(R.drawable.arrow_levelup_gradient)
 
@@ -475,7 +477,7 @@ object VolleyButton {
         isChecked: Boolean = false,
         onClick: () -> Unit
     ) {
-        var iconPainter : Painter
+        val iconPainter : Painter
         if(isChecked) iconPainter = painterResource(R.drawable.arrow_leveldown_black)
         else iconPainter = painterResource(R.drawable.arrow_leveldown_gradient)
 
@@ -495,7 +497,7 @@ object VolleyButton {
         isChecked: Boolean = false,
         onClick: () -> Unit
     ) {
-        var iconPainter : Painter
+        val iconPainter : Painter
         if(isChecked) iconPainter = painterResource(R.drawable.mark_black)
         else iconPainter = painterResource(R.drawable.mark_gradient)
 
