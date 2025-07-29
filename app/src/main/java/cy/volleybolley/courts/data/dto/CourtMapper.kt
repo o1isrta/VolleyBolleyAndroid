@@ -11,10 +11,11 @@ fun List<CourtDto>.toDomain(): List<Court> {
 fun CourtDto.toDomain(): Court {
     return Court(
         courtId = this.courtId,
-        price = this.price,
-        description = this.description,
-        contacts = this.contacts?.map { it.toDomain() },
-        tags = this.tags,
+        price = this.price ?: "",
+        description = this.description ?: "",
+        contacts = this.contacts?.map { it.toDomain() } ?: emptyList(),
+        photo = photo ?: "",
+        tags = this.tags ?: emptyList(),
         location = this.location.toDomain()
     )
 }

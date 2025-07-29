@@ -12,7 +12,7 @@ class CourtsNetworkClient : KtorNetworkClient<CourtsRequest, CourtsResponse>() {
     override suspend fun sendRequestByType(request: CourtsRequest): HttpResponse {
         return httpClient.get(BuildConfig.BASE_URL) {
             when (request) {
-                is CourtsRequest.GetCourtsRequest -> {
+                is CourtsRequest.GetCourts -> {
                     url {
                         path(request.path)
                         parameter("search", request.courtName)
@@ -27,8 +27,8 @@ class CourtsNetworkClient : KtorNetworkClient<CourtsRequest, CourtsResponse>() {
         httpResponse: HttpResponse
     ): CourtsResponse {
         return when (requestType) {
-            is CourtsRequest.GetCourtsRequest -> {
-                httpResponse.body<CourtsResponse.GetCourtsResponse>()
+            is CourtsRequest.GetCourts -> {
+                httpResponse.body<CourtsResponse.GetCourts>()
             }
         }
     }

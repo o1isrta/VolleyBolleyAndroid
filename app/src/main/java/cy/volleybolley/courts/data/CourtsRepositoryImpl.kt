@@ -15,20 +15,13 @@ class CourtsRepositoryImpl(
 ) : CourtsRepository {
 
     override suspend fun getCourts(searchQuery: String): VolleyResult<List<Court>, ErrorType> {
-        val response =
-            networkClient.getResponse(CourtsRequest.GetCourtsRequest(courtName = searchQuery))
+        val response = networkClient.getResponse(CourtsRequest.GetCourts(courtName = searchQuery))
 
-        return when (response.isSuccess) {
-            true -> {
-                VolleyResult.Success(
-                    (response.body as? CourtsResponse.GetCourtsResponse)?.courts?.toDomain()
-                        ?: emptyList()
-                )
-            }
-
-            false -> {
-                VolleyResult.Failure(response.resultCode.mapToErrorType())
-            }
+        if (!response.isSuccess) {
+            return VolleyResult.Failure(response.resultCode.mapToErrorType())
         }
+
+        val courts = (response.body as? CourtsResponse.GetCourts)?.courts?.toDomain()
+        return courts?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 }
