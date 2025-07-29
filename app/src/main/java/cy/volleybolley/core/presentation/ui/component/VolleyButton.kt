@@ -97,35 +97,22 @@ object VolleyButton {
 
     @Composable
     @Stable
-    fun ActiveButtonSmallText( // такую кнопку только одну нашла: с текстом "Add payment"
+    fun OutlinedActiveButtonSmallText( // такую кнопку только одну нашла: с текстом "Add payment"
         modifier: Modifier = Modifier,
-        //enabled: Boolean = true,
         text: String,
         paddingValues: PaddingValues = PaddingValues(16.dp,8.dp,16.dp,8.dp),
         onClick: () -> Unit
     ) {
-        Button(
-           // enabled = enabled,
-            modifier = modifier,
+        OutlinedButton(
             onClick = onClick,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = VolleyColor.YellowPro//,
-                //disabledContainerColor = VolleyColor.GreyDisabled
-            ),
+            border = BorderStroke(1.dp, VolleyColor.YellowPro),
             shape = RoundedCornerShape(16.dp),
+            modifier = modifier,
             contentPadding = paddingValues
         ) {
             Text(
-//                text = text.uppercase(),
-//                color = if (enabled) {
-//                    VolleyColor.BlackText
-//                } else {
-//                    VolleyColor.White
-//                },
                 text = text,
-                color = VolleyColor.BlackText,
-                //fontSize = 16.sp,
-                //fontFamily = Hero400Font
+                color = VolleyColor.White,
                 style = ButtonSText
             )
         }
@@ -1024,7 +1011,7 @@ private fun PreviewActiveButton() {
                         .fillMaxWidth(),
                     onSelected = {}
                 )
-                VolleyButton.ActiveButtonSmallText(
+                VolleyButton.OutlinedActiveButtonSmallText(
                     modifier = Modifier
                         .padding(vertical = 12.dp)
                         .height(35.dp)
