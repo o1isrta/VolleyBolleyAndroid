@@ -1,4 +1,4 @@
-package cy.volleybolley.presentation
+package cy.volleybolley.presentation.ui.model
 
 import androidx.compose.ui.graphics.Color
 

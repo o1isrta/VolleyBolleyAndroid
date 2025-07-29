@@ -1,4 +1,4 @@
-package cy.volleybolley.presentation
+package cy.volleybolley.presentation.ui.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cy.volleybolley.R
 import cy.volleybolley.Root1
+import cy.volleybolley.presentation.ui.model.VolleyColor
 
 
 val ActayWide700Font = FontFamily(
@@ -557,7 +558,7 @@ object VolleyButton {
                         )
                     }
             },
-            object: ButtonItem{
+            object: ButtonItem {
                 override val id = 2
                 override val isChecked: Boolean = (checkId == id)
                 override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
@@ -569,7 +570,7 @@ object VolleyButton {
                         )
                     }
             },
-            object: ButtonItem{
+            object: ButtonItem {
                 override val id = 3
                 override val isChecked: Boolean = (checkId == id)
                 override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
@@ -606,7 +607,7 @@ object VolleyButton {
                         )
                     }
             },
-            object: ButtonItem{
+            object: ButtonItem {
                 override val id = 2
                 override val isChecked: Boolean = (checkId == id)
                 override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
@@ -657,7 +658,7 @@ object VolleyButton {
                         )
                     }
             },
-            object: ButtonItem{
+            object: ButtonItem {
                 override val id = 3
                 override val isChecked: Boolean = (checkId == id)
                 override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
@@ -695,7 +696,7 @@ object VolleyButton {
                         )
                     }
             },
-            object: ButtonItem{
+            object: ButtonItem {
                 override val id = 2
                 override val isChecked: Boolean = (checkId == id)
                 override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
@@ -746,7 +747,7 @@ object VolleyButton {
                         )
                     }
             },
-            object: ButtonItem{
+            object: ButtonItem {
                 override val id = 3
                 override val isChecked: Boolean = (checkId == id)
                 override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
