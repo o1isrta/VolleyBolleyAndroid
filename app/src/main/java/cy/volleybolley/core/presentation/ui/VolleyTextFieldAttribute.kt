@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +46,7 @@ import java.util.Locale
 
 object VolleyTextFieldAttribute {
     @Composable
-    fun DataPickerField(
+    fun DatePickerField(
         modifier: Modifier = Modifier,
         cornerRadius: Int = VolleyDimens.DIMEN_16,
         height: Int = VolleyDimens.DIMEN_52,
@@ -186,6 +187,7 @@ object VolleyTextFieldAttribute {
         return formatter.format(Date(millis))
     }
 
+    @Stable
     @Composable
     fun CountActionField(
         maximumCount: Int = VolleyDimens.DIMEN_24,
@@ -233,6 +235,7 @@ object VolleyTextFieldAttribute {
         }
     }
 
+    @Stable
     @Composable
     private fun CountField(
         modifier: Modifier = Modifier,
@@ -272,7 +275,6 @@ object VolleyTextFieldAttribute {
             }
         }
     }
-
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -282,14 +284,13 @@ private fun PreviewGradientTextFields() {
         Column(modifier = Modifier.background(VolleyColor.SEAWAVE_BACKGROUND)) {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 
-            VolleyTextFieldAttribute.DataPickerField(
+            VolleyTextFieldAttribute.DatePickerField(
                 modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
             ) { }
 
             VolleyTextFieldAttribute.CountActionField(
                 paddingValues = PaddingValues(VolleyDimens.DIMEN_16.dp)
             ) { }
-
         }
     }
 }

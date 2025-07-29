@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientField
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldMedium
 
 object VolleyTextFieldGradient {
+    @Stable
     @Composable
     fun SearchField(
         modifier: Modifier = Modifier,
@@ -70,6 +72,7 @@ object VolleyTextFieldGradient {
         )
     }
 
+    @Stable
     @Composable
     fun SimpleGradientTextField(
         modifier: Modifier = Modifier,
@@ -87,6 +90,7 @@ object VolleyTextFieldGradient {
         )
     }
 
+    @Stable
     @Composable
     fun PhoneTextField(
         modifier: Modifier = Modifier,
@@ -116,6 +120,7 @@ object VolleyTextFieldGradient {
         )
     }
 
+    @Stable
     @Composable
     fun PhoneCodeTextField(
         modifier: Modifier = Modifier,
@@ -139,6 +144,7 @@ object VolleyTextFieldGradient {
         )
     }
 
+    @Stable
     @Composable
     private fun TextFieldBaseGradient(
         modifier: Modifier = Modifier,
