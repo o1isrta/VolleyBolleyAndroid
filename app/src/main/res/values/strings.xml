@@ -220,4 +220,6 @@
     <string name="avatar_content_description">User avatar</string>
     <string name="top_bar_level_content_description">User level</string>
 
+    <string name="registration_date_of_birth_string_pattern">MM/dd/yyyy</string>
+
 </resources>
