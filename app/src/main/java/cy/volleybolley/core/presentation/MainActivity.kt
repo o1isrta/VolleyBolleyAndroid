@@ -391,12 +391,12 @@ class MainActivity : ComponentActivity() {
                         .fillMaxWidth(),
                     onSelected = {}
                 )
-                VolleyButton.GroupButtonsForTourneyType(
-                    modifier = Modifier
-                        .padding(24.dp)
-                        .fillMaxWidth(),
-                    onSelected = {}
-                )
+//                VolleyButton.GroupButtonsForTourneyType(
+//                    modifier = Modifier
+//                        .padding(24.dp)
+//                        .fillMaxWidth(),
+//                    onSelected = {}
+//                )
             }
         }
     }

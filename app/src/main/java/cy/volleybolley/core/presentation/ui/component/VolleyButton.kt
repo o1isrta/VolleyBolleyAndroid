@@ -34,8 +34,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,19 +43,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonSText
 import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonText
 import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonXSText
-
-
-/*val ActayWide700Font = FontFamily(
-    Font(R.font.actay_wide_bold)
-)
-
-val Hero400Font = FontFamily(
-    Font(R.font.hero_regular)
-)
-
-val Hero700Font = FontFamily(
-    Font(R.font.hero_bold)
-)*/
 
 object VolleyButton {
     @Composable
@@ -88,8 +73,29 @@ object VolleyButton {
                 } else {
                     VolleyColor.White
                 },
-              //
-               // fontFamily = ActayWide700Font
+                style = ButtonText
+            )
+        }
+    }
+
+    @Composable
+    @Stable
+    fun OutlinedActiveButton(
+        modifier: Modifier = Modifier,
+        text: String,
+        paddingValues: PaddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp),
+        onClick: () -> Unit
+    ) {
+        OutlinedButton(
+            onClick = onClick,
+            border = BorderStroke(1.dp, VolleyColor.YellowPro),
+            shape = RoundedCornerShape(16.dp),
+            modifier = modifier,
+            contentPadding = paddingValues
+        ) {
+            Text(
+                text = text.uppercase(),
+                color = VolleyColor.White,
                 style = ButtonText
             )
         }
@@ -117,63 +123,28 @@ object VolleyButton {
             )
         }
     }
+
     @Composable
     @Stable
     fun ActiveButtonMap( // такую кнопку только одну нашла: с текстом "Map"
         modifier: Modifier = Modifier,
-        //enabled: Boolean = true,
         text: String,
         paddingValues: PaddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp),
         onClick: () -> Unit
     ) {
         Button(
-            // enabled = enabled,
             modifier = modifier,
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(
-                containerColor = VolleyColor.OrangeHard//,
-                //disabledContainerColor = VolleyColor.GreyDisabled
+                containerColor = VolleyColor.OrangeHard
             ),
             shape = RoundedCornerShape(16.dp),
             contentPadding = paddingValues
         ) {
             Text(
-//                text = text.uppercase(),
-//                color = if (enabled) {
-//                    VolleyColor.BlackText
-//                } else {
-//                    VolleyColor.White
-//                },
                 text = text,
                 color = VolleyColor.BlackText,
-                //fontSize = 16.sp,
-                //fontFamily = Hero400Font
                 style = ButtonSText
-            )
-        }
-    }
-
-    @Composable
-    @Stable
-    fun OutlinedActiveButton(
-        modifier: Modifier = Modifier,
-        text: String,
-        paddingValues: PaddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp),
-        onClick: () -> Unit
-    ) {
-        OutlinedButton(
-            onClick = onClick,
-            border = BorderStroke(1.dp, VolleyColor.YellowPro),
-            shape = RoundedCornerShape(16.dp),
-            modifier = modifier,
-            contentPadding = paddingValues
-        ) {
-            Text(
-                text = text.uppercase(),
-                color = VolleyColor.White,
-                //fontSize = 16.sp,
-                //fontFamily = ActayWide700Font
-                style = ButtonText
             )
         }
     }
@@ -206,8 +177,6 @@ object VolleyButton {
             Text(
                 text = text,
                 color = VolleyColor.BlackText,
-                //fontFamily = Hero400Font,
-                //fontSize = 16.sp,
                 style = ButtonSText,
                 modifier = Modifier.padding(paddingValues)
             )
@@ -238,8 +207,6 @@ object VolleyButton {
             Text(
                 text = text,
                 color = VolleyColor.White,
-                //fontFamily = Hero400Font,
-               // fontSize = 16.sp
                 style = ButtonSText
             )
         }
@@ -307,8 +274,6 @@ object VolleyButton {
                     Text(
                         text = text,
                         color = VolleyColor.BlackText,
-                       // fontFamily = Hero400Font,
-                       // fontSize = 16.sp
                         style =  ButtonSText
                     )
                     Spacer(modifier = Modifier.size(8.dp))
@@ -340,8 +305,6 @@ object VolleyButton {
                     Text(
                         text = text,
                         color = VolleyColor.White,
-                        //fontFamily = Hero400Font,
-                        //fontSize = 16.sp
                         style = ButtonSText
                     )
                     Spacer(modifier = Modifier.size(8.dp))
@@ -394,7 +357,6 @@ object VolleyButton {
                     Text(
                         text = text,
                         color = VolleyColor.BlackText,
-                        //fontFamily = Hero400Font,
                         style = ButtonXSText,
                         fontSize = 14.sp
                     )
@@ -428,8 +390,6 @@ object VolleyButton {
                     Text(
                         text = text,
                         color = VolleyColor.White,
-                        //fontFamily = Hero400Font,
-                        //fontSize = 14.sp
                         style = ButtonXSText
                     )
                 }
@@ -462,7 +422,7 @@ object VolleyButton {
     fun ButtonLevelDown(
         modifier: Modifier = Modifier,
         isChecked: Boolean = false,
-        onClick: () -> Unit
+        onClick: () -> Unit = {}
     ) {
         val iconPainter : Painter
         if(isChecked) iconPainter = painterResource(R.drawable.arrow_leveldown_black)
@@ -482,7 +442,7 @@ object VolleyButton {
     fun ButtonConfirmLevel(
         modifier: Modifier = Modifier,
         isChecked: Boolean = false,
-        onClick: () -> Unit
+        onClick: () -> Unit = {}
     ) {
         val iconPainter : Painter
         if(isChecked) iconPainter = painterResource(R.drawable.mark_black)
@@ -910,12 +870,256 @@ object VolleyButton {
     }
 }
 
-
-
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewActiveButton() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+    ) {
+        VolleyButton.ActiveButton(
+            modifier = Modifier
+                .padding(24.dp)
+                .height(44.dp),
+            text = "ACTIVE BUTTON",
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewOutlinedActiveButton() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+    ) {
+        VolleyButton.OutlinedActiveButton(
+            modifier = Modifier
+                .padding(24.dp)
+                .height(44.dp),
+            text = "OUTLINED BUTTON",
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewOutlinedActiveButtonSmallText() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+    ) {
+        VolleyButton.OutlinedActiveButtonSmallText(
+            modifier = Modifier
+                .padding(24.dp)
+                .height(35.dp),
+            text = "Add payment",
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewActiveButtonMap() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+    ) {
+        VolleyButton.ActiveButtonMap(
+            modifier = Modifier
+                .padding(24.dp)
+                .height(44.dp),
+            text = "Map",
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewActiveGradientButton() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+    ) {
+        VolleyButton.ActiveGradientButton(
+            modifier = Modifier
+                .padding(24.dp)
+                .height(44.dp),
+            text = "Gradient button",
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewOutlinedGradientButton() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+    ) {
+        VolleyButton.OutlinedGradientButton(
+            modifier = Modifier
+                .padding(24.dp)
+                .height(44.dp),
+            text = "Outlined gradient button",
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewCheckGradientButton() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+    ) {
+        Column{
+        VolleyButton.CheckGradientButton(
+            modifier = Modifier
+                .padding(24.dp)
+                .height(44.dp),
+            isChecked = true,
+            text = "Check gradient button, isChecked = true",
+            onClick = {}
+        )
+        VolleyButton.CheckGradientButton(
+            modifier = Modifier
+                .padding(24.dp)
+                .height(44.dp),
+            isChecked = false,
+            text = "Check gradient button, isChecked = false",
+            onClick = {}
+        )}
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewCheckedGradientButtonRightImage() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+    ) {
+        Column{
+            VolleyButton.CheckedGradientButtonRightImage(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .height(44.dp),
+                isChecked = true,
+                text = "isChecked = true",
+                onClick = {}
+            )
+            VolleyButton.CheckGradientButton(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .height(44.dp),
+                isChecked = false,
+                text = "isChecked = false",
+                onClick = {}
+            )}
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewCheckedGradientButtonTopImage() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        Column{
+            VolleyButton.CheckedGradientButtonTopImage(
+                modifier = Modifier,
+                //    .padding(24.dp),
+                //    .height(44.dp),
+                isChecked = true,
+                text = "Level up",
+                iconPainter = painterResource(R.drawable.arrow_levelup_black),
+                onClick = {}
+            )
+            Spacer(modifier = Modifier.size(12.dp))
+            VolleyButton.CheckedGradientButtonTopImage(
+                modifier = Modifier,
+               //     .padding(24.dp)
+                //    .height(44.dp),
+                isChecked = false,
+                text = "Level up",
+                iconPainter = painterResource(R.drawable.arrow_levelup_gradient),
+                onClick = {}
+            )}
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewButtonLevelUp() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        Column {
+            VolleyButton.ButtonLevelUp()
+            Spacer(modifier = Modifier.size(12.dp))
+            VolleyButton.ButtonLevelUp( isChecked = true )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewButtonLevelDown() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        Column {
+            VolleyButton.ButtonLevelDown()
+            Spacer(modifier = Modifier.size(12.dp))
+            VolleyButton.ButtonLevelDown ( isChecked = true )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewButtonConfirmLevel() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        Column {
+            VolleyButton.ButtonConfirmLevel ()
+            Spacer(modifier = Modifier.size(12.dp))
+            VolleyButton.ButtonConfirmLevel ( isChecked = true )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewActiveButton1() {
     Root1 {
         Box(
             modifier = Modifier
