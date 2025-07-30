@@ -18,10 +18,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -45,6 +43,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientField
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 
 object VolleyTextFieldGradient {
+    @Stable
     @Composable
     fun SearchField(
         modifier: Modifier = Modifier,
@@ -74,6 +73,7 @@ object VolleyTextFieldGradient {
         )
     }
 
+    @Stable
     @Composable
     fun SimpleGradientTextField(
         modifier: Modifier = Modifier,
@@ -91,6 +91,7 @@ object VolleyTextFieldGradient {
         )
     }
 
+    @Stable
     @Composable
     fun PhoneTextField(
         modifier: Modifier = Modifier,
@@ -120,6 +121,7 @@ object VolleyTextFieldGradient {
         )
     }
 
+    @Stable
     @Composable
     fun PhoneCodeTextField(
         modifier: Modifier = Modifier,
@@ -143,6 +145,7 @@ object VolleyTextFieldGradient {
         )
     }
 
+    @Stable
     @Composable
     private fun TextFieldBaseGradient(
         modifier: Modifier = Modifier,
@@ -162,7 +165,7 @@ object VolleyTextFieldGradient {
         actionToTransferContent: (String) -> Unit,
         composablePrefix: @Composable () -> Unit = {},
     ) {
-        var inputText by remember { mutableStateOf(textInputValue) }
+        val inputText = VolleyUiUtil.getLimitedText(maxTextLength, textInputValue)
         val alertMode = alertMessage.isNotEmpty()
 
         val gradientBrush = remember {
@@ -216,8 +219,7 @@ object VolleyTextFieldGradient {
                             BasicTextField(
                                 value = inputText,
                                 onValueChange = { text ->
-                                    inputText = VolleyUiUtil.getLimitedText(maxTextLength, text)
-                                    actionToTransferContent(inputText)
+                                    actionToTransferContent(text)
                                 },
                                 singleLine = true,
                                 textStyle = realFieldTextStyle,
@@ -256,9 +258,7 @@ object VolleyTextFieldGradient {
 @Composable
 private fun PreviewGradientTextFields() {
     Root {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(VolleyColor.SEAWAVE_BACKGROUND)) {
+        Column(modifier = Modifier.fillMaxSize().background(VolleyColor.SEAWAVE_BACKGROUND)) {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 
             VolleyTextFieldGradient.SearchField(
@@ -275,6 +275,7 @@ private fun PreviewGradientTextFields() {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
 
             VolleyTextFieldGradient.SimpleGradientTextField(
+                text = "Blablablabla",
                 hint = "Surname",
                 modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
             ) { }
@@ -304,7 +305,7 @@ private fun PreviewGradientTextFields() {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
 
             VolleyTextFieldGradient.PhoneCodeTextField(
-                text = "623456",
+                text = "623456SOME",
                 alertMessage = "alarm message!",
                 modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
             ) { }

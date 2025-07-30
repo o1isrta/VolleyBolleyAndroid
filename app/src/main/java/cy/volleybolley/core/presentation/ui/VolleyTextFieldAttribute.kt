@@ -22,11 +22,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,18 +46,23 @@ import java.util.Locale
 
 object VolleyTextFieldAttribute {
     @Composable
-    fun DataPickerField(
+    fun DatePickerField(
         modifier: Modifier = Modifier,
         cornerRadius: Int = VolleyDimens.DIMEN_16,
         height: Int = VolleyDimens.DIMEN_52,
-        hint: String = stringResource(R.string.registration_date_of_birth_hint),
-        actionForSaveDate: (String) -> Unit,
+        inputTextValue: String = stringResource(R.string.registration_date_of_birth_hint),
+        actionForSaveDate: (Long?) -> Unit,
     ) {
         val shape = RoundedCornerShape(cornerRadius.dp)
         var showModal by remember { mutableStateOf(false) }
         var selectedDate by remember { mutableStateOf<Long?>(null) }
 
-        val correctText = selectedDate?.let { convertMillisToDate(it) } ?: hint
+        val correctText = selectedDate?.let { dateInMillis ->
+            convertMillisToDate(
+                stringResource(R.string.registration_date_of_birth_string_pattern),
+                dateInMillis
+            )
+        } ?: inputTextValue
 
         val gradientBrush = Brush.verticalGradient(
             colors = listOf(VolleyColor.YELLOW_GRADIENT, VolleyColor.GREEN_GRADIENT)
@@ -112,7 +116,7 @@ object VolleyTextFieldAttribute {
     private fun DatePickerModal(
         onDateSelected: (Long?) -> Unit,
         onDismiss: () -> Unit,
-        actionForSaveDate: (String) -> Unit
+        actionForSaveDate: (Long?) -> Unit
     ) {
         val datePickerState = rememberDatePickerState()
 
@@ -122,9 +126,7 @@ object VolleyTextFieldAttribute {
             confirmButton = {
                 TextButton(onClick = {
                     onDateSelected(datePickerState.selectedDateMillis)
-                    val dateString =
-                        datePickerState.selectedDateMillis?.let { convertMillisToDate(it) } ?: ""
-                    actionForSaveDate(dateString)
+                    actionForSaveDate(datePickerState.selectedDateMillis)
                     onDismiss()
                 }) {
                     Text(
@@ -180,43 +182,43 @@ object VolleyTextFieldAttribute {
         }
     }
 
-    private fun convertMillisToDate(millis: Long): String {
-        val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+    private fun convertMillisToDate(stringPattern: String, millis: Long): String {
+        val formatter = SimpleDateFormat(stringPattern, Locale.getDefault())
         return formatter.format(Date(millis))
     }
 
+    @Stable
     @Composable
     fun CountActionField(
         maximumCount: Int = VolleyDimens.DIMEN_24,
         minimumCount: Int = VolleyDimens.DIMEN_4,
+        inputCount: Int = VolleyDimens.DIMEN_4,
         paddingValues: PaddingValues = PaddingValues(),
         actionToTransferCount: (Int) -> Unit,
     ) {
-        var count by rememberSaveable { mutableIntStateOf(minimumCount) }
-
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .padding(paddingValues)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (count > minimumCount) {
+                if (inputCount > minimumCount) {
                     Icon(
                         painter = painterResource(R.drawable.ic_minus),
                         contentDescription = null,
                         tint = VolleyColor.WHITE,
                         modifier = Modifier
                             .clickable(null, null) {
-                                count -= 1
-                                actionToTransferCount(count)
+                                val newCount = inputCount - 1
+                                actionToTransferCount(newCount)
                             }
                     )
                     Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
                 }
 
-                CountField(text = count.toString())
+                CountField(text = inputCount.toString())
 
-                if (count < maximumCount) {
+                if (inputCount < maximumCount) {
                     Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
                     Icon(
                         painter = painterResource(R.drawable.ic_plus),
@@ -224,16 +226,16 @@ object VolleyTextFieldAttribute {
                         tint = VolleyColor.WHITE,
                         modifier = Modifier
                             .clickable(null, null) {
-                                count += 1
-                                actionToTransferCount(count)
+                                val newCount = inputCount + 1
+                                actionToTransferCount(newCount)
                             }
                     )
                 }
             }
         }
-
     }
 
+    @Stable
     @Composable
     private fun CountField(
         modifier: Modifier = Modifier,
@@ -273,7 +275,6 @@ object VolleyTextFieldAttribute {
             }
         }
     }
-
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -283,14 +284,13 @@ private fun PreviewGradientTextFields() {
         Column(modifier = Modifier.background(VolleyColor.SEAWAVE_BACKGROUND)) {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 
-            VolleyTextFieldAttribute.DataPickerField(
+            VolleyTextFieldAttribute.DatePickerField(
                 modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
             ) { }
 
             VolleyTextFieldAttribute.CountActionField(
                 paddingValues = PaddingValues(VolleyDimens.DIMEN_16.dp)
             ) { }
-
         }
     }
 }
