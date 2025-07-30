@@ -42,9 +42,9 @@ import cy.volleybolley.core.presentation.Root1
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.LEVEL_UP_TEXT
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonSText
-import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonText
-import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonXSText
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonSText
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonText
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonXSText
 
 @UiLibraryMarker
 object VolleyButton {
@@ -73,7 +73,7 @@ object VolleyButton {
             Text(
                 text = text.uppercase(),
                 color = if (enabled) {
-                    VolleyColor.BlackText
+                    VolleyColor.TEXT_DARK
                 } else {
                     VolleyColor.White
                 },
@@ -127,7 +127,7 @@ object VolleyButton {
         ) {
             Text(
                 text = text,
-                color = VolleyColor.BlackText,
+                color = VolleyColor.TEXT_DARK,
                 style = ButtonSText
             )
         }
@@ -162,7 +162,7 @@ object VolleyButton {
         ) {
             Text(
                 text = text,
-                color = VolleyColor.BlackText,
+                color = VolleyColor.TEXT_DARK,
                 style = ButtonSText,
                 modifier = Modifier.padding(paddingValues)
             )
@@ -282,7 +282,7 @@ object VolleyButton {
                 ) {
                     Text(
                         text = text,
-                        color = VolleyColor.BlackText,
+                        color = VolleyColor.TEXT_DARK,
                         style = ButtonSText
                     )
                     Spacer(modifier = Modifier.size(size = 8.dp))
@@ -370,7 +370,7 @@ object VolleyButton {
                     )
                     Text(
                         text = text,
-                        color = VolleyColor.BlackText,
+                        color = VolleyColor.TEXT_DARK,
                         style = ButtonXSText,
                         fontSize = 14.sp
                     )

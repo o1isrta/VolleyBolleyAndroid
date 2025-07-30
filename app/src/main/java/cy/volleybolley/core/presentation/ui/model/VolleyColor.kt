@@ -62,9 +62,14 @@ object VolleyColor {
      * белый
      */
     val White = Color(color = 0xFFFFFFFF)
+    val BLACK = Color(color = 0xFF000000)
+    val TEXT_FIELD = Color(color = 0xFF7C7C7C)
 
     /**
      * цвет темного текста
      */
-    val BlackText = Color(color = 0xFF423F39)
+    val TEXT_DARK = Color(color = 0xFF423F39)
+    val TEXT_CALENDAR_DARK = Color(color = 0xFF333333)
+    val TEXT_CALENDAR_LIGHT_GREY = Color(color = 0xFFE0E0E0)
+    val ALERT = Color(color = 0xFFE33222)
 }

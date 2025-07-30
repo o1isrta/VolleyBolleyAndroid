@@ -22,7 +22,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.TitleXL,
+            style = VolleyTypography.TitleXL,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -43,7 +43,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.TitleXLAlt,
+            style = VolleyTypography.TitleXLAlt,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -64,7 +64,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.TitleLarge,
+            style = VolleyTypography.TitleLarge,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -85,7 +85,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.TitleMedium,
+            style = VolleyTypography.TitleMedium,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -106,7 +106,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.BodyBoldMedium,
+            style = VolleyTypography.BodyBoldMedium,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -127,7 +127,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.BodyBold,
+            style = VolleyTypography.BodyBold,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -148,7 +148,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.BodyRegular,
+            style = VolleyTypography.BodyRegular,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -169,7 +169,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.BodySmall,
+            style = VolleyTypography.BodySmall,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -190,7 +190,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.BodyLight,
+            style = VolleyTypography.BodyLight,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -211,7 +211,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.BodyBoldSmall,
+            style = VolleyTypography.BodyBoldSmall,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -232,7 +232,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.BodyTiny,
+            style = VolleyTypography.BodyTiny,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -253,7 +253,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.ButtonText,
+            style = VolleyTypography.ButtonText,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
@@ -274,7 +274,7 @@ object VolleyText {
     ) {
         Text(
             text = text,
-            style = VolleyCustomTypography.LogoDisplay,
+            style = VolleyTypography.LogoDisplay,
             modifier = modifier,
             color = color,
             textAlign = textAlign,
