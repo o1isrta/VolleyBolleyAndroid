@@ -14,7 +14,7 @@ class CourtsRepositoryImpl(
     val networkClient: NetworkClient<CourtsRequest, CourtsResponse>
 ) : CourtsRepository {
 
-    override suspend fun getCourts(searchQuery: String): VolleyResult<List<Court>, ErrorType> {
+    override suspend fun getCourts(searchQuery: String?): VolleyResult<List<Court>, ErrorType> {
         val response = networkClient.getResponse(CourtsRequest.GetCourts(courtName = searchQuery))
 
         if (!response.isSuccess) {

@@ -5,5 +5,5 @@ import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.courts.domain.model.Court
 
 interface CourtsUseCase {
-    suspend fun getCourts(searchQuery: String): VolleyResult<List<Court>, ErrorType>
+    suspend fun getCourts(searchQuery: String? = null): VolleyResult<List<Court>, ErrorType>
 }

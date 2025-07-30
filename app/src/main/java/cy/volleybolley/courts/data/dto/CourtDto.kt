@@ -3,6 +3,7 @@ package cy.volleybolley.courts.data.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Suppress("LongParameterList")
 @Serializable
 class CourtDto(
     @SerialName("court_id") val courtId: Int,
