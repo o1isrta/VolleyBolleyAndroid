@@ -106,32 +106,6 @@ object VolleyButton {
     }
 
     /**
-     * такую кнопку только одну нашла: с текстом "Add payment"
-     */
-    @Composable
-    @Stable
-    fun OutlinedActiveButtonSmallText(
-        modifier: Modifier = Modifier,
-        text: String,
-        paddingValues: PaddingValues = PaddingValues(16.dp, 8.dp, 16.dp, 8.dp),
-        onClick: () -> Unit
-    ) {
-        OutlinedButton(
-            onClick = onClick,
-            border = BorderStroke(1.dp, VolleyColor.YellowPro),
-            shape = RoundedCornerShape(16.dp),
-            modifier = modifier,
-            contentPadding = paddingValues
-        ) {
-            Text(
-                text = text,
-                color = VolleyColor.White,
-                style = ButtonSText
-            )
-        }
-    }
-
-    /**
      * такую кнопку только одну нашла: с текстом "Map"
      */
     @Composable
@@ -223,6 +197,25 @@ object VolleyButton {
                 style = ButtonSText
             )
         }
+    }
+
+    /**
+     * такую кнопку только одну нашла: с текстом "Add payment"
+     */
+    @Composable
+    @Stable
+    fun OutlinedActiveButtonSmallText(
+        modifier: Modifier = Modifier,
+        text: String,
+        paddingValues: PaddingValues = PaddingValues(16.dp, 8.dp, 16.dp, 8.dp),
+        onClick: () -> Unit
+    ) {
+        OutlinedGradientButton(
+            modifier = modifier,
+            text = text,
+            paddingValues = paddingValues,
+            onClick = onClick
+        )
     }
 
     /**
@@ -1154,7 +1147,147 @@ private fun PreviewButtonConfirmLevel() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun PreviewActiveButton1() {
+private fun PreviewGroupButtonsForChangeLevel() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        VolleyButton.GroupButtonsForChangeLevel(
+            1,
+            modifier = Modifier
+                .padding(vertical = 12.dp),
+            onSelected = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewGroupButtonsForDate2() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        VolleyButton.GroupButtonsForDate2(
+            modifier = Modifier
+                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            onSelected = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewGroupButtonsForDate3() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        VolleyButton.GroupButtonsForDate3(
+            3,
+            modifier = Modifier
+                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            onSelected = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewGroupButtonsForPrivacy() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        VolleyButton.GroupButtonsForPrivacy(
+            modifier = Modifier
+                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            onSelected = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewGroupButtonsForGender3() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        VolleyButton.GroupButtonsForGender3(
+            modifier = Modifier
+                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            onSelected = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewGroupButtonsForGender2() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        VolleyButton.GroupButtonsForGender2(
+            modifier = Modifier
+                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            onSelected = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewGroupButtonsForLevel() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        VolleyButton.GroupButtonsForLevel(
+            2,
+            modifier = Modifier
+                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            onSelected = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewGroupButtonsForTourneyType() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = VolleyColor.TurquoiseDark)
+            .padding(24.dp)
+    ) {
+        VolleyButton.GroupButtonsForTourneyType(
+            modifier = Modifier
+                .padding(vertical = 12.dp) //  .align(alignment = Alignment.TopCenter)
+                .fillMaxWidth(),
+            onSelected = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewCombo() {
     Root1 {
         Box(
             modifier = Modifier
