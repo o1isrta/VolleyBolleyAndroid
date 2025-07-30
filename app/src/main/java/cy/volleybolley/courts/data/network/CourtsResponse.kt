@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 sealed interface CourtsResponse {
     @Serializable
-    class GetCourtsResponse(
+    class GetCourts(
         val courts: List<CourtDto>
     ) : CourtsResponse
 }

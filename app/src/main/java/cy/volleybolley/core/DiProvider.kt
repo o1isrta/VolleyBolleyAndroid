@@ -1,15 +1,11 @@
 package cy.volleybolley.core
 
 import cy.volleybolley.core.di.coreModule
-import cy.volleybolley.core.di.dataModule
-import cy.volleybolley.core.di.interactorModule
-import cy.volleybolley.core.di.repositoryModule
+import cy.volleybolley.courts.di.courtsModule
 
 object DiProvider {
     val modules = listOf(
         coreModule,
-        dataModule,
-        repositoryModule,
-        interactorModule,
+        courtsModule,
     )
 }

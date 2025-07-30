@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,10 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.kotlin.ksp)
 }
+
+val localProperties = Properties()
+localProperties.load(rootProject.file("local.properties").inputStream())
+val serverUrl = localProperties.getProperty("SERVER_URL") ?: "https://default.url"
 
 android {
     namespace = "cy.volleybolley"
@@ -28,7 +34,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "release-proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"http://158.160.175.32/api/\"")
         }
         debug {
             isMinifyEnabled = true
@@ -37,7 +42,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "debug-proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"http://158.160.175.32/api/\"")
+        }
+        defaultConfig {
+
+            buildConfigField("String", "BASE_URL", serverUrl)
         }
     }
     val javaVersion = libs.versions.javaVersion.get()
