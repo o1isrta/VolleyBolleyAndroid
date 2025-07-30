@@ -2,6 +2,7 @@ package cy.volleybolley.courts.data.network
 
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
+import cy.volleybolley.courts.data.dto.CourtDto
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -28,7 +29,8 @@ class CourtsNetworkClient : KtorNetworkClient<CourtsRequest, CourtsResponse>() {
     ): CourtsResponse {
         return when (requestType) {
             is CourtsRequest.GetCourts -> {
-                httpResponse.body<CourtsResponse.GetCourts>()
+                val responseList = httpResponse.body<List<CourtDto>>()
+                CourtsResponse.GetCourts(responseList)
             }
         }
     }
