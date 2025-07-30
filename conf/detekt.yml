@@ -92,6 +92,7 @@ complexity:
     LargeClass:
         active: true
         threshold: 300
+        ignoreAnnotated: [ "UiLibraryMarker" ]
     LongMethod:
         active: true
         threshold: 40

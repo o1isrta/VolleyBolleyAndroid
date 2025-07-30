@@ -39,25 +39,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.Root1
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.LEVEL_UP_TEXT
+import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonSText
 import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonText
 import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography.ButtonXSText
 
+@UiLibraryMarker
 object VolleyButton {
+    const val LEVEL_UP_TEXT = "Level up"
+
     @Composable
     @Stable
     fun ActiveButton(
         modifier: Modifier = Modifier,
         enabled: Boolean = true,
         text: String,
-        paddingValues: PaddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp),
+        paddingValues: PaddingValues = PaddingValues(16.dp, 12.dp, 16.dp, 12.dp),
         onClick: () -> Unit
     ) {
         Button(
             enabled = enabled,
             modifier = modifier,
-
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(
                 containerColor = VolleyColor.YellowPro,
@@ -83,7 +87,7 @@ object VolleyButton {
     fun OutlinedActiveButton(
         modifier: Modifier = Modifier,
         text: String,
-        paddingValues: PaddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp),
+        paddingValues: PaddingValues = PaddingValues(16.dp, 12.dp, 16.dp, 12.dp),
         onClick: () -> Unit
     ) {
         OutlinedButton(
@@ -101,12 +105,15 @@ object VolleyButton {
         }
     }
 
+    /**
+     * такую кнопку только одну нашла: с текстом "Add payment"
+     */
     @Composable
     @Stable
-    fun OutlinedActiveButtonSmallText( // такую кнопку только одну нашла: с текстом "Add payment"
+    fun OutlinedActiveButtonSmallText(
         modifier: Modifier = Modifier,
         text: String,
-        paddingValues: PaddingValues = PaddingValues(16.dp,8.dp,16.dp,8.dp),
+        paddingValues: PaddingValues = PaddingValues(16.dp, 8.dp, 16.dp, 8.dp),
         onClick: () -> Unit
     ) {
         OutlinedButton(
@@ -124,12 +131,15 @@ object VolleyButton {
         }
     }
 
+    /**
+     * такую кнопку только одну нашла: с текстом "Map"
+     */
     @Composable
     @Stable
-    fun ActiveButtonMap( // такую кнопку только одну нашла: с текстом "Map"
+    fun ActiveButtonMap(
         modifier: Modifier = Modifier,
         text: String,
-        paddingValues: PaddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp),
+        paddingValues: PaddingValues = PaddingValues(16.dp, 12.dp, 16.dp, 12.dp),
         onClick: () -> Unit
     ) {
         Button(
@@ -149,12 +159,15 @@ object VolleyButton {
         }
     }
 
+    /**
+     * градиентная кнопка без картинки
+     */
     @Composable
     @Stable
-    fun ActiveGradientButton(                     // градиентная кнопка без картинки
+    fun ActiveGradientButton(
         modifier: Modifier = Modifier,
         text: String,
-        paddingValues: PaddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp),
+        paddingValues: PaddingValues = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
         onClick: () -> Unit
     ) {
         Box(
@@ -166,14 +179,13 @@ object VolleyButton {
                             VolleyColor.YellowForGradient,
                             VolleyColor.GreenForGradient
                         ),
-                        start = Offset(0f, 0f),
-                        end = Offset(0f, 100f)
+                        start = Offset(x = 0f, y = 0f),
+                        end = Offset(x = 0f, y = 100f)
                     ),
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(size = 16.dp),
                 ),
             contentAlignment = Alignment.Center
-        )
-        {
+        ) {
             Text(
                 text = text,
                 color = VolleyColor.BlackText,
@@ -188,19 +200,20 @@ object VolleyButton {
     fun OutlinedGradientButton(
         modifier: Modifier = Modifier,
         text: String,
-        paddingValues: PaddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp),
+        paddingValues: PaddingValues = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
         onClick: () -> Unit
     ) {
         OutlinedButton(
             onClick = onClick,
             border = BorderStroke(
-                1.dp, brush = Brush.linearGradient(
+                width = 1.dp,
+                brush = Brush.linearGradient(
                     colors = listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient),
-                    start = Offset(0f, 0f),
-                    end = Offset(0f, 100f)
+                    start = Offset(x = 0f, y = 0f),
+                    end = Offset(x = 0f, y = 100f)
                 )
             ),
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(size = 16.dp),
             modifier = modifier,
             contentPadding = paddingValues
         ) {
@@ -212,29 +225,28 @@ object VolleyButton {
         }
     }
 
+    /**
+     * @param isChecked кнопка не выбрана
+     */
     @Composable
     @Stable
     fun CheckGradientButton(
         modifier: Modifier = Modifier,
         text: String,
-        isChecked: Boolean = false,               // кнопка не выбрана
-        paddingValues: PaddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp),
+        isChecked: Boolean = false,
+        paddingValues: PaddingValues = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
         onClick: () -> Unit
     ) {
-         if (isChecked) {
+        if (isChecked) {
             ActiveGradientButton(
-                onClick = {
-                    onClick()
-                },
+                onClick = onClick,
                 modifier = modifier,
                 paddingValues = paddingValues,
                 text = text
             )
         } else {
             OutlinedGradientButton(
-                onClick = {
-                    onClick()
-                },
+                onClick = onClick,
                 modifier = modifier,
                 paddingValues = paddingValues,
                 text = text
@@ -242,13 +254,16 @@ object VolleyButton {
         }
     }
 
+    /**
+     * с картинкой справа
+     */
     @Composable
     @Stable
-    fun CheckedGradientButtonRightImage(                // с картинкой справа
+    fun CheckedGradientButtonRightImage(
         modifier: Modifier = Modifier,
         text: String,
         isChecked: Boolean = false,
-        paddingValues: PaddingValues = PaddingValues(16.dp,12.dp,16.dp,12.dp),
+        paddingValues: PaddingValues = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
         onClick: () -> Unit
     ) {
         if (isChecked) {
@@ -262,25 +277,26 @@ object VolleyButton {
                                 VolleyColor.YellowForGradient,
                                 VolleyColor.GreenForGradient
                             ),
-                            start = Offset(0f, 0f),
-                            end = Offset(0f, 100f)
+                            start = Offset(x = 0f, y = 0f),
+                            end = Offset(x = 0f, y = 100f)
                         ),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(size = 16.dp),
                     )
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(paddingValues))
-                {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(paddingValues)
+                ) {
                     Text(
                         text = text,
                         color = VolleyColor.BlackText,
-                        style =  ButtonSText
+                        style = ButtonSText
                     )
-                    Spacer(modifier = Modifier.size(8.dp))
+                    Spacer(modifier = Modifier.size(size = 8.dp))
                     Image(
                         painter = painterResource(R.drawable.arrow_right_black),
                         contentDescription = null,
-                        modifier = Modifier.size(17.dp, 16.dp)
+                        modifier = Modifier.size(width = 17.dp, height = 16.dp)
                     )
                 }
             }
@@ -288,16 +304,17 @@ object VolleyButton {
             OutlinedButton(
                 onClick = onClick,
                 border = BorderStroke(
-                    1.dp, brush = Brush.linearGradient(
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
                         colors = listOf(
                             VolleyColor.YellowForGradient,
                             VolleyColor.GreenForGradient
                         ),
-                        start = Offset(0f, 0f),
-                        end = Offset(0f, 100f)
+                        start = Offset(x = 0f, y = 0f),
+                        end = Offset(x = 0f, y = 100f)
                     )
                 ),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(size = 16.dp),
                 modifier = modifier,
                 contentPadding = paddingValues
             ) {
@@ -307,25 +324,28 @@ object VolleyButton {
                         color = VolleyColor.White,
                         style = ButtonSText
                     )
-                    Spacer(modifier = Modifier.size(8.dp))
+                    Spacer(modifier = Modifier.size(size = 8.dp))
                     Image(
                         painter = painterResource(R.drawable.arrow_right_white),
                         contentDescription = null,
-                        modifier = Modifier.size(17.dp, 16.dp)
+                        modifier = Modifier.size(width = 17.dp, height = 16.dp)
                     )
                 }
             }
         }
     }
 
+    /**
+     * с картинкой наверху, вспомогательная функция для кнопок LevelUp, LevelDown, ConfirmLevel
+     */
     @Composable
     @Stable
-    fun CheckedGradientButtonTopImage(                // с картинкой наверху, вспомогательная функция для кнопок LevelUp, LevelDown, ConfirmLevel
+    fun CheckedGradientButtonTopImage(
         modifier: Modifier = Modifier,
         text: String,
         isChecked: Boolean = false,
         iconPainter: Painter,
-        paddingValues: PaddingValues = PaddingValues(12.dp,8.dp,12.dp,8.dp),
+        paddingValues: PaddingValues = PaddingValues(12.dp, 8.dp, 12.dp, 8.dp),
         onClick: () -> Unit
     ) {
         if (isChecked) {
@@ -339,20 +359,21 @@ object VolleyButton {
                                 VolleyColor.YellowForGradient,
                                 VolleyColor.GreenForGradient
                             ),
-                            start = Offset(0f, 0f),
-                            end = Offset(0f, 100f)
+                            start = Offset(x = 0f, y = 0f),
+                            end = Offset(x = 0f, y = 100f)
                         ),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(size = 16.dp),
                     )
 
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(paddingValues))
-                {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(paddingValues)
+                ) {
                     Image(
                         painter = iconPainter,
                         contentDescription = null,
-                        modifier = modifier.size(57.dp, 30.dp)
+                        modifier = modifier.size(width = 57.dp, height = 30.dp)
                     )
                     Text(
                         text = text,
@@ -366,26 +387,25 @@ object VolleyButton {
             OutlinedButton(
                 onClick = onClick,
                 border = BorderStroke(
-                    1.dp, brush = Brush.linearGradient(
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
                         colors = listOf(
                             VolleyColor.YellowForGradient,
                             VolleyColor.GreenForGradient
                         ),
-                        start = Offset(0f, 0f),
-                        end = Offset(0f, 100f)
+                        start = Offset(x = 0f, y = 0f),
+                        end = Offset(x = 0f, y = 100f)
                     )
                 ),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(size = 16.dp),
                 modifier = modifier,
                 contentPadding = paddingValues
-
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally)
-                {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Image(
                         painter = iconPainter,
                         contentDescription = null,
-                        modifier = modifier.size(57.dp, 30.dp)
+                        modifier = modifier.size(width = 57.dp, height = 30.dp)
                     )
                     Text(
                         text = text,
@@ -404,17 +424,19 @@ object VolleyButton {
         isChecked: Boolean = false,
         onClick: () -> Unit = {}
     ) {
-        val iconPainter : Painter
-        if(isChecked) iconPainter = painterResource(R.drawable.arrow_levelup_black)
-        else iconPainter = painterResource(R.drawable.arrow_levelup_gradient)
+        val iconPainter: Painter = if (isChecked) {
+            painterResource(R.drawable.arrow_levelup_black)
+        } else {
+            painterResource(R.drawable.arrow_levelup_gradient)
+        }
 
         CheckedGradientButtonTopImage(
-                onClick = onClick,
-                modifier = modifier,
-                text = "Level up",
-                isChecked = isChecked,
-                iconPainter = iconPainter
-            )
+            onClick = onClick,
+            modifier = modifier,
+            text = LEVEL_UP_TEXT,
+            isChecked = isChecked,
+            iconPainter = iconPainter
+        )
     }
 
     @Composable
@@ -424,9 +446,11 @@ object VolleyButton {
         isChecked: Boolean = false,
         onClick: () -> Unit = {}
     ) {
-        val iconPainter : Painter
-        if(isChecked) iconPainter = painterResource(R.drawable.arrow_leveldown_black)
-        else iconPainter = painterResource(R.drawable.arrow_leveldown_gradient)
+        val iconPainter = if (isChecked) {
+            painterResource(R.drawable.arrow_leveldown_black)
+        } else {
+            painterResource(R.drawable.arrow_leveldown_gradient)
+        }
 
         CheckedGradientButtonTopImage(
             onClick = onClick,
@@ -444,9 +468,11 @@ object VolleyButton {
         isChecked: Boolean = false,
         onClick: () -> Unit = {}
     ) {
-        val iconPainter : Painter
-        if(isChecked) iconPainter = painterResource(R.drawable.mark_black)
-        else iconPainter = painterResource(R.drawable.mark_gradient)
+        val iconPainter = if (isChecked) {
+            painterResource(R.drawable.mark_black)
+        } else {
+            painterResource(R.drawable.mark_gradient)
+        }
 
         CheckedGradientButtonTopImage(
             onClick = onClick,
@@ -458,400 +484,410 @@ object VolleyButton {
     }
 
     @Stable
-    interface ButtonItem{
-        val id: Int                                             // порядковый номер кнопки в группе
-        val isChecked: Boolean                                  // true - кнопка нажата
+    interface ButtonItem {
+        /**
+         * порядковый номер кнопки в группе
+         */
+        val position: Int
+
+        /**
+         * true - кнопка нажата
+         */
+        val isChecked: Boolean
         val button: @Composable (modifier: Modifier, isChecked: Boolean, onClick: () -> Unit) -> Unit // кнопка
     }
 
+    /**
+     * @param items список кнопок
+     * @param isExclusive true  - только одна кнопка в группе может быть выбрана (false - любое количество)
+     */
     @Composable
     fun ButtonsGroup(
-        items: List<ButtonItem>,     // список кнопок
+        items: List<ButtonItem>,
         modifier: Modifier = Modifier,
-        isExclusive: Boolean = true, // true  - только одна кнопка в группе может быть выбрана (false - любое количество)
+        isExclusive: Boolean = true,
         onSelected: (Int) -> Unit
-    ){
-        var checkSet : Set<Int> = emptySet()
+    ) {
+        var checkSet = emptySet<Int>()
         items.forEach { item ->
-            if (item.isChecked){
-                checkSet = checkSet + item.id
+            if (item.isChecked) {
+                checkSet = checkSet + item.position
             }
         }
-        val state = rememberSaveable { mutableStateOf<Set<Int>>(checkSet)}
+        val state = rememberSaveable { mutableStateOf(checkSet) }
 
-        Row(modifier, horizontalArrangement = Arrangement.Start)
-        {
+        Row(modifier, horizontalArrangement = Arrangement.Start) {
             items.forEach { item ->
-                val isCheck = state.value.contains(item.id)
-                val onClick = {
-                    if(isExclusive){ // добавить текущий элемент, удалив остальные/ удалить элемент
-                        state.value =
-                            if (isCheck)
-                                state.value - item.id
-                            else setOf(item.id)
+                val isCheck = state.value.contains(item.position)
+                item.button(modifier, isCheck) {
+                    if (isExclusive) { // добавить текущий элемент, удалив остальные/ удалить элемент
+                        state.value = if (isCheck) {
+                            state.value - item.position
+                        } else {
+                            setOf(item.position)
+                        }
                     } else { // добавить/удалить текущий элемент
-                        state.value =
-                            if (isCheck)
-                                state.value - item.id
-                            else
-                                state.value + item.id
+                        state.value = if (isCheck) {
+                            state.value - item.position
+                        } else {
+                            state.value + item.position
+                        }
                     }
-                    onSelected(item.id)
+                    onSelected(item.position)
                 }
-                item.button(modifier, isCheck, onClick)
                 Spacer(modifier = Modifier.size(8.dp))
             }
         }
     }
 
     @Composable
-    fun GroupButtonsForChangeLevel(checkId: Int, modifier: Modifier, onSelected: (Int) -> Unit)
-    {
-        ButtonsGroup(listOf(
-            object: ButtonItem {
-                override val id = 1
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                    _, isChecked, onClick ->
-                        ButtonLevelDown(
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 2
-                override val isChecked: Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                    _, isChecked, onClick ->
-                        ButtonConfirmLevel(
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 3
-                override val isChecked: Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                    _, isChecked, onClick ->
-                        ButtonLevelUp(
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            }
-        ),
-            modifier = modifier.height(63.dp),
-            true,
+    fun GroupButtonsForChangeLevel(checkId: Int, modifier: Modifier, onSelected: (Int) -> Unit) {
+        ButtonsGroup(
+            listOf(
+                object : ButtonItem {
+                    override val position = 1
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            ButtonLevelDown(
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 2
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            ButtonConfirmLevel(
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 3
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            ButtonLevelUp(
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                }
+            ),
+            modifier = modifier.height(height = 63.dp),
+            isExclusive = true,
             onSelected = onSelected
-            )
+        )
     }
 
-    // группа кнопок выбора даты (из 2 кнопок: Today, Pick date)
+    /**
+     * группа кнопок выбора даты (из 2 кнопок: Today, Pick date)
+     */
     @Composable
-    fun GroupButtonsForDate2(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit)
-    {
-        ButtonsGroup(listOf(
-            object: ButtonItem {
-                override val id = 1
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            text = "Today",
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 2
-                override val isChecked: Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckedGradientButtonRightImage(
-                            text = "Pick date",
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            }
-        ),
+    fun GroupButtonsForDate2(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
+        ButtonsGroup(
+            listOf(
+                object : ButtonItem {
+                    override val position = 1
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Today",
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 2
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckedGradientButtonRightImage(
+                                text = "Pick date",
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                }
+            ),
             modifier = modifier.height(44.dp),
             true,
             onSelected = onSelected
         )
     }
 
-    // группа кнопок выбора даты (из 3 кнопок: Today, Tomorrow, Pick date)
+    /**
+     * группа кнопок выбора даты (из 3 кнопок: Today, Tomorrow, Pick date)
+     */
     @Composable
-    fun GroupButtonsForDate3(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit)
-    {
-        ButtonsGroup(listOf(
-            object: ButtonItem {
-                override val id = 1
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            text = "Today",
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 2
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            text = "Tomorrow",
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 3
-                override val isChecked: Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton(
-                            text = "Pick date",
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            }
-        ),
+    fun GroupButtonsForDate3(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
+        ButtonsGroup(
+            listOf(
+                object : ButtonItem {
+                    override val position = 1
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Today",
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 2
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Tomorrow",
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 3
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Pick date",
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                }
+            ),
             modifier = modifier.height(44.dp),
             true,
             onSelected = onSelected
         )
     }
 
-    // группа кнопок выбора Privacy (из 2 кнопок: Public, Private)
+    /**
+     * группа кнопок выбора Privacy (из 2 кнопок: Public, Private)
+     */
     @Composable
-    fun GroupButtonsForPrivacy(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit)
-    {
-        ButtonsGroup(listOf(
-            object: ButtonItem {
-                override val id = 1
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            text = "Public",
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 2
-                override val isChecked: Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckedGradientButtonRightImage(
-                            text = "Private",
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            }
-        ),
+    fun GroupButtonsForPrivacy(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
+        ButtonsGroup(
+            listOf(
+                object : ButtonItem {
+                    override val position = 1
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Public",
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 2
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckedGradientButtonRightImage(
+                                text = "Private",
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                }
+            ),
             modifier = modifier.height(44.dp),
             true,
             onSelected = onSelected
         )
     }
 
-    // группа кнопок выбора пола (из 3 кнопок: Mix, Men, Women)
+    /**
+     * группа кнопок выбора пола (из 3 кнопок: Mix, Men, Women)
+     */
     @Composable
-    fun GroupButtonsForGender3(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit)
-    {
-        ButtonsGroup(listOf(
-            object: ButtonItem {
-                override val id = 1
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            text = "Mix",
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 2
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            text = "Men",
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 3
-                override val isChecked: Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton(
-                            text = "Women",
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-            }
-        ),
+    fun GroupButtonsForGender3(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
+        ButtonsGroup(
+            listOf(
+                object : ButtonItem {
+                    override val position = 1
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Mix",
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 2
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Men",
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 3
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Women",
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                }
+            ),
             modifier = modifier.height(44.dp),
-            true,
+            isExclusive = true,
             onSelected = onSelected
         )
     }
 
-    // группа кнопок выбора пола (из 2 кнопок: Male, Female)
+    /**
+     * группа кнопок выбора пола (из 2 кнопок: Male, Female)
+     */
     @Composable
-    fun GroupButtonsForGender2(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit)
-    {
+    fun GroupButtonsForGender2(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
         val paddingValues = PaddingValues(10.dp)
-        ButtonsGroup(listOf(
-            object: ButtonItem {
-                override val id = 1
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            text = "Male",
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 2
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            text = "Female",
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-            }
-        ),
+        ButtonsGroup(
+            listOf(
+                object : ButtonItem {
+                    override val position = 1
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Male",
+                                isChecked = isChecked,
+                                paddingValues = paddingValues,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 2
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Female",
+                                isChecked = isChecked,
+                                paddingValues = paddingValues,
+                                onClick = onClick
+                            )
+                        }
+                }
+            ),
             modifier = modifier.height(40.dp),
             true,
             onSelected = onSelected
         )
     }
 
-    // группа кнопок выбора Level (из 4 кнопок: Light, Medium, Hard, Pro)
+    /**
+     * группа кнопок выбора Level (из 4 кнопок: Light, Medium, Hard, Pro)
+     */
     @Composable
-    fun GroupButtonsForLevel(checkId: Int = 1,  isExclusive: Boolean = true, modifier: Modifier, onSelected: (Int) -> Unit)
-    {
-        val paddingValues = PaddingValues(10.dp)
-        ButtonsGroup(listOf(
-            object: ButtonItem {
-                override val id = 1
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            text = "Light",
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 2
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            text = "Medium",
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 3
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            //modifier = modifier,
-                            text = "Hard",
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-            },
-            object: ButtonItem {
-                override val id = 4
-                override val isChecked : Boolean = (checkId == id)
-                override val button : @Composable (Modifier, Boolean, () -> Unit) -> Unit =
-                    {
-                            _, isChecked, onClick ->
-                        CheckGradientButton (
-                            //modifier = modifier,
-                            text = "Pro",
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-            }
-        ),
-            modifier = modifier.height(40.dp),
+    fun GroupButtonsForLevel(
+        checkId: Int = 1,
+        isExclusive: Boolean = true,
+        modifier: Modifier,
+        onSelected: (Int) -> Unit
+    ) {
+        val paddingValues = PaddingValues(all = 10.dp)
+        ButtonsGroup(
+            listOf(
+                object : ButtonItem {
+                    override val position = 1
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Light",
+                                isChecked = isChecked,
+                                paddingValues = paddingValues,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 2
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Medium",
+                                isChecked = isChecked,
+                                paddingValues = paddingValues,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 3
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Hard",
+                                isChecked = isChecked,
+                                paddingValues = paddingValues,
+                                onClick = onClick
+                            )
+                        }
+                },
+                object : ButtonItem {
+                    override val position = 4
+                    override val isChecked = checkId == position
+                    override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
+                        { _, isChecked, onClick ->
+                            CheckGradientButton(
+                                text = "Pro",
+                                isChecked = isChecked,
+                                paddingValues = paddingValues,
+                                onClick = onClick
+                            )
+                        }
+                }
+            ),
+            modifier = modifier.height(height = 40.dp),
             isExclusive = isExclusive,
             onSelected = onSelected
         )
     }
 
-    // группа кнопок выбора Tourney Type (из 2 кнопок: Individual, Team)
+    /**
+     * группа кнопок выбора Tourney Type (из 2 кнопок: Individual, Team)
+     */
     @Composable
     fun GroupButtonsForTourneyType(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
         var selectedButton by remember { mutableIntStateOf(checkId) }
 
-        Row(modifier= modifier.height(44.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(
+            modifier = modifier.height(44.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             CheckGradientButton(
                 modifier = Modifier.weight(1f),
                 text = "Individual",
-                isChecked = (selectedButton == 1),
+                isChecked = selectedButton == 1,
                 onClick = {
                     selectedButton = 1
                     onSelected(selectedButton)
@@ -860,7 +896,7 @@ object VolleyButton {
             CheckGradientButton(
                 modifier = Modifier.weight(1f),
                 text = "Team",
-                isChecked = (selectedButton == 2),
+                isChecked = selectedButton == 2,
                 onClick = {
                     selectedButton = 2
                     onSelected(selectedButton)
@@ -986,23 +1022,24 @@ private fun PreviewCheckGradientButton() {
             .fillMaxSize()
             .background(color = VolleyColor.TurquoiseDark)
     ) {
-        Column{
-        VolleyButton.CheckGradientButton(
-            modifier = Modifier
-                .padding(24.dp)
-                .height(44.dp),
-            isChecked = true,
-            text = "Check gradient button, isChecked = true",
-            onClick = {}
-        )
-        VolleyButton.CheckGradientButton(
-            modifier = Modifier
-                .padding(24.dp)
-                .height(44.dp),
-            isChecked = false,
-            text = "Check gradient button, isChecked = false",
-            onClick = {}
-        )}
+        Column {
+            VolleyButton.CheckGradientButton(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .height(44.dp),
+                isChecked = true,
+                text = "Check gradient button, isChecked = true",
+                onClick = {}
+            )
+            VolleyButton.CheckGradientButton(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .height(44.dp),
+                isChecked = false,
+                text = "Check gradient button, isChecked = false",
+                onClick = {}
+            )
+        }
     }
 }
 
@@ -1014,7 +1051,7 @@ private fun PreviewCheckedGradientButtonRightImage() {
             .fillMaxSize()
             .background(color = VolleyColor.TurquoiseDark)
     ) {
-        Column{
+        Column {
             VolleyButton.CheckedGradientButtonRightImage(
                 modifier = Modifier
                     .padding(24.dp)
@@ -1030,7 +1067,8 @@ private fun PreviewCheckedGradientButtonRightImage() {
                 isChecked = false,
                 text = "isChecked = false",
                 onClick = {}
-            )}
+            )
+        }
     }
 }
 
@@ -1043,26 +1081,23 @@ private fun PreviewCheckedGradientButtonTopImage() {
             .background(color = VolleyColor.TurquoiseDark)
             .padding(24.dp)
     ) {
-        Column{
+        Column {
             VolleyButton.CheckedGradientButtonTopImage(
                 modifier = Modifier,
-                //    .padding(24.dp),
-                //    .height(44.dp),
                 isChecked = true,
-                text = "Level up",
+                text = LEVEL_UP_TEXT,
                 iconPainter = painterResource(R.drawable.arrow_levelup_black),
                 onClick = {}
             )
             Spacer(modifier = Modifier.size(12.dp))
             VolleyButton.CheckedGradientButtonTopImage(
                 modifier = Modifier,
-               //     .padding(24.dp)
-                //    .height(44.dp),
                 isChecked = false,
-                text = "Level up",
+                text = LEVEL_UP_TEXT,
                 iconPainter = painterResource(R.drawable.arrow_levelup_gradient),
                 onClick = {}
-            )}
+            )
+        }
     }
 }
 
@@ -1078,7 +1113,7 @@ private fun PreviewButtonLevelUp() {
         Column {
             VolleyButton.ButtonLevelUp()
             Spacer(modifier = Modifier.size(12.dp))
-            VolleyButton.ButtonLevelUp( isChecked = true )
+            VolleyButton.ButtonLevelUp(isChecked = true)
         }
     }
 }
@@ -1095,7 +1130,7 @@ private fun PreviewButtonLevelDown() {
         Column {
             VolleyButton.ButtonLevelDown()
             Spacer(modifier = Modifier.size(12.dp))
-            VolleyButton.ButtonLevelDown ( isChecked = true )
+            VolleyButton.ButtonLevelDown(isChecked = true)
         }
     }
 }
@@ -1110,9 +1145,9 @@ private fun PreviewButtonConfirmLevel() {
             .padding(24.dp)
     ) {
         Column {
-            VolleyButton.ButtonConfirmLevel ()
+            VolleyButton.ButtonConfirmLevel()
             Spacer(modifier = Modifier.size(12.dp))
-            VolleyButton.ButtonConfirmLevel ( isChecked = true )
+            VolleyButton.ButtonConfirmLevel(isChecked = true)
         }
     }
 }
@@ -1139,30 +1174,6 @@ private fun PreviewActiveButton1() {
                     text = "ACTIVE BUTTON",
                     onClick = {}
                 )
-//                VolleyButton.OutlinedActiveButton(
-//                    modifier = Modifier
-//                        .padding(vertical = 12.dp)
-//                        .height(44.dp)
-//                        .align(Alignment.CenterHorizontally),
-//                    text = "OUTLINED BUTTON",
-//                    onClick = {}
-//                )
-//                VolleyButton.ActiveGradientButton(
-//                    modifier = Modifier
-//                        .padding(vertical = 12.dp)
-//                        .height(44.dp)
-//                        .align(Alignment.CenterHorizontally),
-//                    text = "Gradient button",
-//                    onClick = {}
-//                )
-//                VolleyButton.OutlinedGradientButton(
-//                    modifier = Modifier
-//                        .padding(vertical = 12.dp)
-//                        .height(44.dp)
-//                        .align(Alignment.CenterHorizontally),
-//                    text = "Outlined gradient button",
-//                    onClick = {}
-//                )
                 VolleyButton.GroupButtonsForChangeLevel(
                     1,
                     modifier = Modifier
@@ -1177,7 +1188,7 @@ private fun PreviewActiveButton1() {
                     onSelected = {}
                 )
                 VolleyButton.GroupButtonsForDate3(
-                    3,
+                    checkId = 3,
                     modifier = Modifier
                         .padding(vertical = 12.dp)
                         .align(Alignment.Start),
@@ -1235,5 +1246,3 @@ private fun PreviewActiveButton1() {
         }
     }
 }
-
-

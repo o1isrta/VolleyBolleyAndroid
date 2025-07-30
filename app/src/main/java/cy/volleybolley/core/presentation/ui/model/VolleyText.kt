@@ -1,13 +1,12 @@
 package cy.volleybolley.core.presentation.ui.model
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.material3.Text
-import cy.volleybolley.core.presentation.ui.model.VolleyCustomTypography
 
 object VolleyText {
 

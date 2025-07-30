@@ -56,6 +56,7 @@ object VolleyAvatar {
         }
     }
 }
+
 @Preview
 @Composable
 private fun MyScreen() {
@@ -66,4 +67,3 @@ private fun MyScreen() {
         )
     }
 }
-

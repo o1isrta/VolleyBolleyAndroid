@@ -44,6 +44,8 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
         }
     }
 
+    // В этом случае используем общую ошибку для избегания вылетов при недочетах во внешних зависимостях
+    @Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException")
     /**
      * Безопасный вызов внешних зависимостией (например usecase) для user-friendly
      * @param onError блок обработки неожиданной ошибки от внешней зависимости
