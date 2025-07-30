@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -899,121 +900,100 @@ object VolleyButton {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Composable
+@Stable
+private fun PreviewContainer(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    Box(
+        modifier = modifier
+            .background(color = VolleyColor.TurquoiseDark)
+            .width(250.dp)
+            .height(120.dp)
+            .padding(20.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        content()
+    }
+}
+
+@Preview(showBackground = true)
 @Composable
 private fun PreviewActiveButton() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-    ) {
+    PreviewContainer {
         VolleyButton.ActiveButton(
-            modifier = Modifier
-                .padding(24.dp)
-                .height(44.dp),
+            modifier = Modifier.height(44.dp),
             text = "ACTIVE BUTTON",
             onClick = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewOutlinedActiveButton() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-    ) {
+    PreviewContainer {
         VolleyButton.OutlinedActiveButton(
-            modifier = Modifier
-                .padding(24.dp)
-                .height(44.dp),
+            modifier = Modifier.height(44.dp),
             text = "OUTLINED BUTTON",
             onClick = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewOutlinedActiveButtonSmallText() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-    ) {
+    PreviewContainer {
         VolleyButton.OutlinedActiveButtonSmallText(
-            modifier = Modifier
-                .padding(24.dp)
-                .height(35.dp),
+            modifier = Modifier.height(35.dp),
             text = "Add payment",
             onClick = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewActiveButtonMap() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-    ) {
+    PreviewContainer {
         VolleyButton.ActiveButtonMap(
-            modifier = Modifier
-                .padding(24.dp)
-                .height(44.dp),
+            modifier = Modifier.height(44.dp),
             text = "Map",
             onClick = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewActiveGradientButton() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-    ) {
+    PreviewContainer {
         VolleyButton.ActiveGradientButton(
-            modifier = Modifier
-                .padding(24.dp)
-                .height(44.dp),
+            modifier = Modifier.height(44.dp),
             text = "Gradient button",
             onClick = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewOutlinedGradientButton() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-    ) {
+    PreviewContainer(modifier = Modifier.width(300.dp)) {
         VolleyButton.OutlinedGradientButton(
-            modifier = Modifier
-                .padding(24.dp)
-                .height(44.dp),
+            modifier = Modifier.height(44.dp),
             text = "Outlined gradient button",
             onClick = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewCheckGradientButton() {
-    Box(
+    PreviewContainer(
         modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
+            .height(250.dp)
+            .width(300.dp)
     ) {
         Column {
             VolleyButton.CheckGradientButton(
@@ -1036,13 +1016,13 @@ private fun PreviewCheckGradientButton() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewCheckedGradientButtonRightImage() {
-    Box(
+    PreviewContainer(
         modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
+            .height(250.dp)
+            .width(300.dp)
     ) {
         Column {
             VolleyButton.CheckedGradientButtonRightImage(
@@ -1065,15 +1045,10 @@ private fun PreviewCheckedGradientButtonRightImage() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewCheckedGradientButtonTopImage() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
-    ) {
+    PreviewContainer(modifier = Modifier.height(250.dp)) {
         Column {
             VolleyButton.CheckedGradientButtonTopImage(
                 modifier = Modifier,
@@ -1094,15 +1069,10 @@ private fun PreviewCheckedGradientButtonTopImage() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewButtonLevelUp() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
-    ) {
+    PreviewContainer(modifier = Modifier.height(250.dp)) {
         Column {
             VolleyButton.ButtonLevelUp()
             Spacer(modifier = Modifier.size(12.dp))
@@ -1111,15 +1081,10 @@ private fun PreviewButtonLevelUp() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewButtonLevelDown() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
-    ) {
+    PreviewContainer(modifier = Modifier.height(250.dp)) {
         Column {
             VolleyButton.ButtonLevelDown()
             Spacer(modifier = Modifier.size(12.dp))
@@ -1128,15 +1093,10 @@ private fun PreviewButtonLevelDown() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewButtonConfirmLevel() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
-    ) {
+    PreviewContainer(modifier = Modifier.height(250.dp)) {
         Column {
             VolleyButton.ButtonConfirmLevel()
             Spacer(modifier = Modifier.size(12.dp))
@@ -1145,140 +1105,97 @@ private fun PreviewButtonConfirmLevel() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewGroupButtonsForChangeLevel() {
-    Box(
+    PreviewContainer(
         modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
+            .width(400.dp)
+            .height(200.dp)
     ) {
         VolleyButton.GroupButtonsForChangeLevel(
-            1,
-            modifier = Modifier
-                .padding(vertical = 12.dp),
+            checkId = 1,
+            modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewGroupButtonsForDate2() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
-    ) {
+    PreviewContainer {
         VolleyButton.GroupButtonsForDate2(
-            modifier = Modifier
-                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewGroupButtonsForDate3() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
-    ) {
+    PreviewContainer(modifier = Modifier.width(400.dp)) {
         VolleyButton.GroupButtonsForDate3(
-            3,
-            modifier = Modifier
-                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            checkId = 3,
+            modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewGroupButtonsForPrivacy() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
-    ) {
+    PreviewContainer {
         VolleyButton.GroupButtonsForPrivacy(
-            modifier = Modifier
-                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewGroupButtonsForGender3() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
-    ) {
+    PreviewContainer(modifier = Modifier.width(300.dp)) {
         VolleyButton.GroupButtonsForGender3(
-            modifier = Modifier
-                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewGroupButtonsForGender2() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
-    ) {
+    PreviewContainer {
         VolleyButton.GroupButtonsForGender2(
-            modifier = Modifier
-                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewGroupButtonsForLevel() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
-    ) {
+    PreviewContainer(modifier = Modifier.width(400.dp)) {
         VolleyButton.GroupButtonsForLevel(
-            2,
-            modifier = Modifier
-                .padding(vertical = 12.dp), // .align(alignment = Alignment.TopStart)
+            checkId = 2,
+            modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewGroupButtonsForTourneyType() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = VolleyColor.TurquoiseDark)
-            .padding(24.dp)
-    ) {
+    PreviewContainer {
         VolleyButton.GroupButtonsForTourneyType(
             modifier = Modifier
-                .padding(vertical = 12.dp) //  .align(alignment = Alignment.TopCenter)
+                .padding(vertical = 12.dp)
                 .fillMaxWidth(),
             onSelected = {}
         )

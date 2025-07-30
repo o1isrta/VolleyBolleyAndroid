@@ -132,7 +132,6 @@ fun Root1(content: @Composable (PaddingValues) -> Unit) {
                 modifier = Modifier.fillMaxSize()
             ) { paddingValues ->
                 content(paddingValues)
-
             }
         }
     }
