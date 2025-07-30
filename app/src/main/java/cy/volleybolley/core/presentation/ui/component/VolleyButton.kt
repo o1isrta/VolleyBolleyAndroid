@@ -103,29 +103,6 @@ object VolleyButton {
 
     @Composable
     @Stable
-    fun OutlinedActiveButtonSmallText( // такую кнопку только одну нашла: с текстом "Add payment"
-        modifier: Modifier = Modifier,
-        text: String,
-        paddingValues: PaddingValues = PaddingValues(16.dp,8.dp,16.dp,8.dp),
-        onClick: () -> Unit
-    ) {
-        OutlinedButton(
-            onClick = onClick,
-            border = BorderStroke(1.dp, VolleyColor.YellowPro),
-            shape = RoundedCornerShape(16.dp),
-            modifier = modifier,
-            contentPadding = paddingValues
-        ) {
-            Text(
-                text = text,
-                color = VolleyColor.White,
-                style = ButtonSText
-            )
-        }
-    }
-
-    @Composable
-    @Stable
     fun ActiveButtonMap( // такую кнопку только одну нашла: с текстом "Map"
         modifier: Modifier = Modifier,
         text: String,
@@ -210,6 +187,22 @@ object VolleyButton {
                 style = ButtonSText
             )
         }
+    }
+
+    @Composable
+    @Stable
+    fun OutlinedActiveButtonSmallText( // такую кнопку только одну нашла: с текстом "Add payment"
+        modifier: Modifier = Modifier,
+        text: String,
+        paddingValues: PaddingValues = PaddingValues(16.dp,8.dp,16.dp,8.dp),
+        onClick: () -> Unit
+    ) {
+        OutlinedGradientButton(
+            modifier = modifier,
+            text = text,
+            paddingValues = paddingValues,
+            onClick = onClick
+        )
     }
 
     @Composable
