@@ -1,6 +1,9 @@
 package cy.volleybolley.core.presentation.ui.model
 
 import androidx.compose.ui.unit.IntSize
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 object VolleyUiUtil {
     //Gradient container values
@@ -25,5 +28,11 @@ object VolleyUiUtil {
     @JvmStatic
     fun getGradientRadiusByContainerSize(containerSize: IntSize): Float {
         return if (containerSize == IntSize.Zero) 1f else maxOf(containerSize.width, containerSize.height).toFloat()
+    }
+
+    @JvmStatic
+    fun convertMillisToTextDate(stringPattern: String, millis: Long): String {
+        val formatter = SimpleDateFormat(stringPattern, Locale.getDefault())
+        return formatter.format(Date(millis))
     }
 }
