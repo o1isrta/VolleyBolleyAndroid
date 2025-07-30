@@ -6,7 +6,7 @@ import java.util.Date
 import java.util.Locale
 
 object VolleyUiUtil {
-    //Gradient container values
+    // Gradient container values
     const val GRADIENT_COLOR_STOP_MARK_1 = 0.0f
     const val GRADIENT_COLOR_STOP_MARK_2 = 0.65f
     const val GRADIENT_COLOR_STOP_MARK_3 = 1.0f
