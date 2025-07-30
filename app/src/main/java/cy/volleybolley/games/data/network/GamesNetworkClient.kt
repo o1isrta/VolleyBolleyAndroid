@@ -2,6 +2,8 @@ package cy.volleybolley.games.data.network
 
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
+import cy.volleybolley.games.data.dto.GameDto
+import cy.volleybolley.games.data.network.GamesResponse.*
 import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -14,13 +16,15 @@ class GamesNetworkClient() : KtorNetworkClient<GamesRequest, GamesResponse>() {
     override suspend fun sendRequestByType(request: GamesRequest): HttpResponse {
         return httpClient.post(BuildConfig.BASE_URL) {
             when (request) {
-                is GamesRequest.CreateGameRequest -> {
+                is GamesRequest.CreateGame -> {
                     url {
                         path(request.path)
                     }
                     contentType(ContentType.Application.Json)
                     setBody(request.game)
                 }
+
+                is GamesRequest.GetGameDetails -> TODO()
             }
         }
     }
@@ -30,9 +34,12 @@ class GamesNetworkClient() : KtorNetworkClient<GamesRequest, GamesResponse>() {
         httpResponse: HttpResponse
     ): GamesResponse {
         return when (requestType) {
-            is GamesRequest.CreateGameRequest -> {
-                httpResponse.body<GamesResponse.CreateGameResponse>()
+            is GamesRequest.CreateGame -> {
+                val response = httpResponse.body<GameDto>()
+                CreateGame(response)
             }
+
+            is GamesRequest.GetGameDetails -> TODO()
         }
     }
 }

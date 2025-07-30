@@ -5,7 +5,9 @@ import kotlinx.serialization.Serializable
 
 sealed interface GamesResponse {
     @Serializable
-    class CreateGameResponse(
+    class CreateGame(
         val game: GameDto
     ): GamesResponse
+
+    class GetGameDetail(): GamesResponse
 }

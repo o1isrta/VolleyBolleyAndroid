@@ -15,12 +15,12 @@ class GamesRepositoryImpl(
     val networkClient: NetworkClient<GamesRequest, GamesResponse>
 ) : GamesRepository {
     override suspend fun createGame(game: Game): VolleyResult<Game?, ErrorType> {
-        val response = networkClient.getResponse(GamesRequest.CreateGameRequest(game = game.toData()))
+        val response = networkClient.getResponse(GamesRequest.CreateGame(game = game.toData()))
 
         return when (response.isSuccess) {
             true -> {
                 VolleyResult.Success(
-                    (response.body as? GamesResponse.CreateGameResponse)?.game?.toDomain()
+                    (response.body as? GamesResponse.CreateGame)?.game?.toDomain()
                 )
             }
 
