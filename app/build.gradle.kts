@@ -26,11 +26,11 @@ android {
         if (propertiesFile.exists()) {
             localProperties.load(propertiesFile.inputStream())
         } else {
-            throw IllegalStateException("local.properties file not exists")
+            error("local.properties file not exists")
         }
 
         val serverUrl = localProperties.getProperty("SERVER_URL")
-            ?: throw IllegalStateException("You should add SERVER_URL property in local.properties")
+            ?: error("You should add SERVER_URL property in local.properties")
         buildConfigField("String", "BASE_URL", "\"$serverUrl\"")
     }
 
