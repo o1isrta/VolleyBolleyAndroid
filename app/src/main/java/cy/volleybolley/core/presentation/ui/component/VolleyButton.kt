@@ -265,7 +265,7 @@ object VolleyButton {
     fun CheckGradientButton(
         modifier: Modifier = Modifier,
         text: String,
-        isChecked: Boolean = false,
+        isChecked: Boolean,
         paddingValues: PaddingValues = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
         onClick: () -> Unit
     ) {
