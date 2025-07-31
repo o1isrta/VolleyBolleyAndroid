@@ -247,13 +247,12 @@ object VolleyButton {
     fun OutlinedActiveButtonSmallText(
         modifier: Modifier = Modifier,
         text: String,
-        paddingValues: PaddingValues = PaddingValues(16.dp, 8.dp, 16.dp, 8.dp),
         onClick: () -> Unit
     ) {
         OutlinedGradientButton(
             modifier = modifier,
             text = text,
-            paddingValues = paddingValues,
+            paddingValues = PaddingValues(16.dp, 8.dp, 16.dp, 8.dp),
             onClick = onClick
         )
     }
