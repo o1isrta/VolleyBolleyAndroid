@@ -8,10 +8,6 @@ plugins {
     alias(libs.plugins.kotlin.ksp)
 }
 
-val localProperties = Properties()
-localProperties.load(rootProject.file("local.properties").inputStream())
-val serverUrl = localProperties.getProperty("SERVER_URL") ?: "https://default.url"
-
 android {
     namespace = "cy.volleybolley"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -24,6 +20,17 @@ android {
         versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProperties = Properties()
+        val propertiesFile = File(rootDir, "local.properties")
+        if (propertiesFile.exists()) {
+            localProperties.load(propertiesFile.inputStream())
+        } else {
+            throw IllegalStateException("local.properties file not exists")
+        }
+
+        val serverUrl = localProperties.getProperty("SERVER_URL")
+            ?: throw IllegalStateException("You should add SERVER_URL property in local.properties")
         buildConfigField("String", "BASE_URL", "\"$serverUrl\"")
     }
 
