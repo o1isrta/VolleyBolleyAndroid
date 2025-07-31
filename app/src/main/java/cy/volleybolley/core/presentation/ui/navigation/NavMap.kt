@@ -29,10 +29,6 @@ sealed interface NavMap {
         override val route = "create_new_game/BasicGameSetupScreen"
     }
 
-    object GameCreatedScreen : NavMap {
-        override val route = "create_new_game/GameCreatedScreen"
-    }
-
     object GameEnteringConditionsScreen : NavMap {
         override val route = "create_new_game/GameEnteringConditionsScreen"
     }
@@ -46,19 +42,11 @@ sealed interface NavMap {
         override val route = "create_new_tourney/BasicTourneySetupScreen"
     }
 
-    object TourneyCreatedScreen : NavMap {
-        override val route = "create_new_tourney/TourneyCreatedScreen"
-    }
-
     object TourneyEnteringConditionsScreen : NavMap {
         override val route = "create_new_tourney/TourneyEnteringConditionsScreen"
     }
 
     // find a game flow
-    object JoinedTheGameScreen : NavMap {
-        override val route = "find_a_game/JoinedTheGameScreen"
-    }
-
     object JoinTheGameScreen : NavMap {
         override val route = "find_a_game/JoinTheGameScreen"
     }
@@ -74,10 +62,6 @@ sealed interface NavMap {
 
     object InvitePlayersScreen : NavMap {
         override val route = "find_a_tourney/InvitePlayersScreen"
-    }
-
-    object JoinedTheTourneyScreen : NavMap {
-        override val route = "find_a_tourney/JoinedTheTourneyScreen"
     }
 
     object JoinIndividualScreen : NavMap {
@@ -167,6 +151,10 @@ sealed interface NavMap {
 
     object RatePlayersScreen : NavMap {
         override val route = "home/RatePlayersScreen"
+    }
+
+    object SuccessScreen : NavMap {
+        override val route = "home/SuccessScreen"
     }
 
     // profile flow

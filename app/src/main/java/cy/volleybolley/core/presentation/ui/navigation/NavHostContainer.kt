@@ -11,20 +11,16 @@ import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationBy
 import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.SignUpScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameCreatedScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyCreatedScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.findagame.JoinTheGameScreen
-import cy.volleybolley.core.presentation.ui.screens.findagame.JoinedTheGameScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.ChooseTeamScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.IndividualPlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.InvitePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinIndividualScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinTeamScreen
-import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinedTheTourneyScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.ArchiveScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.PastGameScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.PastTourneyScreen
@@ -44,6 +40,7 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.Upcoming
 import cy.volleybolley.core.presentation.ui.screens.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
+import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.AboutScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
@@ -86,9 +83,6 @@ fun NavHostContainer(
         composable(NavMap.BasicGameSetupScreen.route) {
             BasicGameSetupScreen(navController)
         }
-        composable(NavMap.GameCreatedScreen.route) {
-            GameCreatedScreen(navController)
-        }
         composable(NavMap.GameEnteringConditionsScreen.route) {
             GameEnteringConditionsScreen(navController)
         }
@@ -100,17 +94,11 @@ fun NavHostContainer(
         composable(NavMap.BasicTourneySetupScreen.route) {
             BasicTourneySetupScreen(navController)
         }
-        composable(NavMap.TourneyCreatedScreen.route) {
-            TourneyCreatedScreen(navController)
-        }
         composable(NavMap.TourneyEnteringConditionsScreen.route) {
             TourneyEnteringConditionsScreen(navController)
         }
 
         // find a game flow
-        composable(NavMap.JoinedTheGameScreen.route) {
-            JoinedTheGameScreen(navController)
-        }
         composable(NavMap.JoinTheGameScreen.route) {
             JoinTheGameScreen(navController)
         }
@@ -124,9 +112,6 @@ fun NavHostContainer(
         }
         composable(NavMap.InvitePlayersScreen.route) {
             InvitePlayersScreen(navController)
-        }
-        composable(NavMap.JoinedTheTourneyScreen.route) {
-            JoinedTheTourneyScreen(navController)
         }
         composable(NavMap.JoinIndividualScreen.route) {
             JoinIndividualScreen(navController)
@@ -200,6 +185,9 @@ fun NavHostContainer(
         }
         composable(NavMap.RatePlayersScreen.route) {
             RatePlayersScreen(navController)
+        }
+        composable(NavMap.SuccessScreen.route) {
+            SuccessScreen(navController)
         }
 
         // profile flow

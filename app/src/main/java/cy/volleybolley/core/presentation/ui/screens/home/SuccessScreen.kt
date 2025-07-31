@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.findagame
+package cy.volleybolley.core.presentation.ui.screens.home
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
 @Composable
-fun JoinedTheGameScreen(navController: NavHostController) {
+fun SuccessScreen(navController: NavHostController) {
     Button(onClick = { navController.popBackStack() }) {
         Text("Назад")
     }
