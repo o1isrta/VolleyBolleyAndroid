@@ -40,7 +40,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.Root1
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.ACTIVE_BUTTON_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.ADD_PAYMENT_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.CHECK_GRADIENT_BUTTON_FALSE_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.CHECK_GRADIENT_BUTTON_TRUE_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.GRADIENT_BUTTON_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_FALSE_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.LEVEL_UP_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.MAP_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.OUTLINED_BUTTON_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.OUTLINED_GRADIENT_BUTTON_TEXT
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonSText
@@ -50,6 +60,35 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonXSText
 @UiLibraryMarker
 object VolleyButton {
     const val LEVEL_UP_TEXT = "Level up"
+    const val LEVEL_DOWN_TEXT = "Level down"
+    const val CONFIRM_LEVEL_TEXT = "Confirm level"
+    const val TODAY_TEXT = "Today"
+    const val TOMORROW_TEXT = "Tomorrow"
+    const val PICK_DATE_TEXT = "Pick date"
+    const val PUBLIC_TEXT = "Public"
+    const val PRIVATE_TEXT = "Private"
+    const val MIX_TEXT = "Mix"
+    const val MEN_TEXT = "Men"
+    const val WOMEN_TEXT = "Women"
+    const val MALE_TEXT = "Male"
+    const val FEMALE_TEXT = "Female"
+    const val LIGHT_TEXT = "Light"
+    const val MEDIUM_TEXT = "Medium"
+    const val HARD_TEXT = "Hard"
+    const val PRO_TEXT = "Pro"
+    const val INDIVIDUAL_TEXT = "Individual"
+    const val TEAM_TEXT = "Team"
+    const val ACTIVE_BUTTON_TEXT ="ACTIVE BUTTON"
+    const val OUTLINED_BUTTON_TEXT ="OUTLINED BUTTON"
+    const val ADD_PAYMENT_TEXT = "Add payment"
+    const val MAP_TEXT = "Map"
+    const val GRADIENT_BUTTON_TEXT = "Gradient button"
+    const val OUTLINED_GRADIENT_BUTTON_TEXT = "Outlined gradient button"
+    const val CHECK_GRADIENT_BUTTON_TRUE_TEXT = "Check gradient button, isChecked = true"
+    const val CHECK_GRADIENT_BUTTON_FALSE_TEXT = "Check gradient button, isChecked = false"
+    const val ISCHECKED_TRUE_TEXT = "isChecked = true"
+    const val ISCHECKED_FALSE_TEXT = "isChecked = false"
+
 
     @Composable
     @Stable
@@ -449,7 +488,7 @@ object VolleyButton {
         CheckedGradientButtonTopImage(
             onClick = onClick,
             modifier = modifier,
-            text = "Level down",
+            text = LEVEL_DOWN_TEXT,
             isChecked = isChecked,
             iconPainter = iconPainter
         )
@@ -471,7 +510,7 @@ object VolleyButton {
         CheckedGradientButtonTopImage(
             onClick = onClick,
             modifier = modifier,
-            text = "Confirm level",
+            text = CONFIRM_LEVEL_TEXT,
             isChecked = isChecked,
             iconPainter = iconPainter
         )
@@ -591,7 +630,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Today",
+                                text = TODAY_TEXT,
                                 isChecked = isChecked,
                                 onClick = onClick
                             )
@@ -603,7 +642,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckedGradientButtonRightImage(
-                                text = "Pick date",
+                                text = PICK_DATE_TEXT,
                                 isChecked = isChecked,
                                 onClick = onClick
                             )
@@ -629,7 +668,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Today",
+                                text = TODAY_TEXT,
                                 isChecked = isChecked,
                                 onClick = onClick
                             )
@@ -641,7 +680,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Tomorrow",
+                                text = TOMORROW_TEXT,
                                 isChecked = isChecked,
                                 onClick = onClick
                             )
@@ -653,7 +692,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Pick date",
+                                text = PICK_DATE_TEXT,
                                 isChecked = isChecked,
                                 onClick = onClick
                             )
@@ -679,7 +718,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Public",
+                                text = PUBLIC_TEXT,
                                 isChecked = isChecked,
                                 onClick = onClick
                             )
@@ -691,7 +730,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckedGradientButtonRightImage(
-                                text = "Private",
+                                text = PRIVATE_TEXT,
                                 isChecked = isChecked,
                                 onClick = onClick
                             )
@@ -717,7 +756,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Mix",
+                                text = MIX_TEXT,
                                 isChecked = isChecked,
                                 onClick = onClick
                             )
@@ -729,7 +768,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Men",
+                                text = MEN_TEXT,
                                 isChecked = isChecked,
                                 onClick = onClick
                             )
@@ -741,7 +780,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Women",
+                                text = WOMEN_TEXT,
                                 isChecked = isChecked,
                                 onClick = onClick
                             )
@@ -768,7 +807,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Male",
+                                text = MALE_TEXT,
                                 isChecked = isChecked,
                                 paddingValues = paddingValues,
                                 onClick = onClick
@@ -781,7 +820,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Female",
+                                text = FEMALE_TEXT,
                                 isChecked = isChecked,
                                 paddingValues = paddingValues,
                                 onClick = onClick
@@ -814,7 +853,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Light",
+                                text = LIGHT_TEXT,
                                 isChecked = isChecked,
                                 paddingValues = paddingValues,
                                 onClick = onClick
@@ -827,7 +866,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Medium",
+                                text = MEDIUM_TEXT,
                                 isChecked = isChecked,
                                 paddingValues = paddingValues,
                                 onClick = onClick
@@ -840,7 +879,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Hard",
+                                text = HARD_TEXT,
                                 isChecked = isChecked,
                                 paddingValues = paddingValues,
                                 onClick = onClick
@@ -853,7 +892,7 @@ object VolleyButton {
                     override val button: @Composable (Modifier, Boolean, () -> Unit) -> Unit =
                         { _, isChecked, onClick ->
                             CheckGradientButton(
-                                text = "Pro",
+                                text = PRO_TEXT,
                                 isChecked = isChecked,
                                 paddingValues = paddingValues,
                                 onClick = onClick
@@ -880,7 +919,7 @@ object VolleyButton {
         ) {
             CheckGradientButton(
                 modifier = Modifier.weight(1f),
-                text = "Individual",
+                text = INDIVIDUAL_TEXT,
                 isChecked = selectedButton == 1,
                 onClick = {
                     selectedButton = 1
@@ -889,7 +928,7 @@ object VolleyButton {
             )
             CheckGradientButton(
                 modifier = Modifier.weight(1f),
-                text = "Team",
+                text = TEAM_TEXT,
                 isChecked = selectedButton == 2,
                 onClick = {
                     selectedButton = 2
@@ -921,7 +960,7 @@ private fun PreviewActiveButton() {
     PreviewContainer {
         VolleyButton.ActiveButton(
             modifier = Modifier.height(44.dp),
-            text = "ACTIVE BUTTON",
+            text = ACTIVE_BUTTON_TEXT,
             onClick = {}
         )
     }
@@ -933,7 +972,7 @@ private fun PreviewOutlinedActiveButton() {
     PreviewContainer {
         VolleyButton.OutlinedActiveButton(
             modifier = Modifier.height(44.dp),
-            text = "OUTLINED BUTTON",
+            text = OUTLINED_BUTTON_TEXT,
             onClick = {}
         )
     }
@@ -945,7 +984,7 @@ private fun PreviewOutlinedActiveButtonSmallText() {
     PreviewContainer {
         VolleyButton.OutlinedActiveButtonSmallText(
             modifier = Modifier.height(35.dp),
-            text = "Add payment",
+            text = ADD_PAYMENT_TEXT,
             onClick = {}
         )
     }
@@ -957,7 +996,7 @@ private fun PreviewActiveButtonMap() {
     PreviewContainer {
         VolleyButton.ActiveButtonMap(
             modifier = Modifier.height(44.dp),
-            text = "Map",
+            text = MAP_TEXT,
             onClick = {}
         )
     }
@@ -969,7 +1008,7 @@ private fun PreviewActiveGradientButton() {
     PreviewContainer {
         VolleyButton.ActiveGradientButton(
             modifier = Modifier.height(44.dp),
-            text = "Gradient button",
+            text = GRADIENT_BUTTON_TEXT,
             onClick = {}
         )
     }
@@ -981,7 +1020,7 @@ private fun PreviewOutlinedGradientButton() {
     PreviewContainer(modifier = Modifier.width(300.dp)) {
         VolleyButton.OutlinedGradientButton(
             modifier = Modifier.height(44.dp),
-            text = "Outlined gradient button",
+            text = OUTLINED_GRADIENT_BUTTON_TEXT,
             onClick = {}
         )
     }
@@ -1001,7 +1040,7 @@ private fun PreviewCheckGradientButton() {
                     .padding(24.dp)
                     .height(44.dp),
                 isChecked = true,
-                text = "Check gradient button, isChecked = true",
+                text = CHECK_GRADIENT_BUTTON_TRUE_TEXT,
                 onClick = {}
             )
             VolleyButton.CheckGradientButton(
@@ -1009,7 +1048,7 @@ private fun PreviewCheckGradientButton() {
                     .padding(24.dp)
                     .height(44.dp),
                 isChecked = false,
-                text = "Check gradient button, isChecked = false",
+                text = CHECK_GRADIENT_BUTTON_FALSE_TEXT,
                 onClick = {}
             )
         }
@@ -1030,7 +1069,7 @@ private fun PreviewCheckedGradientButtonRightImage() {
                     .padding(24.dp)
                     .height(44.dp),
                 isChecked = true,
-                text = "isChecked = true",
+                text = ISCHECKED_TRUE_TEXT,
                 onClick = {}
             )
             VolleyButton.CheckGradientButton(
@@ -1038,7 +1077,7 @@ private fun PreviewCheckedGradientButtonRightImage() {
                     .padding(24.dp)
                     .height(44.dp),
                 isChecked = false,
-                text = "isChecked = false",
+                text = ISCHECKED_FALSE_TEXT,
                 onClick = {}
             )
         }
@@ -1221,7 +1260,7 @@ private fun PreviewCombo() {
                         .padding(vertical = 12.dp)
                         .height(44.dp)
                         .align(Alignment.CenterHorizontally),
-                    text = "ACTIVE BUTTON",
+                    text = ACTIVE_BUTTON_TEXT,
                     onClick = {}
                 )
                 VolleyButton.GroupButtonsForChangeLevel(
@@ -1281,7 +1320,7 @@ private fun PreviewCombo() {
                         .padding(vertical = 12.dp)
                         .height(35.dp)
                         .align(Alignment.CenterHorizontally),
-                    text = "Add payment",
+                    text = ADD_PAYMENT_TEXT,
                     onClick = {}
                 )
                 VolleyButton.ActiveButtonMap(
@@ -1289,7 +1328,7 @@ private fun PreviewCombo() {
                         .padding(vertical = 12.dp)
                         .height(44.dp)
                         .align(Alignment.CenterHorizontally),
-                    text = "Map",
+                    text = MAP_TEXT,
                     onClick = {}
                 )
             }
