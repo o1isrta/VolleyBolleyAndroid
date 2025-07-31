@@ -68,6 +68,12 @@ jobs:
             -   name: Grant execute permission for gradlew
                 run: chmod +x gradlew
 
+            -   name: Add debug environment
+                env:
+                    VOLLEY_SERVER_URL: ${{ secrets.VOLLEY_SERVER_URL }}
+                run: |
+                    sh ci/add_debug_env.sh
+
             -   name: Assemble app
                 run: ./gradlew :app:assembleDebug $commonGradleFlags
 

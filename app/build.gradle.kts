@@ -24,6 +24,7 @@ android {
         versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"$serverUrl\"")
     }
 
     buildTypes {
@@ -42,10 +43,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "debug-proguard-rules.pro"
             )
-        }
-        defaultConfig {
-
-            buildConfigField("String", "BASE_URL", serverUrl)
         }
     }
     val javaVersion = libs.versions.javaVersion.get()
