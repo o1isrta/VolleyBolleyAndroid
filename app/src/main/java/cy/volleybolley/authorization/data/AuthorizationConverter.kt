@@ -1,25 +1,25 @@
 package cy.volleybolley.authorization.data
 
-import cy.volleybolley.core.data.network.model.ApiResponse.AuthorizationResponse
-import cy.volleybolley.authorization.data.dto.UserDto
+import cy.volleybolley.authorization.data.dto.AuthorizationResponse
+import cy.volleybolley.authorization.data.dto.PlayerDto
 import cy.volleybolley.authorization.domain.model.AuthorizationResult
-import cy.volleybolley.authorization.domain.model.User
+import cy.volleybolley.authorization.domain.model.Player
 
-fun UserDto.toUser() = User(
-    userId = userId,
-    isRegistered = isRegistered,
+fun PlayerDto.toPlayer() = Player(
+    playerId = playerId,
     avatar = avatar,
     firstName = firstName,
     lastName = lastName,
-    genderId = genderId,
+    gender = gender,
     dateOfBirth = dateOfBirth,
-    levelId = levelId,
-    countryId = countryId,
-    cityId = cityId
+    level = level,
+    country = country,
+    city = city
 )
 
 fun AuthorizationResponse.toAuthorizationResult() = AuthorizationResult(
     accessToken = accessToken,
     refreshToken = refreshToken,
-    user = user.toUser()
+    isRegistered = isRegistered,
+    player = player.toPlayer()
 )
