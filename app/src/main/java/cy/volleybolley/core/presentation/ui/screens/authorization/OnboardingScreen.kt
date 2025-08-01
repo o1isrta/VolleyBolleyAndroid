@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
+import cy.volleybolley.core.presentation.ui.navigation.SignUpRoute
 
 @Composable
 fun OnboardingScreen(navController: NavHostController) {
@@ -25,7 +25,7 @@ fun OnboardingScreen(navController: NavHostController) {
         Text("Welcome to OnboardingScreen")
         Spacer(Modifier.height(8.dp))
         Button(onClick = {
-            navController.navigate(NavMap.SignUpScreen.route)
+            navController.navigate(SignUpRoute)
         }) {
             Text("Go to Sign Up Screen")
         }

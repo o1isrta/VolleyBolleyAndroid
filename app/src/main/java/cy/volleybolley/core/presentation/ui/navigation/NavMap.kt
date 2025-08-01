@@ -1,197 +1,156 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
-sealed interface NavMap {
-    val route: String
+import kotlinx.serialization.Serializable
 
-    // authorization flow
-    object OnboardingScreen : NavMap {
-        override val route = "authorization/OnboardingScreen"
-    }
+@Serializable
+sealed interface NavMap
 
-    object SignUpScreen : NavMap {
-        override val route = "authorization/SignUpScreen"
-    }
 
-    object RegistrationScreen : NavMap {
-        override val route = "authorization/RegistrationScreen"
-    }
+// --- authorization flow ---
+@Serializable
+object LaunchRoute : NavMap
 
-    object RegistrationByPhoneScreen : NavMap {
-        override val route = "authorization/RegistrationByPhoneScreen"
-    }
+@Serializable
+object OnboardingRoute : NavMap
 
-    object AboutLevelsScreen : NavMap {
-        override val route = "authorization/AboutLevelsScreen"
-    }
+@Serializable
+object SignUpRoute : NavMap
 
-    // create new game flow
-    object BasicGameSetupScreen : NavMap {
-        override val route = "create_new_game/BasicGameSetupScreen"
-    }
+@Serializable
+object RegistrationRoute : NavMap
 
-    object GameEnteringConditionsScreen : NavMap {
-        override val route = "create_new_game/GameEnteringConditionsScreen"
-    }
+@Serializable
+object RegistrationByPhoneRoute : NavMap
 
-    object PrivacyOptionsScreen : NavMap {
-        override val route = "create_new_game/PrivacyOptionsScreen"
-    }
+@Serializable
+object AboutLevelsRoute : NavMap
 
-    // create new tourney flow
-    object BasicTourneySetupScreen : NavMap {
-        override val route = "create_new_tourney/BasicTourneySetupScreen"
-    }
+// --- create new game flow ---
+@Serializable
+object BasicGameSetupRoute : NavMap
 
-    object TourneyEnteringConditionsScreen : NavMap {
-        override val route = "create_new_tourney/TourneyEnteringConditionsScreen"
-    }
+@Serializable
+object GameEnteringConditionsRoute : NavMap
 
-    // find a game flow
-    object JoinTheGameScreen : NavMap {
-        override val route = "find_a_game/JoinTheGameScreen"
-    }
+@Serializable
+object PrivacyOptionsRoute : NavMap
 
-    // find a tourney flow
-    object ChooseTeamScreen : NavMap {
-        override val route = "find_a_tourney/ChooseTeamScreen"
-    }
+// --- create new tourney flow ---
+@Serializable
+object BasicTourneySetupRoute : NavMap
 
-    object IndividualPlayersScreen : NavMap {
-        override val route = "find_a_tourney/IndividualPlayersScreen"
-    }
+@Serializable
+object TourneyEnteringConditionsRoute : NavMap
 
-    object InvitePlayersScreen : NavMap {
-        override val route = "find_a_tourney/InvitePlayersScreen"
-    }
+// --- find a game flow ---
+@Serializable
+object JoinTheGameRoute : NavMap
 
-    object JoinIndividualScreen : NavMap {
-        override val route = "find_a_tourney/ JoinIndividualScreen"
-    }
+// --- find a tourney flow ---
+@Serializable
+object ChooseTeamRoute : NavMap
 
-    object JoinTeamScreen : NavMap {
-        override val route = "find_a_tourney/JoinTeamScreen"
-    }
+@Serializable
+object IndividualPlayersRoute : NavMap
 
-    // archive flow
-    object ArchiveScreen : NavMap {
-        override val route = "archive/ArchiveScreen"
-    }
+@Serializable
+object InvitePlayersRoute : NavMap
 
-    object PastGameScreen : NavMap {
-        override val route = "archive/PastGameScreen"
-    }
+@Serializable
+object JoinIndividualRoute : NavMap
 
-    object PastTourneyScreen : NavMap {
-        override val route = "archive/PastTourneyScreen"
-    }
+@Serializable
+object JoinTeamRoute : NavMap
 
-    object TeamsScreen : NavMap {
-        override val route = "archive/TeamsScreen"
-    }
+// --- archive flow ---
+@Serializable
+object ArchiveRoute : NavMap
 
-    // game invites flow
-    object GameInvitesScreen : NavMap {
-        override val route = "game_invites/GameInvitesScreen"
-    }
+@Serializable
+object PastGameRoute : NavMap
 
-    object JoinTheTourneyScreen : NavMap {
-        override val route = "game_invites/JoinTheTourneyScreen"
-    }
+@Serializable
+object PastTourneyRoute : NavMap
 
-    // my games flow
-    object ChangeTeamScreen : NavMap {
-        override val route = "my_games/ChangeTeamScreen"
-    }
+@Serializable
+object TeamsRoute : NavMap
 
-    object GameHomeScreen : NavMap {
-        override val route = "my_games/GameHomeScreen"
-    }
+// --- game invites flow ---
+@Serializable
+object GameInvitesRoute : NavMap
 
-    object ManagePlayersScreen : NavMap {
-        override val route = "my_games/ManagePlayersScreen"
-    }
+@Serializable
+object JoinTheTourneyRoute : NavMap
 
-    object MyGameScreen : NavMap {
-        override val route = "my_games/MyGameScreen"
-    }
+// --- my games flow ---
+@Serializable
+object ChangeTeamRoute : NavMap
 
-    object MyGamesScreen : NavMap {
-        override val route = "my_games/MyGamesScreen"
-    }
+@Serializable
+object GameHomeRoute : NavMap
 
-    object MyTourneyScreen : NavMap {
-        override val route = "my_games/MyTourneyScreen"
-    }
+@Serializable
+object ManagePlayersRoute : NavMap
 
-    // upcoming games flow
-    object JoinedPlayersScreen : NavMap {
-        override val route = "upcoming_games/JoinedPlayersScreen"
-    }
+@Serializable
+object MyGameRoute : NavMap
 
-    object UpcomingGameDetailsScreen : NavMap {
-        override val route = "upcoming_games/UpcomingGameDetailsScreen"
-    }
+@Serializable
+object MyGamesRoute : NavMap
 
-    object UpcomingGamesScreen : NavMap {
-        override val route = "upcoming_games/UpcomingGamesScreen"
-    }
+@Serializable
+object MyTourneyRoute : NavMap
 
-    object UpcomingTourneyDetailsScreen : NavMap {
-        override val route = "upcoming_games/UpcomingTourneyDetailsScreen"
-    }
+// --- upcoming games flow ---
+@Serializable
+object JoinedPlayersRoute : NavMap
 
-    // home flow
-    object HomeScreen : NavMap {
-        override val route = "home/HomeScreen"
-    }
+@Serializable
+object UpcomingGameDetailsRoute : NavMap
 
-    object SearchCourtScreen : NavMap {
-        override val route = "home/SearchCourtScreen"
-    }
+@Serializable
+object UpcomingGamesRoute : NavMap
 
-    object RatePlayersScreen : NavMap {
-        override val route = "home/RatePlayersScreen"
-    }
+@Serializable
+object UpcomingTourneyDetailsRoute : NavMap
 
-    object SuccessScreen : NavMap {
-        override val route = "home/SuccessScreen"
-    }
+// --- home flow ---
+@Serializable
+object HomeRoute : NavMap
 
-    // profile flow
-    object AboutScreen : NavMap {
-        override val route = "profile/AboutScreen"
-    }
+@Serializable
+object SearchCourtRoute : NavMap
 
-    object ChangePhotoScreen : NavMap {
-        override val route = "profile/ChangePhotoScreen"
-    }
+@Serializable
+object RatePlayersRoute : NavMap
 
-    object FaqScreen : NavMap {
-        override val route = "profile/FaqScreen"
-    }
+@Serializable
+object SuccessRoute : NavMap
 
-    object PaymentsScreen : NavMap {
-        override val route = "profile/PaymentsScreen"
-    }
+// --- profile flow ---
+@Serializable
+object AboutRoute : NavMap
 
-    object PersonalDataScreen : NavMap {
-        override val route = "profile/ PersonalDataScreen"
-    }
+@Serializable
+object ChangePhotoRoute : NavMap
 
-    object PlayerProfileScreen : NavMap {
-        override val route = "profile/PlayerProfileScreen"
-    }
+@Serializable
+object FaqRoute : NavMap
 
-    object PlayersScreen : NavMap {
-        override val route = "profile/PlayersScreen"
-    }
+@Serializable
+object PaymentsRoute : NavMap
 
-    object ProfileScreen : NavMap {
-        override val route = "profile/ProfileScreen"
-    }
+@Serializable
+object PersonalDataRoute : NavMap
 
-    object EnterPaymentDataScreen : NavMap {
-        override val route = "profile/EnterPaymentDataScreen"
-    }
+@Serializable
+object PlayerProfileRoute : NavMap
 
-}
+@Serializable
+object PlayersRoute : NavMap
+
+@Serializable
+object ProfileRoute : NavMap
+
+@Serializable
+object EnterPaymentDataRoute : NavMap

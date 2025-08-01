@@ -12,7 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
+import cy.volleybolley.core.presentation.ui.navigation.AboutLevelsRoute
+import cy.volleybolley.core.presentation.ui.navigation.HomeRoute
 
 @Composable
 fun RegistrationScreen(navController: NavHostController) {
@@ -24,12 +25,12 @@ fun RegistrationScreen(navController: NavHostController) {
     ) {
         Spacer(Modifier.height(8.dp))
         Button(onClick = {
-            navController.navigate(NavMap.AboutLevelsScreen.route)
+            navController.navigate(AboutLevelsRoute)
         }) {
             Text("Go to About Levels Screen")
         }
         Button(onClick = {
-            navController.navigate(NavMap.HomeScreen.route)
+            navController.navigate(HomeRoute)
         }) {
             Text("Go to Home Screen")
         }

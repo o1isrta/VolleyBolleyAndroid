@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.core.presentation.ui.screens.authorization.AboutLevelsScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationScreen
@@ -54,169 +55,80 @@ import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
 @Composable
 fun NavHostContainer(
     modifier: Modifier = Modifier,
-    startDestination: NavMap = NavMap.OnboardingScreen
+    startDestination: NavMap = LaunchRoute
 ) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = startDestination.route,
+        startDestination = startDestination,
         modifier = modifier
     ) {
-        // authorization flow
-        composable(NavMap.OnboardingScreen.route) {
-            OnboardingScreen(navController)
-        }
-        composable(NavMap.SignUpScreen.route) {
-            SignUpScreen(navController)
-        }
-        composable(NavMap.RegistrationScreen.route) {
-            RegistrationScreen(navController)
-        }
-        composable(NavMap.RegistrationByPhoneScreen.route) {
-            RegistrationByPhoneScreen(navController)
-        }
-        composable(NavMap.AboutLevelsScreen.route) {
-            AboutLevelsScreen(navController)
-        }
+        // authorization
+        composable<LaunchRoute> { LaunchScreen(navController) }
+        composable<OnboardingRoute> { OnboardingScreen(navController) }
+        composable<SignUpRoute> { SignUpScreen(navController) }
+        composable<RegistrationRoute> { RegistrationScreen(navController) }
+        composable<RegistrationByPhoneRoute> { RegistrationByPhoneScreen(navController) }
+        composable<AboutLevelsRoute> { AboutLevelsScreen(navController) }
 
-        // create new game flow
-        composable(NavMap.BasicGameSetupScreen.route) {
-            BasicGameSetupScreen(navController)
-        }
-        composable(NavMap.GameEnteringConditionsScreen.route) {
-            GameEnteringConditionsScreen(navController)
-        }
-        composable(NavMap.PrivacyOptionsScreen.route) {
-            PrivacyOptionsScreen(navController)
-        }
+        // create game
+        composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }
+        composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(navController) }
+        composable<PrivacyOptionsRoute> { PrivacyOptionsScreen(navController) }
 
-        // create new tourney flow
-        composable(NavMap.BasicTourneySetupScreen.route) {
-            BasicTourneySetupScreen(navController)
-        }
-        composable(NavMap.TourneyEnteringConditionsScreen.route) {
-            TourneyEnteringConditionsScreen(navController)
-        }
+        // create tourney
+        composable<BasicTourneySetupRoute> { BasicTourneySetupScreen(navController) }
+        composable<TourneyEnteringConditionsRoute> { TourneyEnteringConditionsScreen(navController) }
 
-        // find a game flow
-        composable(NavMap.JoinTheGameScreen.route) {
-            JoinTheGameScreen(navController)
-        }
+        // find game
+        composable<JoinTheGameRoute> { JoinTheGameScreen(navController) }
 
-        // find a tourney flow
-        composable(NavMap.ChooseTeamScreen.route) {
-            ChooseTeamScreen(navController)
-        }
-        composable(NavMap.IndividualPlayersScreen.route) {
-            IndividualPlayersScreen(navController)
-        }
-        composable(NavMap.InvitePlayersScreen.route) {
-            InvitePlayersScreen(navController)
-        }
-        composable(NavMap.JoinIndividualScreen.route) {
-            JoinIndividualScreen(navController)
-        }
-        composable(NavMap.JoinTeamScreen.route) {
-            JoinTeamScreen(navController)
-        }
+        // find tourney
+        composable<ChooseTeamRoute> { ChooseTeamScreen(navController) }
+        composable<IndividualPlayersRoute> { IndividualPlayersScreen(navController) }
+        composable<InvitePlayersRoute> { InvitePlayersScreen(navController) }
+        composable<JoinIndividualRoute> { JoinIndividualScreen(navController) }
+        composable<JoinTeamRoute> { JoinTeamScreen(navController) }
 
-        // archive flow
-        composable(NavMap.ArchiveScreen.route) {
-            ArchiveScreen(navController)
-        }
-        composable(NavMap.PastGameScreen.route) {
-            PastGameScreen(navController)
-        }
-        composable(NavMap.PastTourneyScreen.route) {
-            PastTourneyScreen(navController)
-        }
-        composable(NavMap.TeamsScreen.route) {
-            TeamsScreen(navController)
-        }
+        // archive
+        composable<ArchiveRoute> { ArchiveScreen(navController) }
+        composable<PastGameRoute> { PastGameScreen(navController) }
+        composable<PastTourneyRoute> { PastTourneyScreen(navController) }
+        composable<TeamsRoute> { TeamsScreen(navController) }
 
-        // game invites flow
-        composable(NavMap.GameInvitesScreen.route) {
-            GameInvitesScreen(navController)
-        }
-        composable(NavMap.JoinTheTourneyScreen.route) {
-            JoinTheTourneyScreen(navController)
-        }
+        // game invites
+        composable<GameInvitesRoute> { GameInvitesScreen(navController) }
+        composable<JoinTheTourneyRoute> { JoinTheTourneyScreen(navController) }
 
-        // my games flow
-        composable(NavMap.ChangeTeamScreen.route) {
-            ChangeTeamScreen(navController)
-        }
-        composable(NavMap.GameHomeScreen.route) {
-            GameHomeScreen(navController)
-        }
-        composable(NavMap.ManagePlayersScreen.route) {
-            ManagePlayersScreen(navController)
-        }
-        composable(NavMap.MyGameScreen.route) {
-            MyGameScreen(navController)
-        }
-        composable(NavMap.MyGamesScreen.route) {
-            MyGamesScreen(navController)
-        }
-        composable(NavMap.MyTourneyScreen.route) {
-            MyTourneyScreen(navController)
-        }
+        // my games
+        composable<ChangeTeamRoute> { ChangeTeamScreen(navController) }
+        composable<GameHomeRoute> { GameHomeScreen(navController) }
+        composable<ManagePlayersRoute> { ManagePlayersScreen(navController) }
+        composable<MyGameRoute> { MyGameScreen(navController) }
+        composable<MyGamesRoute> { MyGamesScreen(navController) }
+        composable<MyTourneyRoute> { MyTourneyScreen(navController) }
 
-        // upcoming games flow
-        composable(NavMap.JoinedPlayersScreen.route) {
-            JoinedPlayersScreen(navController)
-        }
-        composable(NavMap.UpcomingGameDetailsScreen.route) {
-            UpcomingGameDetailsScreen(navController)
-        }
-        composable(NavMap.UpcomingGamesScreen.route) {
-            UpcomingGamesScreen(navController)
-        }
-        composable(NavMap.UpcomingTourneyDetailsScreen.route) {
-            UpcomingTourneyDetailsScreen(navController)
-        }
+        // upcoming games
+        composable<JoinedPlayersRoute> { JoinedPlayersScreen(navController) }
+        composable<UpcomingGameDetailsRoute> { UpcomingGameDetailsScreen(navController) }
+        composable<UpcomingGamesRoute> { UpcomingGamesScreen(navController) }
+        composable<UpcomingTourneyDetailsRoute> { UpcomingTourneyDetailsScreen(navController) }
 
-        // home flow
-        composable(NavMap.HomeScreen.route) {
-            HomeScreen(navController)
-        }
-        composable(NavMap.SearchCourtScreen.route) {
-            SearchCourtScreen(navController)
-        }
-        composable(NavMap.RatePlayersScreen.route) {
-            RatePlayersScreen(navController)
-        }
-        composable(NavMap.SuccessScreen.route) {
-            SuccessScreen(navController)
-        }
+        // home
+        composable<HomeRoute> { HomeScreen(navController) }
+        composable<SearchCourtRoute> { SearchCourtScreen(navController) }
+        composable<RatePlayersRoute> { RatePlayersScreen(navController) }
+        composable<SuccessRoute> { SuccessScreen(navController) }
 
-        // profile flow
-        composable(NavMap.AboutScreen.route) {
-            AboutScreen(navController)
-        }
-        composable(NavMap.ChangePhotoScreen.route) {
-            ChangePhotoScreen(navController)
-        }
-        composable(NavMap.FaqScreen.route) {
-            FaqScreen(navController)
-        }
-        composable(NavMap.PaymentsScreen.route) {
-            PaymentsScreen(navController)
-        }
-        composable(NavMap.PersonalDataScreen.route) {
-            PersonalDataScreen(navController)
-        }
-        composable(NavMap.PlayerProfileScreen.route) {
-            PlayerProfileScreen(navController)
-        }
-        composable(NavMap.PlayersScreen.route) {
-            PlayersScreen(navController)
-        }
-        composable(NavMap.ProfileScreen.route) {
-            ProfileScreen(navController)
-        }
-        composable(NavMap.EnterPaymentDataScreen.route) {
-            EnterPaymentDataScreen(navController)
-        }
+        // profile
+        composable<AboutRoute> { AboutScreen(navController) }
+        composable<ChangePhotoRoute> { ChangePhotoScreen(navController) }
+        composable<FaqRoute> { FaqScreen(navController) }
+        composable<PaymentsRoute> { PaymentsScreen(navController) }
+        composable<PersonalDataRoute> { PersonalDataScreen(navController) }
+        composable<PlayerProfileRoute> { PlayerProfileScreen(navController) }
+        composable<PlayersRoute> { PlayersScreen(navController) }
+        composable<ProfileRoute> { ProfileScreen(navController) }
+        composable<EnterPaymentDataRoute> { EnterPaymentDataScreen(navController) }
     }
 }
