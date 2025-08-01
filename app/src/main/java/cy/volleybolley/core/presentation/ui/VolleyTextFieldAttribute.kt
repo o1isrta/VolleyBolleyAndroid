@@ -436,7 +436,11 @@ private fun PreviewGradientTextFields() {
             ) { }
 
             VolleyTextFieldAttribute.DurationField(
-                inputTime = VolleyTimeStamp(4, 20, false),
+                inputTime = VolleyTimeStamp(
+                    VolleyDimens.DIMEN_4,
+                    VolleyDimens.DIMEN_20,
+                    false
+                ),
                 modifier = Modifier
                     .padding(VolleyDimens.DIMEN_16.dp)
             ) { }
