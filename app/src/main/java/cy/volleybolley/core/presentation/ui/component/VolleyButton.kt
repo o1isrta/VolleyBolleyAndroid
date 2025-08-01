@@ -43,8 +43,6 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.Root1
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ACTIVE_BUTTON_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ADD_PAYMENT_TEXT
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.CHECK_GRADIENT_BUTTON_FALSE_TEXT
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.CHECK_GRADIENT_BUTTON_TRUE_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.GRADIENT_BUTTON_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_FALSE_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
@@ -85,8 +83,6 @@ object VolleyButton {
     const val MAP_TEXT = "Map"
     const val GRADIENT_BUTTON_TEXT = "Gradient button"
     const val OUTLINED_GRADIENT_BUTTON_TEXT = "Outlined gradient button"
-    const val CHECK_GRADIENT_BUTTON_TRUE_TEXT = "Check gradient button, isChecked = true"
-    const val CHECK_GRADIENT_BUTTON_FALSE_TEXT = "Check gradient button, isChecked = false"
     const val ISCHECKED_TRUE_TEXT = "isChecked = true"
     const val ISCHECKED_FALSE_TEXT = "isChecked = false"
 
@@ -543,34 +539,11 @@ object VolleyButton {
     fun ButtonsGroup(
         items: List<ButtonItem>,
         modifier: Modifier = Modifier,
-        isExclusive: Boolean = true,
         onSelected: (Int) -> Unit
     ) {
-        var checkSet = emptySet<Int>()
-        items.forEach { item ->
-            if (item.isChecked) {
-                checkSet = checkSet + item.position
-            }
-        }
-        val state = rememberSaveable { mutableStateOf(checkSet) }
-
         Row(modifier, horizontalArrangement = Arrangement.Start) {
             items.forEach { item ->
-                val isCheck = state.value.contains(item.position)
-                item.button(modifier, isCheck) {
-                    if (isExclusive) { // добавить текущий элемент, удалив остальные/ удалить элемент
-                        state.value = if (isCheck) {
-                            state.value - item.position
-                        } else {
-                            setOf(item.position)
-                        }
-                    } else { // добавить/удалить текущий элемент
-                        state.value = if (isCheck) {
-                            state.value - item.position
-                        } else {
-                            state.value + item.position
-                        }
-                    }
+                item.button(modifier, item.isChecked) {
                     onSelected(item.position)
                 }
                 Spacer(modifier = Modifier.size(8.dp))
@@ -614,7 +587,7 @@ object VolleyButton {
                 )
             ),
             modifier = modifier.height(height = 63.dp),
-            isExclusive = true,
+            //isExclusive = true,
             onSelected = onSelected
         )
     }
@@ -650,7 +623,7 @@ object VolleyButton {
                 )
             ),
             modifier = modifier.height(44.dp),
-            true,
+            //true,
             onSelected = onSelected
         )
     }
@@ -697,7 +670,7 @@ object VolleyButton {
                 )
             ),
             modifier = modifier.height(44.dp),
-            true,
+            //true,
             onSelected = onSelected
         )
     }
@@ -733,7 +706,7 @@ object VolleyButton {
                 )
             ),
             modifier = modifier.height(44.dp),
-            true,
+            //true,
             onSelected = onSelected
         )
     }
@@ -780,7 +753,7 @@ object VolleyButton {
                 )
             ),
             modifier = modifier.height(44.dp),
-            isExclusive = true,
+            //isExclusive = true,
             onSelected = onSelected
         )
     }
@@ -819,7 +792,7 @@ object VolleyButton {
                 )
             ),
             modifier = modifier.height(40.dp),
-            true,
+            //true,
             onSelected = onSelected
         )
     }
@@ -887,7 +860,7 @@ object VolleyButton {
                 )
             ),
             modifier = modifier.height(height = 40.dp),
-            isExclusive = isExclusive,
+            //isExclusive = isExclusive,
             onSelected = onSelected
         )
     }
@@ -1018,7 +991,7 @@ private fun PreviewCheckGradientButton() {
     PreviewContainer(
         modifier = Modifier
             .height(250.dp)
-            .width(300.dp)
+            .width(350.dp)
     ) {
         Column {
             VolleyButton.CheckGradientButton(
@@ -1026,7 +999,7 @@ private fun PreviewCheckGradientButton() {
                     .padding(24.dp)
                     .height(44.dp),
                 isChecked = true,
-                text = CHECK_GRADIENT_BUTTON_TRUE_TEXT,
+                text = ISCHECKED_TRUE_TEXT,
                 onClick = {}
             )
             VolleyButton.CheckGradientButton(
@@ -1034,7 +1007,7 @@ private fun PreviewCheckGradientButton() {
                     .padding(24.dp)
                     .height(44.dp),
                 isChecked = false,
-                text = CHECK_GRADIENT_BUTTON_FALSE_TEXT,
+                text = ISCHECKED_FALSE_TEXT,
                 onClick = {}
             )
         }
