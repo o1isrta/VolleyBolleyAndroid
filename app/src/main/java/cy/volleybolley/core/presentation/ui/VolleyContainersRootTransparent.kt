@@ -24,7 +24,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -51,17 +50,10 @@ import androidx.core.graphics.createBitmap
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
-object VolleyContainer {
-    const val GRADIENT_COLOR_STOP_MARK_1 = 0.0f
-    const val GRADIENT_COLOR_STOP_MARK_2 = 0.65f
-    const val GRADIENT_COLOR_STOP_MARK_3 = 1.0f
-    const val GRADIENT_COLOR_STOP_VALUE_1 = 0.02f
-    const val GRADIENT_COLOR_STOP_VALUE_2 = 0.2f
-    const val GRADIENT_COLOR_STOP_VALUE_3 = 0.4f
-    const val GRADIENT_BORDER_ALPHA = 0.05f
-
+object VolleyContainersRootTransparent {
     @Composable
     fun Root(content: @Composable (PaddingValues) -> Unit) {
         VolleybolleyTheme {
@@ -144,7 +136,7 @@ object VolleyContainer {
     ) {
         val shape = RoundedCornerShape(cornerRadius.dp)
         var containerSize by remember { mutableStateOf(IntSize.Zero) }
-        var gradientRadius by remember { mutableFloatStateOf(1f) }
+        var gradientRadius = VolleyUiUtil.getGradientRadiusByContainerSize(containerSize)
 
         Box(
             contentAlignment = contentAlignmentOnContainer,
@@ -155,15 +147,17 @@ object VolleyContainer {
                 modifier = Modifier
                     .onSizeChanged { size ->
                         containerSize = size
-                        gradientRadius = maxOf(size.width, size.height).toFloat()
                     }
                     .fillMaxSize()
                     .background(
                         shape = shape,
                         brush = Brush.radialGradient(
-                            GRADIENT_COLOR_STOP_MARK_1 to VolleyColor.WHITE.copy(alpha = GRADIENT_COLOR_STOP_VALUE_1),
-                            GRADIENT_COLOR_STOP_MARK_2 to VolleyColor.WHITE.copy(alpha = GRADIENT_COLOR_STOP_VALUE_2),
-                            GRADIENT_COLOR_STOP_MARK_3 to VolleyColor.WHITE.copy(alpha = GRADIENT_COLOR_STOP_VALUE_3),
+                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_1 to VolleyColor.WHITE
+                                .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_1),
+                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_2 to VolleyColor.WHITE
+                                .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_2),
+                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_3 to VolleyColor.WHITE
+                                .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_3),
                             center = Offset(containerSize.width / 2f, containerSize.height / 2f),
                             radius = gradientRadius,
                         )
@@ -171,7 +165,7 @@ object VolleyContainer {
                     .clip(shape)
                     .border(
                         width = VolleyDimens.DIMEN_1.dp,
-                        color = VolleyColor.WHITE.copy(alpha = GRADIENT_BORDER_ALPHA),
+                        color = VolleyColor.WHITE.copy(alpha = VolleyUiUtil.GRADIENT_BORDER_ALPHA),
                         shape = shape
                     )
             )
@@ -294,7 +288,7 @@ object VolleyContainer {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewContainers() {
-    VolleyContainer.Root {
+    VolleyContainersRootTransparent.Root {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -302,7 +296,7 @@ private fun PreviewContainers() {
                 .background(VolleyColor.SEAWAVE_BACKGROUND)
         ) {
             Column {
-                VolleyContainer.TransparentContainer(
+                VolleyContainersRootTransparent.TransparentContainer(
                     modifier = Modifier
                         .padding(VolleyDimens.DIMEN_20.dp)
                         .fillMaxWidth()
@@ -315,7 +309,7 @@ private fun PreviewContainers() {
                     )
                 }
 
-                VolleyContainer.GlassContainer(
+                VolleyContainersRootTransparent.GlassContainer(
                     modifier = Modifier
                         .padding(VolleyDimens.DIMEN_20.dp)
                         .fillMaxWidth()
@@ -335,20 +329,20 @@ private fun PreviewContainers() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewContainersInsideOtherContainer() {
-    VolleyContainer.Root {
+    VolleyContainersRootTransparent.Root {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
                 .background(VolleyColor.SEAWAVE_BACKGROUND)
         ) {
-            VolleyContainer.TransparentContainer(
+            VolleyContainersRootTransparent.TransparentContainer(
                 modifier = Modifier
                     .padding(VolleyDimens.DIMEN_16.dp)
                     .fillMaxSize()
             ) {
                 Column {
-                    VolleyContainer.TransparentContainer(
+                    VolleyContainersRootTransparent.TransparentContainer(
                         modifier = Modifier
                             .padding(VolleyDimens.DIMEN_20.dp)
                             .fillMaxWidth()
@@ -361,7 +355,7 @@ private fun PreviewContainersInsideOtherContainer() {
                         )
                     }
 
-                    VolleyContainer.GlassContainer(
+                    VolleyContainersRootTransparent.GlassContainer(
                         modifier = Modifier
                             .padding(VolleyDimens.DIMEN_20.dp)
                             .fillMaxWidth()

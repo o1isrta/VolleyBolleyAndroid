@@ -36,13 +36,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.VolleyContainer.Root
+import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldMedium
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 
 object VolleyTextFieldAttribute {
     @Composable
@@ -58,7 +56,7 @@ object VolleyTextFieldAttribute {
         var selectedDate by remember { mutableStateOf<Long?>(null) }
 
         val correctText = selectedDate?.let { dateInMillis ->
-            convertMillisToDate(
+            VolleyUiUtil.convertMillisToTextDate(
                 stringResource(R.string.registration_date_of_birth_string_pattern),
                 dateInMillis
             )
@@ -180,11 +178,6 @@ object VolleyTextFieldAttribute {
                 ),
             )
         }
-    }
-
-    private fun convertMillisToDate(stringPattern: String, millis: Long): String {
-        val formatter = SimpleDateFormat(stringPattern, Locale.getDefault())
-        return formatter.format(Date(millis))
     }
 
     @Stable
