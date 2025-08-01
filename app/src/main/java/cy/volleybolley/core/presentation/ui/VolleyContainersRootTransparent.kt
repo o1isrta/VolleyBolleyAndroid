@@ -153,7 +153,7 @@ object VolleyContainersRootTransparent {
         var backgroundSize by remember { mutableStateOf(IntSize.Zero) }
         val dpWidth = with(density) { backgroundSize.width.toDp() }
         val dpHeight = with(density) { backgroundSize.height.toDp() }
-        var gradientRadius = VolleyUiUtil.getGradientRadiusByContainerSize(backgroundSize)
+        val gradientRadius = VolleyUiUtil.getGradientRadiusByContainerSize(backgroundSize)
 
         Box(
             contentAlignment = mainContainerAlignment,
