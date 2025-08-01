@@ -12,6 +12,8 @@ import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 import cy.volleybolley.core.presentation.ui.navigation.OnboardingRoute
 import kotlinx.coroutines.delay
 
+private const val LAUNCH_DELAY_MILLIS = 3_000L
+
 @Composable
 fun LaunchScreen(navController: NavHostController) {
     Box(
@@ -23,7 +25,7 @@ fun LaunchScreen(navController: NavHostController) {
 
     // Через 3 сек переход дальше и удаление Launch из backstack
     LaunchedEffect(Unit) {
-        delay(3000L)
+        delay(LAUNCH_DELAY_MILLIS)
         navController.navigate(OnboardingRoute) {
             popUpTo(LaunchRoute) { inclusive = true }
         }

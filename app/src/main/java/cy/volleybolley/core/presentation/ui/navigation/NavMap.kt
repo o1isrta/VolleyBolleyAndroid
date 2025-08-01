@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface NavMap
 
-
 // --- authorization flow ---
 @Serializable
 object LaunchRoute : NavMap
