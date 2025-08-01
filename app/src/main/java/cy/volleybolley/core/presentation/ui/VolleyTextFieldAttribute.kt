@@ -279,8 +279,8 @@ object VolleyTextFieldAttribute {
         actionForSaveTime: (VolleyTimeStamp?) -> Unit,
     ) {
         var showTimePicker by remember { mutableStateOf(false) }
-        var correctTimeString = inputTime?.getCorrectTimeString() ?: VolleyTimeStamp.DURATION_FIELD_HINT
-        var correctAfternoonMark: String = inputTime?.getAfternoonMark() ?: VolleyTimeStamp.PM_MARK
+        val correctTimeString = inputTime?.getCorrectTimeString() ?: VolleyTimeStamp.DURATION_FIELD_HINT
+        val correctAfternoonMark: String = inputTime?.getAfternoonMark() ?: VolleyTimeStamp.PM_MARK
 
         VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = cornerRadius,
