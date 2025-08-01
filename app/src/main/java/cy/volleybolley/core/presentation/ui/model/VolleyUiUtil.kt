@@ -20,8 +20,7 @@ object VolleyUiUtil {
         return if (symbolLimit == null) {
             text
         } else {
-            val substringRange = 0 until symbolLimit
-            if (text.length <= symbolLimit) text else text.substring(substringRange)
+            if (text.length <= symbolLimit) text else text.take(symbolLimit)
         }
     }
 
