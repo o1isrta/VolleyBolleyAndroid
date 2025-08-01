@@ -14,8 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,22 +47,21 @@ object VolleyMessageTextField {
     @Composable
     fun MessageField(
         modifier: Modifier = Modifier,
-        textInput: String = "",
+        textInput: String,
+        maxLength: Int = VolleyDimens.DIMEN_160,
         hint: String,
         actionToTransferContent: (String) -> Unit,
     ) {
-        val croppedText = VolleyUiUtil.getLimitedText(VolleyDimens.DIMEN_160, textInput)
+        val limitedText = VolleyUiUtil.getLimitedText(maxLength, textInput)
         Box {
-            var textLength: Int by remember { mutableIntStateOf(croppedText.length) }
-
             MessageContainer(
                 modifier = modifier
             ) {
                 MessageTextField(
-                    textInput = croppedText,
+                    textInput = limitedText,
+                    maxLength = maxLength,
                     hint = hint,
                     actionToTransferContent = { text ->
-                        textLength = text.length
                         actionToTransferContent(text)
                     },
                     modifier = Modifier
@@ -88,31 +88,33 @@ object VolleyMessageTextField {
                     .align(Alignment.BottomEnd)
             ) {
                 VolleyText.BodyLight(
-                    text = "$textLength/160",
+                    text = "${limitedText.length}/$maxLength",
                     maxLines = 1,
                     color = VolleyColor.WHITE,
                 )
             }
         }
+
+        LaunchedEffect(textInput) {
+            if (textInput.length > maxLength) {
+                actionToTransferContent(textInput.take(maxLength))
+            }
+        }
     }
 
+    @Stable
     @Composable
     private fun MessageTextField(
         modifier: Modifier = Modifier,
-        textInput: String = "",
+        textInput: String,
+        maxLength: Int,
         hint: String,
         actionToTransferContent: (String) -> Unit,
     ) {
-        var inputText by remember {
-            mutableStateOf(
-                VolleyUiUtil.getLimitedText(VolleyDimens.DIMEN_160, textInput)
-            )
-        }
-
         Box(
             modifier = modifier
         ) {
-            if (inputText.isEmpty()) {
+            if (textInput.isEmpty()) {
                 VolleyText.BodyLight(
                     text = hint,
                     color = VolleyColor.WHITE,
@@ -120,10 +122,10 @@ object VolleyMessageTextField {
             }
 
             BasicTextField(
-                value = inputText,
+                value = textInput,
                 onValueChange = { text ->
-                    inputText = VolleyUiUtil.getLimitedText(VolleyDimens.DIMEN_160, text)
-                    actionToTransferContent(inputText)
+                    val limitedText = VolleyUiUtil.getLimitedText(maxLength, text)
+                    actionToTransferContent(limitedText)
                 },
                 singleLine = false,
                 textStyle = VolleyTypography.BodyRegular.copy(color = VolleyColor.WHITE),
@@ -259,6 +261,7 @@ object VolleyMessageTextField {
         }
     }
 
+    @Stable
     @Composable
     private fun MessageContentBox(
         modifier: Modifier = Modifier,
@@ -295,6 +298,7 @@ private fun PreviewMessageField() {
 
             VolleyMessageTextField.MessageField(
                 hint = "Some hint...",
+                textInput = "",
                 modifier = Modifier
                     .padding(VolleyDimens.DIMEN_20.dp, 0.dp)
             ) { }
