@@ -1,6 +1,6 @@
 package cy.volleybolley.core.presentation.ui.model
 
-class TimePickerStamp(
+class VolleyTimeStamp(
     hourValue: Int,
     minutesValue: Int,
     isAfternoonValue: Boolean,
@@ -44,5 +44,6 @@ class TimePickerStamp(
         const val DOUBLE_SYMBOL_MARK: Int = 10
         const val PM_MARK = "PM"
         const val AM_MARK = "AM"
+        const val DURATION_FIELD_HINT = "_:__"
     }
 }

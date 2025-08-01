@@ -42,7 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
-import cy.volleybolley.core.presentation.ui.model.TimePickerStamp
+import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -56,19 +56,18 @@ object VolleyTextFieldAttribute {
         modifier: Modifier = Modifier,
         cornerRadius: Int = VolleyDimens.DIMEN_16,
         height: Int = VolleyDimens.DIMEN_52,
-        inputTextValue: String = stringResource(R.string.registration_date_of_birth_hint),
+        inputDate: Long?,
         actionForSaveDate: (Long?) -> Unit,
     ) {
         val shape = RoundedCornerShape(cornerRadius.dp)
         var showDateDialog by remember { mutableStateOf(false) }
-        var selectedDate by remember { mutableStateOf<Long?>(null) }
 
-        val correctText = selectedDate?.let { dateInMillis ->
+        val correctText = inputDate?.let { dateInMillis ->
             VolleyUiUtil.convertMillisToTextDate(
-                stringResource(R.string.registration_date_of_birth_string_pattern),
+                VolleyUiUtil.DATE_OF_BIRTH_FIELD_PATTERN,
                 dateInMillis
             )
-        } ?: inputTextValue
+        } ?: VolleyUiUtil.DATE_FIELD_HINT
 
         val gradientBrush = Brush.verticalGradient(
             colors = listOf(VolleyColor.YELLOW_GRADIENT, VolleyColor.GREEN_GRADIENT)
@@ -108,9 +107,6 @@ object VolleyTextFieldAttribute {
 
         if (showDateDialog) {
             DatePickerDialog(
-                onDateSelected = { date ->
-                    selectedDate = date
-                },
                 onDismiss = { showDateDialog = false },
                 actionForSaveDate = actionForSaveDate,
             )
@@ -120,7 +116,6 @@ object VolleyTextFieldAttribute {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun DatePickerDialog(
-        onDateSelected: (Long?) -> Unit,
         onDismiss: () -> Unit,
         actionForSaveDate: (Long?) -> Unit
     ) {
@@ -131,7 +126,6 @@ object VolleyTextFieldAttribute {
             onDismissRequest = onDismiss,
             confirmButton = {
                 TextButton(onClick = {
-                    onDateSelected(datePickerState.selectedDateMillis)
                     actionForSaveDate(datePickerState.selectedDateMillis)
                     onDismiss()
                 }) {
@@ -281,13 +275,12 @@ object VolleyTextFieldAttribute {
     fun DurationField(
         modifier: Modifier = Modifier,
         cornerRadius: Int = VolleyDimens.DIMEN_16,
-        inputTextValue: String = stringResource(R.string.duration_time_hint),
-        actionForSaveTime: (TimePickerStamp?) -> Unit,
+        inputTime: VolleyTimeStamp?,
+        actionForSaveTime: (VolleyTimeStamp?) -> Unit,
     ) {
         var showTimePicker by remember { mutableStateOf(false) }
-        var timeStamp: TimePickerStamp? by remember { mutableStateOf(null) }
-        var correctTimeString = timeStamp?.getCorrectTimeString() ?: inputTextValue
-        var correctAfternoonMark: String = timeStamp?.getAfternoonMark() ?: stringResource(R.string.pm)
+        var correctTimeString = inputTime?.getCorrectTimeString() ?: VolleyTimeStamp.DURATION_FIELD_HINT
+        var correctAfternoonMark: String = inputTime?.getAfternoonMark() ?: VolleyTimeStamp.PM_MARK
 
         VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = cornerRadius,
@@ -333,7 +326,6 @@ object VolleyTextFieldAttribute {
 
         if (showTimePicker) {
             TimePickerDialog(
-                onConfirm = { stampOfTime -> timeStamp = stampOfTime },
                 onDismiss = { showTimePicker = false },
                 actionForSaveTime = actionForSaveTime,
             )
@@ -343,9 +335,8 @@ object VolleyTextFieldAttribute {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun TimePickerDialog(
-        onConfirm: (TimePickerStamp) -> Unit,
         onDismiss: () -> Unit,
-        actionForSaveTime: (TimePickerStamp?) -> Unit,
+        actionForSaveTime: (VolleyTimeStamp?) -> Unit,
     ) {
         val currentTime = Calendar.getInstance()
         val timePickerState = rememberTimePickerState(
@@ -369,13 +360,12 @@ object VolleyTextFieldAttribute {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        val stampOfTime = TimePickerStamp(
+                        val stampOfTime = VolleyTimeStamp(
                             hourValue = timePickerState.hour,
                             minutesValue = timePickerState.minute,
                             isAfternoonValue = timePickerState.isAfternoon
                         )
                         actionForSaveTime(stampOfTime)
-                        onConfirm(stampOfTime)
                         onDismiss()
                     }
                 ) {
@@ -415,12 +405,22 @@ object VolleyTextFieldAttribute {
 @Composable
 private fun PreviewGradientTextFields() {
     Root {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(VolleyColor.BLACK)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.SEAWAVE_BACKGROUND)
+        ) {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 
+            val currentDate = Calendar.getInstance().timeInMillis
             VolleyTextFieldAttribute.DatePickerField(
+                inputDate = currentDate,
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_16.dp)
+            ) { }
+
+            VolleyTextFieldAttribute.DatePickerField(
+                inputDate = null,
                 modifier = Modifier
                     .padding(VolleyDimens.DIMEN_16.dp)
             ) { }
@@ -430,9 +430,16 @@ private fun PreviewGradientTextFields() {
             ) { }
 
             VolleyTextFieldAttribute.DurationField(
+                inputTime = null,
                 modifier = Modifier
                     .padding(VolleyDimens.DIMEN_16.dp)
-            ) {  }
+            ) { }
+
+            VolleyTextFieldAttribute.DurationField(
+                inputTime = VolleyTimeStamp(4, 20, false),
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_16.dp)
+            ) { }
         }
     }
 }

@@ -247,7 +247,7 @@ object VolleyMessageTextField {
                     .clip(shape)
                     .border(
                         width = VolleyDimens.DIMEN_1.dp,
-                        color = VolleyColor.WHITE.copy(alpha = 0.05f),
+                        color = VolleyColor.WHITE.copy(alpha = VolleyUiUtil.GRADIENT_BORDER_ALPHA),
                         shape = shape
                     )
             )
