@@ -96,7 +96,7 @@ complexity:
         active: true
         threshold: 40
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
-        ignoreAnnotated: [ "Composable" ]
+        ignoreAnnotated: [ "Composable", "Serializable" ]
     LongParameterList:
         active: true
         functionThreshold: 6
