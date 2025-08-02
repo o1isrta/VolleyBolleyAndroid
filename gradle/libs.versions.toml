@@ -9,6 +9,7 @@ javaVersion = "11"
 # Plugins
 agp = "8.10.1"
 kotlin = "2.1.21"
+ksp = "2.1.21-2.0.1"
 # Libs
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -20,7 +21,9 @@ composeBom = "2025.06.01"
 coilCompose = "2.7.0"
 ktor = "3.1.3"
 koin = "4.1.0"
-navigation = "2.9.2"
+annotations = "2.1.0"
+koinKspCompiler = "1.3.0"
+
 # Detekt
 detekt = "1.23.7"
 detektTwitterComposeRules ="0.0.26"
@@ -40,11 +43,12 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
 # DI
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "annotations" }
+koin-ksp-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koinKspCompiler" }
 # Ktor
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
@@ -73,6 +77,7 @@ ktor-client = [
 koin-di = [
     "koin-core",
     "koin-androidx-compose",
+    "koin-annotations",
 ]
 
 [plugins]
@@ -80,4 +85,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

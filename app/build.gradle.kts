@@ -1,8 +1,11 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
@@ -17,6 +20,18 @@ android {
         versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProperties = Properties()
+        val propertiesFile = File(rootDir, "local.properties")
+        if (propertiesFile.exists()) {
+            localProperties.load(propertiesFile.inputStream())
+        } else {
+            error("local.properties file not exists")
+        }
+
+        val serverUrl = localProperties.getProperty("SERVER_URL")
+            ?: error("You should add SERVER_URL property in local.properties")
+        buildConfigField("String", "BASE_URL", "\"$serverUrl\"")
     }
 
     buildTypes {
@@ -74,5 +89,7 @@ dependencies {
 
     implementation(libs.bundles.koin.di)
     implementation(libs.bundles.ktor.client)
-    implementation(libs.androidx.navigation.compose)
+
+    ksp(libs.koin.ksp.compiler)
+
 }
