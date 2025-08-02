@@ -27,13 +27,13 @@ import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBar
 import cy.volleybolley.core.presentation.ui.component.model.LevelIcon
-import cy.volleybolley.core.presentation.ui.model.Colors
+import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 
 object VolleyTopBar {
     private val TopBarHeight = 106.dp
     private val CornerRadius = 32.dp
-    private val BackgroundColor = Colors.ColorHeader
+    private val BackgroundColor = VolleyColor.SEAWAVE_HEADER
     private val Diameter = 46.dp
     private val MarginIcon = 8.dp
 
@@ -73,7 +73,7 @@ object VolleyTopBar {
                                 end = 71.dp,
                                 top = 63.dp
                             ),
-                        color = Colors.White,
+                        color = VolleyColor.WHITE,
                         textAlign = TextAlign.Left,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

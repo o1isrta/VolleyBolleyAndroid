@@ -10,6 +10,8 @@ val Purple40 = Color(color = DefaultThemeColors.PURPLE_40)
 val PurpleGrey40 = Color(color = DefaultThemeColors.PURPLE_GREY40)
 val Pink40 = Color(color = DefaultThemeColors.PINK_40)
 
+val Background = Color(color = 0xFF32716B)
+
 object DefaultThemeColors {
     const val PURPLE_80 = 0xFFD0BCFF
     const val PURPLE_GREY_80 = 0xFFD0BCFF
