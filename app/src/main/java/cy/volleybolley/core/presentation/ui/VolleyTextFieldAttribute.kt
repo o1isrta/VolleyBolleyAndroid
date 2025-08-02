@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -20,7 +22,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -37,10 +42,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
+import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
+import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldMedium
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
+import java.util.Calendar
 
 object VolleyTextFieldAttribute {
     @Composable
@@ -48,19 +56,18 @@ object VolleyTextFieldAttribute {
         modifier: Modifier = Modifier,
         cornerRadius: Int = VolleyDimens.DIMEN_16,
         height: Int = VolleyDimens.DIMEN_52,
-        inputTextValue: String = stringResource(R.string.registration_date_of_birth_hint),
+        inputDate: Long?,
         actionForSaveDate: (Long?) -> Unit,
     ) {
         val shape = RoundedCornerShape(cornerRadius.dp)
-        var showModal by remember { mutableStateOf(false) }
-        var selectedDate by remember { mutableStateOf<Long?>(null) }
+        var showDateDialog by remember { mutableStateOf(false) }
 
-        val correctText = selectedDate?.let { dateInMillis ->
+        val correctText = inputDate?.let { dateInMillis ->
             VolleyUiUtil.convertMillisToTextDate(
-                stringResource(R.string.registration_date_of_birth_string_pattern),
+                VolleyUiUtil.DATE_OF_BIRTH_FIELD_PATTERN,
                 dateInMillis
             )
-        } ?: inputTextValue
+        } ?: VolleyUiUtil.DATE_FIELD_HINT
 
         val gradientBrush = Brush.verticalGradient(
             colors = listOf(VolleyColor.YELLOW_GRADIENT, VolleyColor.GREEN_GRADIENT)
@@ -72,7 +79,7 @@ object VolleyTextFieldAttribute {
                     interactionSource = null,
                     indication = null,
                 ) {
-                    showModal = true
+                    showDateDialog = true
                 }
         ) {
             Box(
@@ -98,12 +105,9 @@ object VolleyTextFieldAttribute {
             }
         }
 
-        if (showModal) {
-            DatePickerModal(
-                onDateSelected = { date ->
-                    selectedDate = date
-                },
-                onDismiss = { showModal = false },
+        if (showDateDialog) {
+            DatePickerDialog(
+                onDismiss = { showDateDialog = false },
                 actionForSaveDate = actionForSaveDate,
             )
         }
@@ -111,8 +115,7 @@ object VolleyTextFieldAttribute {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun DatePickerModal(
-        onDateSelected: (Long?) -> Unit,
+    private fun DatePickerDialog(
         onDismiss: () -> Unit,
         actionForSaveDate: (Long?) -> Unit
     ) {
@@ -123,7 +126,6 @@ object VolleyTextFieldAttribute {
             onDismissRequest = onDismiss,
             confirmButton = {
                 TextButton(onClick = {
-                    onDateSelected(datePickerState.selectedDateMillis)
                     actionForSaveDate(datePickerState.selectedDateMillis)
                     onDismiss()
                 }) {
@@ -182,7 +184,7 @@ object VolleyTextFieldAttribute {
 
     @Stable
     @Composable
-    fun CountActionField(
+    fun CountField(
         maximumCount: Int = VolleyDimens.DIMEN_24,
         minimumCount: Int = VolleyDimens.DIMEN_4,
         inputCount: Int = VolleyDimens.DIMEN_4,
@@ -209,7 +211,7 @@ object VolleyTextFieldAttribute {
                     Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
                 }
 
-                CountField(text = inputCount.toString())
+                CountTextField(text = inputCount.toString())
 
                 if (inputCount < maximumCount) {
                     Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
@@ -230,7 +232,7 @@ object VolleyTextFieldAttribute {
 
     @Stable
     @Composable
-    private fun CountField(
+    private fun CountTextField(
         modifier: Modifier = Modifier,
         cornerRadius: Int = VolleyDimens.DIMEN_16,
         height: Int = VolleyDimens.DIMEN_40,
@@ -268,21 +270,176 @@ object VolleyTextFieldAttribute {
             }
         }
     }
+
+    @Composable
+    fun DurationField(
+        modifier: Modifier = Modifier,
+        cornerRadius: Int = VolleyDimens.DIMEN_16,
+        inputTime: VolleyTimeStamp?,
+        actionForSaveTime: (VolleyTimeStamp?) -> Unit,
+    ) {
+        var showTimePicker by remember { mutableStateOf(false) }
+        val correctTimeString = inputTime?.getCorrectTimeString() ?: stringResource(R.string.duration_time_hint)
+        val correctAfternoonMark: String = inputTime?.getAfternoonMark() ?: VolleyTimeStamp.PM_MARK
+
+        VolleyContainersRootTransparent.TransparentContainer(
+            cornerRadius = cornerRadius,
+            modifier = modifier
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clickable {
+                        showTimePicker = true
+                    }
+            ) {
+                VolleyText.BodyRegular(
+                    text = correctTimeString,
+                    color = VolleyColor.WHITE,
+                    maxLines = 1,
+                    modifier = Modifier
+                        .padding(
+                            start = VolleyDimens.DIMEN_16.dp,
+                            top = VolleyDimens.DIMEN_13.dp,
+                            end = VolleyDimens.DIMEN_4.dp,
+                            bottom = VolleyDimens.DIMEN_13.dp
+                        )
+                )
+
+                VolleyText.BodyRegular(
+                    text = correctAfternoonMark,
+                    color = VolleyColor.WHITE,
+                    maxLines = 1,
+                    modifier = Modifier
+                        .padding(
+                            start = VolleyDimens.DIMEN_4.dp,
+                            top = 0.dp,
+                            end = VolleyDimens.DIMEN_16.dp,
+                            bottom = 0.dp
+                        )
+                )
+            }
+        }
+
+        if (showTimePicker) {
+            TimePickerDialog(
+                onDismiss = { showTimePicker = false },
+                actionForSaveTime = actionForSaveTime,
+            )
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun TimePickerDialog(
+        onDismiss: () -> Unit,
+        actionForSaveTime: (VolleyTimeStamp?) -> Unit,
+    ) {
+        val currentTime = Calendar.getInstance()
+        val timePickerState = rememberTimePickerState(
+            initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
+            initialMinute = currentTime.get(Calendar.MINUTE),
+            is24Hour = false,
+        )
+
+        AlertDialog(
+            containerColor = VolleyColor.WHITE,
+            onDismissRequest = onDismiss,
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    VolleyText.BodyBold(
+                        text = stringResource(R.string.registration_date_of_birth_cancel),
+                        color = VolleyColor.SEAWAVE_HEADER,
+                        maxLines = 1
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val stampOfTime = VolleyTimeStamp(
+                            hour = timePickerState.hour,
+                            minutes = timePickerState.minute,
+                            isAfternoon = timePickerState.isAfternoon
+                        )
+                        actionForSaveTime(stampOfTime)
+                        onDismiss()
+                    }
+                ) {
+                    VolleyText.BodyBold(
+                        text = stringResource(R.string.ok),
+                        color = VolleyColor.SEAWAVE_HEADER,
+                        maxLines = 1
+                    )
+                }
+            },
+            text = {
+                TimePicker(
+                    state = timePickerState,
+                    colors = TimePickerDefaults.colors(
+                        clockDialColor = VolleyColor.SEAWAVE_HEADER,
+                        clockDialSelectedContentColor = VolleyColor.TEXT_DARK,
+                        clockDialUnselectedContentColor = VolleyColor.WHITE,
+                        selectorColor = VolleyColor.GREEN_GRADIENT,
+                        containerColor = VolleyColor.GREEN_GRADIENT,
+                        periodSelectorBorderColor = VolleyColor.WHITE,
+                        periodSelectorSelectedContainerColor = VolleyColor.GREEN_GRADIENT,
+                        periodSelectorUnselectedContainerColor = VolleyColor.SEAWAVE_HEADER,
+                        periodSelectorSelectedContentColor = VolleyColor.TEXT_DARK,
+                        periodSelectorUnselectedContentColor = VolleyColor.WHITE,
+                        timeSelectorSelectedContainerColor = VolleyColor.GREEN_GRADIENT,
+                        timeSelectorUnselectedContainerColor = VolleyColor.SEAWAVE_HEADER,
+                        timeSelectorSelectedContentColor = VolleyColor.TEXT_DARK,
+                        timeSelectorUnselectedContentColor = VolleyColor.WHITE,
+                    ),
+                )
+            }
+        )
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewGradientTextFields() {
     Root {
-        Column(modifier = Modifier.background(VolleyColor.SEAWAVE_BACKGROUND)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.SEAWAVE_BACKGROUND)
+        ) {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 
+            val currentDate = Calendar.getInstance().timeInMillis
             VolleyTextFieldAttribute.DatePickerField(
-                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+                inputDate = currentDate,
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_16.dp)
             ) { }
 
-            VolleyTextFieldAttribute.CountActionField(
+            VolleyTextFieldAttribute.DatePickerField(
+                inputDate = null,
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_16.dp)
+            ) { }
+
+            VolleyTextFieldAttribute.CountField(
                 paddingValues = PaddingValues(VolleyDimens.DIMEN_16.dp)
+            ) { }
+
+            VolleyTextFieldAttribute.DurationField(
+                inputTime = null,
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_16.dp)
+            ) { }
+
+            VolleyTextFieldAttribute.DurationField(
+                inputTime = VolleyTimeStamp(
+                    VolleyDimens.DIMEN_4,
+                    VolleyDimens.DIMEN_20,
+                    false
+                ),
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_16.dp)
             ) { }
         }
     }
