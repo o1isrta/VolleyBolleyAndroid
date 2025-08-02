@@ -279,7 +279,7 @@ object VolleyTextFieldAttribute {
         actionForSaveTime: (VolleyTimeStamp?) -> Unit,
     ) {
         var showTimePicker by remember { mutableStateOf(false) }
-        val correctTimeString = inputTime?.getCorrectTimeString() ?: VolleyTimeStamp.DURATION_FIELD_HINT
+        val correctTimeString = inputTime?.getCorrectTimeString() ?: stringResource(R.string.duration_time_hint)
         val correctAfternoonMark: String = inputTime?.getAfternoonMark() ?: VolleyTimeStamp.PM_MARK
 
         VolleyContainersRootTransparent.TransparentContainer(
@@ -289,10 +289,7 @@ object VolleyTextFieldAttribute {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .clickable(
-                        interactionSource = null,
-                        indication = null,
-                    ) {
+                    .clickable {
                         showTimePicker = true
                     }
             ) {
@@ -361,9 +358,9 @@ object VolleyTextFieldAttribute {
                 TextButton(
                     onClick = {
                         val stampOfTime = VolleyTimeStamp(
-                            hourValue = timePickerState.hour,
-                            minutesValue = timePickerState.minute,
-                            isAfternoonValue = timePickerState.isAfternoon
+                            hour = timePickerState.hour,
+                            minutes = timePickerState.minute,
+                            isAfternoon = timePickerState.isAfternoon
                         )
                         actionForSaveTime(stampOfTime)
                         onDismiss()
