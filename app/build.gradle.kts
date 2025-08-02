@@ -89,6 +89,7 @@ dependencies {
 
     implementation(libs.bundles.koin.di)
     implementation(libs.bundles.ktor.client)
+    implementation(libs.androidx.navigation.compose)
 
     ksp(libs.koin.ksp.compiler)
 
