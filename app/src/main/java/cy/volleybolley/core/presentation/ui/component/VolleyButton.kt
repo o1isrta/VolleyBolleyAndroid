@@ -44,13 +44,13 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.LEVEL_UP_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.MAP_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.OUTLINED_BUTTON_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.OUTLINED_GRADIENT_BUTTON_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtonsMap
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtonsPlayers
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonSText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonXSText
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtonsMap
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtonsPlayers
 
 @UiLibraryMarker
 object VolleyButton {
@@ -908,11 +908,10 @@ object VolleyButton {
         onClick: () -> Unit
     ) {
         val paddingValues = PaddingValues(all = 4.dp)
-        val color: Color
-        if(isChecked) {
-            color = VolleyColor.White
+        val color: Color = if (isChecked) {
+            VolleyColor.White
         } else {
-            color = Color.Transparent
+            Color.Transparent
         }
         OutlinedButton(
             onClick = onClick,
