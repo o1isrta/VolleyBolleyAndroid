@@ -28,6 +28,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -182,58 +183,38 @@ object VolleyButton {
         paddingValues: PaddingValues = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
         onClick: () -> Unit
     ) {
-            Button(
-                onClick = onClick,
-                modifier = modifier
-                   .background(Brush.linearGradient(
-                        colors = listOf(
-                            VolleyColor.YellowForGradient,
-                            VolleyColor.GreenForGradient
-                        ),
-                        start = Offset(x = 0f, y = 0f),
-                        end = Offset(x = 0f, y = 100f)
-                    ),
-                        shape = RoundedCornerShape(size = 16.dp)
-                    ).height(60.dp),
-                colors = ButtonDefaults.buttonColors(Color.Transparent),
-                contentPadding = PaddingValues(0.dp)  // Отключаем внутренние отступы по умолчанию
+        Button(
+            onClick = onClick,
+            modifier = modifier,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = VolleyColor.TEXT_DARK
+            ),
+            contentPadding = PaddingValues(0.dp),
+            shape = RoundedCornerShape(size = 16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(
+                                VolleyColor.YellowForGradient,
+                                VolleyColor.GreenForGradient
+                            ),
+                            start = Offset(x = 0f, y = 0f),
+                            end = Offset(x = 0f, y = 100f)
+                        )
+                    )
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = text,
                     color = VolleyColor.TEXT_DARK,
-                    style = ButtonSText,
-                    modifier = Modifier.padding(paddingValues) // Добавляем отступы к тексту
+                    style = ButtonSText
                 )
             }
-
-//            Box(
-//                modifier = modifier
-//                    .clickable(
-//                        onClick = onClick,
-//                        indication = null, // Отключаем стандартный Indication эффект
-//                        interactionSource = remember { MutableInteractionSource() }
-//                    )
-//                    .background(
-//                        brush = Brush.linearGradient(
-//                            colors = listOf(
-//                                VolleyColor.YellowForGradient,
-//                                VolleyColor.GreenForGradient
-//                            ),
-//                            start = Offset(x = 0f, y = 0f),
-//                            end = Offset(x = 0f, y = 100f)
-//                        ),
-//                        shape = RoundedCornerShape(size = 16.dp),
-//                    ),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Text(
-//                    text = text,
-//                    color = VolleyColor.TEXT_DARK,
-//                    style = ButtonSText,
-//                    modifier = Modifier.padding(paddingValues)
-//                )
-//            }
-
+        }
     }
 
     /**
@@ -330,37 +311,46 @@ object VolleyButton {
         onClick: () -> Unit
     ) {
         if (isChecked) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = modifier
-                    .clickable(onClick = onClick)
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                VolleyColor.YellowForGradient,
-                                VolleyColor.GreenForGradient
-                            ),
-                            start = Offset(x = 0f, y = 0f),
-                            end = Offset(x = 0f, y = 100f)
-                        ),
-                        shape = RoundedCornerShape(size = 16.dp),
-                    )
+            Button(
+                onClick = onClick,
+                modifier = modifier,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = VolleyColor.TEXT_DARK
+                ),
+                contentPadding = PaddingValues(0.dp),
+                shape = RoundedCornerShape(size = 16.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(paddingValues)
+                Box(
+                    modifier = Modifier
+                        .background(
+                            Brush.linearGradient(
+                                colors = listOf(
+                                    VolleyColor.YellowForGradient,
+                                    VolleyColor.GreenForGradient
+                                ),
+                                start = Offset(x = 0f, y = 0f),
+                                end = Offset(x = 0f, y = 100f)
+                            )
+                        )
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = text,
-                        color = VolleyColor.TEXT_DARK,
-                        style = ButtonSText
-                    )
-                    Spacer(modifier = Modifier.size(size = 8.dp))
-                    Image(
-                        painter = painterResource(R.drawable.arrow_right_black),
-                        contentDescription = null,
-                        modifier = Modifier.size(width = 17.dp, height = 16.dp)
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = text,
+                            color = VolleyColor.TEXT_DARK,
+                            style = ButtonSText
+                        )
+                        Spacer(modifier = Modifier.size(size = 8.dp))
+                        Image(
+                            painter = painterResource(R.drawable.arrow_right_black),
+                            contentDescription = null,
+                            modifier = Modifier.size(width = 17.dp, height = 16.dp)
+                        )
+                    }
                 }
             }
         } else {
@@ -412,42 +402,46 @@ object VolleyButton {
         onClick: () -> Unit
     ) {
         if (isChecked) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = modifier
-                    .clickable(
-                        onClick = onClick,
-                        indication = null, // Отключаем стандартный Indication эффект
-                        interactionSource = remember { MutableInteractionSource() } // Обязательно передавать interactionSource
-
-                    )
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                VolleyColor.YellowForGradient,
-                                VolleyColor.GreenForGradient
-                            ),
-                            start = Offset(x = 0f, y = 0f),
-                            end = Offset(x = 0f, y = 100f)
-                        ),
-                        shape = RoundedCornerShape(size = 16.dp),
-                    )
+            Button(
+                onClick = onClick,
+                modifier = modifier,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = VolleyColor.TEXT_DARK
+                ),
+                contentPadding = PaddingValues(0.dp),
+                shape = RoundedCornerShape(size = 16.dp)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(paddingValues)
+                Box(
+                    modifier = Modifier
+                        .background(
+                            Brush.linearGradient(
+                                colors = listOf(
+                                    VolleyColor.YellowForGradient,
+                                    VolleyColor.GreenForGradient
+                                ),
+                                start = Offset(x = 0f, y = 0f),
+                                end = Offset(x = 0f, y = 100f)
+                            )
+                        )
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Image(
-                        painter = iconPainter,
-                        contentDescription = null,
-                        modifier = modifier.size(width = 57.dp, height = 30.dp)
-                    )
-                    Text(
-                        text = text,
-                        color = VolleyColor.TEXT_DARK,
-                        style = ButtonXSText,
-                        fontSize = 14.sp
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            painter = iconPainter,
+                            contentDescription = null,
+                            modifier = modifier.size(width = 57.dp, height = 30.dp)
+                        )
+                        Text(
+                            text = text,
+                            color = VolleyColor.TEXT_DARK,
+                            style = ButtonXSText,
+                            fontSize = 14.sp
+                        )
+                    }
                 }
             }
         } else {
@@ -496,7 +490,6 @@ object VolleyButton {
         } else {
             painterResource(R.drawable.arrow_levelup_gradient)
         }
-
         CheckedGradientButtonTopImage(
             onClick = onClick,
             modifier = modifier,
@@ -899,7 +892,7 @@ object VolleyButton {
             CheckGradientButton(
                 modifier = Modifier.weight(1f),
                 text = INDIVIDUAL_TEXT,
-                isChecked = checkId  == 1,
+                isChecked = checkId == 1,
                 onClick = onClick
             )
             CheckGradientButton(
@@ -920,10 +913,9 @@ object VolleyButton {
     ) {
         val paddingValues = PaddingValues(all = 4.dp)
         val color: Color
-        if(isChecked == true){
+        if(isChecked) {
             color = VolleyColor.White
-        }
-        else{
+        } else {
             color = Color.Transparent
         }
         OutlinedButton(
@@ -960,20 +952,22 @@ object VolleyButton {
                         ),
                         start = Offset(x = 0f, y = 0f),
                         end = Offset(x = 0f, y = 100f)
-                    )                    ,
+                    ),
                     shape = RoundedCornerShape(size = 16.dp),
                 )
                 .size(204.dp, 32.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 2.dp), // Отступ 2.dp слева и справа, // Занимаем всю ширину Box
-                horizontalArrangement = Arrangement.SpaceBetween, // Кнопки по краям
-                verticalAlignment = Alignment.CenterVertically, // Выравнивание по вертикали
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 2.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 SliderButton(
                     modifier = Modifier.size(100.dp, 28.dp),
                     text = MAP_TEXT,
-                    isChecked = checkId  == 1,
+                    isChecked = checkId == 1,
                     onClick = onClick
                 )
                 SliderButton(
@@ -1002,20 +996,22 @@ object VolleyButton {
                         ),
                         start = Offset(x = 0f, y = 0f),
                         end = Offset(x = 0f, y = 100f)
-                    )                    ,
+                    ),
                     shape = RoundedCornerShape(size = 16.dp),
                 )
                 .size(319.dp, 32.dp)
         ) {
-            Row (
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 2.dp), // Отступ 2.dp слева и справа, // Занимаем всю ширину Box
-                horizontalArrangement = Arrangement.SpaceBetween, // Кнопки по краям
-                verticalAlignment = Alignment.CenterVertically, // Выравнивание по вертикали
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 2.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 SliderButton(
                     modifier = Modifier.size(166.dp, 28.dp),
                     text = ALL_PLAYERS_TEXT,
-                    isChecked = checkId  == 1,
+                    isChecked = checkId == 1,
                     onClick = onClick
                 )
                 SliderButton(
@@ -1026,31 +1022,6 @@ object VolleyButton {
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSliderButtonsMap() {
-    PreviewContainer {
-        SliderButtonsMap(
-            modifier = Modifier,
-            onClick = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSliderButtonsPlayers() {
-    PreviewContainer(
-        modifier = Modifier
-            .width(350.dp)
-    ) {
-        SliderButtonsPlayers(
-            modifier = Modifier,
-            onClick = {}
-        )
     }
 }
 
@@ -1120,7 +1091,7 @@ private fun PreviewActiveButtonMap() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewActiveGradientButton() {
-    PreviewContainer (
+    PreviewContainer(
         modifier = Modifier
             .height(250.dp)
     ) {
@@ -1161,6 +1132,7 @@ private fun PreviewCheckGradientButton() {
                 text = ISCHECKED_TRUE_TEXT,
                 onClick = {}
             )
+            Spacer(modifier = Modifier.height(8.dp))
             VolleyButton.CheckGradientButton(
                 modifier = Modifier
                     .padding(24.dp)
@@ -1184,15 +1156,14 @@ private fun PreviewCheckedGradientButtonRightImage() {
         Column {
             VolleyButton.CheckedGradientButtonRightImage(
                 modifier = Modifier
-                    .padding(24.dp)
                     .height(44.dp),
                 isChecked = true,
                 text = ISCHECKED_TRUE_TEXT,
                 onClick = {}
             )
-            VolleyButton.CheckGradientButton(
+            Spacer(modifier = Modifier.height(8.dp))
+            VolleyButton.CheckedGradientButtonRightImage(
                 modifier = Modifier
-                    .padding(24.dp)
                     .height(44.dp),
                 isChecked = false,
                 text = ISCHECKED_FALSE_TEXT,
@@ -1283,6 +1254,7 @@ private fun PreviewGroupButtonsForChangeLevel() {
 private fun PreviewGroupButtonsForDate2() {
     PreviewContainer {
         VolleyButton.GroupButtonsForDate2(
+            checkId = 2,
             modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
         )
@@ -1354,6 +1326,31 @@ private fun PreviewGroupButtonsForTourneyType() {
             modifier = Modifier
                 .padding(vertical = 12.dp)
                 .fillMaxWidth(),
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSliderButtonsMap() {
+    PreviewContainer {
+        SliderButtonsMap(
+            modifier = Modifier,
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSliderButtonsPlayers() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(350.dp)
+    ) {
+        SliderButtonsPlayers(
+            modifier = Modifier,
             onClick = {}
         )
     }

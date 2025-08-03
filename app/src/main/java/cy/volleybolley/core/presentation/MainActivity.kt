@@ -22,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_FALSE_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
@@ -52,18 +54,20 @@ private fun ButtonDemo() {
             .background(color = VolleyColor.TurquoiseDark),
         verticalArrangement = Arrangement.Center
     ) {
-        VolleyButton.SliderButtonsMap(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            onClick = {}
-        )
         VolleyButton.CheckedGradientButtonRightImage(
             modifier = Modifier
                 .padding(24.dp)
                 .height(44.dp)
-                .fillMaxWidth(),
-            text = "isChecked = false",
-            onClick = {},
-            isChecked = false
+                .align(Alignment.CenterHorizontally),
+            isChecked = true,
+            text = ISCHECKED_TRUE_TEXT,
+            onClick = {}
+        )
+        VolleyButton.SliderButtonsMap(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(24.dp),
+            onClick = {}
         )
         VolleyButton.GroupButtonsForChangeLevel(
             checkId = 1,
@@ -73,6 +77,7 @@ private fun ButtonDemo() {
             onSelected = {}
         )
         VolleyButton.GroupButtonsForDate2(
+            checkId = 2,
             modifier = Modifier
                 .padding(24.dp)
                 .fillMaxWidth(),
