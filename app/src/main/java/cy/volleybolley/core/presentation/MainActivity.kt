@@ -13,18 +13,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import cy.volleybolley.core.presentation.ui.component.VolleyButton
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_FALSE_TEXT
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
-import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,14 +27,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             VolleybolleyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                RootContainer { innerPadding ->
+                    NavHostContainer(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
-            ButtonDemo()
         }
     }
 }
@@ -119,30 +111,28 @@ private fun ButtonDemo() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun RootContainer(
+    content: @Composable (PaddingValues) -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Background),
+    ) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            containerColor = Background,
+            content = content
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun Preview() {
     VolleybolleyTheme {
-        Greeting("Android")
-    }
-}
-
-@Composable
-fun Root1(content: @Composable (PaddingValues) -> Unit) {
-    VolleybolleyTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            Scaffold(
-                modifier = Modifier.fillMaxSize()
-            ) { paddingValues ->
-                content(paddingValues)
-            }
+        RootContainer { padding ->
+            NavHostContainer(modifier = Modifier.padding(padding))
         }
     }
 }

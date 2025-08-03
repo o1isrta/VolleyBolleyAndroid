@@ -33,13 +33,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.VolleyContainer.Root
+import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.CodeField
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldAlert
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldLight
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldMedium
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 
 object VolleyTextFieldGradient {
     @Stable
@@ -164,7 +165,7 @@ object VolleyTextFieldGradient {
         actionToTransferContent: (String) -> Unit,
         composablePrefix: @Composable () -> Unit = {},
     ) {
-        val inputText = getLimitedText(maxTextLength, textInputValue)
+        val inputText = VolleyUiUtil.getLimitedText(maxTextLength, textInputValue)
         val alertMode = alertMessage.isNotEmpty()
 
         val gradientBrush = remember {
@@ -250,15 +251,6 @@ object VolleyTextFieldGradient {
 
     private fun getTextStyleByAlertMode(alertMode: Boolean, baseTextStyle: TextStyle): TextStyle {
         return if (alertMode) baseTextStyle.copy(color = VolleyColor.ALERT) else baseTextStyle
-    }
-
-    private fun getLimitedText(symbolLimit: Int?, text: String): String {
-        return if (symbolLimit == null) {
-            text
-        } else {
-            val substringRange = 0 until symbolLimit
-            if (text.length <= symbolLimit) text else text.substring(substringRange)
-        }
     }
 }
 
