@@ -37,7 +37,7 @@ object VolleyAvatar {
             modifier = Modifier
                 .size(size)
                 .clip(CircleShape)
-                .border(1.dp, VolleyColor.WHITE, CircleShape)
+                .border(1.dp, VolleyColor.White, CircleShape)
                 .clickable(onClick = onClick)
         ) {
             AsyncImage(
