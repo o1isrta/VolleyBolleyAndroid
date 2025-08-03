@@ -29,7 +29,7 @@ object VolleyColor {
     val TurquoiseMedium = Color(color = 0xFF2DB69A)
 
     /**
-     * бирюзовый (светлый фон)
+     * бирюзовый (светлый фон, хедер)
      */
     val Turquoise = Color(color = 0xFF53A8A1)
 
@@ -62,14 +62,28 @@ object VolleyColor {
      * белый
      */
     val White = Color(color = 0xFFFFFFFF)
-    val BLACK = Color(color = 0xFF000000)
-    val TEXT_FIELD = Color(color = 0xFF7C7C7C)
+
+    /**
+     * чёрный
+     */
+    val Black = Color(color = 0xFF000000)
+
+    /**
+     * текст в полях ввода
+     */
+    val TextField = Color(color = 0xFF7C7C7C)
 
     /**
      * цвет темного текста
      */
-    val TEXT_DARK = Color(color = 0xFF423F39)
-    val TEXT_CALENDAR_DARK = Color(color = 0xFF333333)
-    val TEXT_CALENDAR_LIGHT_GREY = Color(color = 0xFFE0E0E0)
-    val ALERT = Color(color = 0xFFE33222)
+    val TextDark = Color(color = 0xFF423F39)
+
+    /**
+     * цвет текста и компонентов при ошибках, инвалидации и тд.
+     */
+    val Alert = Color(color = 0xFFE33222)
+
+    val TextCalendarDark = Color(color = 0xFF333333)
+    val TextCalendarLightGrey = Color(color = 0xFFE0E0E0)
+
 }

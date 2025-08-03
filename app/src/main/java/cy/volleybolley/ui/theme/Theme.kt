@@ -14,9 +14,9 @@ private val LightColorScheme = lightColorScheme(
     primary = VolleyColor.GreenForGradient,
     secondary = PurpleGrey40,
     tertiary = Pink40,
-    onSurface = VolleyColor.TEXT_CALENDAR_DARK,
-    onSurfaceVariant = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
-    outline = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
+    onSurface = VolleyColor.TextCalendarDark,
+    onSurfaceVariant = VolleyColor.TextCalendarLightGrey,
+    outline = VolleyColor.TextCalendarLightGrey,
 )
 
 @Composable

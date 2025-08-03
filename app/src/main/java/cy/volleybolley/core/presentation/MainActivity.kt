@@ -13,12 +13,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
+import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 class MainActivity : ComponentActivity() {
@@ -117,11 +122,11 @@ fun RootContainer(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background),
+            .background(VolleyColor.TurquoiseDark),
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            containerColor = Background,
+            containerColor = VolleyColor.TurquoiseDark,
             content = content
         )
     }

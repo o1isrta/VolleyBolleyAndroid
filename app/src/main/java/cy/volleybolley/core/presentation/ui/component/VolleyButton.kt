@@ -3,8 +3,6 @@ package cy.volleybolley.core.presentation.ui.component
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,10 +23,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -38,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.Root1
+import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ACTIVE_BUTTON_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ADD_PAYMENT_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.GRADIENT_BUTTON_TEXT
@@ -112,7 +108,7 @@ object VolleyButton {
             Text(
                 text = text.uppercase(),
                 color = if (enabled) {
-                    VolleyColor.TEXT_DARK
+                    VolleyColor.TextDark
                 } else {
                     VolleyColor.White
                 },
@@ -166,7 +162,7 @@ object VolleyButton {
         ) {
             Text(
                 text = text,
-                color = VolleyColor.TEXT_DARK,
+                color = VolleyColor.TextDark,
                 style = ButtonSText
             )
         }
@@ -188,7 +184,7 @@ object VolleyButton {
             modifier = modifier,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
-                contentColor = VolleyColor.TEXT_DARK
+                contentColor = VolleyColor.TextDark
             ),
             contentPadding = PaddingValues(0.dp),
             shape = RoundedCornerShape(size = 16.dp)
@@ -210,7 +206,7 @@ object VolleyButton {
             ) {
                 Text(
                     text = text,
-                    color = VolleyColor.TEXT_DARK,
+                    color = VolleyColor.TextDark,
                     style = ButtonSText
                 )
             }
@@ -316,7 +312,7 @@ object VolleyButton {
                 modifier = modifier,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
-                    contentColor = VolleyColor.TEXT_DARK
+                    contentColor = VolleyColor.TextDark
                 ),
                 contentPadding = PaddingValues(0.dp),
                 shape = RoundedCornerShape(size = 16.dp)
@@ -341,7 +337,7 @@ object VolleyButton {
                     ) {
                         Text(
                             text = text,
-                            color = VolleyColor.TEXT_DARK,
+                            color = VolleyColor.TextDark,
                             style = ButtonSText
                         )
                         Spacer(modifier = Modifier.size(size = 8.dp))
@@ -407,7 +403,7 @@ object VolleyButton {
                 modifier = modifier,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
-                    contentColor = VolleyColor.TEXT_DARK
+                    contentColor = VolleyColor.TextDark
                 ),
                 contentPadding = PaddingValues(0.dp),
                 shape = RoundedCornerShape(size = 16.dp)
@@ -437,7 +433,7 @@ object VolleyButton {
                         )
                         Text(
                             text = text,
-                            color = VolleyColor.TEXT_DARK,
+                            color = VolleyColor.TextDark,
                             style = ButtonXSText,
                             fontSize = 14.sp
                         )
@@ -930,7 +926,7 @@ object VolleyButton {
         ) {
             Text(
                 text = text,
-                color = VolleyColor.TEXT_DARK,
+                color = VolleyColor.TextDark,
                 style = ButtonSText
             )
         }
@@ -1359,7 +1355,7 @@ fun PreviewSliderButtonsPlayers() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewCombo() {
-    Root1 {
+    VolleyContainersRootTransparent.Root {
         Box(
             modifier = Modifier
                 .fillMaxSize()

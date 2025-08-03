@@ -148,7 +148,7 @@ object VolleyTypography {
 
     // --- Поля ввода ---
     val GradientFieldMedium = TextStyle(
-        color = VolleyColor.TEXT_FIELD,
+        color = VolleyColor.TextField,
         fontSize = 16.sp,
         lineHeight = 20.sp,
         fontFamily = HeroFamily,
@@ -157,7 +157,7 @@ object VolleyTypography {
     )
 
     val GradientFieldLight = TextStyle(
-        color = VolleyColor.TEXT_FIELD,
+        color = VolleyColor.TextField,
         fontSize = 14.sp,
         lineHeight = 16.8.sp,
         fontFamily = HeroFamily,
@@ -175,7 +175,7 @@ object VolleyTypography {
     )
 
     val CodeField = TextStyle(
-        color = VolleyColor.TEXT_FIELD,
+        color = VolleyColor.TextField,
         fontSize = 16.sp,
         lineHeight = 20.sp,
         fontFamily = HeroFamily,

@@ -64,7 +64,7 @@ object VolleyTextFieldGradient {
                 Icon(
                     painter = painterResource(R.drawable.ic_search),
                     contentDescription = null,
-                    tint = VolleyColor.TEXT_DARK
+                    tint = VolleyColor.TextDark
                 )
 
                 Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_8.dp))
@@ -112,7 +112,7 @@ object VolleyTextFieldGradient {
                 Text(
                     text = stringResource(R.string.registration_phone_field_code_symbol),
                     style = GradientFieldMedium,
-                    color = if (alertMessage.isNotEmpty()) VolleyColor.ALERT else Color.Unspecified
+                    color = if (alertMessage.isNotEmpty()) VolleyColor.Alert else Color.Unspecified
                 )
 
                 Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_4.dp))
@@ -194,7 +194,7 @@ object VolleyTextFieldGradient {
                         )
                         .border(
                             width = VolleyDimens.DIMEN_1.dp,
-                            brush = if (alertMode) SolidColor(VolleyColor.ALERT) else gradientBrush,
+                            brush = if (alertMode) SolidColor(VolleyColor.Alert) else gradientBrush,
                             shape = RoundedCornerShape(cornerRadius.dp)
                         ),
                 ) {
@@ -223,7 +223,7 @@ object VolleyTextFieldGradient {
                                 },
                                 singleLine = true,
                                 textStyle = realFieldTextStyle,
-                                cursorBrush = SolidColor(VolleyColor.TEXT_DARK),
+                                cursorBrush = SolidColor(VolleyColor.TextDark),
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = keyboardType,
                                     imeAction = keyboardActionButtonType
@@ -250,7 +250,7 @@ object VolleyTextFieldGradient {
     }
 
     private fun getTextStyleByAlertMode(alertMode: Boolean, baseTextStyle: TextStyle): TextStyle {
-        return if (alertMode) baseTextStyle.copy(color = VolleyColor.ALERT) else baseTextStyle
+        return if (alertMode) baseTextStyle.copy(color = VolleyColor.Alert) else baseTextStyle
     }
 }
 

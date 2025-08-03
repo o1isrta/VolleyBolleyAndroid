@@ -25,7 +25,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,13 +43,11 @@ import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.createBitmap
-import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -125,12 +122,12 @@ object VolleyContainersRootTransparent {
             Box(
                 modifier = Modifier
                     .size(dpWidth, dpHeight)
-                    .background(VolleyColor.WHITE.copy(alpha = 0.08f))
+                    .background(VolleyColor.White.copy(alpha = 0.08f))
                     .clip(shape)
                     .blur(blurRadius.dp)
                     .border(
                         width = VolleyDimens.DIMEN_4.dp,
-                        color = VolleyColor.WHITE.copy(alpha = 0.2f),
+                        color = VolleyColor.White.copy(alpha = 0.2f),
                         shape = shape
                     )
             )
@@ -169,11 +166,11 @@ object VolleyContainersRootTransparent {
                     .background(
                         shape = shape,
                         brush = Brush.radialGradient(
-                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_1 to VolleyColor.WHITE
+                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_1 to VolleyColor.White
                                 .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_1),
-                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_2 to VolleyColor.WHITE
+                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_2 to VolleyColor.White
                                 .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_2),
-                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_3 to VolleyColor.WHITE
+                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_3 to VolleyColor.White
                                 .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_3),
                             center = Offset(backgroundSize.width / 2f, backgroundSize.height / 2f),
                             radius = gradientRadius,
@@ -182,7 +179,7 @@ object VolleyContainersRootTransparent {
                     .clip(shape)
                     .border(
                         width = VolleyDimens.DIMEN_1.dp,
-                        color = VolleyColor.WHITE.copy(alpha = VolleyUiUtil.GRADIENT_BORDER_ALPHA),
+                        color = VolleyColor.White.copy(alpha = VolleyUiUtil.GRADIENT_BORDER_ALPHA),
                         shape = shape
                     )
             )
@@ -324,7 +321,7 @@ private fun PreviewContainers() {
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .background(VolleyColor.SEAWAVE_BACKGROUND)
+                .background(VolleyColor.TurquoiseDark)
         ) {
             Column {
                 VolleyContainersRootTransparent.TransparentContainer(
@@ -334,7 +331,7 @@ private fun PreviewContainers() {
                 ) {
                     VolleyText.BodyRegular(
                         text = "Some small text",
-                        color = VolleyColor.WHITE,
+                        color = VolleyColor.White,
                         modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
 
                     )
@@ -347,7 +344,7 @@ private fun PreviewContainers() {
                 ) {
                     VolleyText.BodyRegular(
                         text = "Text in max width",
-                        color = VolleyColor.WHITE,
+                        color = VolleyColor.White,
                         modifier = Modifier
                             .padding(VolleyDimens.DIMEN_16.dp)
                             .height(VolleyDimens.DIMEN_90.dp)
@@ -369,7 +366,7 @@ private fun PreviewContainers() {
                         ) {
                             VolleyText.BodyRegular(
                                 text = "some text 1",
-                                color = VolleyColor.WHITE,
+                                color = VolleyColor.White,
                                 modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
                             )
                         }
@@ -381,7 +378,7 @@ private fun PreviewContainers() {
                         ) {
                             VolleyText.BodyRegular(
                                 text = "some text 2",
-                                color = VolleyColor.WHITE,
+                                color = VolleyColor.White,
                                 modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
                             )
                         }
@@ -396,7 +393,7 @@ private fun PreviewContainers() {
                 ) {
                     Text(
                         text = "Some glass container",
-                        color = VolleyColor.WHITE,
+                        color = VolleyColor.White,
                         fontSize = VolleyDimens.DIMEN_16.sp
                     )
                 }
