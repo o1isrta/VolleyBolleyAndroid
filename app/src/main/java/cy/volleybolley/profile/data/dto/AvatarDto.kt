@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class AvatarDto(
+data class AvatarDto(
     @SerialName("avatar") val avatar: String,
 )

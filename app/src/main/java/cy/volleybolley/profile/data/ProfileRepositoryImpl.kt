@@ -45,7 +45,11 @@ class ProfileRepositoryImpl(
                 body = personalData.toUpdateBody()
             )
         )
-        return if (response.isSuccess) VolleyResult.Success(Unit) else VolleyResult.Failure(response.resultCode.mapToErrorType())
+        return if (response.isSuccess) {
+            VolleyResult.Success(Unit)
+        } else {
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
+        }
     }
 
     override suspend fun updatePayments(
@@ -58,7 +62,11 @@ class ProfileRepositoryImpl(
                 body = payments.toDto()
             )
         )
-        return if (response.isSuccess) VolleyResult.Success(Unit) else VolleyResult.Failure(response.resultCode.mapToErrorType())
+        return if (response.isSuccess) {
+            VolleyResult.Success(Unit)
+        } else {
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
+        }
     }
 
     override suspend fun updateAvatar(
@@ -80,7 +88,11 @@ class ProfileRepositoryImpl(
 
     override suspend fun deleteProfile(accessToken: String?): VolleyResult<Unit, ErrorType> {
         val response = networkClient.getResponse(ProfileRequest.DeleteProfile(accessToken))
-        return if (response.isSuccess) VolleyResult.Success(Unit) else VolleyResult.Failure(response.resultCode.mapToErrorType())
+        return if (response.isSuccess) {
+            VolleyResult.Success(Unit)
+        } else {
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
+        }
     }
 
 }

@@ -5,14 +5,14 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class PersonalDataDto(
+data class PersonalDataDto(
     @SerialName("first_name") val firstName: String,
     @SerialName("last_name") val lastName: String,
     @SerialName("gender") val gender: String,
     @SerialName("date_of_birth") val birthDate: String,
     @SerialName("level") val level: String,
-    @SerialName("country") val country: String,
-    @SerialName("city") val city: String,
+    @SerialName("country_id") val countryId: Int,
+    @SerialName("city_id") val cityId: Int,
     @SerialName("avatar") val avatar: String,
 )
 
@@ -23,8 +23,8 @@ fun PersonalDataDto.toDomain(): PersonalData {
         gender = gender,
         birthDate = birthDate,
         level = level,
-        country = country,
-        city = city,
+        countryId = countryId,
+        cityId = cityId,
         avatar = avatar,
     )
 }

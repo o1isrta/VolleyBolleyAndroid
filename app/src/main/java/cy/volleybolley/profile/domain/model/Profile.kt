@@ -1,6 +1,6 @@
 package cy.volleybolley.profile.domain.model
 
 data class Profile(
-    var personalData: PersonalData?,
-    var payments: List<Payment>?,
+    val personalData: PersonalData?,
+    val payments: List<Payment>?,
 )
