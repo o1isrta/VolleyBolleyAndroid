@@ -6,7 +6,7 @@ data class PersonalData(
     val gender: String,
     val birthDate: String,
     val level: String,
-    val country: String,
-    val city: String,
+    val countryId: Int,
+    val cityId: Int,
     val avatar: String,
 )

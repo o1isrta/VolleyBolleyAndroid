@@ -13,10 +13,20 @@ class PaymentDto(
 
 fun List<PaymentDto>.toDomain(): List<Payment> = this.map { it.toDomain() }
 
+fun List<Payment>.toDto(): List<PaymentDto> = this.map { it.toDto() }
+
 fun PaymentDto.toDomain(): Payment {
     return Payment(
         type = type,
         account = account,
         isPreferred = isPreferred,
+    )
+}
+
+fun Payment.toDto(): PaymentDto {
+    return PaymentDto(
+        type = type,
+        account = account,
+        isPreferred = isPreferred
     )
 }
