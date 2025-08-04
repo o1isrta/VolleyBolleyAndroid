@@ -45,4 +45,13 @@ val coreModule = module {
             }
         }
     }
+    single {
+        cy.volleybolley.core.data.network.impl.PlayersNetworkClient()
+    }
+
+    single<cy.volleybolley.core.domain.players.repository.PlayersRepository> {
+        cy.volleybolley.core.data.players.repository.PlayersRepositoryImpl(
+            networkClient = get()
+        )
+    }
 }
