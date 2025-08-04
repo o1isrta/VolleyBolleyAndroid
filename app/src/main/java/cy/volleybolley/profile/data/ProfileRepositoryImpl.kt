@@ -15,7 +15,7 @@ import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PersonalData
 
 class ProfileRepositoryImpl(
-    val networkClient: NetworkClient<ProfileRequest, ProfileResponse>
+    private val networkClient: NetworkClient<ProfileRequest, ProfileResponse>
 ) : ProfileRepository {
     override suspend fun getPersonalData(accessToken: String?): VolleyResult<PersonalData, ErrorType> {
         val response = networkClient.getResponse(ProfileRequest.GetPersonalData(accessToken))
@@ -37,12 +37,12 @@ class ProfileRepositoryImpl(
 
     override suspend fun updatePersonalData(
         accessToken: String?,
-        data: PersonalData
+        personalData: PersonalData
     ): VolleyResult<Unit, ErrorType> {
         val response = networkClient.getResponse(
             ProfileRequest.UpdatePersonalData(
                 accessToken = accessToken,
-                body = data.toUpdateBody()
+                body = personalData.toUpdateBody()
             )
         )
         return if (response.isSuccess) VolleyResult.Success(Unit) else VolleyResult.Failure(response.resultCode.mapToErrorType())
