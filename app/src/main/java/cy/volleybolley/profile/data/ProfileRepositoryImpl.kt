@@ -6,7 +6,6 @@ import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.profile.data.dto.AvatarDto
 import cy.volleybolley.profile.data.dto.toDomain
-import cy.volleybolley.profile.data.dto.toDto
 import cy.volleybolley.profile.data.dto.toUpdateBody
 import cy.volleybolley.profile.data.network.model.ProfileRequest
 import cy.volleybolley.profile.data.network.model.ProfileResponse
@@ -37,7 +36,7 @@ class ProfileRepositoryImpl(
 
     override suspend fun updatePersonalData(
         accessToken: String?,
-        personalData: PersonalData
+        personalData: PersonalData,
     ): VolleyResult<Unit, ErrorType> {
         val response = networkClient.getResponse(
             ProfileRequest.UpdatePersonalData(
@@ -54,12 +53,12 @@ class ProfileRepositoryImpl(
 
     override suspend fun updatePayments(
         accessToken: String?,
-        payments: List<Payment>
+        payments: List<Payment>,
     ): VolleyResult<Unit, ErrorType> {
         val response = networkClient.getResponse(
             ProfileRequest.UpdatePayments(
                 accessToken = accessToken,
-                body = payments.toDto()
+                body = payments.toUpdateBody()
             )
         )
         return if (response.isSuccess) {
@@ -71,7 +70,7 @@ class ProfileRepositoryImpl(
 
     override suspend fun updateAvatar(
         accessToken: String?,
-        avatarBase64String: String
+        avatarBase64String: String,
     ): VolleyResult<String, ErrorType> {
         val response = networkClient.getResponse(
             ProfileRequest.UpdateProfileAvatar(
