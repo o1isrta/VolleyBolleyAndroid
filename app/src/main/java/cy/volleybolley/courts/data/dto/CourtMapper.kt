@@ -10,28 +10,28 @@ fun List<CourtDto>.toDomain(): List<Court> {
 
 fun CourtDto.toDomain(): Court {
     return Court(
-        courtId = this.courtId,
-        price = this.price ?: "",
-        description = this.description ?: "",
-        contacts = this.contacts?.map { it.toDomain() } ?: emptyList(),
+        courtId = courtId,
+        price = price ?: "",
+        description = description ?: "",
+        contacts = contacts?.map { it.toDomain() } ?: emptyList(),
         photo = photo ?: "",
-        tags = this.tags ?: emptyList(),
-        location = this.location.toDomain()
+        tags = tags ?: emptyList(),
+        location = location.toDomain()
     )
 }
 
 fun ContactDto.toDomain(): Contact {
     return Contact(
-        contactType = this.contactType,
-        contact = this.contact
+        contactType = contactType,
+        contact = contact
     )
 }
 
 fun LocationDto.toDomain(): Location {
     return Location(
-        longitude = this.longitude,
-        latitude = this.latitude,
-        courtName = this.courtName,
-        locationName = this.locationName
+        longitude = longitude,
+        latitude = latitude,
+        courtName = courtName,
+        locationName = locationName
     )
 }

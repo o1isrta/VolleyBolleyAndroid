@@ -1,8 +1,14 @@
 package cy.volleybolley.games.data.dto
 
+import cy.volleybolley.courts.data.dto.toDomain
+import cy.volleybolley.games.data.network.GamesResponse
 import cy.volleybolley.games.domain.model.Game
+import cy.volleybolley.games.domain.model.GameDetails
+import cy.volleybolley.games.domain.model.Host
+import cy.volleybolley.games.domain.model.PlayerShort
 
-fun GameDto.toDomain(): Game = Game(
+fun GamesResponse.CreateGame.toDomain(): Game = Game(
+    gameId = gameId,
     courtId = courtId,
     message = message,
     startTime = startTime,
@@ -13,8 +19,9 @@ fun GameDto.toDomain(): Game = Game(
     maximumPlayers = maximumPlayers,
     price = price,
     paymentType = paymentType,
+    paymentAccount = paymentAccount,
     currencyType = currencyType,
-    players = players.map { it.playerId }
+    players = players
 )
 
 fun Game.toData(): GameDto = GameDto(
@@ -28,6 +35,36 @@ fun Game.toData(): GameDto = GameDto(
     maximumPlayers = maximumPlayers,
     price = price,
     paymentType = paymentType,
+    players = players
+)
+
+fun GamesResponse.GetGameDetails.toDomain(): GameDetails = GameDetails(
+    gameId = gameId,
+    gameType = gameType,
+    host = host.toDomain(),
+    message = message,
+    courtLocation = courtLocation.toDomain(),
+    startTime = startTime,
+    endTime = endTime,
+    levels = levels,
+    gender = gender,
+    pricePerPerson = pricePerPerson,
     currencyType = currencyType,
-    players = players.map { PlayerIdDto(it) }
+    paymentType = paymentType,
+    paymentAccount = paymentAccount,
+    maximumPlayers = maximumPlayers,
+    players = players.map { it.toDomain() }
+)
+
+fun HostDto.toDomain(): Host = Host(
+    id = id,
+    name = "$firstName $lastName",
+    avatar = avatar,
+    level = level
+)
+
+fun PlayerShortDto.toDomain(): PlayerShort = PlayerShort(
+    playerId = playerId,
+    name = "$firstName $lastName",
+    level = level
 )

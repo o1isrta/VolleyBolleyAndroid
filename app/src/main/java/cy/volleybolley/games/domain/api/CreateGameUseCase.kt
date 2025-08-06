@@ -4,6 +4,6 @@ import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.games.domain.model.Game
 
-interface GamesInteractor {
-    suspend fun createGame(game: Game): VolleyResult<Game?, ErrorType>
+interface CreateGameUseCase {
+    suspend fun createGame(game: Game): VolleyResult<Game, ErrorType>
 }

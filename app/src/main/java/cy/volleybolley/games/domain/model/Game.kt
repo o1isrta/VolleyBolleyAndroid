@@ -1,6 +1,7 @@
 package cy.volleybolley.games.domain.model
 
 data class Game(
+    val gameId: Int? = null, // при создании
     val courtId: Int,
     val message: String,
     val startTime: String,
@@ -11,6 +12,7 @@ data class Game(
     val maximumPlayers: Int,
     val price: String,
     val paymentType: String,
-    val currencyType: String,
+    val paymentAccount: String? = null, // при создании
+    val currencyType: String? = null, // при создании
     val players: List<Int>,
 )
