@@ -40,8 +40,9 @@ jobs:
             -   name: Add debug environment
                 env:
                     VOLLEY_SERVER_URL: ${{ secrets.VOLLEY_SERVER_URL }}
+                    VOLLEY_GOOGLE_SERVICES: ${{ secrets.VOLLEY_GOOGLE_SERVICES }}
                 run: |
-                    sh ci/add_debug_env.sh
+                    sh ci/add_debug_env.sh && sh ci/add_google_services
 
             -   name: Run detekt
                 run: ./gradlew detektAll $commonGradleFlags
@@ -77,8 +78,9 @@ jobs:
             -   name: Add debug environment
                 env:
                     VOLLEY_SERVER_URL: ${{ secrets.VOLLEY_SERVER_URL }}
+                    VOLLEY_GOOGLE_SERVICES: ${{ secrets.VOLLEY_GOOGLE_SERVICES }}
                 run: |
-                    sh ci/add_debug_env.sh
+                    sh ci/add_debug_env.sh && sh ci/add_google_services
 
             -   name: Assemble app
                 run: ./gradlew :app:assembleDebug $commonGradleFlags
