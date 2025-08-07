@@ -2,6 +2,7 @@ package cy.volleybolley.authorization.data.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
 sealed interface AuthorizationResponse {
     @Serializable
     class AuthResponse(

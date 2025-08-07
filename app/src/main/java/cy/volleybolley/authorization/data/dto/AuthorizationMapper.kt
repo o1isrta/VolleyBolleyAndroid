@@ -1,13 +1,10 @@
-package cy.volleybolley.authorization.data
+package cy.volleybolley.authorization.data.dto
 
-import cy.volleybolley.authorization.data.dto.AuthorizationResponse
-import cy.volleybolley.authorization.data.dto.PlayerDto
-import cy.volleybolley.authorization.data.dto.PlayerRegistrationBody
 import cy.volleybolley.authorization.domain.model.AuthorizationResult
 import cy.volleybolley.authorization.domain.model.Player
 import cy.volleybolley.authorization.domain.model.RegistrationData
 
-fun PlayerDto.toPlayer() = Player(
+fun PlayerDto.toDomain() = Player(
     playerId = playerId,
     avatar = avatar,
     firstName = firstName,
@@ -19,14 +16,14 @@ fun PlayerDto.toPlayer() = Player(
     cityId = cityId
 )
 
-fun AuthorizationResponse.AuthResponse.toAuthorizationResult() = AuthorizationResult(
+fun AuthorizationResponse.AuthResponse.toDomain() = AuthorizationResult(
     accessToken = accessToken,
     refreshToken = refreshToken,
     isRegistered = isRegistered,
-    player = player.toPlayer()
+    player = player.toDomain()
 )
 
-fun RegistrationData.toPlayerRegistrationBody() = PlayerRegistrationBody(
+fun RegistrationData.toData() = PlayerRegistrationBody(
     firstName = firstName,
     lastName = lastName,
     gender = gender,

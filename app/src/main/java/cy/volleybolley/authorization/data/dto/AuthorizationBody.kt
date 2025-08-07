@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AuthorizationRequestBody(
+data class AuthorizationBody(
     @SerialName("id_token") val idToken: String
 )

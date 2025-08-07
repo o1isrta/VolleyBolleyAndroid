@@ -10,6 +10,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.URLProtocol
 import io.ktor.http.appendPathSegments
+import io.ktor.http.headers
 
 class AuthorizationKtorNetworkClient : KtorNetworkClient<AuthorizationRequest, AuthorizationResponse>() {
     override suspend fun sendRequestByType(request: AuthorizationRequest): HttpResponse {
@@ -41,6 +42,9 @@ class AuthorizationKtorNetworkClient : KtorNetworkClient<AuthorizationRequest, A
                         protocol = URLProtocol.HTTP
                         if (request.path.isNotEmpty()) appendPathSegments(request.path)
                         setBody(request.body)
+                        headers {
+                            append("Authorization", "Bearer ${request.accessToken}")
+                        }
                     }
                 }
             }

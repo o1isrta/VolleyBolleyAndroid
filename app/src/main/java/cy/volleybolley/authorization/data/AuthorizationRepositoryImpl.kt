@@ -1,10 +1,11 @@
-package cy.volleybolley.authorization.data.network
+package cy.volleybolley.authorization.data
 
-import cy.volleybolley.authorization.data.dto.AuthorizationRequest.*
-import cy.volleybolley.authorization.data.dto.AuthorizationRequestBody
+import cy.volleybolley.authorization.data.dto.AuthorizationRequest
+import cy.volleybolley.authorization.data.dto.AuthorizationBody
 import cy.volleybolley.authorization.data.dto.AuthorizationResponse
-import cy.volleybolley.authorization.data.toAuthorizationResult
-import cy.volleybolley.authorization.data.toPlayerRegistrationBody
+import cy.volleybolley.authorization.data.dto.toData
+import cy.volleybolley.authorization.data.dto.toDomain
+import cy.volleybolley.authorization.data.network.AuthorizationKtorNetworkClient
 import cy.volleybolley.authorization.domain.api.AuthorizationRepository
 import cy.volleybolley.authorization.domain.model.AuthorizationResult
 import cy.volleybolley.authorization.domain.model.AuthorizationType
@@ -22,18 +23,18 @@ class AuthorizationRepositoryImpl(
     ): VolleyResult<AuthorizationResult, ErrorType> {
         val request = when (authType) {
             AuthorizationType.GOOGLE_AUTORIZATION -> {
-                GoogleAuthorizationRequest(
-                    body = AuthorizationRequestBody(idToken = idToken)
+                AuthorizationRequest.GoogleAuthorizationRequest(
+                    body = AuthorizationBody(idToken = idToken)
                 )
             }
             AuthorizationType.FACEBOOK_AUTORIZATION -> {
-                FacebookAuthorizationRequest(
-                    body = AuthorizationRequestBody(idToken = idToken)
+                AuthorizationRequest.FacebookAuthorizationRequest(
+                    body = AuthorizationBody(idToken = idToken)
                 )
             }
-            AuthorizationType.PHONE_NUVBER_AUTORIZATION -> {
-                PhoneNumberAuthorizationRequest(
-                    body = AuthorizationRequestBody(idToken = idToken)
+            AuthorizationType.PHONE_NUMBER_AUTORIZATION -> {
+                AuthorizationRequest.PhoneNumberAuthorizationRequest(
+                    body = AuthorizationBody(idToken = idToken)
                 )
             }
         }
@@ -41,7 +42,7 @@ class AuthorizationRepositoryImpl(
         return when(response.isSuccess) {
             true -> {
                 VolleyResult.Success(
-                    (response.body!! as AuthorizationResponse.AuthResponse).toAuthorizationResult(),
+                    (response.body!! as AuthorizationResponse.AuthResponse).toDomain(),
                 )
             }
             else -> {
@@ -55,9 +56,9 @@ class AuthorizationRepositoryImpl(
         registrationData: RegistrationData
     ): VolleyResult<Unit, ErrorType> {
         val response = client.getResponse(
-            PlayerRegistrationRequest(
+            AuthorizationRequest.PlayerRegistrationRequest(
                 accessToken = accessToken,
-                body = registrationData.toPlayerRegistrationBody()
+                body = registrationData.toData()
             )
         )
         return if (response.isSuccess) {
