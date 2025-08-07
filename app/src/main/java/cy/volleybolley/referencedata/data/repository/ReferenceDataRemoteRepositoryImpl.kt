@@ -5,9 +5,8 @@ import cy.volleybolley.core.data.network.model.mapToErrorType
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.referencedata.data.cache.ReferenceDataLocalRepository
-import cy.volleybolley.referencedata.data.dto.mapToDomain
-import cy.volleybolley.referencedata.data.localdto.mapToDomain
-import cy.volleybolley.referencedata.data.localdto.mapToLocalDto
+import cy.volleybolley.referencedata.data.mapper.mapToDomain
+import cy.volleybolley.referencedata.data.mapper.mapToLocalDto
 import cy.volleybolley.referencedata.data.network.ReferenceDataRequest
 import cy.volleybolley.referencedata.data.network.ReferenceDataResponse
 import cy.volleybolley.referencedata.domain.api.ReferenceDataRemoteRepository
@@ -27,7 +26,8 @@ class ReferenceDataRemoteRepositoryImpl(
 
         when (response.isSuccess) {
             true -> {
-                val result = (response.body as ReferenceDataResponse.CountriesResponse).countries.mapToDomain()
+                val result =
+                    (response.body as ReferenceDataResponse.CountriesResponse).countries.mapToDomain()
                 localRepository.saveCountries(result.mapToLocalDto())
 
                 emit(
@@ -56,7 +56,8 @@ class ReferenceDataRemoteRepositoryImpl(
 
         when (response.isSuccess) {
             true -> {
-                val result = (response.body as ReferenceDataResponse.CurrenciesResponse).currencies.mapToDomain()
+                val result =
+                    (response.body as ReferenceDataResponse.CurrenciesResponse).currencies.mapToDomain()
                 localRepository.saveCurrencies(result.mapToLocalDto())
 
                 emit(
@@ -81,7 +82,8 @@ class ReferenceDataRemoteRepositoryImpl(
 
         when (response.isSuccess) {
             true -> {
-                val result = (response.body as ReferenceDataResponse.FaqResponse).faqDto.mapToDomain()
+                val result =
+                    (response.body as ReferenceDataResponse.FaqResponse).faqDto.mapToDomain()
                 localRepository.saveFaq(result.mapToLocalDto())
 
                 emit(

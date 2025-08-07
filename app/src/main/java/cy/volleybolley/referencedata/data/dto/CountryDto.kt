@@ -1,6 +1,5 @@
 package cy.volleybolley.referencedata.data.dto
 
-import cy.volleybolley.referencedata.domain.model.Country
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
