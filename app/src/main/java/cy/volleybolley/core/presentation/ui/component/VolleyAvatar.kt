@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -22,9 +21,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
+import cy.volleybolley.core.presentation.ui.model.VolleyColor
 
 object VolleyAvatar {
-
     @Composable
     @Stable
     fun CircularAvatar(
@@ -32,14 +31,13 @@ object VolleyAvatar {
         size: Dp,
         onClick: () -> Unit = {}
     ) {
-        // Плейс холдер временный - заменить, когда дизайнеры дадут векторный рисунок**************************************************
-        val placehold = painterResource(id = R.drawable.ic_avatar_placeholder)
+        val placeholder = painterResource(id = R.drawable.ic_avatar_placeholder)
 
         Box(
             modifier = Modifier
                 .size(size)
                 .clip(CircleShape)
-                .border(1.dp, Color.White, CircleShape)
+                .border(1.dp, VolleyColor.White, CircleShape)
                 .clickable(onClick = onClick)
         ) {
             AsyncImage(
@@ -50,12 +48,13 @@ object VolleyAvatar {
                 contentDescription = stringResource(id = R.string.avatar_content_description),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
-                error = placehold,
-                placeholder = placehold
+                error = placeholder,
+                placeholder = placeholder
             )
         }
     }
 }
+
 @Preview
 @Composable
 private fun MyScreen() {
@@ -66,4 +65,3 @@ private fun MyScreen() {
         )
     }
 }
-

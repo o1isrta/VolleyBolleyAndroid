@@ -92,11 +92,12 @@ complexity:
     LargeClass:
         active: true
         threshold: 300
+        ignoreAnnotated: [ "UiLibraryMarker" ]
     LongMethod:
         active: true
         threshold: 40
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
-        ignoreAnnotated: [ "Composable" ]
+        ignoreAnnotated: [ "Composable", "Serializable" ]
     LongParameterList:
         active: true
         functionThreshold: 6
