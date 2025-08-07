@@ -8,5 +8,5 @@ data class PersonalData(
     val level: String,
     val countryId: Int,
     val cityId: Int,
-    val avatar: String,
+    val avatar: String?,
 )

@@ -1,6 +1,5 @@
 package cy.volleybolley.profile.data.dto
 
-import cy.volleybolley.profile.domain.model.PersonalData
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -13,18 +12,5 @@ data class PersonalDataDto(
     @SerialName("level") val level: String,
     @SerialName("country_id") val countryId: Int,
     @SerialName("city_id") val cityId: Int,
-    @SerialName("avatar") val avatar: String,
+    @SerialName("avatar") val avatar: String?,
 )
-
-fun PersonalDataDto.toDomain(): PersonalData {
-    return PersonalData(
-        firstName = firstName,
-        lastName = lastName,
-        gender = gender,
-        birthDate = birthDate,
-        level = level,
-        countryId = countryId,
-        cityId = cityId,
-        avatar = avatar,
-    )
-}

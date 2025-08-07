@@ -30,7 +30,7 @@ sealed interface ProfileRequest {
     class UpdateProfileAvatar(
         val accessToken: String? = null,
         val path: String = "$PLAYERS_ME/avatar",
-        val body: AvatarDto?,
+        val body: AvatarDto,
     ) : ProfileRequest
 
     class DeleteProfile(

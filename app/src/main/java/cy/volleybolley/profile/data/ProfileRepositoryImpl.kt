@@ -70,7 +70,7 @@ class ProfileRepositoryImpl(
 
     override suspend fun updateAvatar(
         accessToken: String?,
-        avatarBase64String: String,
+        avatarBase64String: String?,
     ): VolleyResult<String, ErrorType> {
         val response = networkClient.getResponse(
             ProfileRequest.UpdateProfileAvatar(
@@ -81,8 +81,10 @@ class ProfileRepositoryImpl(
         if (!response.isSuccess) {
             return VolleyResult.Failure(response.resultCode.mapToErrorType())
         }
-        val avatar = (response.body as? ProfileResponse.UpdateProfileAvatar)?.avatar?.toString()
-        return avatar?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+        val avatar = (response.body as? ProfileResponse.UpdateProfileAvatar)?.avatar
+        return avatar?.let {
+            VolleyResult.Success(handleAvatarNullValue(it.avatar))
+        } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
     override suspend fun deleteProfile(accessToken: String?): VolleyResult<Unit, ErrorType> {
@@ -93,5 +95,7 @@ class ProfileRepositoryImpl(
             VolleyResult.Failure(response.resultCode.mapToErrorType())
         }
     }
+
+    private fun handleAvatarNullValue(avatar: String?): String = avatar ?: ""
 
 }
