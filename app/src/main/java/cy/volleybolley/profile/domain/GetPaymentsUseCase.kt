@@ -8,7 +8,7 @@ import cy.volleybolley.profile.domain.model.Payment
 class GetPaymentsUseCase(
     private val repository: ProfileRepository,
 ) {
-    suspend fun execute(accessToken: String?): VolleyResult<List<Payment>, ErrorType> {
-        return repository.getPayments(accessToken = accessToken)
+    suspend fun execute(): VolleyResult<List<Payment>, ErrorType> {
+        return repository.getPayments()
     }
 }

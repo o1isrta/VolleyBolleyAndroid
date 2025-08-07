@@ -7,7 +7,7 @@ import cy.volleybolley.profile.domain.api.ProfileRepository
 class DeleteProfileUseCase(
     private val repository: ProfileRepository,
 ) {
-    suspend fun execute(accessToken: String?): VolleyResult<Unit, ErrorType> {
-        return repository.deleteProfile(accessToken)
+    suspend fun execute(): VolleyResult<Unit, ErrorType> {
+        return repository.deleteProfile()
     }
 }

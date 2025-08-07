@@ -8,7 +8,7 @@ import cy.volleybolley.profile.domain.model.PersonalData
 class GetPersonalDataUseCase(
     private val repository: ProfileRepository,
 ) {
-    suspend fun execute(accessToken: String?): VolleyResult<PersonalData, ErrorType> {
-        return repository.getPersonalData(accessToken = accessToken)
+    suspend fun execute(): VolleyResult<PersonalData, ErrorType> {
+        return repository.getPersonalData()
     }
 }

@@ -1,6 +1,7 @@
 package cy.volleybolley.profile.data.dto
 
 import cy.volleybolley.profile.domain.model.Payment
+import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.profile.domain.model.PersonalData
 
 fun List<PaymentDto>.toDomain(): List<Payment> = this.map { it.toDomain() }
@@ -15,7 +16,7 @@ fun List<Payment>.toDto(): List<PaymentDto> = this.map { it.toDto() }
 
 fun PaymentDto.toDomain(): Payment {
     return Payment(
-        type = type,
+        type = getPaymentTypeByName(type) ?: PaymentType.UNKNOWN,
         account = account,
         isPreferred = isPreferred,
     )
@@ -23,7 +24,7 @@ fun PaymentDto.toDomain(): Payment {
 
 fun Payment.toDto(): PaymentDto {
     return PaymentDto(
-        type = type,
+        type = type.nameValue,
         account = account,
         isPreferred = isPreferred
     )
@@ -56,3 +57,4 @@ fun PersonalData.toUpdateBody(): PersonalDataUpdateBody {
 
 private fun checkStringDataField(field: String): String? = if (field.isEmpty()) null else field
 private fun checkIntDataField(field: Int): Int? = if (field == -1) null else field
+private fun getPaymentTypeByName(name: String): PaymentType? = PaymentType.entries.firstOrNull { it.nameValue == name }

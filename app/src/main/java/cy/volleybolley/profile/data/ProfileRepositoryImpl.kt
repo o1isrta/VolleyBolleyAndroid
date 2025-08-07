@@ -1,5 +1,6 @@
 package cy.volleybolley.profile.data
 
+import android.util.Base64
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.data.network.model.mapToErrorType
 import cy.volleybolley.core.domain.model.ErrorType
@@ -14,18 +15,24 @@ import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PersonalData
 
 class ProfileRepositoryImpl(
-    private val networkClient: NetworkClient<ProfileRequest, ProfileResponse>
+    private val networkClient: NetworkClient<ProfileRequest, ProfileResponse>,
+    private var accessToken: String? = null,
 ) : ProfileRepository {
-    override suspend fun getPersonalData(accessToken: String?): VolleyResult<PersonalData, ErrorType> {
+    private var lastReceivedPersonalData: PersonalData? = null
+
+    override suspend fun getPersonalData(): VolleyResult<PersonalData, ErrorType> {
         val response = networkClient.getResponse(ProfileRequest.GetPersonalData(accessToken))
         if (!response.isSuccess) {
             return VolleyResult.Failure(response.resultCode.mapToErrorType())
         }
         val personalData = (response.body as? ProfileResponse.GetPersonalData)?.personalData?.toDomain()
-        return personalData?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+        return personalData?.let {
+            lastReceivedPersonalData = it
+            VolleyResult.Success(it)
+        } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
-    override suspend fun getPayments(accessToken: String?): VolleyResult<List<Payment>, ErrorType> {
+    override suspend fun getPayments(): VolleyResult<List<Payment>, ErrorType> {
         val response = networkClient.getResponse(ProfileRequest.GetPayments(accessToken))
         if (!response.isSuccess) {
             return VolleyResult.Failure(response.resultCode.mapToErrorType())
@@ -35,13 +42,13 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun updatePersonalData(
-        accessToken: String?,
         personalData: PersonalData,
     ): VolleyResult<Unit, ErrorType> {
+        val actualChangesOnPersonalData = lastReceivedPersonalData?.getChangedPersonalDataFields(personalData)
         val response = networkClient.getResponse(
             ProfileRequest.UpdatePersonalData(
                 accessToken = accessToken,
-                body = personalData.toUpdateBody()
+                body = actualChangesOnPersonalData?.toUpdateBody() ?: personalData.toUpdateBody()
             )
         )
         return if (response.isSuccess) {
@@ -52,7 +59,6 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun updatePayments(
-        accessToken: String?,
         payments: List<Payment>,
     ): VolleyResult<Unit, ErrorType> {
         val response = networkClient.getResponse(
@@ -69,13 +75,12 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun updateAvatar(
-        accessToken: String?,
-        avatarBase64String: String?,
+        imageBytes: ByteArray?,
     ): VolleyResult<String, ErrorType> {
         val response = networkClient.getResponse(
             ProfileRequest.UpdateProfileAvatar(
                 accessToken = accessToken,
-                body = AvatarDto(avatarBase64String)
+                body = AvatarDto(convertImageBytesToBase64String(imageBytes))
             )
         )
         if (!response.isSuccess) {
@@ -87,7 +92,7 @@ class ProfileRepositoryImpl(
         } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
-    override suspend fun deleteProfile(accessToken: String?): VolleyResult<Unit, ErrorType> {
+    override suspend fun deleteProfile(): VolleyResult<Unit, ErrorType> {
         val response = networkClient.getResponse(ProfileRequest.DeleteProfile(accessToken))
         return if (response.isSuccess) {
             VolleyResult.Success(Unit)
@@ -98,4 +103,27 @@ class ProfileRepositoryImpl(
 
     private fun handleAvatarNullValue(avatar: String?): String = avatar ?: ""
 
+    fun updateAccessToken(newAccessToken: String) {
+        accessToken = newAccessToken
+    }
+
+    private fun convertImageBytesToBase64String(imageBytes: ByteArray?): String? {
+        return imageBytes?.let { Base64.encodeToString(it, Base64.DEFAULT) }
+    }
+
+    private fun PersonalData.getChangedPersonalDataFields(newData: PersonalData): PersonalData {
+        return PersonalData(
+            firstName = firstName.checkSameStringField(newData.firstName),
+            lastName = lastName.checkSameStringField(newData.lastName),
+            gender = gender.checkSameStringField(newData.gender),
+            birthDate = birthDate.checkSameStringField(newData.birthDate),
+            level = level.checkSameStringField(newData.level),
+            countryId = countryId.checkSameIntField(newData.countryId),
+            cityId = cityId.checkSameIntField(newData.cityId),
+            avatar = avatar
+        )
+    }
+
+    private fun String.checkSameStringField(newString: String): String = if (this == newString) "" else newString
+    private fun Int.checkSameIntField(newInt: Int): Int = if (this.toInt() == newInt) -1 else newInt
 }
