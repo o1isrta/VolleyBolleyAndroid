@@ -33,7 +33,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 object VolleyTopBar {
     private val TopBarHeight = 106.dp
     private val CornerRadius = 32.dp
-    private val BackgroundColor = VolleyColor.SEAWAVE_HEADER
+    private val BackgroundColor = VolleyColor.Turquoise
     private val Diameter = 46.dp
     private val MarginIcon = 8.dp
 
@@ -73,7 +73,7 @@ object VolleyTopBar {
                                 end = 71.dp,
                                 top = 63.dp
                             ),
-                        color = VolleyColor.WHITE,
+                        color = VolleyColor.White,
                         textAlign = TextAlign.Left,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

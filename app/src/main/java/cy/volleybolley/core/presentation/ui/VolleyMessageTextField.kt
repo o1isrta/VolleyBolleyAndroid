@@ -90,7 +90,7 @@ object VolleyMessageTextField {
                 VolleyText.BodyLight(
                     text = "${limitedText.length}/$maxLength",
                     maxLines = 1,
-                    color = VolleyColor.WHITE,
+                    color = VolleyColor.White,
                 )
             }
         }
@@ -117,7 +117,7 @@ object VolleyMessageTextField {
             if (textInput.isEmpty()) {
                 VolleyText.BodyLight(
                     text = hint,
-                    color = VolleyColor.WHITE,
+                    color = VolleyColor.White,
                 )
             }
 
@@ -128,8 +128,8 @@ object VolleyMessageTextField {
                     actionToTransferContent(limitedText)
                 },
                 singleLine = false,
-                textStyle = VolleyTypography.BodyRegular.copy(color = VolleyColor.WHITE),
-                cursorBrush = SolidColor(VolleyColor.WHITE),
+                textStyle = VolleyTypography.BodyRegular.copy(color = VolleyColor.White),
+                cursorBrush = SolidColor(VolleyColor.White),
             )
         }
     }
@@ -185,12 +185,12 @@ object VolleyMessageTextField {
                 modifier = Modifier
                     .height(backgroundHeight)
                     .fillMaxWidth()
-                    .background(VolleyColor.WHITE.copy(alpha = 0.08f))
+                    .background(VolleyColor.White.copy(alpha = 0.08f))
                     .clip(shape)
                     .blur(blurRadius.dp)
                     .border(
                         width = VolleyDimens.DIMEN_4.dp,
-                        color = VolleyColor.WHITE.copy(alpha = 0.2f),
+                        color = VolleyColor.White.copy(alpha = 0.2f),
                         shape = shape
                     )
             )
@@ -234,11 +234,11 @@ object VolleyMessageTextField {
                     .background(
                         shape = shape,
                         brush = Brush.radialGradient(
-                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_1 to VolleyColor.WHITE
+                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_1 to VolleyColor.White
                                 .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_1),
-                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_2 to VolleyColor.WHITE
+                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_2 to VolleyColor.White
                                 .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_2),
-                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_3 to VolleyColor.WHITE
+                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_3 to VolleyColor.White
                                 .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_3),
                             center = Offset(containerSize.width / 2f, containerSize.height / 2f),
                             radius = gradientRadius,
@@ -247,7 +247,7 @@ object VolleyMessageTextField {
                     .clip(shape)
                     .border(
                         width = VolleyDimens.DIMEN_1.dp,
-                        color = VolleyColor.WHITE.copy(alpha = VolleyUiUtil.GRADIENT_BORDER_ALPHA),
+                        color = VolleyColor.White.copy(alpha = VolleyUiUtil.GRADIENT_BORDER_ALPHA),
                         shape = shape
                     )
             )
@@ -292,7 +292,7 @@ private fun PreviewMessageField() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(VolleyColor.SEAWAVE_BACKGROUND)
+                .background(VolleyColor.TurquoiseDark)
         ) {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 
