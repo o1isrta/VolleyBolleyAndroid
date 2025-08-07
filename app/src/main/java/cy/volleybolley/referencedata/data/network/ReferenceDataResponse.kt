@@ -1,40 +1,27 @@
 package cy.volleybolley.referencedata.data.network
 
 import cy.volleybolley.referencedata.data.dto.CountryDto
-import cy.volleybolley.referencedata.domain.model.Currency
-import cy.volleybolley.referencedata.domain.model.Faq
+import cy.volleybolley.referencedata.data.dto.CurrencyDto
+import cy.volleybolley.referencedata.data.dto.FaqDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 sealed interface ReferenceDataResponse {
     @Serializable
     class CountriesResponse(
+        @SerialName("countries")
         val countries: List<CountryDto>
     ) : ReferenceDataResponse
 
     @Serializable
-    class CurrencyResponse(
-        @SerialName("currency_type")
-        val type: String,
-        @SerialName("currency_name")
-        val name: String
+    class CurrenciesResponse(
+        @SerialName("currencies")
+        val currencies: List<CurrencyDto>
     ) : ReferenceDataResponse
 
     @Serializable
     class FaqResponse(
-        val faq: String
+        @SerialName("faq")
+        val faqDto: FaqDto
     ) : ReferenceDataResponse
-}
-
-fun ReferenceDataResponse.CurrencyResponse.mapToDomain(): Currency {
-    return Currency(
-        type = this.type,
-        name = this.name
-    )
-}
-
-fun ReferenceDataResponse.FaqResponse.mapToDomain(): Faq {
-    return Faq(
-        faq = this.faq
-    )
 }

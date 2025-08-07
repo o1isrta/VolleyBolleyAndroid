@@ -9,6 +9,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ReferenceDataRemoteRepository {
     fun getCountries(): Flow<VolleyResult<List<Country>, ErrorType>>
-    fun getCurrency(): Flow<VolleyResult<Currency, ErrorType>>
+    fun getCurrencies(): Flow<VolleyResult<List<Currency>, ErrorType>>
     fun getFaq(): Flow<VolleyResult<Faq, ErrorType>>
 }

@@ -5,7 +5,7 @@ sealed class ReferenceDataRequest(
 ) {
     class CountriesRequest() : ReferenceDataRequest("countries")
 
-    class CurrencyRequest() : ReferenceDataRequest("currency")
+    class CurrencyRequest() : ReferenceDataRequest("currencies")
 
     class FaqRequest() : ReferenceDataRequest("faq")
 }

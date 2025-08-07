@@ -1,4 +1,4 @@
-package cy.volleybolley.referencedata.domain.usecase
+package cy.volleybolley.referencedata.domain.api
 
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
