@@ -42,7 +42,7 @@ jobs:
                     VOLLEY_SERVER_URL: ${{ secrets.VOLLEY_SERVER_URL }}
                     VOLLEY_GOOGLE_SERVICES: ${{ secrets.VOLLEY_GOOGLE_SERVICES }}
                 run: |
-                    sh ci/add_debug_env.sh && sh ci/add_google_services.sh
+                    sh ci/add_debug_env.sh && sh ci/add_google_services_file.sh
 
             -   name: Run detekt
                 run: ./gradlew detektAll $commonGradleFlags
@@ -80,7 +80,7 @@ jobs:
                     VOLLEY_SERVER_URL: ${{ secrets.VOLLEY_SERVER_URL }}
                     VOLLEY_GOOGLE_SERVICES: ${{ secrets.VOLLEY_GOOGLE_SERVICES }}
                 run: |
-                    sh ci/add_debug_env.sh && sh ci/add_google_services.sh
+                    sh ci/add_debug_env.sh && sh ci/add_google_services_file.sh
 
             -   name: Assemble app
                 run: ./gradlew :app:assembleDebug $commonGradleFlags
