@@ -8,6 +8,6 @@ data class Player(
     val gender: Int? = null,
     val dateOfBirth: String? = null,
     val level: Int? = null,
-    val country: Int? = null,
-    val city: Int? = null
+    val countryId: Int? = null,
+    val cityId: Int? = null
 )

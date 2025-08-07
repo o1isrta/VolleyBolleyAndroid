@@ -13,10 +13,7 @@ import io.ktor.http.appendPathSegments
 
 class AuthorizationKtorNetworkClient : KtorNetworkClient<AuthorizationRequest, AuthorizationResponse>() {
     override suspend fun sendRequestByType(request: AuthorizationRequest): HttpResponse {
-        return httpClient.post("\"http://158.160.175.32/api/\"") {
-            /* Когда Варя ПР смержит, заменить эту строку на
             return httpClient.post(BuildConfig.BASE_URL) {
-            */
             when (request) {
                 is AuthorizationRequest.GoogleAuthorizationRequest-> {
                     url {
@@ -25,7 +22,6 @@ class AuthorizationKtorNetworkClient : KtorNetworkClient<AuthorizationRequest, A
                         setBody(request.body)
                     }
                 }
-
                 is AuthorizationRequest.FacebookAuthorizationRequest -> {
                     url {
                         protocol = URLProtocol.HTTP
@@ -40,6 +36,13 @@ class AuthorizationKtorNetworkClient : KtorNetworkClient<AuthorizationRequest, A
                         setBody(request.body)
                     }
                 }
+                is AuthorizationRequest.PlayerRegistrationRequest -> {
+                    url {
+                        protocol = URLProtocol.HTTP
+                        if (request.path.isNotEmpty()) appendPathSegments(request.path)
+                        setBody(request.body)
+                    }
+                }
             }
         }
     }
@@ -48,6 +51,14 @@ class AuthorizationKtorNetworkClient : KtorNetworkClient<AuthorizationRequest, A
         requestType: AuthorizationRequest,
         httpResponse: HttpResponse
     ): AuthorizationResponse {
-        return httpResponse.body<AuthorizationResponse>()
+        return when (requestType) {
+            is AuthorizationRequest.GoogleAuthorizationRequest,
+            is AuthorizationRequest.FacebookAuthorizationRequest,
+            is AuthorizationRequest.PhoneNumberAuthorizationRequest
+                -> {
+                httpResponse.body<AuthorizationResponse.AuthResponse>()
+            }
+            is AuthorizationRequest.PlayerRegistrationRequest -> AuthorizationResponse.RegistrationResponse
+        }
     }
 }

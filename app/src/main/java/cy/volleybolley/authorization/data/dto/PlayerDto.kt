@@ -12,6 +12,6 @@ data class PlayerDto(
     val gender: Int? = null,
     @SerialName("date_of_birth") val dateOfBirth: String? = null,
     val level: Int? = null,
-    val country: Int? = null,
-    val city: Int? = null
+    @SerialName("country_id") val countryId: Int? = null,
+    @SerialName("city_id") val cityId: Int? = null
 )
