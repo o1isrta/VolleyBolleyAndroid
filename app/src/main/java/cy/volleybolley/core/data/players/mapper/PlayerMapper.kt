@@ -1,7 +1,13 @@
 package cy.volleybolley.core.data.players.mapper
 
-import cy.volleybolley.core.data.network.model.*
-import cy.volleybolley.core.domain.players.model.*
+import cy.volleybolley.core.data.network.model.ActivityDto
+import cy.volleybolley.core.data.network.model.LocationDto
+import cy.volleybolley.core.data.network.model.PlayerDto
+import cy.volleybolley.core.data.network.model.PlayerDtoDetail
+import cy.volleybolley.core.domain.players.model.Activity
+import cy.volleybolley.core.domain.players.model.Location
+import cy.volleybolley.core.domain.players.model.Player
+import cy.volleybolley.core.domain.players.model.PlayerDetail
 
 fun PlayerDto.toDomain(): Player {
     return Player(

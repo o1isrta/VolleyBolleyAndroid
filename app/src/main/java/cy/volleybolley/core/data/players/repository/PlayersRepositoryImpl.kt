@@ -5,7 +5,8 @@ import cy.volleybolley.core.data.network.model.PlayerRequest
 import cy.volleybolley.core.data.network.model.PlayerResponse
 import cy.volleybolley.core.data.players.mapper.toDomain
 import cy.volleybolley.core.domain.model.VolleyResult
-import cy.volleybolley.core.domain.players.model.*
+import cy.volleybolley.core.domain.players.model.Player
+import cy.volleybolley.core.domain.players.model.PlayerDetail
 import cy.volleybolley.core.domain.players.repository.PlayersRepository
 
 class PlayersRepositoryImpl(
@@ -55,7 +56,6 @@ class PlayersRepositoryImpl(
             VolleyResult.Failure(Throwable("Failed to add to favorites"))
         }
     }
-
 
     override suspend fun removeFromFavorites(playerId: Int): VolleyResult<Unit, Throwable> {
         val response = networkClient.getResponse(PlayerRequest.RemoveFromFavorites(playerId))

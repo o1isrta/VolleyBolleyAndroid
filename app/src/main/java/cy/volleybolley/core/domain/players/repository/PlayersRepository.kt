@@ -1,7 +1,7 @@
 package cy.volleybolley.core.domain.players.repository
 
-import cy.volleybolley.core.domain.players.model.Player
 import cy.volleybolley.core.domain.model.VolleyResult
+import cy.volleybolley.core.domain.players.model.Player
 import cy.volleybolley.core.domain.players.model.PlayerDetail
 
 interface PlayersRepository {
