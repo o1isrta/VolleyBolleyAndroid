@@ -8,8 +8,6 @@ import cy.volleybolley.courts.di.courtsModule
 object DiProvider {
     val modules = listOf(
         coreModule,
-        referenceDataModule
-        coreModule,
         courtsModule,
         authViewModelModule,
         referenceDataModule,
