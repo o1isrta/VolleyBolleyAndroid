@@ -30,6 +30,7 @@ fun CountryDto.mapToDomain(): Country {
     )
 }
 
+@JvmName("mapCountryDtoToDomain")
 fun List<CountryDto>.mapToDomain(): List<Country> {
     return this.map { it.mapToDomain() }
 }
@@ -43,6 +44,7 @@ fun CurrencyDto.mapToDomain(): Currency {
     )
 }
 
+@JvmName("mapCurrencyDtoToDomain")
 fun List<CurrencyDto>.mapToDomain(): List<Currency> {
     return this.map { it.mapToDomain() }
 }
@@ -85,10 +87,12 @@ fun Country.mapToLocalDto(): CountryLocalDto {
     )
 }
 
+@JvmName("mapCountryLocalDtoToDomain")
 fun List<CountryLocalDto>.mapToDomain(): List<Country> {
     return this.map { it.mapToDomain() }
 }
 
+@JvmName("mapCountryToLocalDto")
 fun List<Country>.mapToLocalDto(): List<CountryLocalDto> {
     return this.map { it.mapToLocalDto() }
 }
@@ -111,10 +115,12 @@ fun Currency.mapToLocalDto(): CurrencyLocalDto {
     )
 }
 
+@JvmName("mapCurrencyLocalDtoToDomain")
 fun List<CurrencyLocalDto>.mapToDomain(): List<Currency> {
     return this.map { it.mapToDomain() }
 }
 
+@JvmName("mapCurrencyToLocalDto")
 fun List<Currency>.mapToLocalDto(): List<CurrencyLocalDto> {
     return this.map { it.mapToLocalDto() }
 }

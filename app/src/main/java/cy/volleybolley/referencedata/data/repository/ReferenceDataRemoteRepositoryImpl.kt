@@ -16,7 +16,6 @@ import cy.volleybolley.referencedata.domain.model.Faq
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-
 class ReferenceDataRemoteRepositoryImpl(
     private val networkClient: NetworkClient<ReferenceDataRequest, ReferenceDataResponse>,
     private val localRepository: ReferenceDataLocalRepository
