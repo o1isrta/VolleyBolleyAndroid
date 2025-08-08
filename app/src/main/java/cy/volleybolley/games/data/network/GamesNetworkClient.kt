@@ -3,6 +3,7 @@ package cy.volleybolley.games.data.network
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -67,41 +68,77 @@ class GamesNetworkClient() : KtorNetworkClient<GamesRequest, GamesResponse>() {
 
             is GamesRequest.GetMyGames -> httpClient.get(BuildConfig.BASE_URL) {
                 url {
-                    path((request.fullPath()))
+                    path(request.fullPath())
                 }
             }
 
             is GamesRequest.GetInvites -> httpClient.get(BuildConfig.BASE_URL) {
                 url {
-                    path((request.fullPath()))
+                    path(request.fullPath())
                 }
             }
 
             is GamesRequest.GetArchive -> httpClient.get(BuildConfig.BASE_URL) {
                 url {
-                    path((request.fullPath()))
+                    path(request.fullPath())
                 }
             }
 
             is GamesRequest.GetUpcoming -> httpClient.get(BuildConfig.BASE_URL) {
                 url {
-                    path((request.fullPath()))
+                    path(request.fullPath())
                 }
             }
 
+            is GamesRequest.JoinGame -> httpClient.post(BuildConfig.BASE_URL) {
+                url {
+                    path(request.fullPath())
+                }
+            }
 
-            is GamesRequest.JoinGame -> TODO()
-            is GamesRequest.JoinTournament -> TODO()
-            is GamesRequest.GetPlayersToRate -> TODO()
-            is GamesRequest.RatePlayers -> TODO()
-            is GamesRequest.SkipRating -> TODO()
+            is GamesRequest.JoinTournament -> httpClient.post(BuildConfig.BASE_URL) {
+                url {
+                    path(request.fullPath())
+                }
+            }
+
+            is GamesRequest.DeclineGameInvite -> httpClient.delete(BuildConfig.BASE_URL) {
+                url {
+                    path(request.fullPath())
+                }
+            }
+
+            is GamesRequest.DeclineTournamentInvite -> httpClient.delete(BuildConfig.BASE_URL) {
+                url {
+                    path(request.fullPath())
+                }
+            }
+
+            is GamesRequest.GetPlayersToRate -> httpClient.get(BuildConfig.BASE_URL) {
+                url {
+                    path(request.fullPath())
+                }
+            }
+
+            is GamesRequest.RatePlayers -> httpClient.post(BuildConfig.BASE_URL) {
+                url {
+                    path(request.fullPath())
+                }
+                contentType(ContentType.Application.Json)
+                setBody(request.players)
+            }
+
+            is GamesRequest.SkipRating -> httpClient.post(BuildConfig.BASE_URL) {
+                url {
+                    path(request.fullPath())
+                }
+            }
         }
 
     }
 
     override suspend fun getResponseBodyByRequestType(
-        requestType: GamesRequest,
-        httpResponse: HttpResponse
+        requestType: GamesRequest, httpResponse: HttpResponse
     ): GamesResponse {
         return when (requestType) {
             is GamesRequest.CreateGame -> {
@@ -148,11 +185,33 @@ class GamesNetworkClient() : KtorNetworkClient<GamesRequest, GamesResponse>() {
                 httpResponse.body<GamesResponse.GetUpcoming>()
             }
 
-            is GamesRequest.GetPlayersToRate -> TODO()
-            is GamesRequest.JoinGame -> TODO()
-            is GamesRequest.JoinTournament -> TODO()
-            is GamesRequest.RatePlayers -> TODO()
-            is GamesRequest.SkipRating -> TODO()
+            is GamesRequest.JoinGame -> {
+                httpResponse.body<GamesResponse.JoinGame>()
+            }
+
+            is GamesRequest.JoinTournament -> {
+                httpResponse.body<GamesResponse.JoinTournament>()
+            }
+
+            is GamesRequest.DeclineGameInvite -> {
+                httpResponse.body<GamesResponse.DeclineGameInvite>()
+            }
+
+            is GamesRequest.DeclineTournamentInvite -> {
+                httpResponse.body<GamesResponse.DeclineTournamentInvite>()
+            }
+
+            is GamesRequest.GetPlayersToRate -> {
+                httpResponse.body<GamesResponse.GetPlayersToRate>()
+            }
+
+            is GamesRequest.RatePlayers -> {
+                httpResponse.body<GamesResponse.RatePlayers>()
+            }
+
+            is GamesRequest.SkipRating -> {
+                httpResponse.body<GamesResponse.SkipRating>()
+            }
         }
     }
 }

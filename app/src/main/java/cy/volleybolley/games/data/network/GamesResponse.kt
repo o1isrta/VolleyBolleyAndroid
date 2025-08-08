@@ -88,9 +88,9 @@ sealed interface GamesResponse {
         @SerialName("teams") val players: List<TeamDto>,
     ) : GamesResponse
 
-    class InvitePlayersToGame() : GamesResponse
+    class InvitePlayersToGame : GamesResponse
 
-    class InvitePlayersToTournament() : GamesResponse
+    class InvitePlayersToTournament : GamesResponse
 
     @Serializable
     class GetPreview(
@@ -122,14 +122,52 @@ sealed interface GamesResponse {
         @SerialName("tournaments") val tournaments: TournamentPreviewDto,
     ) : GamesResponse
 
-    class JoinGame() : GamesResponse
+    @Serializable
+    class JoinGame(
+        @SerialName("game_id") val gameId: Int,
+        @SerialName("is_joined") val isJoined: Boolean,
+        @SerialName("is_private") val isPrivate: Boolean,
+        @SerialName("court_location") val courtLocation: LocationDto,
+        @SerialName("start_time") val startTime: String,
+        @SerialName("end_time") val endTime: String,
+        @SerialName("levels") val levels: List<String>,
+        @SerialName("gender") val gender: String,
+        @SerialName("currency_type") val currencyType: String,
+        @SerialName("payment_type") val paymentType: String,
+        @SerialName("payment_account") val paymentAccount: String,
+        @SerialName("price_per_person") val pricePerPerson: String,
+        @SerialName("maximum_players") val maximumPlayers: Int,
+    ) : GamesResponse
 
-    class JoinTournament() : GamesResponse
+    @Serializable
+    class JoinTournament(
+        @SerialName("tournament_id") val tournamentId: Int,
+        @SerialName("is_joined") val isJoined: Boolean,
+        @SerialName("is_individual") val isIndividual: Boolean,
+        @SerialName("court_location") val courtLocation: LocationDto,
+        @SerialName("start_time") val startTime: String,
+        @SerialName("end_time") val endTime: String,
+        @SerialName("levels") val levels: List<String>,
+        @SerialName("gender") val gender: String,
+        @SerialName("currency_type") val currencyType: String,
+        @SerialName("payment_type") val paymentType: String,
+        @SerialName("payment_account") val paymentAccount: String,
+        @SerialName("price_per_person") val pricePerPerson: String,
+        @SerialName("maximum_players") val maximumPlayers: Int,
+        @SerialName("maximum_teams") val maximumTeams: Int,
+    ) : GamesResponse
 
-    class GetPlayersToRate() : GamesResponse
+    class DeclineGameInvite : GamesResponse
 
-    class RatePlayers() : GamesResponse
+    class DeclineTournamentInvite : GamesResponse
 
-    class SkipRating() : GamesResponse
+    @Serializable
+    class GetPlayersToRate(
+        @SerialName("players") val players: List<PlayerShortDto>,
+    ) : GamesResponse
+
+    class RatePlayers : GamesResponse
+
+    class SkipRating : GamesResponse
 
 }

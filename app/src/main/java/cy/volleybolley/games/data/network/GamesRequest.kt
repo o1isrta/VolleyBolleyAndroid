@@ -2,6 +2,7 @@ package cy.volleybolley.games.data.network
 
 import cy.volleybolley.games.data.dto.GameDto
 import cy.volleybolley.games.data.dto.PlayersDto
+import cy.volleybolley.games.data.dto.RatePlayerDto
 import cy.volleybolley.games.data.dto.TournamentDto
 
 sealed interface GamesRequest {
@@ -73,21 +74,68 @@ sealed interface GamesRequest {
         }
     }
 
-    class GetUpcoming() : GamesRequest{
+    class GetUpcoming() : GamesRequest {
         fun fullPath(): String {
             return "$GAMES/$UPCOMING"
         }
     }
 
-    class JoinGame() : GamesRequest
+    class JoinGame(
+        val gameId: Int,
+    ) : GamesRequest {
+        fun fullPath(): String {
+            return "$GAMES/$gameId/$JOIN_GAME"
+        }
+    }
 
-    class JoinTournament() : GamesRequest
+    class JoinTournament(
+        val tournamentId: Int,
+    ) : GamesRequest {
+        fun fullPath(): String {
+            return "$GAMES/$tournamentId/$JOIN_TOURNAMENT"
+        }
+    }
 
-    class GetPlayersToRate() : GamesRequest
+    class DeclineGameInvite(
+        val gameId: Int,
+    ) : GamesRequest {
+        fun fullPath(): String {
+            return "$GAMES/$gameId/$INVITES"
+        }
+    }
 
-    class RatePlayers() : GamesRequest
+    class DeclineTournamentInvite(
+        val tournamentId: Int,
+    ) : GamesRequest {
+        fun fullPath(): String {
+            return "$TOURNAMENTS/$tournamentId/$INVITES"
+        }
+    }
 
-    class SkipRating() : GamesRequest
+    class GetPlayersToRate(
+        val gameId: Int,
+    ) : GamesRequest {
+        fun fullPath(): String {
+            return "$GAMES/$gameId/$RATE_PLAYERS"
+        }
+    }
+
+    class RatePlayers(
+        val gameId: Int,
+        val players: List<RatePlayerDto>
+    ) : GamesRequest {
+        fun fullPath(): String {
+            return "$GAMES/$gameId/$RATE_PLAYERS"
+        }
+    }
+
+    class SkipRating(
+        val gameId: Int,
+    ) : GamesRequest {
+        fun fullPath(): String {
+            return "$GAMES/$gameId/$SKIP"
+        }
+    }
 
     companion object {
         const val GAMES = "games"
@@ -98,5 +146,9 @@ sealed interface GamesRequest {
         const val ARCHIVE = "archive"
         const val INVITES = "invites"
         const val UPCOMING = "upcoming"
+        const val JOIN_GAME = "join-game"
+        const val JOIN_TOURNAMENT = "join-tournament"
+        const val RATE_PLAYERS = "rate-players"
+        const val SKIP = "skip"
     }
 }
