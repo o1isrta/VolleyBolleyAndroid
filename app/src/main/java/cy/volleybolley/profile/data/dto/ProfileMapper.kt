@@ -16,7 +16,7 @@ fun List<Payment>.toDto(): List<PaymentDto> = this.map { it.toDto() }
 
 fun PaymentDto.toDomain(): Payment {
     return Payment(
-        type = getPaymentTypeByName(type) ?: PaymentType.UNKNOWN,
+        type = PaymentType.findByName(type),
         account = account,
         isPreferred = isPreferred,
     )
@@ -57,4 +57,3 @@ fun PersonalData.toUpdateBody(): PersonalDataUpdateBody {
 
 private fun checkStringDataField(field: String): String? = if (field.isEmpty()) null else field
 private fun checkIntDataField(field: Int): Int? = if (field == -1) null else field
-private fun getPaymentTypeByName(name: String): PaymentType? = PaymentType.entries.firstOrNull { it.nameValue == name }
