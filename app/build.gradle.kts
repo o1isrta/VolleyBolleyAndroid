@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.google.services)
 }
@@ -94,4 +95,7 @@ dependencies {
     implementation(libs.bundles.firebase.fcm)
     ksp(libs.koin.ksp.compiler)
 
+    implementation(libs.play.services.auth)
+    implementation(libs.firebase.auth)
+    implementation(platform(libs.firebase.bom))
 }

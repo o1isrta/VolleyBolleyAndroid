@@ -1,7 +1,11 @@
 [versions]
 # Config
+firebaseAuth = "23.2.1"
+firebaseBom = "33.16.0"
+koinAndroid = "4.1.0"
 minSdk = "24"
 compileSdk = "35"
+playServicesAuth = "21.3.0"
 targetSdk = "35"
 versionName = "1.0.0"
 versionCode = "1"
@@ -36,6 +40,9 @@ detektTwitterComposeRules = "0.0.26"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+google-firebase-auth = { module = "com.google.firebase:firebase-auth" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -50,6 +57,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 # DI
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
@@ -99,6 +107,7 @@ firebase-fcm = [
 ]
 
 [plugins]
+google-services = { id = "com.google.gms.google-services", version = "4.4.3" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
