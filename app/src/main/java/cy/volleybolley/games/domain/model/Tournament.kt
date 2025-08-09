@@ -1,9 +1,14 @@
 package cy.volleybolley.games.domain.model
 
+import cy.volleybolley.courts.domain.model.Location
+
 data class Tournament (
     val tournamentId: Int? = null, // при создании
-    val courtId: Int,
+    val courtId: Int? = null,
+    val gameType: String? = null, // при создании
+    val host: Host? = null, // при создании
     val message: String,
+    val courtLocation: Location? = null,// при создании
     val startTime: String,
     val endTime: String,
     val gender: String,
