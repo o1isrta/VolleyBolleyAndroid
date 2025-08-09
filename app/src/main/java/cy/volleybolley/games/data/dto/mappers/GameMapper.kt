@@ -2,9 +2,11 @@ package cy.volleybolley.games.data.dto.mappers
 
 import cy.volleybolley.courts.data.dto.toDomain
 import cy.volleybolley.games.data.dto.GameDto
+import cy.volleybolley.games.data.dto.GamePreviewDto
 import cy.volleybolley.games.data.network.GamesResponse
 import cy.volleybolley.games.domain.model.Game
-import cy.volleybolley.games.domain.model.GameDetails
+import cy.volleybolley.games.domain.model.GamePreview
+import cy.volleybolley.games.domain.model.PlayerShort
 
 fun GamesResponse.CreateGame.toDomain(): Game = Game(
     gameId = gameId,
@@ -20,11 +22,11 @@ fun GamesResponse.CreateGame.toDomain(): Game = Game(
     paymentType = paymentType,
     paymentAccount = paymentAccount,
     currencyType = currencyType,
-    players = players
+    players = players.map { PlayerShort(playerId = it) },
 )
 
 fun Game.toData(): GameDto = GameDto(
-    courtId = courtId,
+    courtId = courtId ?: 0,
     message = message,
     startTime = startTime,
     endTime = endTime,
@@ -34,10 +36,10 @@ fun Game.toData(): GameDto = GameDto(
     maximumPlayers = maximumPlayers,
     price = pricePerPerson,
     paymentType = paymentType,
-    players = players
+    players = players.map { it.playerId }
 )
 
-fun GamesResponse.GetGameDetails.toDomain(): GameDetails = GameDetails(
+fun GamesResponse.GetGameDetails.toDomain(): Game = Game(
     gameId = gameId,
     gameType = gameType,
     host = host.toDomain(),
@@ -52,5 +54,14 @@ fun GamesResponse.GetGameDetails.toDomain(): GameDetails = GameDetails(
     paymentType = paymentType,
     paymentAccount = paymentAccount,
     maximumPlayers = maximumPlayers,
-    players = players.map { it.toDomain() }
+    players = players.map { it.toDomain() },
+)
+
+fun GamePreviewDto.toDomain(): GamePreview = GamePreview(
+    gameId = gameId,
+    host = host.toDomain(),
+    locationDto = location.toDomain(),
+    message = message,
+    startTime = startTime,
+    endTime = endTime
 )

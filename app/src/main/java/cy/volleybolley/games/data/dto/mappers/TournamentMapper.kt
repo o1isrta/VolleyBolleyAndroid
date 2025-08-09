@@ -1,9 +1,11 @@
 package cy.volleybolley.games.data.dto.mappers
 
+import cy.volleybolley.courts.data.dto.toDomain
 import cy.volleybolley.games.data.dto.TournamentDto
+import cy.volleybolley.games.data.dto.TournamentPreviewDto
 import cy.volleybolley.games.data.network.GamesResponse
 import cy.volleybolley.games.domain.model.Tournament
-import cy.volleybolley.games.domain.model.TournamentDetails
+import cy.volleybolley.games.domain.model.TournamentPreview
 
 fun GamesResponse.CreateTournament.toDomain(): Tournament = Tournament(
     tournamentId = tournamentId,
@@ -24,7 +26,7 @@ fun GamesResponse.CreateTournament.toDomain(): Tournament = Tournament(
 )
 
 fun Tournament.toData(): TournamentDto = TournamentDto(
-    courtId = courtId,
+    courtId = courtId ?: 0,
     message = message,
     startTime = startTime,
     endTime = endTime,
@@ -35,24 +37,34 @@ fun Tournament.toData(): TournamentDto = TournamentDto(
     maximumTeams = maximumTeams,
     price = pricePerPerson,
     paymentType = paymentType,
-    teams = teams.toData()
+    teams = teams.toPlayersData()
 )
 
-fun GamesResponse.GetTournamentDetails.toDomain(): TournamentDetails = TournamentDetails(
-    tournamentId = TODO(),
-    gameType = TODO(),
-    host = TODO(),
-    message = TODO(),
-    courtLocation = TODO(),
-    startTime = TODO(),
-    endTime = TODO(),
-    levels = TODO(),
-    gender = TODO(),
-    pricePerPerson = TODO(),
-    currencyType = TODO(),
-    paymentType = TODO(),
-    paymentAccount = TODO(),
-    maximumPlayers = TODO(),
-    maximumTeams = TODO(),
-    players = TODO()
+fun GamesResponse.GetTournamentDetails.toDomain(): Tournament = Tournament(
+    tournamentId = tournamentId,
+    isIndividual = isIndividual,
+    gameType = gameType,
+    host = host.toDomain(),
+    message = message,
+    courtLocation = courtLocation.toDomain(),
+    startTime = startTime,
+    endTime = endTime,
+    levels = levels,
+    gender = gender,
+    pricePerPerson = pricePerPerson,
+    currencyType = currencyType,
+    paymentType = paymentType,
+    paymentAccount = paymentAccount,
+    maximumPlayers = maximumPlayers,
+    maximumTeams = maximumTeams,
+    teams = teams.toDomain(),
+)
+
+fun TournamentPreviewDto.toDomain(): TournamentPreview = TournamentPreview(
+    tournamentId = tournamentId,
+    host = host.toDomain(),
+    location = location.toDomain(),
+    message = message,
+    startTime = startTime,
+    endTime = endTime
 )
