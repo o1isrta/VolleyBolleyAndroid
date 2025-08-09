@@ -5,7 +5,6 @@ import cy.volleybolley.games.data.dto.GamePreviewDto
 import cy.volleybolley.games.data.dto.HostDto
 import cy.volleybolley.games.data.dto.PlayerShortDto
 import cy.volleybolley.games.data.dto.TeamDto
-import cy.volleybolley.games.data.dto.TeamShortDto
 import cy.volleybolley.games.data.dto.TournamentPreviewDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -45,7 +44,7 @@ sealed interface GamesResponse {
         @SerialName("payment_type") val paymentType: String,
         @SerialName("payment_account") val paymentAccount: String?,
         @SerialName("currency_type") val currencyType: String,
-        @SerialName("teams") val teams: List<TeamShortDto>,
+        @SerialName("teams") val teams: List<TeamDto>,
     ) : GamesResponse
 
     @Serializable

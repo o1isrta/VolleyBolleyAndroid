@@ -1,11 +1,10 @@
-package cy.volleybolley.games.data.dto
+package cy.volleybolley.games.data.dto.mappers
 
 import cy.volleybolley.courts.data.dto.toDomain
+import cy.volleybolley.games.data.dto.GameDto
 import cy.volleybolley.games.data.network.GamesResponse
 import cy.volleybolley.games.domain.model.Game
 import cy.volleybolley.games.domain.model.GameDetails
-import cy.volleybolley.games.domain.model.Host
-import cy.volleybolley.games.domain.model.PlayerShort
 
 fun GamesResponse.CreateGame.toDomain(): Game = Game(
     gameId = gameId,
@@ -17,7 +16,7 @@ fun GamesResponse.CreateGame.toDomain(): Game = Game(
     levels = levels,
     isPrivate = isPrivate,
     maximumPlayers = maximumPlayers,
-    price = price,
+    pricePerPerson = price,
     paymentType = paymentType,
     paymentAccount = paymentAccount,
     currencyType = currencyType,
@@ -33,7 +32,7 @@ fun Game.toData(): GameDto = GameDto(
     levels = levels,
     isPrivate = isPrivate,
     maximumPlayers = maximumPlayers,
-    price = price,
+    price = pricePerPerson,
     paymentType = paymentType,
     players = players
 )
@@ -54,17 +53,4 @@ fun GamesResponse.GetGameDetails.toDomain(): GameDetails = GameDetails(
     paymentAccount = paymentAccount,
     maximumPlayers = maximumPlayers,
     players = players.map { it.toDomain() }
-)
-
-fun HostDto.toDomain(): Host = Host(
-    id = id,
-    name = "$firstName $lastName",
-    avatar = avatar,
-    level = level
-)
-
-fun PlayerShortDto.toDomain(): PlayerShort = PlayerShort(
-    playerId = playerId,
-    name = "$firstName $lastName",
-    level = level
 )
