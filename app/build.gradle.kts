@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.serialization)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -90,7 +91,7 @@ dependencies {
     implementation(libs.bundles.koin.di)
     implementation(libs.bundles.ktor.client)
     implementation(libs.androidx.navigation.compose)
-
+    implementation(libs.bundles.firebase.fcm)
     ksp(libs.koin.ksp.compiler)
 
 }

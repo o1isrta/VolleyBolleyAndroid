@@ -3,6 +3,7 @@ package cy.volleybolley.core.presentation.ui.model
 import androidx.compose.ui.graphics.Color
 
 object VolleyColor {
+    val YELLOW = Color(CustomColorValues.YELLOW)
     val BLACK = Color(CustomColorValues.BLACK)
     val WHITE = Color(CustomColorValues.WHITE)
     val YELLOW_GRADIENT = Color(CustomColorValues.YELLOW_GRADIENT)
@@ -18,6 +19,7 @@ object VolleyColor {
 }
 
 private object CustomColorValues {
+    const val YELLOW = 0xFFE6C953
     const val BLACK = 0xFF000000
     const val WHITE = 0xFFFFFFFF
     const val YELLOW_GRADIENT = 0xFFF4E998

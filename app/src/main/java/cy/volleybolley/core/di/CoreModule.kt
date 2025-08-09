@@ -1,6 +1,7 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
+import cy.volleybolley.core.presentation.MainActivityViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -11,6 +12,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 const val TIMEOUT_MILLIS = 30_000L
@@ -44,5 +46,12 @@ val coreModule = module {
                 json(get())
             }
         }
+    }
+
+    viewModel {
+        MainActivityViewModel(
+            sendDeviceTokenUseCase = get(), fcmTokenStore = get(),
+            notificationPermissionChecker = get(),
+        )
     }
 }
