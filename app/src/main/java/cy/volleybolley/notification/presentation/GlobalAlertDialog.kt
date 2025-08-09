@@ -31,7 +31,7 @@ fun GlobalAlertDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = VolleyColor.SEAWAVE_HEADER,
+        containerColor = VolleyColor.Turquoise,
         title = {
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -39,14 +39,14 @@ fun GlobalAlertDialog(
             ) {
                 TitleLarge(
                     text = dialog.title,
-                    color = VolleyColor.WHITE
+                    color = VolleyColor.White
                 )
             }
         },
         text = {
             BodyBold(
                 text = dialog.message,
-                color = VolleyColor.WHITE
+                color = VolleyColor.White
             )
         },
         confirmButton = {
@@ -54,14 +54,14 @@ fun GlobalAlertDialog(
                 modifier = Modifier
                     .fillMaxWidth(0.65f)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(VolleyColor.YELLOW)
+                    .background(VolleyColor.YellowPro)
                     .clickable(onClick = onConfirm)
                     .padding(vertical = 12.dp),
                 contentAlignment = Alignment.Center
             ) {
                 ButtonText(
                     text = "ENABLED",
-                    color = VolleyColor.TEXT_DARK
+                    color = VolleyColor.TextDark
                 )
             }
         },
@@ -70,14 +70,14 @@ fun GlobalAlertDialog(
                 modifier = Modifier
                     .fillMaxWidth(0.32f)
                     .clip(RoundedCornerShape(16.dp))
-                    .border(1.dp, VolleyColor.YELLOW, RoundedCornerShape(16.dp))
+                    .border(1.dp, VolleyColor.YellowPro, RoundedCornerShape(16.dp))
                     .clickable(onClick = onDismiss)
                     .padding(vertical = 12.dp),
                 contentAlignment = Alignment.Center
             ) {
                 ButtonText(
                     text = "SKIP",
-                    color = VolleyColor.WHITE
+                    color = VolleyColor.White
                 )
             }
         },

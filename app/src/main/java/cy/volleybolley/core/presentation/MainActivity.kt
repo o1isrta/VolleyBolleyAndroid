@@ -40,7 +40,6 @@ import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
 import cy.volleybolley.notification.presentation.GlobalAlertDialog
 import cy.volleybolley.notification.presentation.resolveNotificationRoute
-import cy.volleybolley.ui.theme.Background
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.google.services)
 }
 
 android {
