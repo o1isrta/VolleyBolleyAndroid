@@ -32,41 +32,54 @@ class MainActivityViewModel(
 
     fun updateTokenBasedOnPermission() {
         viewModelScope.launch {
-            if (!isUserAuthorized) {
-                _uiState.update { it.copy(isReady = true) }
-            } else {
+            if (isUserAuthorized) {
                 val hasPermission = notificationPermissionChecker.isNotificationPermissionGranted()
-
                 if (hasPermission) {
-                    val oldToken = fcmTokenStore.getToken()
-                    val newToken = try {
-                        FirebaseMessaging.getInstance().token.await()
-                    } catch (e: IOException) {
-                        Log.e("FCM", "Token fetch failed: IO error", e)
-                        null
-                    } catch (e: FirebaseException) {
-                        Log.e("FCM", "Token fetch failed: Firebase error", e)
-                        null
-                    } catch (e: CancellationException) {
-                        throw e
-                    }
-                    if (newToken != null && newToken != oldToken) {
-                        fcmTokenStore.saveToken(newToken)
-                        sendDeviceTokenUseCase.updateToken(newToken)
-                        Log.d("FCM", "Token updated: old=$oldToken new=$newToken")
-                    }
+                    updateFcmTokenIfNeeded()
                 }
-
-                _uiState.update {
-                    it.copy(
-                        notificationPermissionGranted = hasPermission,
-                        isReady = true
-                    )
-                }
+                updateUiState(hasPermission)
+            } else {
+                markReady()
             }
         }
     }
 
+    private suspend fun updateFcmTokenIfNeeded() {
+        val oldToken = fcmTokenStore.getToken()
+        val newToken = fetchFirebaseToken()
+        if (newToken != null && newToken != oldToken) {
+            fcmTokenStore.saveToken(newToken)
+            sendDeviceTokenUseCase.updateToken(newToken)
+            Log.d("FCM", "Token updated: old=$oldToken new=$newToken")
+        }
+    }
+
+    private suspend fun fetchFirebaseToken(): String? {
+        return try {
+            FirebaseMessaging.getInstance().token.await()
+        } catch (e: IOException) {
+            Log.e(TAG, IO_ERROR_MSG, e)
+            null
+        } catch (e: FirebaseException) {
+            Log.e(TAG, FIREBASE_ERROR_MSG, e)
+            null
+        } catch (e: CancellationException) {
+            throw e
+        }
+    }
+
+    private fun markReady() {
+        _uiState.update { it.copy(isReady = true) }
+    }
+
+    private fun updateUiState(hasPermission: Boolean) {
+        _uiState.update {
+            it.copy(
+                notificationPermissionGranted = hasPermission,
+                isReady = true
+            )
+        }
+    }
 
     fun isNotificationPermissionGranted(): Boolean {
         return notificationPermissionChecker.isNotificationPermissionGranted()
@@ -105,5 +118,11 @@ class MainActivityViewModel(
 
     fun dismissGlobalDialog() {
         _uiState.update { it.copy(globalDialog = null) }
+    }
+
+    companion object {
+        private const val TAG = "FCM"
+        private const val IO_ERROR_MSG = "Token fetch failed: IO error"
+        private const val FIREBASE_ERROR_MSG = "Token fetch failed: Firebase error"
     }
 }
