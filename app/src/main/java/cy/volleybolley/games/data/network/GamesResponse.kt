@@ -84,7 +84,7 @@ sealed interface GamesResponse {
         @SerialName("payment_account") val paymentAccount: String,
         @SerialName("maximum_players") val maximumPlayers: Int,
         @SerialName("maximum_teams") val maximumTeams: Int,
-        @SerialName("teams") val players: List<TeamDto>,
+        @SerialName("teams") val teams: List<TeamDto>,
     ) : GamesResponse
 
     class InvitePlayersToGame : GamesResponse
@@ -99,26 +99,26 @@ sealed interface GamesResponse {
 
     @Serializable
     class GetMyGames(
-        @SerialName("games") val games: GamePreviewDto,
-        @SerialName("tournaments") val tournaments: TournamentPreviewDto,
+        @SerialName("games") val games: List<GamePreviewDto>,
+        @SerialName("tournaments") val tournaments: List<TournamentPreviewDto>,
     ) : GamesResponse
 
     @Serializable
     class GetArchive(
-        @SerialName("games") val games: GamePreviewDto,
-        @SerialName("tournaments") val tournaments: TournamentPreviewDto,
+        @SerialName("games") val games: List<GamePreviewDto>,
+        @SerialName("tournaments") val tournaments: List<TournamentPreviewDto>,
     ) : GamesResponse
 
     @Serializable
     class GetInvites(
-        @SerialName("games") val games: GamePreviewDto,
-        @SerialName("tournaments") val tournaments: TournamentPreviewDto,
+        @SerialName("games") val games: List<GamePreviewDto>,
+        @SerialName("tournaments") val tournaments: List<TournamentPreviewDto>,
     ) : GamesResponse
 
     @Serializable
     class GetUpcoming(
-        @SerialName("games") val games: GamePreviewDto,
-        @SerialName("tournaments") val tournaments: TournamentPreviewDto,
+        @SerialName("games") val games: List<GamePreviewDto>,
+        @SerialName("tournaments") val tournaments: List<TournamentPreviewDto>,
     ) : GamesResponse
 
     @Serializable
