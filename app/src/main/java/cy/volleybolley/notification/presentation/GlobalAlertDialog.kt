@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyBold
 import cy.volleybolley.core.presentation.ui.model.VolleyText.ButtonText
 import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleLarge
@@ -52,11 +53,11 @@ fun GlobalAlertDialog(
         confirmButton = {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(0.65f)
-                    .clip(RoundedCornerShape(16.dp))
+                    .fillMaxWidth(VolleyDimens.DIMEN_065)
+                    .clip(RoundedCornerShape(VolleyDimens.DIMEN_16))
                     .background(VolleyColor.YellowPro)
                     .clickable(onClick = onConfirm)
-                    .padding(vertical = 12.dp),
+                    .padding(vertical = VolleyDimens.DIMEN_12.dp),
                 contentAlignment = Alignment.Center
             ) {
                 ButtonText(
@@ -68,11 +69,15 @@ fun GlobalAlertDialog(
         dismissButton = {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(0.32f)
-                    .clip(RoundedCornerShape(16.dp))
-                    .border(1.dp, VolleyColor.YellowPro, RoundedCornerShape(16.dp))
+                    .fillMaxWidth(VolleyDimens.DIMEN_032)
+                    .clip(RoundedCornerShape(VolleyDimens.DIMEN_16))
+                    .border(
+                        VolleyDimens.DIMEN_1.dp,
+                        VolleyColor.YellowPro,
+                        RoundedCornerShape(VolleyDimens.DIMEN_16)
+                    )
                     .clickable(onClick = onDismiss)
-                    .padding(vertical = 12.dp),
+                    .padding(vertical = VolleyDimens.DIMEN_12.dp),
                 contentAlignment = Alignment.Center
             ) {
                 ButtonText(

@@ -2,7 +2,6 @@ package cy.volleybolley.core.presentation
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,12 +23,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
@@ -42,7 +39,6 @@ import cy.volleybolley.notification.presentation.GlobalAlertDialog
 import cy.volleybolley.notification.presentation.resolveNotificationRoute
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainActivityViewModel by viewModel()
@@ -62,13 +58,8 @@ class MainActivity : ComponentActivity() {
             )
         )
         enableEdgeToEdge()
-        val granted = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.POST_NOTIFICATIONS
-        ) == PackageManager.PERMISSION_GRANTED
         setContent {
             setContent {
-                val requestPermissionLauncherState = rememberUpdatedState(requestNotificationPermissionLauncher)
                 val state by viewModel.uiState.collectAsState()
                 LaunchedEffect(Unit) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
@@ -79,7 +70,8 @@ class MainActivity : ComponentActivity() {
                             message = getString(R.string.notifications_alert_dialog),
                             onConfirm = {
                                 requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                            })
+                            }
+                        )
                     } else {
                         viewModel.updateTokenBasedOnPermission()
                     }
@@ -191,8 +183,8 @@ private fun ButtonDemo() {
 @Composable
 fun RootContainer(
     state: MainActivityState,
-    onRequestPermission: () -> Unit,//Оставил для времён, когда будут готовы экраны авторизации, чтобы оттуда запрашивать
     onDismissDialog: () -> Unit,
+    onRequestPermission: () -> Unit,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Surface(
@@ -211,6 +203,7 @@ fun RootContainer(
             dialog = dialog,
             onConfirm = {
                 dialog.onConfirm()
+                onRequestPermission()
                 onDismissDialog()
             },
             onDismiss = {
@@ -221,7 +214,6 @@ fun RootContainer(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewRootContainer() {
@@ -230,7 +222,7 @@ fun PreviewRootContainer() {
         RootContainer(
             state = fakeState,
             onRequestPermission = {},
-            onDismissDialog = {}
+            onDismissDialog = {},
         ) { padding ->
             NavHostContainer(modifier = Modifier.padding(padding))
         }
