@@ -20,7 +20,7 @@ class ReferenceDataRemoteRepositoryImpl(
     private val networkClient: NetworkClient<ReferenceDataRequest, ReferenceDataResponse>,
     private val localRepository: ReferenceDataLocalRepository
 ) : ReferenceDataRemoteRepository {
-    override suspend fun getCountries(): Flow<VolleyResult<List<Country>, ErrorType>> = flow {
+    override fun getCountries(): Flow<VolleyResult<List<Country>, ErrorType>> = flow {
         val response = networkClient.getResponse(ReferenceDataRequest.CountriesRequest())
 
         when (response.isSuccess) {
@@ -45,7 +45,7 @@ class ReferenceDataRemoteRepositoryImpl(
         }
     }
 
-    override suspend fun getCurrencies(): Flow<VolleyResult<List<Currency>, ErrorType>> = flow {
+    override fun getCurrencies(): Flow<VolleyResult<List<Currency>, ErrorType>> = flow {
         val response = networkClient.getResponse(ReferenceDataRequest.CurrencyRequest())
 
         when (response.isSuccess) {
@@ -69,7 +69,7 @@ class ReferenceDataRemoteRepositoryImpl(
         }
     }
 
-    override suspend fun getFaq(): Flow<VolleyResult<Faq, ErrorType>> = flow {
+    override fun getFaq(): Flow<VolleyResult<Faq, ErrorType>> = flow {
         val response = networkClient.getResponse(ReferenceDataRequest.FaqRequest())
 
         when (response.isSuccess) {

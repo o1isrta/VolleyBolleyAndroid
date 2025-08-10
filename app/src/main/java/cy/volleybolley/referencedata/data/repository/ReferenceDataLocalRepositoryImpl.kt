@@ -14,12 +14,12 @@ class ReferenceDataLocalRepositoryImpl(private val cacheDir: File, private val j
         return File(cacheDir, "$key.json")
     }
 
-    override fun saveCountries(data: List<CountryLocalDto>) {
+    override suspend fun saveCountries(data: List<CountryLocalDto>) {
         val jsonString = json.encodeToString(data)
         getFile(COUNTRIES_CACHE).writeText(jsonString)
     }
 
-    override fun loadCountries(): List<CountryLocalDto>? {
+    override suspend fun loadCountries(): List<CountryLocalDto>? {
         val file = getFile(COUNTRIES_CACHE)
         return if (file.exists()) {
             json.decodeFromString(file.readText())
@@ -28,12 +28,12 @@ class ReferenceDataLocalRepositoryImpl(private val cacheDir: File, private val j
         }
     }
 
-    override fun saveCurrencies(data: List<CurrencyLocalDto>) {
+    override suspend fun saveCurrencies(data: List<CurrencyLocalDto>) {
         val jsonString = json.encodeToString(data)
         getFile(CURRENCIES_CACHE).writeText(jsonString)
     }
 
-    override fun loadCurrencies(): List<CurrencyLocalDto>? {
+    override suspend fun loadCurrencies(): List<CurrencyLocalDto>? {
         val file = getFile(CURRENCIES_CACHE)
         return if (file.exists()) {
             json.decodeFromString(file.readText())
@@ -42,12 +42,12 @@ class ReferenceDataLocalRepositoryImpl(private val cacheDir: File, private val j
         }
     }
 
-    override fun saveFaq(data: FaqLocalDto) {
+    override suspend fun saveFaq(data: FaqLocalDto) {
         val jsonString = json.encodeToString(data)
         getFile(FAQ_CACHE).writeText(jsonString)
     }
 
-    override fun loadFaq(): FaqLocalDto? {
+    override suspend fun loadFaq(): FaqLocalDto? {
         val file = getFile(FAQ_CACHE)
         return if (file.exists()) {
             json.decodeFromString(file.readText())

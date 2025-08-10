@@ -5,10 +5,10 @@ import cy.volleybolley.referencedata.data.localdto.CurrencyLocalDto
 import cy.volleybolley.referencedata.data.localdto.FaqLocalDto
 
 interface ReferenceDataLocalRepository {
-    fun saveCountries(data: List<CountryLocalDto>)
-    fun loadCountries(): List<CountryLocalDto>?
-    fun saveCurrencies(data: List<CurrencyLocalDto>)
-    fun loadCurrencies(): List<CurrencyLocalDto>?
-    fun saveFaq(data: FaqLocalDto)
-    fun loadFaq(): FaqLocalDto?
+    suspend fun saveCountries(data: List<CountryLocalDto>)
+    suspend fun loadCountries(): List<CountryLocalDto>?
+    suspend fun saveCurrencies(data: List<CurrencyLocalDto>)
+    suspend fun loadCurrencies(): List<CurrencyLocalDto>?
+    suspend fun saveFaq(data: FaqLocalDto)
+    suspend fun loadFaq(): FaqLocalDto?
 }
