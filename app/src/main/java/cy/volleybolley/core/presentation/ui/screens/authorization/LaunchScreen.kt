@@ -31,4 +31,3 @@ fun LaunchScreen(navController: NavHostController) {
         }
     }
 }
-

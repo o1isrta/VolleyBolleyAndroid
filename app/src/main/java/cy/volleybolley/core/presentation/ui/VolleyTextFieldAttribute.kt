@@ -42,14 +42,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
-import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
+import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldMedium
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import java.util.Calendar
 
+@UiLibraryMarker
 object VolleyTextFieldAttribute {
     @Composable
     fun DatePickerField(
@@ -70,7 +72,7 @@ object VolleyTextFieldAttribute {
         } ?: VolleyUiUtil.DATE_FIELD_HINT
 
         val gradientBrush = Brush.verticalGradient(
-            colors = listOf(VolleyColor.YELLOW_GRADIENT, VolleyColor.GREEN_GRADIENT)
+            colors = listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient)
         )
 
         Box(
@@ -99,7 +101,7 @@ object VolleyTextFieldAttribute {
             ) {
                 Text(
                     text = correctText,
-                    color = VolleyColor.TEXT_FIELD,
+                    color = VolleyColor.TextField,
                     style = GradientFieldMedium,
                 )
             }
@@ -132,7 +134,7 @@ object VolleyTextFieldAttribute {
                     Text(
                         text = stringResource(R.string.registration_date_of_birth_ok),
                         style = GradientFieldMedium,
-                        color = VolleyColor.SEAWAVE_BACKGROUND
+                        color = VolleyColor.TurquoiseDark
                     )
                 }
             },
@@ -141,12 +143,12 @@ object VolleyTextFieldAttribute {
                     Text(
                         text = stringResource(R.string.registration_date_of_birth_cancel),
                         style = GradientFieldMedium,
-                        color = VolleyColor.SEAWAVE_BACKGROUND
+                        color = VolleyColor.TurquoiseDark
                     )
                 }
             },
             colors = DatePickerDefaults.colors(
-                containerColor = VolleyColor.WHITE,
+                containerColor = VolleyColor.White,
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -156,27 +158,27 @@ object VolleyTextFieldAttribute {
                 title = null,
                 state = datePickerState,
                 colors = DatePickerDefaults.colors(
-                    containerColor = VolleyColor.WHITE,
-                    titleContentColor = VolleyColor.TEXT_CALENDAR_DARK,
-                    headlineContentColor = VolleyColor.TEXT_CALENDAR_DARK,
-                    weekdayContentColor = VolleyColor.TEXT_CALENDAR_DARK,
-                    navigationContentColor = VolleyColor.TEXT_CALENDAR_DARK,
-                    yearContentColor = VolleyColor.TEXT_CALENDAR_DARK,
-                    disabledYearContentColor = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
-                    currentYearContentColor = VolleyColor.SEAWAVE_BACKGROUND,
-                    selectedYearContentColor = VolleyColor.YELLOW_GRADIENT,
-                    disabledSelectedYearContentColor = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
-                    selectedYearContainerColor = VolleyColor.GREEN_GRADIENT,
-                    disabledSelectedYearContainerColor = VolleyColor.TEXT_DARK,
-                    dayContentColor = VolleyColor.TEXT_CALENDAR_DARK,
-                    disabledDayContentColor = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
-                    selectedDayContentColor = VolleyColor.YELLOW_GRADIENT,
-                    disabledSelectedDayContentColor = VolleyColor.TEXT_CALENDAR_LIGHT_GREY,
-                    selectedDayContainerColor = VolleyColor.GREEN_GRADIENT,
-                    disabledSelectedDayContainerColor = VolleyColor.TEXT_DARK,
-                    todayContentColor = VolleyColor.SEAWAVE_BACKGROUND,
-                    todayDateBorderColor = VolleyColor.SEAWAVE_BACKGROUND,
-                    dividerColor = VolleyColor.SEAWAVE_BACKGROUND,
+                    containerColor = VolleyColor.White,
+                    titleContentColor = VolleyColor.TextCalendarDark,
+                    headlineContentColor = VolleyColor.TextCalendarDark,
+                    weekdayContentColor = VolleyColor.TextCalendarDark,
+                    navigationContentColor = VolleyColor.TextCalendarDark,
+                    yearContentColor = VolleyColor.TextCalendarDark,
+                    disabledYearContentColor = VolleyColor.TextCalendarLightGrey,
+                    currentYearContentColor = VolleyColor.TurquoiseDark,
+                    selectedYearContentColor = VolleyColor.YellowForGradient,
+                    disabledSelectedYearContentColor = VolleyColor.TextCalendarLightGrey,
+                    selectedYearContainerColor = VolleyColor.GreenForGradient,
+                    disabledSelectedYearContainerColor = VolleyColor.TextDark,
+                    dayContentColor = VolleyColor.TextCalendarDark,
+                    disabledDayContentColor = VolleyColor.TextCalendarLightGrey,
+                    selectedDayContentColor = VolleyColor.YellowForGradient,
+                    disabledSelectedDayContentColor = VolleyColor.TextCalendarLightGrey,
+                    selectedDayContainerColor = VolleyColor.GreenForGradient,
+                    disabledSelectedDayContainerColor = VolleyColor.TextDark,
+                    todayContentColor = VolleyColor.TurquoiseDark,
+                    todayDateBorderColor = VolleyColor.TurquoiseDark,
+                    dividerColor = VolleyColor.TurquoiseDark,
                 ),
             )
         }
@@ -201,7 +203,7 @@ object VolleyTextFieldAttribute {
                     Icon(
                         painter = painterResource(R.drawable.ic_minus),
                         contentDescription = null,
-                        tint = VolleyColor.WHITE,
+                        tint = VolleyColor.White,
                         modifier = Modifier
                             .clickable(null, null) {
                                 val newCount = inputCount - 1
@@ -218,7 +220,7 @@ object VolleyTextFieldAttribute {
                     Icon(
                         painter = painterResource(R.drawable.ic_plus),
                         contentDescription = null,
-                        tint = VolleyColor.WHITE,
+                        tint = VolleyColor.White,
                         modifier = Modifier
                             .clickable(null, null) {
                                 val newCount = inputCount + 1
@@ -241,7 +243,7 @@ object VolleyTextFieldAttribute {
         val shape = RoundedCornerShape(cornerRadius.dp)
 
         val gradientBrush = Brush.verticalGradient(
-            colors = listOf(VolleyColor.YELLOW_GRADIENT, VolleyColor.GREEN_GRADIENT)
+            colors = listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient)
         )
 
         Box(
@@ -264,7 +266,7 @@ object VolleyTextFieldAttribute {
             ) {
                 Text(
                     text = text,
-                    color = VolleyColor.TEXT_FIELD,
+                    color = VolleyColor.TextField,
                     style = GradientFieldMedium,
                 )
             }
@@ -295,7 +297,7 @@ object VolleyTextFieldAttribute {
             ) {
                 VolleyText.BodyRegular(
                     text = correctTimeString,
-                    color = VolleyColor.WHITE,
+                    color = VolleyColor.White,
                     maxLines = 1,
                     modifier = Modifier
                         .padding(
@@ -308,7 +310,7 @@ object VolleyTextFieldAttribute {
 
                 VolleyText.BodyRegular(
                     text = correctAfternoonMark,
-                    color = VolleyColor.WHITE,
+                    color = VolleyColor.White,
                     maxLines = 1,
                     modifier = Modifier
                         .padding(
@@ -343,13 +345,13 @@ object VolleyTextFieldAttribute {
         )
 
         AlertDialog(
-            containerColor = VolleyColor.WHITE,
+            containerColor = VolleyColor.White,
             onDismissRequest = onDismiss,
             dismissButton = {
                 TextButton(onClick = onDismiss) {
                     VolleyText.BodyBold(
                         text = stringResource(R.string.registration_date_of_birth_cancel),
-                        color = VolleyColor.SEAWAVE_HEADER,
+                        color = VolleyColor.TurquoiseDark,
                         maxLines = 1
                     )
                 }
@@ -368,7 +370,7 @@ object VolleyTextFieldAttribute {
                 ) {
                     VolleyText.BodyBold(
                         text = stringResource(R.string.ok),
-                        color = VolleyColor.SEAWAVE_HEADER,
+                        color = VolleyColor.Turquoise,
                         maxLines = 1
                     )
                 }
@@ -377,20 +379,20 @@ object VolleyTextFieldAttribute {
                 TimePicker(
                     state = timePickerState,
                     colors = TimePickerDefaults.colors(
-                        clockDialColor = VolleyColor.SEAWAVE_HEADER,
-                        clockDialSelectedContentColor = VolleyColor.TEXT_DARK,
-                        clockDialUnselectedContentColor = VolleyColor.WHITE,
-                        selectorColor = VolleyColor.GREEN_GRADIENT,
-                        containerColor = VolleyColor.GREEN_GRADIENT,
-                        periodSelectorBorderColor = VolleyColor.WHITE,
-                        periodSelectorSelectedContainerColor = VolleyColor.GREEN_GRADIENT,
-                        periodSelectorUnselectedContainerColor = VolleyColor.SEAWAVE_HEADER,
-                        periodSelectorSelectedContentColor = VolleyColor.TEXT_DARK,
-                        periodSelectorUnselectedContentColor = VolleyColor.WHITE,
-                        timeSelectorSelectedContainerColor = VolleyColor.GREEN_GRADIENT,
-                        timeSelectorUnselectedContainerColor = VolleyColor.SEAWAVE_HEADER,
-                        timeSelectorSelectedContentColor = VolleyColor.TEXT_DARK,
-                        timeSelectorUnselectedContentColor = VolleyColor.WHITE,
+                        clockDialColor = VolleyColor.Turquoise,
+                        clockDialSelectedContentColor = VolleyColor.TextDark,
+                        clockDialUnselectedContentColor = VolleyColor.White,
+                        selectorColor = VolleyColor.GreenForGradient,
+                        containerColor = VolleyColor.GreenForGradient,
+                        periodSelectorBorderColor = VolleyColor.White,
+                        periodSelectorSelectedContainerColor = VolleyColor.GreenForGradient,
+                        periodSelectorUnselectedContainerColor = VolleyColor.Turquoise,
+                        periodSelectorSelectedContentColor = VolleyColor.TextDark,
+                        periodSelectorUnselectedContentColor = VolleyColor.White,
+                        timeSelectorSelectedContainerColor = VolleyColor.GreenForGradient,
+                        timeSelectorUnselectedContainerColor = VolleyColor.Turquoise,
+                        timeSelectorSelectedContentColor = VolleyColor.TextDark,
+                        timeSelectorUnselectedContentColor = VolleyColor.White,
                     ),
                 )
             }
@@ -405,7 +407,7 @@ private fun PreviewGradientTextFields() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(VolleyColor.SEAWAVE_BACKGROUND)
+                .background(VolleyColor.TurquoiseDark)
         ) {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 

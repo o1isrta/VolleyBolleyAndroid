@@ -121,6 +121,22 @@ object VolleyTypography {
         letterSpacing = 0.sp
     )
 
+    val ButtonSText = TextStyle(
+        fontFamily = HeroFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 19.2.sp,
+        letterSpacing = 0.sp
+    )
+
+    val ButtonXSText = TextStyle(
+        fontFamily = HeroFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 19.2.sp,
+        letterSpacing = 0.sp
+    )
+
     // --- Лого ---
     val LogoDisplay = TextStyle(
         fontFamily = ActayFamily,
@@ -132,7 +148,7 @@ object VolleyTypography {
 
     // --- Поля ввода ---
     val GradientFieldMedium = TextStyle(
-        color = VolleyColor.TEXT_FIELD,
+        color = VolleyColor.TextField,
         fontSize = 16.sp,
         lineHeight = 20.sp,
         fontFamily = HeroFamily,
@@ -141,7 +157,7 @@ object VolleyTypography {
     )
 
     val GradientFieldLight = TextStyle(
-        color = VolleyColor.TEXT_FIELD,
+        color = VolleyColor.TextField,
         fontSize = 14.sp,
         lineHeight = 16.8.sp,
         fontFamily = HeroFamily,
@@ -150,7 +166,7 @@ object VolleyTypography {
     )
 
     val GradientFieldAlert = TextStyle(
-        color = VolleyColor.WHITE,
+        color = VolleyColor.White,
         fontSize = 14.sp,
         lineHeight = 16.8.sp,
         fontFamily = HeroFamily,
@@ -159,7 +175,7 @@ object VolleyTypography {
     )
 
     val CodeField = TextStyle(
-        color = VolleyColor.TEXT_FIELD,
+        color = VolleyColor.TextField,
         fontSize = 16.sp,
         lineHeight = 20.sp,
         fontFamily = HeroFamily,
