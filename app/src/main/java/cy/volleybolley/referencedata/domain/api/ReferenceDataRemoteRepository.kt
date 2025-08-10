@@ -8,7 +8,7 @@ import cy.volleybolley.referencedata.domain.model.Faq
 import kotlinx.coroutines.flow.Flow
 
 interface ReferenceDataRemoteRepository {
-    fun getCountries(): Flow<VolleyResult<List<Country>, ErrorType>>
-    fun getCurrencies(): Flow<VolleyResult<List<Currency>, ErrorType>>
-    fun getFaq(): Flow<VolleyResult<Faq, ErrorType>>
+    suspend fun getCountries(): Flow<VolleyResult<List<Country>, ErrorType>>
+    suspend fun getCurrencies(): Flow<VolleyResult<List<Currency>, ErrorType>>
+    suspend fun getFaq(): Flow<VolleyResult<Faq, ErrorType>>
 }
