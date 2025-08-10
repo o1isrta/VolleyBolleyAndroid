@@ -7,5 +7,5 @@ data class CurrencyLocalDto(
     val id: Int,
     val type: String,
     val name: String,
-    val country: CountryLocalDto
+    val countryId: Int
 )

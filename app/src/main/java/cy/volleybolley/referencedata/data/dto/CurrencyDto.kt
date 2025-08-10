@@ -12,5 +12,5 @@ data class CurrencyDto(
     @SerialName("currency_name")
     val name: String,
     @SerialName("country")
-    val country: CountryDto
+    val countryId: CountryIdDto
 )

@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CountryLocalDto(
     val id: Int,
-    val name: String? = null,
-    val cities: List<CityLocalDto>? = null
+    val name: String,
+    val cities: List<CityLocalDto>
 )

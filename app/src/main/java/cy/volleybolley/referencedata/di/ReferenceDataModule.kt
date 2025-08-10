@@ -16,11 +16,9 @@ import cy.volleybolley.referencedata.domain.api.ReferenceDataRemoteRepository
 import cy.volleybolley.referencedata.domain.impl.GetCountriesUseCaseImpl
 import cy.volleybolley.referencedata.domain.impl.GetCurrenciesUseCaseImpl
 import cy.volleybolley.referencedata.domain.impl.GetFaqUseCaseImpl
-import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 val referenceDataModule = module {
-    single { Json { prettyPrint = true } }
     single {
         val context = get<Context>()
         context.cacheDir

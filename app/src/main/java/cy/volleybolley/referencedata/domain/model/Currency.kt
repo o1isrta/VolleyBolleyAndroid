@@ -4,5 +4,5 @@ data class Currency(
     val id: Int,
     val type: String,
     val name: String,
-    val country: Country
+    val countryId: Int
 )

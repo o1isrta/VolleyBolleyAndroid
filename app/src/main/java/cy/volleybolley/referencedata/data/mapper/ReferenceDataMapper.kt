@@ -26,7 +26,7 @@ fun CountryDto.mapToDomain(): Country {
     return Country(
         id = id,
         name = name,
-        cities = cities?.map { it.mapToDomain() }
+        cities = cities.map { it.mapToDomain() }
     )
 }
 
@@ -40,7 +40,7 @@ fun CurrencyDto.mapToDomain(): Currency {
         id = id,
         type = type,
         name = name,
-        country = country.mapToDomain()
+        countryId = countryId.id
     )
 }
 
@@ -75,7 +75,7 @@ fun CountryLocalDto.mapToDomain(): Country {
     return Country(
         id = id,
         name = name,
-        cities = cities?.map { it.mapToDomain() }
+        cities = cities.map { it.mapToDomain() }
     )
 }
 
@@ -83,7 +83,7 @@ fun Country.mapToLocalDto(): CountryLocalDto {
     return CountryLocalDto(
         id = id,
         name = name,
-        cities = cities?.map { it.mapToLocalDto() }
+        cities = cities.map { it.mapToLocalDto() }
     )
 }
 
@@ -102,7 +102,7 @@ fun CurrencyLocalDto.mapToDomain(): Currency {
         id = id,
         type = type,
         name = name,
-        country = country.mapToDomain()
+        countryId = countryId
     )
 }
 
@@ -111,7 +111,7 @@ fun Currency.mapToLocalDto(): CurrencyLocalDto {
         id = id,
         type = type,
         name = name,
-        country = country.mapToLocalDto()
+        countryId = countryId
     )
 }
 

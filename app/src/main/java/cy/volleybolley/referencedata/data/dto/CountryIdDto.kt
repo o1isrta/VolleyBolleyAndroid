@@ -4,11 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CountryDto(
+data class CountryIdDto(
     @SerialName("country_id")
-    val id: Int,
-    @SerialName("country_name")
-    val name: String,
-    @SerialName("cities")
-    val cities: List<CityDto>
+    val id: Int
 )

@@ -26,22 +26,23 @@ class ReferenceDataRemoteRepositoryImpl(
         when (response.isSuccess) {
             true -> {
                 val result =
-                    (response.body as ReferenceDataResponse.CountriesResponse).countries.mapToDomain()
-                localRepository.saveCountries(result.mapToLocalDto())
+                    (response.body as? ReferenceDataResponse.CountriesResponse)?.countries?.mapToDomain()
+                result?.let {
+                    localRepository.saveCountries(it.mapToLocalDto())
+                    emit(VolleyResult.Success(it))
+                } ?: suspend {
+                    emit(VolleyResult.Failure(ErrorType.UNKNOWN_ERROR))
+                }
 
-                emit(
-                    VolleyResult.Success(result)
-                )
             }
 
             false -> {
                 val countriesFromCache = localRepository.loadCountries()
-
-                if (countriesFromCache != null) {
+                countriesFromCache?.let {
                     emit(
                         VolleyResult.Success(countriesFromCache.mapToDomain())
                     )
-                } else {
+                } ?: suspend {
                     emit(
                         VolleyResult.Failure(response.resultCode.mapToErrorType())
                     )
@@ -56,20 +57,22 @@ class ReferenceDataRemoteRepositoryImpl(
         when (response.isSuccess) {
             true -> {
                 val result =
-                    (response.body as ReferenceDataResponse.CurrenciesResponse).currencies.mapToDomain()
-                localRepository.saveCurrencies(result.mapToLocalDto())
+                    (response.body as? ReferenceDataResponse.CurrenciesResponse)?.currencies?.mapToDomain()
 
-                emit(
-                    VolleyResult.Success(result)
-                )
+                result?.let {
+                    localRepository.saveCurrencies(result.mapToLocalDto())
+                    emit(VolleyResult.Success(result))
+                } ?: suspend {
+                    emit(VolleyResult.Failure(ErrorType.UNKNOWN_ERROR))
+                }
             }
 
             false -> {
                 val currenciesFromCache = localRepository.loadCurrencies()
 
-                if (currenciesFromCache != null) {
+                currenciesFromCache?.let {
                     emit(VolleyResult.Success(currenciesFromCache.mapToDomain()))
-                } else {
+                } ?: suspend {
                     emit(VolleyResult.Failure(response.resultCode.mapToErrorType()))
                 }
             }
@@ -82,20 +85,22 @@ class ReferenceDataRemoteRepositoryImpl(
         when (response.isSuccess) {
             true -> {
                 val result =
-                    (response.body as ReferenceDataResponse.FaqResponse).faqDto.mapToDomain()
-                localRepository.saveFaq(result.mapToLocalDto())
+                    (response.body as? ReferenceDataResponse.FaqResponse)?.faqDto?.mapToDomain()
 
-                emit(
-                    VolleyResult.Success(result)
-                )
+                result?.let {
+                    localRepository.saveFaq(result.mapToLocalDto())
+                    emit(VolleyResult.Success(result))
+                } ?: suspend {
+                    emit(VolleyResult.Failure(ErrorType.UNKNOWN_ERROR))
+                }
             }
 
             false -> {
                 val faqFromCache = localRepository.loadFaq()
 
-                if (faqFromCache != null) {
+                faqFromCache?.let {
                     emit(VolleyResult.Success(faqFromCache.mapToDomain()))
-                } else {
+                } ?: suspend {
                     emit(VolleyResult.Failure(response.resultCode.mapToErrorType()))
                 }
             }
