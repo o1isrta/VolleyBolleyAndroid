@@ -31,8 +31,6 @@ class ReferenceDataRemoteRepositoryImpl(
                     localRepository.saveCountries(it.mapToLocalDto())
                     emit(VolleyResult.Success(it))
                 } ?: emit(VolleyResult.Failure(ErrorType.UNKNOWN_ERROR))
-
-
             }
 
             false -> {
