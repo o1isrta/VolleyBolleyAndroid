@@ -5,11 +5,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cy.volleybolley.R
@@ -32,7 +33,6 @@ import cy.volleybolley.core.presentation.ui.screens.profile.state.ProfileScreenS
 
 @Composable
 fun ProfileScreen(
-    modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
     Button(onClick = { navController.popBackStack() }) {
@@ -117,6 +117,7 @@ private fun ProfileScreen(
         ) {
             VolleyText.BodyLight(
                 text = stringResource(R.string.delete_account),
+                color = VolleyColor.White,
                 modifier = Modifier
                     .clickable {}
             )
@@ -140,10 +141,12 @@ private fun ProfileComponent(
         Icon(
             painter = painter,
             contentDescription = null,
+            tint = VolleyColor.White
         )
 
         VolleyText.BodyRegular(
             text = title,
+            color = VolleyColor.White,
             modifier = Modifier.padding(
                 horizontal = VolleyDimens.DIMEN_8.dp,
                 vertical = 0.dp
@@ -154,10 +157,29 @@ private fun ProfileComponent(
 
 @Composable
 private fun ComponentDivider() {
-    Spacer(
+    HorizontalDivider(
+        thickness = 1.dp,
+        color = VolleyColor.ProfileDivider,
         modifier = Modifier
+            .fillMaxWidth()
             .padding(0.dp, VolleyDimens.DIMEN_16.dp)
-            .height(1.dp)
-            .background(VolleyColor.ProfileDivider)
     )
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun PreviewProfileScreen() {
+    VolleyContainersRootTransparent.Root {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.TurquoiseDark)
+        ) {
+            ProfileScreen(
+                state = ProfileScreenState("some_value"),
+                effect = null
+            ) { }
+        }
+    }
 }
