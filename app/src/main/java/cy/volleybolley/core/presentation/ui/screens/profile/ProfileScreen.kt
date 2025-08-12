@@ -147,9 +147,11 @@ private fun ProfileScreen(
                 text = stringResource(R.string.delete_account),
                 color = VolleyColor.White,
                 modifier = Modifier
-                    .clickable {
-                        eventCallback(ProfileScreenEvent.OnDeleteAccountClick)
-                    }
+                    .clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = { eventCallback(ProfileScreenEvent.OnDeleteAccountClick) }
+                    )
             )
         }
     }
@@ -197,7 +199,11 @@ private fun ProfileComponent(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onComponentClick() }
+            .clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = onComponentClick
+            )
     ) {
         Icon(
             painter = painter,
