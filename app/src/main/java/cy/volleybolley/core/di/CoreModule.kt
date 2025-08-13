@@ -1,6 +1,7 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
+import cy.volleybolley.core.presentation.ui.screens.profile.viewmodel.PersonalDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.viewmodel.ProfileScreenViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -49,5 +50,13 @@ val coreModule = module {
     }
 
     // ViewModels
-    viewModel { ProfileScreenViewModel(get()) }
+    viewModel { ProfileScreenViewModel(deleteProfileUseCase = get()) }
+
+    viewModel {
+        PersonalDataScreenViewModel(
+            getPersonalDataUseCase = get(),
+            updatePersonalDataUseCase = get(),
+        )
+    }
+
 }

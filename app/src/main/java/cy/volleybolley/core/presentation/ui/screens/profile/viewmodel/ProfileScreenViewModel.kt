@@ -72,6 +72,6 @@ class ProfileScreenViewModel(
     }
 
     companion object {
-        const val TAG = "ProfileViewModelTag"
+        val TAG = ProfileScreenViewModel::class.simpleName ?: "ProfileScreenViewModel"
     }
 }
