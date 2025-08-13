@@ -93,42 +93,42 @@ private fun ProfileScreen(
                     title = stringResource(R.string.profile_players_component),
                 ) { eventCallback(ProfileScreenEvent.OnPlayersClick) }
 
-                ComponentDivider()
+                ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_personal_data),
                     title = stringResource(R.string.profile_personal_data_component),
                 ) { eventCallback(ProfileScreenEvent.OnPersonalDataClick) }
 
-                ComponentDivider()
+                ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_payments),
                     title = stringResource(R.string.profile_payments_component),
                 ) { eventCallback(ProfileScreenEvent.OnPaymentsClick) }
 
-                ComponentDivider()
+                ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_support),
                     title = stringResource(R.string.profile_support_component),
                 ) { eventCallback(ProfileScreenEvent.OnSupportClick) }
 
-                ComponentDivider()
+                ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_faq),
                     title = stringResource(R.string.profile_faq_component),
                 ) { eventCallback(ProfileScreenEvent.OnFaqClick) }
 
-                ComponentDivider()
+                ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_about),
                     title = stringResource(R.string.profile_about_component),
                 ) { eventCallback(ProfileScreenEvent.OnAboutClick) }
 
-                ComponentDivider()
+                ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_logout),
@@ -223,10 +223,10 @@ private fun ProfileComponent(
 }
 
 @Composable
-private fun ComponentDivider() {
+private fun ProfileComponentDivider() {
     HorizontalDivider(
         thickness = 1.dp,
-        color = VolleyColor.ProfileDivider,
+        color = VolleyColor.Divider,
         modifier = Modifier
             .fillMaxWidth()
             .padding(0.dp, VolleyDimens.DIMEN_16.dp)

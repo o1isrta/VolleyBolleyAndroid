@@ -83,7 +83,7 @@ object VolleyColor {
      */
     val Alert = Color(color = 0xFFE33222)
 
-    val ProfileDivider = Color(color = 0xFFC3C3C3)
+    val Divider = Color(color = 0xFFC3C3C3)
 
     val TextCalendarDark = Color(color = 0xFF333333)
     val TextCalendarLightGrey = Color(color = 0xFFE0E0E0)
