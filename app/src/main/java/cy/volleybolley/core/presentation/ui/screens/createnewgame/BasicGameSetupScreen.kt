@@ -11,6 +11,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBar
 
 @Composable
 fun BasicGameSetupScreen(navController: NavHostController) {
+    TitleWithBackArrow
     Button(onClick = { navController.popBackStack() }) {
         Text("Назад")
     }
