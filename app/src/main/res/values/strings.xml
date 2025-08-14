@@ -111,9 +111,9 @@
     <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="date_of_bith">Date of bith</string>
+    <string name="date_of_bith">Date of birth</string>
     <string name="level">Level</string>
-    <string name="your_county">Your county</string>
+    <string name="your_country">Your country</string>
     <string name="choose_your_location">Choose your location</string>
     <string name="thailand">Thailand</string>
     <string name="cyprus">Cyprus</string>
