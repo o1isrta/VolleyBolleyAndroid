@@ -1,6 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.profile.viewmodel
 
+import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.ChangePhotoRoute
 import cy.volleybolley.core.presentation.ui.screens.profile.effect.PersonalDataScreenEffect
 import cy.volleybolley.core.presentation.ui.screens.profile.effect.PersonalDataScreenEffect.NavigateOnOtherScreen
@@ -11,11 +13,14 @@ import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataSc
 import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.GenderSelect
 import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.NameChanged
 import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.OnAvatarEditClick
-import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.OnBackFromProfileClick
+import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.OnBackFromPersonalDataClick
 import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.SurnameChanged
+import cy.volleybolley.core.presentation.ui.screens.profile.model.GenderType
 import cy.volleybolley.core.presentation.ui.screens.profile.state.PersonalDataScreenState
 import cy.volleybolley.profile.domain.GetPersonalDataUseCase
 import cy.volleybolley.profile.domain.UpdatePersonalDataUseCase
+import cy.volleybolley.profile.domain.model.PersonalData
+import kotlinx.coroutines.flow.update
 
 class PersonalDataScreenViewModel(
     private val getPersonalDataUseCase: GetPersonalDataUseCase,
@@ -23,20 +28,113 @@ class PersonalDataScreenViewModel(
 ) : BaseViewModel<PersonalDataScreenState, PersonalDataScreenEvent, PersonalDataScreenEffect>(
     initialState = PersonalDataScreenState()
 ){
+    private lateinit var originState: PersonalDataScreenState
+    // Mock PersonalData
+    val personalData = PersonalData(
+        firstName = "Anonymous",
+        lastName = "Nemislimus",
+        gender = "MALE",
+        birthDate = "1987-03-23",
+        level = "LIGHT",
+        countryId = 2,
+        cityId = 202,
+        avatar = "https://cdn.fishki.net/upload/post/2021/03/29/3682461/gallery/tn/wil-hughes-troll-face.jpg"
+    )
+
+    init {
+        // getState()
+        launchSafe(getErrorLogMessage = { "PersonalDataScreen >> init: ${it.message}" }) {
+            originState = personalData.toState()
+            _uiState.update { originState }
+        }
+    }
+
     override val tag: String = TAG
 
     override fun obtainEvent(event: PersonalDataScreenEvent) {
         when(event) {
-            OnBackFromProfileClick -> { NavigateOnOtherScreen(null) }
-            OnAvatarEditClick -> { NavigateOnOtherScreen(ChangePhotoRoute) }
-            is NameChanged -> {}
-            is SurnameChanged -> {}
-            is GenderSelect -> {}
-            is DateSelect -> {}
+            OnBackFromPersonalDataClick -> { sendUiEffect(NavigateOnOtherScreen(null)) }
+            OnAvatarEditClick -> { sendUiEffect(NavigateOnOtherScreen(ChangePhotoRoute)) }
+
+            PersonalDataScreenEvent.OnUpdateButtonClick -> {
+                launchSafe(getErrorLogMessage = { "PersonalDataScreen >> Update button: ${it.message}" }) {
+                    val newPersonalData = uiState.value.toPersonalData()
+                    updatePersonalDataUseCase.execute(newPersonalData)
+                        .onSuccess {
+                            getPersonalDataUseCase.execute()
+                                .onSuccess { personalData ->
+                                    originState = personalData.toState()
+                                }
+                        }
+                }
+            }
+
+            is NameChanged -> {
+                _uiState.update { checkStateForButtonEnabled(uiState.value.copy(name = event.newName)) }
+            }
+
+            is SurnameChanged -> {
+                _uiState.update { checkStateForButtonEnabled(uiState.value.copy(surname = event.newSurname)) }
+            }
+
+            is GenderSelect -> {
+                _uiState.update { checkStateForButtonEnabled(uiState.value.copy(genderId = event.genderId)) }
+            }
+
+            is DateSelect -> {
+                _uiState.update { checkStateForButtonEnabled(uiState.value.copy(dateOfBirth = event.date)) }
+            }
+
             is CountrySelect -> {}
+
             is CitySelect -> {}
         }
 
+    }
+
+    // Неполный метод, потом дописать как будет реализовано API
+    private fun getState() {
+        launchSafe(getErrorLogMessage = { "PersonalDataScreen >> getState: ${it.message}" }) {
+            getPersonalDataUseCase.execute()
+                .onSuccess {
+                    originState = it.toState()
+                    _uiState.update { originState }
+                }
+        }
+    }
+
+    // Неполный метод, потом дописать как будет реализовано API
+    private fun PersonalData.toState(): PersonalDataScreenState {
+        return PersonalDataScreenState(
+            avatar = avatar,
+            name = firstName,
+            surname = lastName,
+            genderId = GenderType.getIdByStringValue(gender),
+            dateOfBirth = VolleyUiUtil.convertTextDateToMillis(
+                VolleyUiUtil.DATE_OF_BIRTH_PATTERN_FOR_SERVER,
+                birthDate
+            ),
+        )
+    }
+
+    private fun PersonalDataScreenState.toPersonalData(): PersonalData {
+        return PersonalData(
+            firstName = name,
+            lastName = surname,
+            gender = GenderType.getNameValueById(genderId),
+            birthDate = dateOfBirth?.let {
+                VolleyUiUtil.convertMillisToTextDate(VolleyUiUtil.DATE_OF_BIRTH_PATTERN_FOR_SERVER, it)
+            } ?: "2000-12-31",
+            level = "",
+            countryId = -1,
+            cityId = -1,
+            avatar = avatar
+        )
+    }
+
+    private fun checkStateForButtonEnabled(newState: PersonalDataScreenState): PersonalDataScreenState {
+        val checkState = if (newState.buttonEnabled) newState.copy(buttonEnabled = false) else newState
+        return if (checkState == originState) originState else newState.copy(buttonEnabled = true)
     }
 
     companion object {

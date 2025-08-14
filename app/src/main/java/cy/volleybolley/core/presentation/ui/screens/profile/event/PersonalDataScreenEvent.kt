@@ -3,8 +3,9 @@ package cy.volleybolley.core.presentation.ui.screens.profile.event
 import cy.volleybolley.core.presentation.base.UiEvent
 
 sealed interface PersonalDataScreenEvent : UiEvent {
-    data object OnBackFromProfileClick : PersonalDataScreenEvent
+    data object OnBackFromPersonalDataClick : PersonalDataScreenEvent
     data object OnAvatarEditClick : PersonalDataScreenEvent
+    data object OnUpdateButtonClick : PersonalDataScreenEvent
     data class NameChanged(val newName: String) : PersonalDataScreenEvent
     data class SurnameChanged(val newSurname: String) : PersonalDataScreenEvent
     data class GenderSelect(val genderId: Int) : PersonalDataScreenEvent

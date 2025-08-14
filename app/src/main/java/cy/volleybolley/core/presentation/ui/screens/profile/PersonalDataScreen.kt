@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -84,14 +85,14 @@ private fun PersonalDataScreen(
             VolleySimpleComponent.TitleWithBackArrow(
                 title = stringResource(R.string.personal_data),
                 modifier = Modifier.fillMaxWidth(),
-                onBackClick = {  }
+                onBackClick = { eventCallback(PersonalDataScreenEvent.OnBackFromPersonalDataClick) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
             AvatarBlock(
                 modifier = Modifier.fillMaxWidth(),
-                avatarString = null,
-                onIconClick = {  }
+                avatarString = state.avatar,
+                onIconClick = { eventCallback(PersonalDataScreenEvent.OnAvatarEditClick) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
@@ -100,8 +101,8 @@ private fun PersonalDataScreen(
 
             VolleyTextFieldGradient.SimpleGradientTextField(
                 hint = stringResource(R.string.name),
-                text = "",
-                actionToTransferContent = {  }
+                text = state.name,
+                actionToTransferContent = { eventCallback(PersonalDataScreenEvent.NameChanged(it)) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_14.dp))
@@ -110,8 +111,8 @@ private fun PersonalDataScreen(
 
             VolleyTextFieldGradient.SimpleGradientTextField(
                 hint = stringResource(R.string.surname),
-                text = "",
-                actionToTransferContent = {  }
+                text = state.surname,
+                actionToTransferContent = { eventCallback(PersonalDataScreenEvent.SurnameChanged(it)) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_14.dp))
@@ -122,8 +123,8 @@ private fun PersonalDataScreen(
 
             VolleyButton.GroupButtonsForGender2(
                 modifier = Modifier,
-                checkId = 1,
-                onSelected = { },
+                checkId = state.genderId,
+                onSelected = { eventCallback(PersonalDataScreenEvent.GenderSelect(it)) },
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -133,8 +134,8 @@ private fun PersonalDataScreen(
             Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
             VolleyTextFieldAttribute.DatePickerField(
-                inputDate = null,
-                actionForSaveDate = {  }
+                inputDate = state.dateOfBirth,
+                actionForSaveDate = { eventCallback(PersonalDataScreenEvent.DateSelect(it)) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -144,9 +145,9 @@ private fun PersonalDataScreen(
             Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
 
             VolleyDropDownField.DropDownGradientField(
-                inputText = stringResource(R.string.your_country),
-                valuesList = emptyList(),
-                onValueClick = {}
+                inputText = state.country,
+                valuesList = state.countriesList,
+                onValueClick = { eventCallback(PersonalDataScreenEvent.CountrySelect(it)) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -156,18 +157,26 @@ private fun PersonalDataScreen(
             Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
 
             VolleyDropDownField.DropDownGradientField(
-                inputText = stringResource(R.string.your_city),
-                valuesList = emptyList(),
-                onValueClick = {}
+                inputText = state.city,
+                valuesList = state.citiesList,
+                onValueClick = { eventCallback(PersonalDataScreenEvent.CitySelect(it)) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
             VolleyButton.ActiveButton(
+                enabled = state.buttonEnabled,
                 text = stringResource(R.string.update),
                 modifier = Modifier.fillMaxWidth().height(VolleyDimens.DIMEN_44.dp)
-            ) { }
+            ) { eventCallback(PersonalDataScreenEvent.OnUpdateButtonClick) }
 
+        }
+    }
+
+    LaunchedEffect(effect) {
+        when(effect) {
+            is PersonalDataScreenEffect.NavigateOnOtherScreen -> navigateAction(effect.route)
+            null -> {}
         }
     }
 

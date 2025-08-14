@@ -16,7 +16,8 @@ object VolleyUiUtil {
     const val GRADIENT_BORDER_ALPHA = 0.05f
 
     const val DATE_FIELD_HINT = "__ /__ /____"
-    const val DATE_OF_BIRTH_FIELD_PATTERN = "MM/dd/yyyy"
+    const val DATE_OF_BIRTH_FIELD_PATTERN = "dd/MM/yyyy"
+    const val DATE_OF_BIRTH_PATTERN_FOR_SERVER = "yyyy-MM-dd"
 
     @JvmStatic
     fun getLimitedText(symbolLimit: Int?, text: String): String {
@@ -36,5 +37,12 @@ object VolleyUiUtil {
     fun convertMillisToTextDate(stringPattern: String, millis: Long): String {
         val formatter = SimpleDateFormat(stringPattern, Locale.getDefault())
         return formatter.format(Date(millis))
+    }
+
+    @JvmStatic
+    fun convertTextDateToMillis(stringPattern: String, dateText: String): Long {
+        val formatter = SimpleDateFormat(stringPattern, Locale.getDefault())
+        val date = formatter.parse(dateText)
+        return date?.time ?: 0L
     }
 }
