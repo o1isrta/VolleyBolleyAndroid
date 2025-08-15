@@ -1,22 +1,19 @@
-package cy.volleybolley.core.presentation.ui.screens.profile.viewmodel
+package cy.volleybolley.core.presentation.ui.screens.profile.personaldata
 
 import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.ChangePhotoRoute
-import cy.volleybolley.core.presentation.ui.screens.profile.effect.PersonalDataScreenEffect
-import cy.volleybolley.core.presentation.ui.screens.profile.effect.PersonalDataScreenEffect.NavigateOnOtherScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent
-import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.CitySelect
-import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.CountrySelect
-import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.DateSelect
-import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.GenderSelect
-import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.NameChanged
-import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.OnAvatarEditClick
-import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.OnBackFromPersonalDataClick
-import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent.SurnameChanged
-import cy.volleybolley.core.presentation.ui.screens.profile.model.GenderType
-import cy.volleybolley.core.presentation.ui.screens.profile.state.PersonalDataScreenState
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.CitySelect
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.CountrySelect
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.DateSelect
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.GenderSelect
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.NameChanged
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.OnAvatarEditClick
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.OnBackFromPersonalDataClick
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.OnUpdateButtonClick
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.SurnameChanged
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.GenderType
 import cy.volleybolley.profile.domain.GetPersonalDataUseCase
 import cy.volleybolley.profile.domain.UpdatePersonalDataUseCase
 import cy.volleybolley.profile.domain.model.PersonalData
@@ -53,10 +50,16 @@ class PersonalDataScreenViewModel(
 
     override fun obtainEvent(event: PersonalDataScreenEvent) {
         when(event) {
-            OnBackFromPersonalDataClick -> { sendUiEffect(NavigateOnOtherScreen(null)) }
-            OnAvatarEditClick -> { sendUiEffect(NavigateOnOtherScreen(ChangePhotoRoute)) }
+            OnBackFromPersonalDataClick -> { sendUiEffect(
+                PersonalDataScreenEffect.NavigateFromPersonalDataScreen(null)
+            ) }
+            OnAvatarEditClick -> { sendUiEffect(
+                PersonalDataScreenEffect.NavigateFromPersonalDataScreen(
+                    ChangePhotoRoute
+                )
+            ) }
 
-            PersonalDataScreenEvent.OnUpdateButtonClick -> {
+            OnUpdateButtonClick -> {
                 launchSafe(getErrorLogMessage = { "PersonalDataScreen >> Update button: ${it.message}" }) {
                     val newPersonalData = uiState.value.toPersonalData()
                     updatePersonalDataUseCase.execute(newPersonalData)
@@ -109,7 +112,7 @@ class PersonalDataScreenViewModel(
             avatar = avatar,
             name = firstName,
             surname = lastName,
-            genderId = GenderType.getIdByStringValue(gender),
+            genderId = GenderType.Companion.getIdByStringValue(gender),
             dateOfBirth = VolleyUiUtil.convertTextDateToMillis(
                 VolleyUiUtil.DATE_OF_BIRTH_PATTERN_FOR_SERVER,
                 birthDate
@@ -121,9 +124,12 @@ class PersonalDataScreenViewModel(
         return PersonalData(
             firstName = name,
             lastName = surname,
-            gender = GenderType.getNameValueById(genderId),
+            gender = GenderType.Companion.getNameValueById(genderId),
             birthDate = dateOfBirth?.let {
-                VolleyUiUtil.convertMillisToTextDate(VolleyUiUtil.DATE_OF_BIRTH_PATTERN_FOR_SERVER, it)
+                VolleyUiUtil.convertMillisToTextDate(
+                    VolleyUiUtil.DATE_OF_BIRTH_PATTERN_FOR_SERVER,
+                    it
+                )
             } ?: "2000-12-31",
             level = "",
             countryId = -1,

@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.profile.event
+package cy.volleybolley.core.presentation.ui.screens.profile.profile
 
 import cy.volleybolley.core.presentation.base.UiEvent
 

@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.profile.model
+package cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model
 
 enum class GenderType(
     val id: Int,

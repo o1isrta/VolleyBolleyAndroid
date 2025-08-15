@@ -47,10 +47,10 @@ import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.FaqScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PaymentsScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.PersonalDataScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreen
 
 @Composable
 fun NavHostContainer(

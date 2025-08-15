@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.profile
+package cy.volleybolley.core.presentation.ui.screens.profile.personaldata
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,10 +36,16 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
-import cy.volleybolley.core.presentation.ui.screens.profile.effect.PersonalDataScreenEffect
-import cy.volleybolley.core.presentation.ui.screens.profile.event.PersonalDataScreenEvent
-import cy.volleybolley.core.presentation.ui.screens.profile.state.PersonalDataScreenState
-import cy.volleybolley.core.presentation.ui.screens.profile.viewmodel.PersonalDataScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEffect.NavigateFromPersonalDataScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.CitySelect
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.CountrySelect
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.DateSelect
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.GenderSelect
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.NameChanged
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.OnAvatarEditClick
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.OnBackFromPersonalDataClick
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.OnUpdateButtonClick
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.SurnameChanged
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -85,14 +91,14 @@ private fun PersonalDataScreen(
             VolleySimpleComponent.TitleWithBackArrow(
                 title = stringResource(R.string.personal_data),
                 modifier = Modifier.fillMaxWidth(),
-                onBackClick = { eventCallback(PersonalDataScreenEvent.OnBackFromPersonalDataClick) }
+                onBackClick = { eventCallback(OnBackFromPersonalDataClick) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
             AvatarBlock(
                 modifier = Modifier.fillMaxWidth(),
                 avatarString = state.avatar,
-                onIconClick = { eventCallback(PersonalDataScreenEvent.OnAvatarEditClick) }
+                onIconClick = { eventCallback(OnAvatarEditClick) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
@@ -102,7 +108,7 @@ private fun PersonalDataScreen(
             VolleyTextFieldGradient.SimpleGradientTextField(
                 hint = stringResource(R.string.name),
                 text = state.name,
-                actionToTransferContent = { eventCallback(PersonalDataScreenEvent.NameChanged(it)) }
+                actionToTransferContent = { eventCallback(NameChanged(it)) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_14.dp))
@@ -112,7 +118,7 @@ private fun PersonalDataScreen(
             VolleyTextFieldGradient.SimpleGradientTextField(
                 hint = stringResource(R.string.surname),
                 text = state.surname,
-                actionToTransferContent = { eventCallback(PersonalDataScreenEvent.SurnameChanged(it)) }
+                actionToTransferContent = { eventCallback(SurnameChanged(it)) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_14.dp))
@@ -124,7 +130,7 @@ private fun PersonalDataScreen(
             VolleyButton.GroupButtonsForGender2(
                 modifier = Modifier,
                 checkId = state.genderId,
-                onSelected = { eventCallback(PersonalDataScreenEvent.GenderSelect(it)) },
+                onSelected = { eventCallback(GenderSelect(it)) },
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -135,7 +141,7 @@ private fun PersonalDataScreen(
 
             VolleyTextFieldAttribute.DatePickerField(
                 inputDate = state.dateOfBirth,
-                actionForSaveDate = { eventCallback(PersonalDataScreenEvent.DateSelect(it)) }
+                actionForSaveDate = { eventCallback(DateSelect(it)) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -147,7 +153,7 @@ private fun PersonalDataScreen(
             VolleyDropDownField.DropDownGradientField(
                 inputText = state.country,
                 valuesList = state.countriesList,
-                onValueClick = { eventCallback(PersonalDataScreenEvent.CountrySelect(it)) }
+                onValueClick = { eventCallback(CountrySelect(it)) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -159,7 +165,7 @@ private fun PersonalDataScreen(
             VolleyDropDownField.DropDownGradientField(
                 inputText = state.city,
                 valuesList = state.citiesList,
-                onValueClick = { eventCallback(PersonalDataScreenEvent.CitySelect(it)) }
+                onValueClick = { eventCallback(CitySelect(it)) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -168,14 +174,14 @@ private fun PersonalDataScreen(
                 enabled = state.buttonEnabled,
                 text = stringResource(R.string.update),
                 modifier = Modifier.fillMaxWidth().height(VolleyDimens.DIMEN_44.dp)
-            ) { eventCallback(PersonalDataScreenEvent.OnUpdateButtonClick) }
+            ) { eventCallback(OnUpdateButtonClick) }
 
         }
     }
 
     LaunchedEffect(effect) {
         when(effect) {
-            is PersonalDataScreenEffect.NavigateOnOtherScreen -> navigateAction(effect.route)
+            is NavigateFromPersonalDataScreen -> navigateAction(effect.route)
             null -> {}
         }
     }

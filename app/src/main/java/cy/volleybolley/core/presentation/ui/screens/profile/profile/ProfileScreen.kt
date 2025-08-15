@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.profile
+package cy.volleybolley.core.presentation.ui.screens.profile.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,10 +43,18 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
-import cy.volleybolley.core.presentation.ui.screens.profile.effect.ProfileScreenEffect
-import cy.volleybolley.core.presentation.ui.screens.profile.event.ProfileScreenEvent
-import cy.volleybolley.core.presentation.ui.screens.profile.model.ProfileDialogType
-import cy.volleybolley.core.presentation.ui.screens.profile.viewmodel.ProfileScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenEffect.NavigateFromProfileScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenEffect.ShowDeleteAccountDialog
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenEffect.ShowLogoutDialog
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenEvent.OnAboutClick
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenEvent.OnDeleteAccountClick
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenEvent.OnFaqClick
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenEvent.OnLogoutClick
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenEvent.OnPaymentsClick
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenEvent.OnPersonalDataClick
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenEvent.OnPlayersClick
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenEvent.OnSupportClick
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.model.ProfileDialogType
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -91,49 +99,49 @@ private fun ProfileScreen(
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_players),
                     title = stringResource(R.string.profile_players_component),
-                ) { eventCallback(ProfileScreenEvent.OnPlayersClick) }
+                ) { eventCallback(OnPlayersClick) }
 
                 ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_personal_data),
                     title = stringResource(R.string.profile_personal_data_component),
-                ) { eventCallback(ProfileScreenEvent.OnPersonalDataClick) }
+                ) { eventCallback(OnPersonalDataClick) }
 
                 ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_payments),
                     title = stringResource(R.string.profile_payments_component),
-                ) { eventCallback(ProfileScreenEvent.OnPaymentsClick) }
+                ) { eventCallback(OnPaymentsClick) }
 
                 ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_support),
                     title = stringResource(R.string.profile_support_component),
-                ) { eventCallback(ProfileScreenEvent.OnSupportClick) }
+                ) { eventCallback(OnSupportClick) }
 
                 ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_faq),
                     title = stringResource(R.string.profile_faq_component),
-                ) { eventCallback(ProfileScreenEvent.OnFaqClick) }
+                ) { eventCallback(OnFaqClick) }
 
                 ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_about),
                     title = stringResource(R.string.profile_about_component),
-                ) { eventCallback(ProfileScreenEvent.OnAboutClick) }
+                ) { eventCallback(OnAboutClick) }
 
                 ProfileComponentDivider()
 
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_logout),
                     title = stringResource(R.string.profile_logout_component),
-                ) { eventCallback(ProfileScreenEvent.OnLogoutClick) }
+                ) { eventCallback(OnLogoutClick) }
             }
         }
 
@@ -150,7 +158,7 @@ private fun ProfileScreen(
                     .clickable(
                         interactionSource = null,
                         indication = null,
-                        onClick = { eventCallback(ProfileScreenEvent.OnDeleteAccountClick) }
+                        onClick = { eventCallback(OnDeleteAccountClick) }
                     )
             )
         }
@@ -158,16 +166,16 @@ private fun ProfileScreen(
 
     LaunchedEffect(effect) {
         when (effect) {
-            is ProfileScreenEffect.NavigateOnOtherScreen -> navigateAction(effect.route)
+            is NavigateFromProfileScreen -> navigateAction(effect.route)
 
-            is ProfileScreenEffect.ShowLogoutDialog -> {
+            is ShowLogoutDialog -> {
                 val actualDialogType = ProfileDialogType.LOGOUT.apply {
                     setPositiveAction(effect.onPositiveButtonClick)
                 }
                 typeOfDialog = actualDialogType
             }
 
-            is ProfileScreenEffect.ShowDeleteAccountDialog -> {
+            is ShowDeleteAccountDialog -> {
                 val actualDialogType = ProfileDialogType.DELETE.apply {
                     setPositiveAction(effect.onPositiveButtonClick)
                 }

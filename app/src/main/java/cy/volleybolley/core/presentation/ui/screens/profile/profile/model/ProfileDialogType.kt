@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.profile.model
+package cy.volleybolley.core.presentation.ui.screens.profile.profile.model
 
 enum class ProfileDialogType(
     val dialogText: String,

@@ -1,8 +1,8 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
-import cy.volleybolley.core.presentation.ui.screens.profile.viewmodel.PersonalDataScreenViewModel
-import cy.volleybolley.core.presentation.ui.screens.profile.viewmodel.ProfileScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
