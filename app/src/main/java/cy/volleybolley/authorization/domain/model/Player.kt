@@ -5,9 +5,9 @@ data class Player(
     val avatar: String? = null,
     val firstName: String? = null,
     val lastName: String? = null,
-    val gender: Int? = null,
+    val gender: String? = null,
     val dateOfBirth: String? = null,
-    val level: Int? = null,
+    val level: String? = null,
     val countryId: Int? = null,
     val cityId: Int? = null
 )

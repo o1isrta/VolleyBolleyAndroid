@@ -7,7 +7,11 @@ import cy.volleybolley.core.data.network.api.NetworkClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import cy.volleybolley.authorization.data.network.AuthorizationKtorNetworkClient
+import cy.volleybolley.authorization.domain.AuthorizationUseCaseImpl
 import cy.volleybolley.authorization.domain.api.AuthorizationRepository
+import cy.volleybolley.authorization.domain.api.AuthorizationUseCase
+import cy.volleybolley.authorization.presentation.AuthorizationViewModel
+import org.koin.core.module.dsl.viewModel
 
 val authorizationModule = module {
     single<NetworkClient<AuthorizationRequest, AuthorizationResponse>>(named("authorization")) {
@@ -15,5 +19,11 @@ val authorizationModule = module {
     }
     single<AuthorizationRepository>(named("authorization")) {
         AuthorizationRepositoryImpl(get())
+    }
+    single<AuthorizationUseCase>(named("authorization")) {
+        AuthorizationUseCaseImpl(get())
+    }
+    viewModel {
+        AuthorizationViewModel(get())
     }
 }

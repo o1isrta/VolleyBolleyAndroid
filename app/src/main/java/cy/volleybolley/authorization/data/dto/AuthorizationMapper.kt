@@ -2,7 +2,6 @@ package cy.volleybolley.authorization.data.dto
 
 import cy.volleybolley.authorization.domain.model.AuthorizationResult
 import cy.volleybolley.authorization.domain.model.Player
-import cy.volleybolley.authorization.domain.model.RegistrationData
 
 fun PlayerDto.toDomain() = Player(
     playerId = playerId,
@@ -23,11 +22,11 @@ fun AuthorizationResponse.AuthResponse.toDomain() = AuthorizationResult(
     player = player.toDomain()
 )
 
-fun RegistrationData.toData() = PlayerRegistrationBody(
+fun Player.toData() = PlayerRegistrationBody(
     firstName = firstName,
     lastName = lastName,
     gender = gender,
-    dateOfBirth = birthDate,
+    dateOfBirth = dateOfBirth,
     level = level,
     countryId = countryId,
     cityId = cityId

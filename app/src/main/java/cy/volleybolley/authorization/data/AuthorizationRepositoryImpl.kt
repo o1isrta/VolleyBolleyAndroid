@@ -9,7 +9,7 @@ import cy.volleybolley.authorization.data.network.AuthorizationKtorNetworkClient
 import cy.volleybolley.authorization.domain.api.AuthorizationRepository
 import cy.volleybolley.authorization.domain.model.AuthorizationResult
 import cy.volleybolley.authorization.domain.model.AuthorizationType
-import cy.volleybolley.authorization.domain.model.RegistrationData
+import cy.volleybolley.authorization.domain.model.Player
 import cy.volleybolley.core.data.network.model.mapToErrorType
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
@@ -52,8 +52,8 @@ class AuthorizationRepositoryImpl(
     }
 
     override suspend fun registration(
-        accessToken: String?,
-        registrationData: RegistrationData
+        accessToken: String,
+        registrationData: Player
     ): VolleyResult<Unit, ErrorType> {
         val response = client.getResponse(
             AuthorizationRequest.PlayerRegistrationRequest(
@@ -67,6 +67,4 @@ class AuthorizationRepositoryImpl(
             VolleyResult.Failure(response.resultCode.mapToErrorType())
         }
     }
-
-
 }
