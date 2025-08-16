@@ -4,7 +4,6 @@ import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.players.domain.model.PlayerDetail
 import cy.volleybolley.players.domain.repository.PlayersRepository
 
-
 class GetPlayerDetailUseCase(
     private val repository: PlayersRepository
 ) {
