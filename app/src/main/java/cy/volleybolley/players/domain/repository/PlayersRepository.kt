@@ -1,8 +1,8 @@
-package cy.volleybolley.core.domain.players.repository
+package cy.volleybolley.players.domain.repository
 
 import cy.volleybolley.core.domain.model.VolleyResult
-import cy.volleybolley.core.domain.players.model.Player
-import cy.volleybolley.core.domain.players.model.PlayerDetail
+import cy.volleybolley.players.domain.model.Player
+import cy.volleybolley.players.domain.model.PlayerDetail
 
 interface PlayersRepository {
     suspend fun getAllPlayers(): VolleyResult<List<Player>, Throwable>

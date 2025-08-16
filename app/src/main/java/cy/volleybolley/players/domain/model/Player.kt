@@ -1,4 +1,4 @@
-package cy.volleybolley.core.domain.players.model
+package cy.volleybolley.players.domain.model
 
 data class Player(
     val id: Int,
