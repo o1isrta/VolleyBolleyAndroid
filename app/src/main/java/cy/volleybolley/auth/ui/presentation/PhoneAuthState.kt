@@ -6,7 +6,7 @@ import cy.volleybolley.core.presentation.base.UiEvent
 import cy.volleybolley.core.presentation.base.UiState
 
 data class PhoneAuthState(
-    val phoneNumber: String,
+    val phoneNumber: String = "",
     val code: String = "",
     val verificationId: String? = null,
     val resendToken: PhoneAuthProvider.ForceResendingToken? = null,
@@ -23,6 +23,7 @@ sealed interface PhoneAuthEvent : UiEvent {
 }
 
 sealed interface PhoneAuthEffect : UiEffect {
+
     data class RequestPhoneVerification(
         val phone: String,
         val resendToken: PhoneAuthProvider.ForceResendingToken? = null

@@ -16,6 +16,6 @@ val authViewModelModule = module {
     }
 
     viewModel {
-        PhoneAuthViewModel()
+        PhoneAuthViewModel(get())
     }
 }
