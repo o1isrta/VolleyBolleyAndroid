@@ -10,10 +10,10 @@ import cy.volleybolley.auth.ui.presentation.PhoneAuthViewModel
 import java.util.concurrent.TimeUnit
 
 class PhoneAuthHelper(
-    private val activity: Activity,
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val auth: FirebaseAuth
 ) {
     fun startPhoneNumberVerification(
+        activity: Activity,
         phoneNumber: String,
         viewModel: PhoneAuthViewModel,
         onIdTokenReceived: (String?) -> Unit,
@@ -33,11 +33,44 @@ class PhoneAuthHelper(
                 }
 
                 override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
-                    super.onCodeSent(verificationId, token)// тут поменять на вызов метода во вьюмодели
+                    viewModel.onCodeSent(verificationId, token)
                 }
             })
             .build()
 
+        PhoneAuthProvider.verifyPhoneNumber(options)
+    }
+
+    fun resendCode(
+        activity: Activity,
+        phoneNumber: String,
+        token: PhoneAuthProvider.ForceResendingToken,
+        viewModel: PhoneAuthViewModel,
+        onIdTokenReceived: (String?) -> Unit,
+        onError: (Throwable) -> Unit
+    ) {
+        val options = PhoneAuthOptions.newBuilder(auth)
+            .setPhoneNumber(phoneNumber)
+            .setTimeout(30L, TimeUnit.SECONDS)
+            .setActivity(activity)
+            .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                    signInWithCredential(credential, onIdTokenReceived, onError)
+                }
+
+                override fun onVerificationFailed(e: FirebaseException) {
+                    onError(e)
+                }
+
+                override fun onCodeSent(
+                    verificationId: String,
+                    token: PhoneAuthProvider.ForceResendingToken
+                ) {
+                    viewModel.onCodeSent(verificationId, token)
+                }
+            })
+            .setForceResendingToken(token)
+            .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
