@@ -13,39 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import cy.volleybolley.auth.ui.presentation.PhoneAuthViewModel
 import cy.volleybolley.core.presentation.ui.navigation.RegistrationRoute
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RegistrationByPhoneScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(Modifier.height(8.dp))
-        Button(onClick = {
-            navController.navigate(RegistrationRoute)
-        }) {
-            Text("Go to Registration Screen")
-        }
-    }
+fun RegistrationByPhoneScreen(
+    navController: NavHostController,
+    viewModel: PhoneAuthViewModel = koinViewModel(),
+
+) {
+
 }
 
-@Preview
-@Composable
-fun RegistrationByPhoneScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(Modifier.height(8.dp))
-        Button(onClick = {
-
-        }) {
-            Text("Go to Registration Screen")
-        }
-    }
-}
