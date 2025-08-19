@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.model
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -65,6 +66,20 @@ object VolleyTypography {
     )
 
     val BodyBold = TextStyle(
+        fontFamily = HeroFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 19.2.sp,
+        letterSpacing = 0.sp
+    )
+
+    val BodyBoldGradient = TextStyle(
+        brush = Brush.verticalGradient(
+            colors = listOf(
+                VolleyColor.YellowForGradient,
+                VolleyColor.GreenForGradient
+            )
+        ),
         fontFamily = HeroFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,

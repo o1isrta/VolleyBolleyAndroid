@@ -53,6 +53,7 @@ class PersonalDataScreenViewModel(
             OnBackFromPersonalDataClick -> { sendUiEffect(
                 PersonalDataScreenEffect.NavigateFromPersonalDataScreen(null)
             ) }
+
             OnAvatarEditClick -> { sendUiEffect(
                 PersonalDataScreenEffect.NavigateFromPersonalDataScreen(
                     ChangePhotoRoute
@@ -73,19 +74,19 @@ class PersonalDataScreenViewModel(
             }
 
             is NameChanged -> {
-                _uiState.update { checkStateForButtonEnabled(uiState.value.copy(name = event.newName)) }
+                _uiState.update { checkStateForButtonEnabled(it.copy(name = event.newName)) }
             }
 
             is SurnameChanged -> {
-                _uiState.update { checkStateForButtonEnabled(uiState.value.copy(surname = event.newSurname)) }
+                _uiState.update { checkStateForButtonEnabled(it.copy(surname = event.newSurname)) }
             }
 
             is GenderSelect -> {
-                _uiState.update { checkStateForButtonEnabled(uiState.value.copy(genderId = event.genderId)) }
+                _uiState.update { checkStateForButtonEnabled(it.copy(genderId = event.genderId)) }
             }
 
             is DateSelect -> {
-                _uiState.update { checkStateForButtonEnabled(uiState.value.copy(dateOfBirth = event.date)) }
+                _uiState.update { checkStateForButtonEnabled(it.copy(dateOfBirth = event.date)) }
             }
 
             is CountrySelect -> {}

@@ -6,4 +6,5 @@ data class AboutScreenState(
     val founder: String = "",
     val designedBy: String = "",
     val developedBy: String = "",
+    val isInitializedState: Boolean = false,
 ) : UiState

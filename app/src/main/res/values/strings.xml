@@ -158,10 +158,7 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="founder">Founder</string>
-    <string name="founder_name">Dmitrii Zverev</string>
     <string name="designed_by">Designed by</string>
-    <string name="designed_by_name_malika">Malika Rozieva</string>
-    <string name="designed_by_name_yulia">Yulia Zemlyanskaya</string>
     <string name="developed_by">Developed by</string>
     <string name="thai_bank">Thai bank</string>
     <string name="cash">cash</string>
@@ -228,4 +225,8 @@
     <string name="profile_faq_component">FAQ</string>
     <string name="profile_about_component">About</string>
     <string name="profile_logout_component">Log out</string>
+    <string name="about_founder">Log out</string>
+    <string name="about_founder_value">Dmitrii Zverev</string>
+    <string name="about_designers_value">Malika Rozieva,Yulia Zemlyanskaya</string>
+    <string name="about_developers_value">Unknown peoples</string>
 </resources>
