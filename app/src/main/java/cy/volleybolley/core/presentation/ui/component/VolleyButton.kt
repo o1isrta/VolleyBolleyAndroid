@@ -190,7 +190,7 @@ object VolleyButton {
             shape = RoundedCornerShape(size = 16.dp)
         ) {
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .background(
                         Brush.linearGradient(
                             colors = listOf(
@@ -1026,7 +1026,7 @@ fun PreviewContainer(modifier: Modifier = Modifier, content: @Composable () -> U
     Box(
         modifier = modifier
             .background(color = VolleyColor.TurquoiseDark)
-            .width(250.dp)
+            .width(350.dp)
             .height(120.dp)
             .padding(20.dp),
         contentAlignment = Alignment.Center
@@ -1319,8 +1319,7 @@ private fun PreviewGroupButtonsForTourneyType() {
     PreviewContainer {
         VolleyButton.GroupButtonsForTourneyType(
             modifier = Modifier
-                .padding(vertical = 12.dp)
-                .fillMaxWidth(),
+                .padding(vertical = 12.dp),
             onClick = {}
         )
     }
