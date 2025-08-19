@@ -2,48 +2,55 @@ package cy.volleybolley.players.data.network
 
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
+import cy.volleybolley.players.data.dto.PlayerDto
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.path
+import org.koin.core.component.inject
+
+interface AccessTokenProvider {
+    suspend fun getAccessToken(): String?
+}
 
 class PlayersNetworkClient : KtorNetworkClient<PlayerRequest, PlayerResponse>() {
 
+    private val tokenProvider: AccessTokenProvider by inject()
+
     override suspend fun sendRequestByType(request: PlayerRequest): HttpResponse {
+        val token = tokenProvider.getAccessToken()
+
         return when (request) {
             is PlayerRequest.GetAllPlayers -> {
                 httpClient.get(BuildConfig.BASE_URL) {
-                    url { path(request.path) }
+                    requestConfigure(path = request.path, accessToken = token)
                 }
             }
 
             is PlayerRequest.SearchPlayers -> {
                 httpClient.get(BuildConfig.BASE_URL) {
-                    url {
-                        path(request.path)
-                        parameter("search", request.query)
-                    }
+                    requestConfigure(path = request.path, accessToken = token)
+                    parameter("search", request.name)
                 }
             }
 
             is PlayerRequest.GetPlayerDetail -> {
                 httpClient.get(BuildConfig.BASE_URL) {
-                    url { path(request.path) }
+                    requestConfigure(path = request.path, accessToken = token)
                 }
             }
 
             is PlayerRequest.AddToFavorites -> {
                 httpClient.post(BuildConfig.BASE_URL) {
-                    url { path(request.path) }
+                    requestConfigure(path = request.path, accessToken = token)
                 }
             }
 
             is PlayerRequest.RemoveFromFavorites -> {
                 httpClient.delete(BuildConfig.BASE_URL) {
-                    url { path(request.path) }
+                    requestConfigure(path = request.path, accessToken = token)
                 }
             }
         }
@@ -55,11 +62,13 @@ class PlayersNetworkClient : KtorNetworkClient<PlayerRequest, PlayerResponse>() 
     ): PlayerResponse {
         return when (requestType) {
             is PlayerRequest.GetAllPlayers -> {
-                httpResponse.body<PlayerResponse.GetAllPlayers>()
+                val players = httpResponse.body<List<PlayerDto>>()
+                PlayerResponse.GetAllPlayers(players)
             }
 
             is PlayerRequest.SearchPlayers -> {
-                httpResponse.body<PlayerResponse.SearchPlayers>()
+                val players = httpResponse.body<List<PlayerDto>>()
+                PlayerResponse.SearchPlayers(players)
             }
 
             is PlayerRequest.GetPlayerDetail -> {
@@ -67,7 +76,8 @@ class PlayersNetworkClient : KtorNetworkClient<PlayerRequest, PlayerResponse>() 
             }
 
             is PlayerRequest.AddToFavorites -> {
-                httpResponse.body<PlayerResponse.AddToFavorites>()
+                val player = httpResponse.body<PlayerDto>()
+                PlayerResponse.AddToFavorites(player)
             }
 
             is PlayerRequest.RemoveFromFavorites -> {

@@ -7,14 +7,12 @@ import kotlinx.serialization.Serializable
 
 sealed class PlayerResponse {
 
-    @Serializable
     data class GetAllPlayers(
-        @SerialName("players") val players: List<PlayerDto>
+        val players: List<PlayerDto>
     ) : PlayerResponse()
 
-    @Serializable
     data class SearchPlayers(
-        @SerialName("players") val players: List<PlayerDto>
+        val players: List<PlayerDto>
     ) : PlayerResponse()
 
     @Serializable
@@ -22,9 +20,8 @@ sealed class PlayerResponse {
         @SerialName("player") val player: PlayerDtoDetail
     ) : PlayerResponse()
 
-    @Serializable
     data class AddToFavorites(
-        @SerialName("player") val player: PlayerDto
+        val player: PlayerDto
     ) : PlayerResponse()
 
     data object RemoveFromFavorites : PlayerResponse()

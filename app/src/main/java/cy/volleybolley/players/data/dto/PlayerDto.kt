@@ -8,7 +8,7 @@ data class PlayerDto(
     @SerialName("player_id") val id: Int,
     @SerialName("first_name") val firstName: String,
     @SerialName("last_name") val lastName: String,
-    @SerialName("avatar_url") val avatarUrl: String? = null,
+    @SerialName("avatar") val avatarUrl: String? = null,
     @SerialName("is_favorite") val isFavorite: Boolean,
     @SerialName("level") val level: String
 )

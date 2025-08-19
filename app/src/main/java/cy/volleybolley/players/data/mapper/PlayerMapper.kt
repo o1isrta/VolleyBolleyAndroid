@@ -34,6 +34,6 @@ fun PlayerDtoDetail.toDomain(): PlayerDetail {
 fun ActivityDto.toDomain(): PlayerActivity {
     return PlayerActivity(
         eventTimestamp = eventTimestamp,
-        courtLocation = courtLocation.toDomain() // <- маппер из courts
+        courtLocation = courtLocation.toDomain()
     )
 }
