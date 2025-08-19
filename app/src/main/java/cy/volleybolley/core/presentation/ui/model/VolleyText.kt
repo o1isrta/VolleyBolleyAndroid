@@ -1,5 +1,7 @@
 package cy.volleybolley.core.presentation.ui.model
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -7,6 +9,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import cy.volleybolley.core.presentation.ui.component.PreviewContainer
+import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyBoldMedium
+import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyBoldSmall
+import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyLight
+import cy.volleybolley.core.presentation.ui.model.VolleyText.BodySmall
+import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyTiny
+import cy.volleybolley.core.presentation.ui.model.VolleyText.ButtonText
+import cy.volleybolley.core.presentation.ui.model.VolleyText.LogoDisplay
+import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleLarge
+import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleMedium
+import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleXL
+import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleXLAlt
 
 object VolleyText {
 
@@ -280,6 +296,193 @@ object VolleyText {
             textAlign = textAlign,
             maxLines = maxLines,
             overflow = overflow
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewTitleXL() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(550.dp)
+    ) {
+        TitleXL(
+            "Пример текста",
+            modifier = Modifier
+                .padding(10.dp),
+            color = VolleyColor.White,
+            textAlign = TextAlign.Left
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewTitleXLAlt() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(550.dp)
+    ) {
+        TitleXLAlt(
+            "Пример текста",
+            modifier = Modifier
+                .padding(10.dp),
+            color = VolleyColor.White,
+            textAlign = TextAlign.Left
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewTitleLarge() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(550.dp)
+    ) {
+        TitleLarge(
+            "Пример текста",
+            modifier = Modifier
+                .padding(10.dp),
+            color = VolleyColor.White,
+            textAlign = TextAlign.Left
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewTitleMedium() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(550.dp)
+    ) {
+        TitleMedium(
+            "Пример текста",
+            modifier = Modifier
+                .padding(10.dp),
+            color = VolleyColor.White,
+            textAlign = TextAlign.Left
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewBodyBoldMedium() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(550.dp)
+    ) {
+        BodyBoldMedium(
+            "Пример текста",
+            modifier = Modifier
+                .padding(10.dp),
+            color = VolleyColor.White,
+            textAlign = TextAlign.Left
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewBodySmall() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(550.dp)
+    ) {
+        BodySmall(
+            "Пример текста",
+            modifier = Modifier
+                .padding(10.dp),
+            color = VolleyColor.White,
+            textAlign = TextAlign.Left
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewBodyLight() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(550.dp)
+    ) {
+        BodyLight(
+            "Пример текста",
+            modifier = Modifier
+                .padding(10.dp),
+            color = VolleyColor.White,
+            textAlign = TextAlign.Left
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewBodyBoldSmall() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(550.dp)
+    ) {
+        BodyBoldSmall(
+            "Пример текста",
+            modifier = Modifier
+                .padding(10.dp),
+            color = VolleyColor.White,
+            textAlign = TextAlign.Left
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewBodyTiny() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(550.dp)
+    ) {
+        BodyTiny(
+            "Пример текста",
+            modifier = Modifier
+                .padding(10.dp),
+            color = VolleyColor.White,
+            textAlign = TextAlign.Left
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewButtonText() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(550.dp)
+    ) {
+        ButtonText(
+            "Пример текста",
+            modifier = Modifier
+                .padding(10.dp),
+            color = VolleyColor.White,
+            textAlign = TextAlign.Left
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewLogoDisplay() {
+    PreviewContainer(
+        modifier = Modifier
+            .width(550.dp)
+    ) {
+        LogoDisplay(
+            "Пример текста",
+            modifier = Modifier
+                .padding(10.dp),
+            color = VolleyColor.White,
+            textAlign = TextAlign.Left
         )
     }
 }
