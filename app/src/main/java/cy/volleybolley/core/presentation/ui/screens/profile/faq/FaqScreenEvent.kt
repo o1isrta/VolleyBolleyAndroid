@@ -1,0 +1,7 @@
+package cy.volleybolley.core.presentation.ui.screens.profile.faq
+
+import cy.volleybolley.core.presentation.base.UiEvent
+
+interface FaqScreenEvent : UiEvent {
+    data object OnBackFromFaqClick: FaqScreenEvent
+}
