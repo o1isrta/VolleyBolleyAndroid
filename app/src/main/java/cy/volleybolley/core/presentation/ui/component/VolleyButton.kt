@@ -1022,7 +1022,7 @@ object VolleyButton {
 
 @Composable
 @Stable
-private fun PreviewContainer(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+fun PreviewContainer(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Box(
         modifier = modifier
             .background(color = VolleyColor.TurquoiseDark)
