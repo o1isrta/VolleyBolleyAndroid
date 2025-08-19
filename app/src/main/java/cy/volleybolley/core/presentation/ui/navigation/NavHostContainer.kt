@@ -42,7 +42,7 @@ import cy.volleybolley.core.presentation.ui.screens.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.AboutScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.about.AboutScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.FaqScreen
