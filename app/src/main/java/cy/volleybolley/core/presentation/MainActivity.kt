@@ -1,6 +1,7 @@
 package cy.volleybolley.core.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -20,11 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cy.volleybolley.auth.ui.presentation.PhoneAuthDelegate
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
+import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationByPhoneScreen
 import cy.volleybolley.ui.theme.VolleybolleyTheme
+import org.koin.compose.getKoin
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,12 +36,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             VolleybolleyTheme {
-                RootContainer { innerPadding ->
-                    NavHostContainer(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-                ButtonDemo()
+                RegistrationByPhoneScreen(
+                    onAuthorized = { token -> Log.d("ТелефонТокен", token)},
+                    onError = {},
+                    phoneAuthUiDelegate = getKoin().get(),
+                    activityProvider = { this@MainActivity}
+                )
             }
         }
     }

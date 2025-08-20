@@ -90,6 +90,14 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
         sendUiEffect(PhoneAuthEffect.ShowError(e.message ?: "Ошибка"))
     }
 
+    fun onPhoneChanged(phone: String) {
+        updateState { copy(phoneNumber = phone) }
+    }
+
+    fun onCodeChanged(code: String) {
+        updateState { copy(code = code) }
+    }
+
     private fun startResendTimer() {
         resendJob?.cancel()
         resendJob = viewModelScope.launch {
