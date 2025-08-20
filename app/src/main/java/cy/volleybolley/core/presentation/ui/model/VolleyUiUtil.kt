@@ -21,7 +21,7 @@ object VolleyUiUtil {
     const val DATE_OF_BIRTH_FIELD_PATTERN = "dd/MM/yyyy"
     const val DATE_OF_BIRTH_PATTERN_FOR_SERVER = "yyyy-MM-dd"
 
-    const val FAQ_BULLET_OUT_PREFIX = "• "
+    const val FAQ_BULLET_OUT_PREFIX = " • "
     const val NEXT_LINE = "\n"
     // temp mock value
     const val MOCK_FAQ = "# Registration\n" +

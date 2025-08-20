@@ -3,6 +3,7 @@ package cy.volleybolley.core.presentation.ui.screens.profile.faq
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -129,11 +130,20 @@ private fun FaqBlock(faqString: FaqString) {
         }
 
         FaqStringType.BULLET -> {
-            VolleyText.BodyRegular(
-                text = VolleyUiUtil.FAQ_BULLET_OUT_PREFIX + faqString.value,
-                color = VolleyColor.White,
-                textAlign = TextAlign.Start
-            )
+            Row(
+                verticalAlignment = Alignment.Top
+            ) {
+                VolleyText.BodyRegular(
+                    text = VolleyUiUtil.FAQ_BULLET_OUT_PREFIX,
+                    color = VolleyColor.White,
+                    textAlign = TextAlign.Start
+                )
+                VolleyText.BodyRegular(
+                    text = faqString.value,
+                    color = VolleyColor.White,
+                    textAlign = TextAlign.Start
+                )
+            }
         }
 
         FaqStringType.REGULAR -> {
