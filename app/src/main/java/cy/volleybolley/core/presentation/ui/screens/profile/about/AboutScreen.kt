@@ -118,7 +118,6 @@ private fun AboutScreen(
             null -> {}
         }
     }
-
 }
 
 @Composable

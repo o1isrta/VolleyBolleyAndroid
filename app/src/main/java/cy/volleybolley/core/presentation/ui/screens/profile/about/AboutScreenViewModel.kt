@@ -15,7 +15,7 @@ class AboutScreenViewModel(
 
     override fun obtainEvent(event: AboutScreenEvent) {
         when (event) {
-            OnBackFromAboutClick -> { sendUiEffect(NavigateFromAboutScreen(null)) }
+            OnBackFromAboutClick -> sendUiEffect(NavigateFromAboutScreen(null))
 
             is OnStateInitialiseByResources -> {
                 _uiState.update { currentState ->

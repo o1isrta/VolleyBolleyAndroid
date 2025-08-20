@@ -50,15 +50,15 @@ class PersonalDataScreenViewModel(
 
     override fun obtainEvent(event: PersonalDataScreenEvent) {
         when(event) {
-            OnBackFromPersonalDataClick -> { sendUiEffect(
+            OnBackFromPersonalDataClick -> sendUiEffect(
                 PersonalDataScreenEffect.NavigateFromPersonalDataScreen(null)
-            ) }
+            )
 
-            OnAvatarEditClick -> { sendUiEffect(
+            OnAvatarEditClick -> sendUiEffect(
                 PersonalDataScreenEffect.NavigateFromPersonalDataScreen(
                     ChangePhotoRoute
                 )
-            ) }
+            )
 
             OnUpdateButtonClick -> {
                 launchSafe(getErrorLogMessage = { "PersonalDataScreen >> Update button: ${it.message}" }) {
@@ -68,6 +68,7 @@ class PersonalDataScreenViewModel(
                             getPersonalDataUseCase.execute()
                                 .onSuccess { personalData ->
                                     originState = personalData.toState()
+                                    _uiState.update { originState }
                                 }
                         }
                 }
