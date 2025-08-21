@@ -37,7 +37,6 @@ class PlayersRepositoryImpl(
         }
     }
 
-
     override suspend fun getPlayerDetail(playerId: Int): VolleyResult<PlayerDetail, ErrorType> {
         val response = networkClient.getResponse(PlayerRequest.GetPlayerDetail(playerId))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
