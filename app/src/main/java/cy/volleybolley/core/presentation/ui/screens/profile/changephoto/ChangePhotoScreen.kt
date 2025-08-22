@@ -1,5 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.profile.changephoto
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -43,9 +46,9 @@ import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEffect.NavigateFromChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.GetAvatarFromPersonalData
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnBackFromChangePhotoClick
-import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnCameraPhotoClick
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnCameraPhotoCreate
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnDeletePhotoClick
-import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnGalleryPhotoClick
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnGalleryPhotoSelect
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnSaveButtonClick
 import org.koin.androidx.compose.koinViewModel
 
@@ -94,6 +97,13 @@ private fun ChangePhotoScreen(
     }
     val menuShape = remember { RoundedCornerShape(VolleyDimens.DIMEN_32.dp) }
 
+    // Create PhotoPicker request
+    val galleryPhotoPicker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        uri?.let {
+            eventCallback(OnGalleryPhotoSelect(it.toString()))
+        }
+    }
+
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
         modifier = Modifier
@@ -131,14 +141,18 @@ private fun ChangePhotoScreen(
                 MenuComponent(
                     painter = painterResource(R.drawable.ic_photo_gallery),
                     title = stringResource(R.string.choose_from_gallery)
-                ) { eventCallback(OnGalleryPhotoClick) }
+                ) {
+                    galleryPhotoPicker.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
 
                 ChangePhotoScreenDivider()
 
                 MenuComponent(
                     painter = painterResource(R.drawable.ic_photo_camera),
                     title = stringResource(R.string.take_photo)
-                ) { OnCameraPhotoClick }
+                ) { OnCameraPhotoCreate }
 
                 ChangePhotoScreenDivider()
 

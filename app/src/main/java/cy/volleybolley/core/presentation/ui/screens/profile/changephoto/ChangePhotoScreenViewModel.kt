@@ -4,9 +4,9 @@ import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEffect.NavigateFromChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.GetAvatarFromPersonalData
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnBackFromChangePhotoClick
-import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnCameraPhotoClick
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnCameraPhotoCreate
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnDeletePhotoClick
-import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnGalleryPhotoClick
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnGalleryPhotoSelect
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnSaveButtonClick
 import cy.volleybolley.profile.domain.DeleteAvatarUseCase
 import cy.volleybolley.profile.domain.UpdateAvatarUseCase
@@ -31,9 +31,11 @@ class ChangePhotoScreenViewModel(
 
             OnBackFromChangePhotoClick -> sendUiEffect(NavigateFromChangePhotoScreen(null))
 
-            OnGalleryPhotoClick -> {}
+            is OnGalleryPhotoSelect -> {
+                _uiState.update { checkStateForButtonEnabled(it.copy(avatarUrl = event.uriString)) }
+            }
 
-            OnCameraPhotoClick -> {}
+            OnCameraPhotoCreate -> {}
 
             OnDeletePhotoClick -> {}
 
