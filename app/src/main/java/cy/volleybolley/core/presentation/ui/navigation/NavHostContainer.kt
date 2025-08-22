@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import cy.volleybolley.core.presentation.ui.screens.authorization.AboutLevelsScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScreen
@@ -43,7 +44,7 @@ import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.about.AboutScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.faq.FaqScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PaymentsScreen
@@ -122,7 +123,10 @@ fun NavHostContainer(
 
         // profile
         composable<AboutRoute> { AboutScreen(navController) }
-        composable<ChangePhotoRoute> { ChangePhotoScreen(navController) }
+        composable<ChangePhotoRoute> { backStackEntry ->
+            val avatarString = backStackEntry.toRoute<ChangePhotoRoute>().avatarUrl
+            ChangePhotoScreen(navController = navController, avatarString = avatarString)
+        }
         composable<FaqRoute> { FaqScreen(navController) }
         composable<PaymentsRoute> { PaymentsScreen(navController) }
         composable<PersonalDataRoute> { PersonalDataScreen(navController) }

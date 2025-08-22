@@ -131,7 +131,9 @@ object SuccessRoute : NavMap
 object AboutRoute : NavMap
 
 @Serializable
-object ChangePhotoRoute : NavMap
+data class ChangePhotoRoute(
+    val avatarUrl: String?
+) : NavMap
 
 @Serializable
 object FaqRoute : NavMap

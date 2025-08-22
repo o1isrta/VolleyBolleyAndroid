@@ -2,6 +2,7 @@ package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.presentation.ui.screens.profile.about.AboutScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.faq.FaqScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenViewModel
@@ -53,17 +54,9 @@ val coreModule = module {
 
     // ViewModels Profile flow
     viewModel { ProfileScreenViewModel(deleteProfileUseCase = get()) }
-    viewModel {
-        PersonalDataScreenViewModel(
-            getPersonalDataUseCase = get(),
-            updatePersonalDataUseCase = get(),
-        )
-    }
-    viewModel {
-        AboutScreenViewModel()
-    }
-    viewModel {
-        FaqScreenViewModel()
-    }
+    viewModel { PersonalDataScreenViewModel(getPersonalDataUseCase = get(), updatePersonalDataUseCase = get()) }
+    viewModel { AboutScreenViewModel() }
+    viewModel { FaqScreenViewModel() }
+    viewModel { ChangePhotoScreenViewModel(updateAvatarUseCase = get(), deleteAvatarUseCase = get()) }
 
 }
