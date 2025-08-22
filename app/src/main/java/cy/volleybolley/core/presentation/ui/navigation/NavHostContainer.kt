@@ -125,7 +125,7 @@ fun NavHostContainer(
         composable<AboutRoute> { AboutScreen(navController) }
         composable<ChangePhotoRoute> { backStackEntry ->
             val avatarString = backStackEntry.toRoute<ChangePhotoRoute>().avatarUrl
-            ChangePhotoScreen(navController = navController, avatarString = avatarString)
+            ChangePhotoScreen(navController = navController, avatarFromPersonalData = avatarString)
         }
         composable<FaqRoute> { FaqScreen(navController) }
         composable<PaymentsRoute> { PaymentsScreen(navController) }

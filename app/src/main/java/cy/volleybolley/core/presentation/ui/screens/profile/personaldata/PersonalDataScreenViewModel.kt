@@ -56,7 +56,7 @@ class PersonalDataScreenViewModel(
 
             OnAvatarEditClick -> sendUiEffect(
                 PersonalDataScreenEffect.NavigateFromPersonalDataScreen(
-                    ChangePhotoRoute
+                    ChangePhotoRoute(avatarUrl = originState.avatar)
                 )
             )
 
