@@ -222,7 +222,10 @@ private fun ProfileComponent(
         VolleyText.BodyRegular(
             text = title,
             color = VolleyColor.White,
-            modifier = Modifier.padding(
+            maxLines = 1,
+            modifier = Modifier
+                .weight(1f)
+                .padding(
                 horizontal = VolleyDimens.DIMEN_8.dp,
                 vertical = 0.dp
             )

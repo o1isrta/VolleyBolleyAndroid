@@ -2,19 +2,28 @@ package cy.volleybolley.core.presentation.ui.screens.profile.changephoto
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -26,12 +35,18 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
+import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
+import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEffect.NavigateFromChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.GetAvatarFromPersonalData
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnBackFromChangePhotoClick
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnCameraPhotoClick
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnDeletePhotoClick
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnGalleryPhotoClick
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnSaveButtonClick
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -39,7 +54,7 @@ fun ChangePhotoScreen(
     avatarFromPersonalData: String? = null,
     navController: NavHostController,
     viewModel: ChangePhotoScreenViewModel = koinViewModel(),
-    ) {
+) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
@@ -69,6 +84,15 @@ private fun ChangePhotoScreen(
     }
 
     val scrollState = rememberScrollState()
+    val gradientBrush = remember {
+        Brush.verticalGradient(
+            colors = listOf(
+                VolleyColor.YellowForGradient,
+                VolleyColor.GreenForGradient
+            )
+        )
+    }
+    val menuShape = remember { RoundedCornerShape(VolleyDimens.DIMEN_32.dp) }
 
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
@@ -94,18 +118,54 @@ private fun ChangePhotoScreen(
             )
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
+            Column(
+                modifier = Modifier
+                    .background(VolleyColor.White, menuShape)
+                    .border(
+                        width = 1.dp,
+                        brush = gradientBrush,
+                        shape = menuShape
+                    )
+                    .padding(VolleyDimens.DIMEN_20.dp)
+            ) {
+                MenuComponent(
+                    painter = painterResource(R.drawable.ic_photo_gallery),
+                    title = stringResource(R.string.choose_from_gallery)
+                ) { eventCallback(OnGalleryPhotoClick) }
 
+                ChangePhotoScreenDivider()
 
+                MenuComponent(
+                    painter = painterResource(R.drawable.ic_photo_camera),
+                    title = stringResource(R.string.take_photo)
+                ) { OnCameraPhotoClick }
+
+                ChangePhotoScreenDivider()
+
+                MenuComponent(
+                    painter = painterResource(R.drawable.ic_photo_delete),
+                    title = stringResource(R.string.delete_photo)
+                ) { OnDeletePhotoClick }
+            }
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+            VolleyButton.ActiveButton(
+                enabled = state.buttonEnabled,
+                text = stringResource(R.string.save),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(VolleyDimens.DIMEN_44.dp)
+            ) { OnSaveButtonClick }
         }
     }
 
     LaunchedEffect(effect) {
-        when(effect) {
+        when (effect) {
             is NavigateFromChangePhotoScreen -> navigateAction(effect.route)
             null -> {}
         }
     }
-
 }
 
 @Composable
@@ -137,6 +197,52 @@ private fun Avatar(
             )
         }
     }
+}
+
+@Stable
+@Composable
+private fun MenuComponent(
+    painter: Painter,
+    title: String,
+    onComponentClick: () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = onComponentClick
+            )
+    ) {
+        Icon(
+            painter = painter,
+            contentDescription = null,
+            tint = VolleyColor.TextDark
+        )
+
+        VolleyText.BodyRegular(
+            text = title,
+            color = VolleyColor.TextDark,
+            maxLines = 1,
+            modifier = Modifier
+                .weight(1f)
+                .padding(
+                    horizontal = VolleyDimens.DIMEN_8.dp,
+                    vertical = 0.dp
+                )
+        )
+    }
+}
+
+@Composable
+private fun ChangePhotoScreenDivider() {
+    VolleySimpleComponent.DividerLine(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(0.dp, VolleyDimens.DIMEN_16.dp)
+    )
 }
 
 @Preview
