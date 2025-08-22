@@ -37,7 +37,9 @@ class ChangePhotoScreenViewModel(
 
             OnCameraPhotoCreate -> {}
 
-            OnDeletePhotoClick -> {}
+            OnDeletePhotoClick -> {
+                _uiState.update { checkStateForButtonEnabled(it.copy(avatarUrl = null)) }
+            }
 
             OnSaveButtonClick -> {}
         }

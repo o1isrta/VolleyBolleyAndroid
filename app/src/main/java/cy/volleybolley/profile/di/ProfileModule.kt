@@ -6,6 +6,7 @@ import cy.volleybolley.profile.data.ProfileRepositoryImpl
 import cy.volleybolley.profile.data.network.ProfileNetworkClient
 import cy.volleybolley.profile.data.network.model.ProfileRequest
 import cy.volleybolley.profile.data.network.model.ProfileResponse
+import cy.volleybolley.profile.domain.DeleteAvatarUseCase
 import cy.volleybolley.profile.domain.DeleteProfileUseCase
 import cy.volleybolley.profile.domain.GetPaymentsUseCase
 import cy.volleybolley.profile.domain.GetPersonalDataUseCase
@@ -31,4 +32,5 @@ val profileModule = module {
     factory { UpdatePaymentsUseCase(repository = get()) }
     factory { UpdateAvatarUseCase(repository = get()) }
     factory { DeleteProfileUseCase(repository = get()) }
+    factory { DeleteAvatarUseCase(repository = get()) }
 }

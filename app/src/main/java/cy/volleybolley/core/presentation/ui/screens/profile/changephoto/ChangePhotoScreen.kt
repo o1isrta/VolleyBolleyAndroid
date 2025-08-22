@@ -152,14 +152,14 @@ private fun ChangePhotoScreen(
                 MenuComponent(
                     painter = painterResource(R.drawable.ic_photo_camera),
                     title = stringResource(R.string.take_photo)
-                ) { OnCameraPhotoCreate }
+                ) { eventCallback(OnCameraPhotoCreate) }
 
                 ChangePhotoScreenDivider()
 
                 MenuComponent(
                     painter = painterResource(R.drawable.ic_photo_delete),
                     title = stringResource(R.string.delete_photo)
-                ) { OnDeletePhotoClick }
+                ) { eventCallback(OnDeletePhotoClick) }
             }
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
