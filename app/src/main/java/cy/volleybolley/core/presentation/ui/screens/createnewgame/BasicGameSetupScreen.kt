@@ -2,7 +2,6 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,34 +15,24 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
-import cy.volleybolley.core.presentation.ui.component.PreviewContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
-import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonSText
-import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonXSText
 
 @Composable
 fun BasicGameSetupScreen(navController: NavHostController) {
@@ -75,77 +64,74 @@ fun BasicGameSetupScreen(navController: NavHostController) {
 
         HorizontalLine()
 
-        VolleyText.TitleMedium(
+        VolleyText.TitleLarge(
             text = stringResource(R.string.place),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp),
+                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_12.dp),
             color = VolleyColor.White
         )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .height(VolleyDimens.DIMEN_44.dp)
-                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_4.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp),
-            horizontalArrangement = Arrangement.Start
+                .fillMaxWidth()
+                .padding(VolleyDimens.DIMEN_20.dp, 0.dp)
         ) {
-            Image(
-                painter = painterResource(R.drawable.ic_mark_yellow),
-                contentDescription = null,
-                //modifier = Modifier//.size(width = 16.dp, height = 15.dp)
-            )
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-            Column(
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier.width(140.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .weight(1f), // Важно!  Занимает только часть доступного пространства,
+                //.height(VolleyDimens.DIMEN_44.dp)
+                //.padding(VolleyDimens.DIMEN_20.dp, 0.dp),
+                horizontalArrangement = Arrangement.Start
             ) {
-                VolleyText.BodyBold(
-                    text = stringResource(R.string.place),
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                       // .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp),
-                    color = VolleyColor.White
+                Image(
+                    painter = painterResource(R.drawable.ic_mark_yellow),
+                    contentDescription = null,
+                    //modifier = Modifier//.size(width = 16.dp, height = 15.dp)
                 )
-                VolleyText.BodyLight(
-                    text = stringResource(R.string.place),
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                       // .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp),
-                    color = VolleyColor.White
-                )
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                Column(
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    VolleyText.BodyBold(
+                        text = "fffffddddssss ggggg hhhhhh dddddd ыыыыы",//stringResource(R.string.place),
+                        modifier = Modifier,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                            // .fillMaxWidth(),
+                        // .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp),
+                        color = VolleyColor.White
+                    )
+                    VolleyText.BodyLight(
+                        text = "fffffddddssss ggggg hhhhhh dddddd ыыыыы 1111111",//stringResource(R.string.place),
+                        modifier = Modifier,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        //  .fillMaxWidth(),
+                        // .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp),
+                        color = VolleyColor.White
+                    )
+                }
             }
+
             VolleyButton.ActiveGradientButton(
                 modifier = Modifier.height(VolleyDimens.DIMEN_44.dp),
                 text = "Create"
             ) { }
-            Spacer(modifier = Modifier.size(size = 8.dp))
+
 
         }
-
-//        VolleyContainersRootTransparent.TransparentContainer(
-//            cornerRadius = VolleyDimens.DIMEN_16,
-//            modifier = Modifier
-//                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp)
-//        ) {
-//            VolleyText.BodyRegular(
-//                text = "Hi! Just old friends meet at the court, beer afterwards, no entry fee, come see us :)",
-//                color = VolleyColor.White,
-//                modifier = Modifier
-//                    .padding(VolleyDimens.DIMEN_16.dp)
-//                    .height(VolleyDimens.DIMEN_90.dp)
-//                    .fillMaxWidth()
-//
-//            )
-//        }
-
-
-
+        HorizontalLine()
     }
 //    Button(onClick = { navController.popBackStack() }) {
 //        Text("Назад")
 //    }
 }
+
 @Composable
 fun HorizontalLine(
 ) {
