@@ -35,7 +35,9 @@ class ChangePhotoScreenViewModel(
                 _uiState.update { checkStateForButtonEnabled(it.copy(avatarUrl = event.uriString)) }
             }
 
-            OnCameraPhotoCreate -> {}
+            is OnCameraPhotoCreate -> {
+                _uiState.update { checkStateForButtonEnabled(it.copy(avatarUrl = event.photoUri)) }
+            }
 
             OnDeletePhotoClick -> {
                 _uiState.update { checkStateForButtonEnabled(it.copy(avatarUrl = null)) }

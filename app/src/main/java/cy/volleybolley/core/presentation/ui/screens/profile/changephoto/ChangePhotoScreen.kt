@@ -1,5 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.profile.changephoto
 
+import android.content.Context
+import android.os.Environment
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,10 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cy.volleybolley.R
@@ -51,6 +55,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePh
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnGalleryPhotoSelect
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnSaveButtonClick
 import org.koin.androidx.compose.koinViewModel
+import java.io.File
 
 @Composable
 fun ChangePhotoScreen(
@@ -86,6 +91,7 @@ private fun ChangePhotoScreen(
         eventCallback(GetAvatarFromPersonalData(inputAvatar))
     }
 
+    val context = LocalContext.current
     val scrollState = rememberScrollState()
     val gradientBrush = remember {
         Brush.verticalGradient(
@@ -102,6 +108,19 @@ private fun ChangePhotoScreen(
         uri?.let {
             eventCallback(OnGalleryPhotoSelect(it.toString()))
         }
+    }
+
+    // Create template file and define it`s uri
+    val cameraPhotoFile = createPhotoFile(context)
+    val cameraPhotoUri = FileProvider.getUriForFile(
+        context,
+        "${context.packageName}.fileprovider",
+        cameraPhotoFile
+    )
+
+    // Create Camera Request
+    val cameraPhotoPicker = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+        if (isSuccess) eventCallback(OnCameraPhotoCreate(cameraPhotoFile.absolutePath))
     }
 
     VolleyContainersRootTransparent.TransparentContainer(
@@ -152,7 +171,9 @@ private fun ChangePhotoScreen(
                 MenuComponent(
                     painter = painterResource(R.drawable.ic_photo_camera),
                     title = stringResource(R.string.take_photo)
-                ) { eventCallback(OnCameraPhotoCreate) }
+                ) {
+                    cameraPhotoPicker.launch(cameraPhotoUri)
+                }
 
                 ChangePhotoScreenDivider()
 
@@ -180,6 +201,17 @@ private fun ChangePhotoScreen(
             null -> {}
         }
     }
+}
+
+private fun createPhotoFile(context: Context): File {
+    // Create an image file name
+    val fileName = "volleyPhoto_${System.currentTimeMillis()}"
+    val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+    return File.createTempFile(
+        fileName,
+        ".jpg",
+        storageDir
+    )
 }
 
 @Composable
