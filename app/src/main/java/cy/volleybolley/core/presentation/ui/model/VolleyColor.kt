@@ -85,4 +85,9 @@ object VolleyColor {
 
     val TextCalendarDark = Color(color = 0xFF333333)
     val TextCalendarLightGrey = Color(color = 0xFFE0E0E0)
+
+    /**
+     * Затемнение для диалогов
+     */
+    val DialogBlackout = Color(color = 0xB2555252)
 }

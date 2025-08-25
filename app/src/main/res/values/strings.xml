@@ -226,4 +226,5 @@
     • Game invites\n
     • Match reminders\n
     • Player ratings after games</string>
+    <string name="enabled">ENABLED</string>
 </resources>

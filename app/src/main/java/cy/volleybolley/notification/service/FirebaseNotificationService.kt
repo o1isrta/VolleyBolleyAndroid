@@ -7,24 +7,20 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.content.edit
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.MainActivity
-import cy.volleybolley.notification.utils.Constants.APP_PREFS
-import cy.volleybolley.notification.utils.Constants.FCM_TOKEN
+import cy.volleybolley.notification.domain.api.FCMTokenStore
+import org.koin.android.ext.android.inject
+import org.koin.core.component.KoinComponent
 
-class FirebaseNotificationService : FirebaseMessagingService() {
+class FirebaseNotificationService : FirebaseMessagingService(), KoinComponent {
+    private val fcmTokenStore: FCMTokenStore by inject()
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d("FCM_TOKEN", token)
-        saveFCMToken(token)
-    }
-
-    private fun saveFCMToken(token: String) {
-        val prefs = getSharedPreferences(APP_PREFS, MODE_PRIVATE)
-        prefs.edit { putString(FCM_TOKEN, token) }
+        fcmTokenStore.saveToken(token)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -82,5 +78,4 @@ class FirebaseNotificationService : FirebaseMessagingService() {
         val notificationId = System.currentTimeMillis().toInt()
         notificationManager.notify(notificationId, builder.build())
     }
-
 }
