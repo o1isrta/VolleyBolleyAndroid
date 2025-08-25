@@ -117,7 +117,6 @@ fun GlobalAlertDialog(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewGlobalAlertDialog() {
