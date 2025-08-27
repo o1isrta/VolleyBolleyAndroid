@@ -23,7 +23,12 @@ val profileModule = module {
         ProfileNetworkClient()
     }
 
-    single<ProfileRepository> { ProfileRepositoryImpl(networkClient = get(named(HttpClientQualifier.PROFILE.value))) }
+    single<ProfileRepository> {
+        ProfileRepositoryImpl(
+            networkClient = get(named(HttpClientQualifier.PROFILE.value)),
+            context = get()
+        )
+    }
 
     // Domain
     factory { GetPersonalDataUseCase(repository = get()) }

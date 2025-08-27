@@ -1,5 +1,6 @@
 package cy.volleybolley.profile.data
 
+import android.content.Context
 import android.util.Base64
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.data.network.model.mapToErrorType
@@ -13,9 +14,13 @@ import cy.volleybolley.profile.data.network.model.ProfileResponse
 import cy.volleybolley.profile.domain.api.ProfileRepository
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PersonalData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import androidx.core.net.toUri
 
 class ProfileRepositoryImpl(
     private val networkClient: NetworkClient<ProfileRequest, ProfileResponse>,
+    private val context: Context,
     private var accessToken: String? = null,
 ) : ProfileRepository {
     private var lastReceivedPersonalData: PersonalData? = null
@@ -75,8 +80,9 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun updateAvatar(
-        imageBytes: ByteArray?,
+        uriString: String?,
     ): VolleyResult<String, ErrorType> {
+        val imageBytes = convertUriStringToByteArray(uriString)
         val response = networkClient.getResponse(
             ProfileRequest.UpdateProfileAvatar(
                 accessToken = accessToken,
@@ -105,6 +111,15 @@ class ProfileRepositoryImpl(
 
     fun updateAccessToken(newAccessToken: String) {
         accessToken = newAccessToken
+    }
+
+    private suspend fun convertUriStringToByteArray(uriString: String?): ByteArray? {
+        val uri = uriString?.toUri()
+        return uri?.let {
+            withContext(Dispatchers.IO) {
+                context.contentResolver.openInputStream(it)?.use { stream -> stream.readBytes() }
+            }
+        }
     }
 
     private fun convertImageBytesToBase64String(imageBytes: ByteArray?): String? {

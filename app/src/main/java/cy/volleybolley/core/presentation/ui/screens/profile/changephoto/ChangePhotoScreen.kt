@@ -191,7 +191,7 @@ private fun ChangePhotoScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(VolleyDimens.DIMEN_44.dp)
-            ) { OnSaveButtonClick }
+            ) { eventCallback(OnSaveButtonClick) }
         }
     }
 
