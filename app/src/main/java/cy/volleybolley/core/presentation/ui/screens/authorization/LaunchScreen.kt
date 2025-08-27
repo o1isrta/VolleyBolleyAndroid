@@ -36,7 +36,6 @@ fun LaunchScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
-
         Image(
             painter = painterResource(id = R.drawable.bg_launch), // твой png фон
             contentDescription = null,

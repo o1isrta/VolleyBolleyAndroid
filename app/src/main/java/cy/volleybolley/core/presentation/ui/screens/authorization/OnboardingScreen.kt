@@ -35,7 +35,6 @@ fun OnboardingScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
-
         Image(
             painter = painterResource(id = R.drawable.bg_launch),
             contentDescription = null,
