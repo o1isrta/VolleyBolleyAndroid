@@ -282,4 +282,26 @@ object VolleyText {
             overflow = overflow
         )
     }
+
+    @Stable
+    @Composable
+    fun HeroBody(
+        text: String,
+        modifier: Modifier = Modifier,
+        color: Color = Color.Unspecified,
+        textAlign: TextAlign? = null,
+        maxLines: Int = Int.MAX_VALUE,
+        overflow: TextOverflow = TextOverflow.Clip
+    ) {
+        Text(
+            text = text,
+            style = VolleyTypography.HeroBody,
+            modifier = modifier,
+            color = color,
+            textAlign = textAlign,
+            maxLines = maxLines,
+            overflow = overflow
+        )
+    }
+
 }

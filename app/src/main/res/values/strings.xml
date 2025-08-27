@@ -221,4 +221,15 @@
     <string name="top_bar_level_content_description">User level</string>
     <string name="registration_date_of_birth_string_pattern">MM/dd/yyyy</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
+    <string name="about_levels">About levels</string>
+    <string name="back">Back</string>
+    <string name="level_light_prefix">Light:</string>
+    <string name="level_light_description">New to the game</string>
+    <string name="level_medium_prefix">Medium:</string>
+    <string name="level_medium_description">Know rules, still learning</string>
+    <string name="level_hard_prefix">Hard:</string>
+    <string name="level_hard_description">Skilled, play often, tournaments experience</string>
+    <string name="level_pro_prefix">Pro:</string>
+    <string name="level_pro_description">Elite level, official championships experience</string>
+
 </resources>

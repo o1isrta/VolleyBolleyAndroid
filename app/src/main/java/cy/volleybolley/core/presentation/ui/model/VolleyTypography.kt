@@ -183,4 +183,14 @@ object VolleyTypography {
         letterSpacing = 10.sp,
         textAlign = TextAlign.Center
     )
+
+    val HeroBody = TextStyle(
+        fontFamily = HeroFamily,
+        fontWeight = FontWeight.W400,
+        fontSize = 20.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.sp,
+        textAlign = TextAlign.Start
+    )
+
 }
