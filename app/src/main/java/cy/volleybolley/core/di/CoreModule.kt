@@ -5,6 +5,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.about.AboutScreenVie
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.faq.FaqScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -54,7 +55,13 @@ val coreModule = module {
 
     // ViewModels Profile flow
     viewModel { ProfileScreenViewModel(deleteProfileUseCase = get()) }
-    viewModel { PersonalDataScreenViewModel(getPersonalDataUseCase = get(), updatePersonalDataUseCase = get()) }
+    viewModel { (backAvatarHolder: BackAvatarHolder) ->
+        PersonalDataScreenViewModel(
+            backAvatarHolder = backAvatarHolder,
+            getPersonalDataUseCase = get(),
+            updatePersonalDataUseCase = get()
+        )
+    }
     viewModel { AboutScreenViewModel() }
     viewModel { FaqScreenViewModel() }
     viewModel { ChangePhotoScreenViewModel(updateAvatarUseCase = get(), deleteAvatarUseCase = get()) }

@@ -4,6 +4,7 @@ import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.ChangePhotoRoute
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.AvatarChanged
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.CitySelect
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.CountrySelect
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.DateSelect
@@ -13,6 +14,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.Persona
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.OnBackFromPersonalDataClick
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.OnUpdateButtonClick
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.SurnameChanged
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.GenderType
 import cy.volleybolley.profile.domain.GetPersonalDataUseCase
 import cy.volleybolley.profile.domain.UpdatePersonalDataUseCase
@@ -20,6 +22,7 @@ import cy.volleybolley.profile.domain.model.PersonalData
 import kotlinx.coroutines.flow.update
 
 class PersonalDataScreenViewModel(
+    private val backAvatarHolder: BackAvatarHolder,
     private val getPersonalDataUseCase: GetPersonalDataUseCase,
     private val updatePersonalDataUseCase: UpdatePersonalDataUseCase,
 ) : BaseViewModel<PersonalDataScreenState, PersonalDataScreenEvent, PersonalDataScreenEffect>(
@@ -45,6 +48,8 @@ class PersonalDataScreenViewModel(
             _uiState.update { originState }
         }
     }
+
+    fun hasChangedAvatar(): String? = backAvatarHolder.getAvatarChanges()
 
     override val tag: String = TAG
 
@@ -93,6 +98,12 @@ class PersonalDataScreenViewModel(
             is CountrySelect -> {}
 
             is CitySelect -> {}
+
+            is AvatarChanged -> {
+                val avatarValue = if (event.avatarUrl.isEmpty()) null else event.avatarUrl
+                originState = originState.copy(avatar = avatarValue)
+                _uiState.update { it.copy(avatar = avatarValue) }
+            }
         }
 
     }

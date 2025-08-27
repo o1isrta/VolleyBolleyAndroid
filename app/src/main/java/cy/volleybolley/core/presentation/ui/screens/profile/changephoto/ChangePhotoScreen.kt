@@ -46,14 +46,14 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
-import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEffect.NavigateFromChangePhotoScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEffect.NavigateBackFromChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.GetAvatarFromPersonalData
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnBackFromChangePhotoClick
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnCameraPhotoCreate
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnDeletePhotoClick
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnGalleryPhotoSelect
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnSaveButtonClick
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
 import org.koin.androidx.compose.koinViewModel
 import java.io.File
 
@@ -70,9 +70,10 @@ fun ChangePhotoScreen(
         inputAvatar = avatarFromPersonalData,
         state = state,
         effect = effect,
-        navigateAction = { route ->
-            route?.let {
-                navController.navigate(it)
+        navigateAction = { newAvatar ->
+            newAvatar?.let {
+                navController.previousBackStackEntry?.savedStateHandle?.set(BackAvatarHolder.AVATAR_KEY, it)
+                navController.popBackStack()
             } ?: navController.popBackStack()
         },
         eventCallback = { event -> viewModel.obtainEvent(event) }
@@ -84,7 +85,7 @@ private fun ChangePhotoScreen(
     inputAvatar: String? = null,
     state: ChangePhotoScreenState,
     effect: ChangePhotoScreenEffect?,
-    navigateAction: (NavMap?) -> Unit,
+    navigateAction: (String?) -> Unit,
     eventCallback: (ChangePhotoScreenEvent) -> Unit,
 ) {
     LaunchedEffect(inputAvatar) {
@@ -197,7 +198,7 @@ private fun ChangePhotoScreen(
 
     LaunchedEffect(effect) {
         when (effect) {
-            is NavigateFromChangePhotoScreen -> navigateAction(effect.route)
+            is NavigateBackFromChangePhotoScreen -> navigateAction(effect.avatarArgument)
             null -> {}
         }
     }

@@ -51,7 +51,11 @@ import cy.volleybolley.core.presentation.ui.screens.profile.PaymentsScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreen
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun NavHostContainer(
@@ -129,7 +133,12 @@ fun NavHostContainer(
         }
         composable<FaqRoute> { FaqScreen(navController) }
         composable<PaymentsRoute> { PaymentsScreen(navController) }
-        composable<PersonalDataRoute> { PersonalDataScreen(navController) }
+        composable<PersonalDataRoute> { backStackEntry ->
+            val viewModel = koinViewModel<PersonalDataScreenViewModel> {
+                parametersOf(BackAvatarHolder(backStackEntry.savedStateHandle))
+            }
+            PersonalDataScreen(navController, viewModel)
+        }
         composable<PlayerProfileRoute> { PlayerProfileScreen(navController) }
         composable<PlayersRoute> { PlayersScreen(navController) }
         composable<ProfileRoute> { ProfileScreen(navController) }

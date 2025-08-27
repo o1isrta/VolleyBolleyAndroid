@@ -12,4 +12,5 @@ sealed interface PersonalDataScreenEvent : UiEvent {
     data class DateSelect(val date: Long?) : PersonalDataScreenEvent
     data class CountrySelect(val country: String) : PersonalDataScreenEvent
     data class CitySelect(val city: String) : PersonalDataScreenEvent
+    data class AvatarChanged(val avatarUrl: String) : PersonalDataScreenEvent
 }
