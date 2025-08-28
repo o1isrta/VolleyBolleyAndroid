@@ -3,6 +3,7 @@ package cy.volleybolley.core.di
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.presentation.ui.screens.profile.about.AboutScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.EnterPaymentDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.faq.FaqScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
@@ -67,5 +68,6 @@ val coreModule = module {
     viewModel { FaqScreenViewModel() }
     viewModel { ChangePhotoScreenViewModel(updateAvatarUseCase = get(), deleteAvatarUseCase = get()) }
     viewModel { PaymentsScreenViewModel(getPaymentsUseCase = get(), updatePaymentsUseCase = get(), json = get()) }
+    viewModel { EnterPaymentDataScreenViewModel(updatePaymentsUseCase = get(), json = get()) }
 
 }
