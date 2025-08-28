@@ -1,7 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.profile.changephoto
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEffect.NavigateBackFromChangePhotoScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEffect.NavigateFromChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.GetAvatarFromPersonalData
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnBackFromChangePhotoClick
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenEvent.OnCameraPhotoCreate
@@ -29,7 +29,7 @@ class ChangePhotoScreenViewModel(
                 _uiState.update { it.copy(avatarUrl = event.avatar) }
             }
 
-            OnBackFromChangePhotoClick -> sendUiEffect(NavigateBackFromChangePhotoScreen(null))
+            OnBackFromChangePhotoClick -> sendUiEffect(NavigateFromChangePhotoScreen(null))
 
             is OnGalleryPhotoSelect -> {
                 _uiState.update { checkStateForButtonEnabled(it.copy(avatarUrl = event.uriString)) }
@@ -45,7 +45,7 @@ class ChangePhotoScreenViewModel(
 
             OnSaveButtonClick -> {
                 val newAvatar = uiState.value.avatarUrl ?: ""
-                sendUiEffect(NavigateBackFromChangePhotoScreen(newAvatar))
+                sendUiEffect(NavigateFromChangePhotoScreen(newAvatar))
             }
         }
     }

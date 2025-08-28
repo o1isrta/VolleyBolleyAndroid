@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.profile
+package cy.volleybolley.core.presentation.ui.screens.profile.payments
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text

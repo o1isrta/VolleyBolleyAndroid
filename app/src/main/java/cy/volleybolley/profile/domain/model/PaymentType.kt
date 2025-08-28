@@ -1,9 +1,9 @@
 package cy.volleybolley.profile.domain.model
 
 enum class PaymentType(val nameValue: String) {
-    REVOLUT("REVOLUTE"),
-    THAIBANK("THAIBANK"),
+    REVOLUT("REVOLUT"),
     CASH("CASH"),
+    THAIBANK("THAIBANK"),
     UNKNOWN("UNKNOWN");
 
     companion object {
