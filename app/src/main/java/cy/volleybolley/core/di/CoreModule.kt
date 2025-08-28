@@ -66,6 +66,6 @@ val coreModule = module {
     viewModel { AboutScreenViewModel() }
     viewModel { FaqScreenViewModel() }
     viewModel { ChangePhotoScreenViewModel(updateAvatarUseCase = get(), deleteAvatarUseCase = get()) }
-    viewModel { PaymentsScreenViewModel(getPaymentsUseCase = get(), updatePaymentsUseCase = get()) }
+    viewModel { PaymentsScreenViewModel(getPaymentsUseCase = get(), updatePaymentsUseCase = get(), json = get()) }
 
 }

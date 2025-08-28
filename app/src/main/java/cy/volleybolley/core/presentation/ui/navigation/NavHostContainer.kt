@@ -54,7 +54,9 @@ import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreen
+import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -143,7 +145,8 @@ fun NavHostContainer(
         composable<PlayersRoute> { PlayersScreen(navController) }
         composable<ProfileRoute> { ProfileScreen(navController) }
         composable<EnterPaymentDataRoute> { backStackEntry ->
-            val route = backStackEntry.toRoute<EnterPaymentDataRoute>()
+            val json: Json = koinInject()
+            val paymentsJsonString = backStackEntry.toRoute<EnterPaymentDataRoute>().paymentsJsonString
             EnterPaymentDataScreen(navController)
         }
     }

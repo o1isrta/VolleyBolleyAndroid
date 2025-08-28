@@ -11,10 +11,12 @@ import cy.volleybolley.profile.domain.UpdatePaymentsUseCase
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
 import kotlinx.coroutines.flow.update
+import kotlinx.serialization.json.Json
 
 class PaymentsScreenViewModel(
     private val getPaymentsUseCase: GetPaymentsUseCase,
     private val updatePaymentsUseCase: UpdatePaymentsUseCase,
+    private val json: Json,
 ) : BaseViewModel<PaymentsScreenState, PaymentsScreenEvent, PaymentsScreenEffect>(
     initialState = PaymentsScreenState(),
 ){
@@ -53,7 +55,7 @@ class PaymentsScreenViewModel(
                             NavigateFromPaymentsScreen(
                                 EnterPaymentDataRoute(
                                     type = event.itemType,
-                                    payments = uiState.value.payments
+                                    paymentsJsonString = json.encodeToString(uiState.value.payments),
                                 )
                             )
                         )

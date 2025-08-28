@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
-import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
 import kotlinx.serialization.Serializable
 
@@ -158,5 +157,5 @@ object ProfileRoute : NavMap
 @Serializable
 data class EnterPaymentDataRoute(
     val type: PaymentType,
-    val payments: List<Payment>
+    val paymentsJsonString: String
 ) : NavMap
