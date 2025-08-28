@@ -142,6 +142,9 @@ fun NavHostContainer(
         composable<PlayerProfileRoute> { PlayerProfileScreen(navController) }
         composable<PlayersRoute> { PlayersScreen(navController) }
         composable<ProfileRoute> { ProfileScreen(navController) }
-        composable<EnterPaymentDataRoute> { EnterPaymentDataScreen(navController) }
+        composable<EnterPaymentDataRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<EnterPaymentDataRoute>()
+            EnterPaymentDataScreen(navController)
+        }
     }
 }
