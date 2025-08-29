@@ -68,6 +68,13 @@ val coreModule = module {
     viewModel { FaqScreenViewModel() }
     viewModel { ChangePhotoScreenViewModel(updateAvatarUseCase = get(), deleteAvatarUseCase = get()) }
     viewModel { PaymentsScreenViewModel(getPaymentsUseCase = get(), updatePaymentsUseCase = get(), json = get()) }
-    viewModel { EnterPaymentDataScreenViewModel(updatePaymentsUseCase = get(), json = get()) }
+    viewModel { (paymentTypeName: String, paymentsJsonString: String) ->
+        EnterPaymentDataScreenViewModel(
+            updatePaymentsUseCase = get(),
+            json = get(),
+            paymentTypeName = paymentTypeName,
+            paymentsJsonStringFromPaymentsScreen = paymentsJsonString
+        )
+    }
 
 }

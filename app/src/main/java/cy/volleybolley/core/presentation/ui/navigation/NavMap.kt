@@ -156,6 +156,6 @@ object ProfileRoute : NavMap
 
 @Serializable
 data class EnterPaymentDataRoute(
-    val type: PaymentType,
+    val paymentTypeName: String,
     val paymentsJsonString: String
 ) : NavMap

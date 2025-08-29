@@ -51,6 +51,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScr
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.EnterPaymentDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreen
@@ -145,9 +146,11 @@ fun NavHostContainer(
         composable<PlayersRoute> { PlayersScreen(navController) }
         composable<ProfileRoute> { ProfileScreen(navController) }
         composable<EnterPaymentDataRoute> { backStackEntry ->
-            val json: Json = koinInject()
-            val paymentsJsonString = backStackEntry.toRoute<EnterPaymentDataRoute>().paymentsJsonString
-            EnterPaymentDataScreen(navController)
+            val routeWithArgs = backStackEntry.toRoute<EnterPaymentDataRoute>()
+            val viewModel = koinViewModel<EnterPaymentDataScreenViewModel> {
+                parametersOf(routeWithArgs.paymentTypeName, routeWithArgs.paymentsJsonString)
+            }
+            EnterPaymentDataScreen(navController, viewModel)
         }
     }
 }

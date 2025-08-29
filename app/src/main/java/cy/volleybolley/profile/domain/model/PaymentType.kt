@@ -8,10 +8,10 @@ enum class PaymentType(val nameValue: String) {
 
     fun getSimpleName(): String =
         when (this) {
-            REVOLUT -> "Revolut"
-            CASH -> "Cash"
             THAIBANK -> "Thai bank"
-            UNKNOWN -> "Revolut"
+            CASH -> "Cash"
+            REVOLUT -> "Revolut"
+            UNKNOWN -> "Unknown"
         }
 
     companion object {

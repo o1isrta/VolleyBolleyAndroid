@@ -31,11 +31,11 @@ class PaymentsScreenViewModel(
             account = "",
             isPreferred = true
         ),
-//        Payment(
-//            type = PaymentType.REVOLUT,
-//            account = "@AnonymousNemislimus",
-//            isPreferred = false
-//        )
+        Payment(
+            type = PaymentType.REVOLUT,
+            account = "@AnonymousNemislimus",
+            isPreferred = false
+        )
     )
 
     init {
@@ -54,7 +54,7 @@ class PaymentsScreenViewModel(
                         sendUiEffect(
                             NavigateFromPaymentsScreen(
                                 EnterPaymentDataRoute(
-                                    type = event.itemType,
+                                    paymentTypeName = event.itemType.nameValue,
                                     paymentsJsonString = json.encodeToString(uiState.value.payments),
                                 )
                             )

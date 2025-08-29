@@ -229,4 +229,7 @@
     <string name="about_founder_value">Dmitrii Zverev</string>
     <string name="about_designers_value">Malika Rozieva,Yulia Zemlyanskaya</string>
     <string name="about_developers_value">Unknown peoples</string>
+    <string name="enter_payment_revolut_acc_prefix">\@</string>
+    <string name="enter_payment_revolut_hint">AccountName</string>
+    <string name="enter_payment_thaibank_hint">000 000 0000</string>
 </resources>
