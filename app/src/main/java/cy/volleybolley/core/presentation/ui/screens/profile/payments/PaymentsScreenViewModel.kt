@@ -2,6 +2,7 @@ package cy.volleybolley.core.presentation.ui.screens.profile.payments
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.navigation.EnterPaymentDataRoute
+import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.model.BackPaymentsHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEffect.NavigateFromPaymentsScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEvent.ClickOnBackFromPayments
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEvent.ClickOnPaymentsItem
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.Json
 
 class PaymentsScreenViewModel(
+    private val backPaymentsHolder: BackPaymentsHolder,
     private val getPaymentsUseCase: GetPaymentsUseCase,
     private val updatePaymentsUseCase: UpdatePaymentsUseCase,
     private val json: Json,
@@ -60,7 +62,7 @@ class PaymentsScreenViewModel(
                             )
                         )
                     }
-                    else -> {}
+                    else -> Unit
                 }
             }
 
@@ -68,6 +70,12 @@ class PaymentsScreenViewModel(
                 // Execute updatePaymentsUseCase and update local state on success
                 _uiState.update { it.copy(changePreferred(it.payments, event.itemType)) }
             }
+        }
+    }
+
+    fun handleBackPayments() {
+        backPaymentsHolder.getPaymentsJsonString()?.let { jsonString ->
+            _uiState.update { it.copy(payments = json.decodeFromString<List<Payment>>(jsonString)) }
         }
     }
 

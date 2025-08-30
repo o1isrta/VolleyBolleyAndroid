@@ -37,13 +37,13 @@ import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScr
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEvent.ClickOnPaymentsItemCheckBox
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PaymentsScreen(
     navController: NavHostController,
-    viewModel: PaymentsScreenViewModel = koinViewModel(),
+    viewModel: PaymentsScreenViewModel,
 ) {
+    viewModel.handleBackPayments()
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 

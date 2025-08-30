@@ -52,12 +52,12 @@ import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.Persona
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.EnterPaymentDataScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.model.BackPaymentsHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreen
-import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -130,21 +130,34 @@ fun NavHostContainer(
 
         // profile
         composable<AboutRoute> { AboutScreen(navController) }
+
         composable<ChangePhotoRoute> { backStackEntry ->
             val avatarString = backStackEntry.toRoute<ChangePhotoRoute>().avatarUrl
             ChangePhotoScreen(navController = navController, avatarFromPersonalData = avatarString)
         }
+
         composable<FaqRoute> { FaqScreen(navController) }
-        composable<PaymentsRoute> { PaymentsScreen(navController) }
+
+        composable<PaymentsRoute> { backStackEntry ->
+            val viewModel = koinViewModel<PaymentsScreenViewModel> {
+                parametersOf(BackPaymentsHolder(backStackEntry.savedStateHandle))
+            }
+            PaymentsScreen(navController, viewModel)
+        }
+
         composable<PersonalDataRoute> { backStackEntry ->
             val viewModel = koinViewModel<PersonalDataScreenViewModel> {
                 parametersOf(BackAvatarHolder(backStackEntry.savedStateHandle))
             }
             PersonalDataScreen(navController, viewModel)
         }
+
         composable<PlayerProfileRoute> { PlayerProfileScreen(navController) }
+
         composable<PlayersRoute> { PlayersScreen(navController) }
+
         composable<ProfileRoute> { ProfileScreen(navController) }
+
         composable<EnterPaymentDataRoute> { backStackEntry ->
             val routeWithArgs = backStackEntry.toRoute<EnterPaymentDataRoute>()
             val viewModel = koinViewModel<EnterPaymentDataScreenViewModel> {

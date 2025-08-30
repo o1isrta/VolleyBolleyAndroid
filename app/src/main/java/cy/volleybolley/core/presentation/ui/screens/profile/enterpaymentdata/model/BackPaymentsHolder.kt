@@ -1,0 +1,11 @@
+package cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.model
+
+import androidx.lifecycle.SavedStateHandle
+
+class BackPaymentsHolder(private val savedStateHandle: SavedStateHandle) {
+    fun getPaymentsJsonString(): String? = savedStateHandle.get<String>(PAYMENTS_KEY)
+
+    companion object {
+        const val PAYMENTS_KEY = "payments_key"
+    }
+}

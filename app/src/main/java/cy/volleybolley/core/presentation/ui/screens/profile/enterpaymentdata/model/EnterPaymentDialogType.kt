@@ -1,0 +1,12 @@
+package cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.model
+
+enum class EnterPaymentDialogType(
+    val dialogText: String,
+    var action: () -> Unit = {},
+) {
+    SUCCESS("Payment changes have been saved successfully");
+
+    fun setPositiveAction(newAction: () -> Unit) {
+        action = newAction
+    }
+}

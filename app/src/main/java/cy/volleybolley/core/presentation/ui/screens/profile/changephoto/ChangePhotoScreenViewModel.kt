@@ -32,15 +32,15 @@ class ChangePhotoScreenViewModel(
             OnBackFromChangePhotoClick -> sendUiEffect(NavigateFromChangePhotoScreen(null))
 
             is OnGalleryPhotoSelect -> {
-                _uiState.update { checkStateForButtonEnabled(it.copy(avatarUrl = event.uriString)) }
+                _uiState.update { checkStateForButtonEnabled(event.uriString) }
             }
 
             is OnCameraPhotoCreate -> {
-                _uiState.update { checkStateForButtonEnabled(it.copy(avatarUrl = event.photoUri)) }
+                _uiState.update { checkStateForButtonEnabled(event.photoUri) }
             }
 
             OnDeletePhotoClick -> {
-                _uiState.update { checkStateForButtonEnabled(it.copy(avatarUrl = null)) }
+                _uiState.update { checkStateForButtonEnabled(null) }
             }
 
             OnSaveButtonClick -> {
@@ -50,12 +50,11 @@ class ChangePhotoScreenViewModel(
         }
     }
 
-    private fun checkStateForButtonEnabled(newState: ChangePhotoScreenState): ChangePhotoScreenState {
-        return if (newState.avatarUrl == originAvatar) {
-            newState.copy(buttonEnabled = false)
-        }  else {
-            newState.copy(buttonEnabled = true)
-        }
+    private fun checkStateForButtonEnabled(newAvatar: String?): ChangePhotoScreenState {
+        return ChangePhotoScreenState(
+            avatarUrl = newAvatar,
+            buttonEnabled = newAvatar != originAvatar
+        )
     }
 
     companion object {
