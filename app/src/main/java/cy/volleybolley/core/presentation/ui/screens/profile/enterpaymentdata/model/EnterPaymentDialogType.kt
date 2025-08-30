@@ -6,7 +6,7 @@ enum class EnterPaymentDialogType(
 ) {
     SUCCESS("Payment changes have been saved successfully");
 
-    fun setPositiveAction(newAction: () -> Unit) {
+    fun setDoneAction(newAction: () -> Unit) {
         action = newAction
     }
 }

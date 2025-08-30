@@ -187,7 +187,7 @@ private fun PaymentsComponent(
 
         Image(
             painter = painter,
-            alpha = if (checkBoxEnabled) 1f else 0.4f,
+            alpha = if (checkBoxEnabled) 1f else 0.25f,
             contentDescription = null,
             modifier = Modifier
                 .clickable(

@@ -22,7 +22,12 @@ class EnterPaymentDataScreenViewModel(
 ){
     private val originPayments: List<Payment> = json.decodeFromString(paymentsJsonStringFromPaymentsScreen)
     val originPaymentType: PaymentType = PaymentType.findByName(paymentTypeName)
-    private var savedAccountValue = originPayments.find { it.type == originPaymentType }?.account ?: ""
+
+    private var savedAccountValue = getCorrectAccountValue(
+        value = originPayments.find { it.type == originPaymentType }?.account ?: "",
+        paymentType = originPaymentType
+    )
+
     private var savedPaymentsJsonString: String? = null
     override val tag: String = TAG
 
@@ -46,20 +51,21 @@ class EnterPaymentDataScreenViewModel(
                 launchSafe(getErrorLogMessage = { "EnterPaymentDataScreen >> Save button: ${it.message}" }) {
                     val newPayment = Payment(
                         type = originPaymentType,
-                        account = uiState.value.accountValue,
+                        account = setCorrectAccountValue(uiState.value.accountValue.trim(), originPaymentType),
                         isPreferred = false
                     )
 
                     val sameTypePaymentInOrigins = originPayments.find { it.type == newPayment.type }
                     val updatedPayments = sameTypePaymentInOrigins?.let {
                         originPayments.map {
-                            if (it.type == newPayment.type) newPayment else it
+                            if (it.type == newPayment.type) newPayment.copy(isPreferred = it.isPreferred) else it
                         }
                     } ?: (originPayments + newPayment)
                     savedPaymentsJsonString = json.encodeToString(updatedPayments)
                     // here we must do updatePaymentsUseCase.execute(updatedPayments) >> on success actions below:
 
-                    savedAccountValue = uiState.value.accountValue
+                    savedAccountValue = uiState.value.accountValue.trim()
+                    _uiState.update { checkStateForButtonEnabled(savedAccountValue) }
                     sendUiEffect(
                         ShowInfoDialog(
                             onDoneButtonClick = {
@@ -77,6 +83,18 @@ class EnterPaymentDataScreenViewModel(
             accountValue = newAccount,
             buttonEnabled = newAccount.isNotBlank() && newAccount != savedAccountValue
         )
+    }
+
+    private fun getCorrectAccountValue(value: String, paymentType: PaymentType): String {
+        return when {
+            value.isEmpty() -> value
+            paymentType == PaymentType.REVOLUT -> value.drop(1)
+            else -> value
+        }
+    }
+
+    private fun setCorrectAccountValue(value: String, paymentType: PaymentType): String {
+        return if (paymentType == PaymentType.REVOLUT) "@$value" else value
     }
 
     companion object {

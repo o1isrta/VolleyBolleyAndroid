@@ -129,7 +129,7 @@ private fun EnterPaymentDataScreen(
             is NavigateFromEnterPaymentDataScreen -> navigateAction(effect.updatedPaymentsJsonString)
             is ShowInfoDialog -> {
                 val definedDialog = EnterPaymentDialogType.SUCCESS.apply {
-                    setPositiveAction(effect.onDoneButtonClick)
+                    setDoneAction(effect.onDoneButtonClick)
                 }
                 dialogType = definedDialog
             }
@@ -141,7 +141,7 @@ private fun EnterPaymentDataScreen(
         EnterPaymentDataDialog(
             text = type.dialogText,
             onDismiss = { dialogType = null },
-            onDone = { type.action }
+            onDone = type.action
         )
     }
 }
@@ -230,7 +230,10 @@ private fun EnterPaymentDataDialog(
 
                 VolleyButton.ActiveButton(
                     text = stringResource(R.string.done),
-                    onClick = onDone,
+                    onClick = {
+                        onDismiss()
+                        onDone()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

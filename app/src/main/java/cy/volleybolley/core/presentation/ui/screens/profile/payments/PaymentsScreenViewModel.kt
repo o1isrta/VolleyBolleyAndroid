@@ -33,11 +33,11 @@ class PaymentsScreenViewModel(
             account = "",
             isPreferred = true
         ),
-        Payment(
-            type = PaymentType.REVOLUT,
-            account = "@AnonymousNemislimus",
-            isPreferred = false
-        )
+//        Payment(
+//            type = PaymentType.REVOLUT,
+//            account = "@AnonymousNemislimus",
+//            isPreferred = false
+//        )
     )
 
     init {
@@ -77,6 +77,7 @@ class PaymentsScreenViewModel(
         backPaymentsHolder.getPaymentsJsonString()?.let { jsonString ->
             _uiState.update { it.copy(payments = json.decodeFromString<List<Payment>>(jsonString)) }
         }
+        backPaymentsHolder.clearBackPayments()
     }
 
     private fun changePreferred(oldPayments: List<Payment>, chosenType: PaymentType): List<Payment> {
