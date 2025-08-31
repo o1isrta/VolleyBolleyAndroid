@@ -37,7 +37,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEffect.NavigateFromPersonalDataScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.AvatarChanged
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.CitySelect
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.CountrySelect
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.DateSelect
@@ -53,14 +52,13 @@ fun PersonalDataScreen(
     navController: NavHostController,
     viewModel: PersonalDataScreenViewModel,
 ) {
+    viewModel.handleBackAvatar()
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
-    val avatarFromChangePhotoScreen = viewModel.hasChangedAvatar()
 
     PersonalDataScreen(
         state = state,
         effect = effect,
-        changedAvatar = avatarFromChangePhotoScreen,
         navigateAction = { route ->
             route?.let {
                 navController.navigate(it)
@@ -74,7 +72,6 @@ fun PersonalDataScreen(
 private fun PersonalDataScreen(
     state: PersonalDataScreenState,
     effect: PersonalDataScreenEffect?,
-    changedAvatar: String?,
     navigateAction: (NavMap?) -> Unit,
     eventCallback: (PersonalDataScreenEvent) -> Unit,
 ) {
@@ -188,14 +185,6 @@ private fun PersonalDataScreen(
             null -> {}
         }
     }
-
-    LaunchedEffect(changedAvatar) {
-        when(changedAvatar) {
-            null -> {}
-            else -> eventCallback(AvatarChanged(changedAvatar))
-        }
-    }
-
 }
 
 @Composable
@@ -288,7 +277,6 @@ private fun PreviewPersonalDataScreen() {
             PersonalDataScreen(
                 state = PersonalDataScreenState(),
                 effect = null,
-                changedAvatar = null,
                 navigateAction = {}
             ) { }
         }

@@ -4,7 +4,6 @@ import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.ChangePhotoRoute
-import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.AvatarChanged
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.CitySelect
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.CountrySelect
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenEvent.DateSelect
@@ -29,8 +28,8 @@ class PersonalDataScreenViewModel(
     initialState = PersonalDataScreenState()
 ){
     private lateinit var originState: PersonalDataScreenState
-    // Mock PersonalData
-    val personalData = PersonalData(
+
+    val mockPersonalData = PersonalData(
         firstName = "Anonymous",
         lastName = "Nemislimus",
         gender = "MALE",
@@ -44,12 +43,10 @@ class PersonalDataScreenViewModel(
     init {
         // getState()
         launchSafe(getErrorLogMessage = { "PersonalDataScreen >> init: ${it.message}" }) {
-            originState = personalData.toState()
+            originState = mockPersonalData.toState()
             _uiState.update { originState }
         }
     }
-
-    fun hasChangedAvatar(): String? = backAvatarHolder.getAvatarChanges()
 
     override val tag: String = TAG
 
@@ -98,14 +95,15 @@ class PersonalDataScreenViewModel(
             is CountrySelect -> {}
 
             is CitySelect -> {}
-
-            is AvatarChanged -> {
-                val avatarValue = if (event.avatarUrl.isEmpty()) null else event.avatarUrl
-                originState = originState.copy(avatar = avatarValue)
-                _uiState.update { it.copy(avatar = avatarValue) }
-            }
         }
+    }
 
+    fun handleBackAvatar() {
+        backAvatarHolder.getAvatarChanges()?.let { avatarValue ->
+            val newAvatar = if (avatarValue.isEmpty()) null else avatarValue
+            originState = originState.copy(avatar = newAvatar)
+            _uiState.update { it.copy(avatar = newAvatar) }
+        }
     }
 
     // Неполный метод, потом дописать как будет реализовано API
