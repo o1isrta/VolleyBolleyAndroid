@@ -50,7 +50,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.faq.FaqScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.EnterPaymentDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.model.BackPaymentsHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenViewModel
