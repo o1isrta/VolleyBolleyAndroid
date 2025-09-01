@@ -13,6 +13,19 @@ class PlayersScreenViewModel(
     override val tag = TAG
 
     override fun obtainEvent(event: PlayersScreenEvent) {
+        when(event) {
+            PlayersScreenEvent.ClickOnBackFromPlayers -> {}
+
+            is PlayersScreenEvent.SearchTextChanged -> {}
+
+            is PlayersScreenEvent.ClickOnSearchButton -> {}
+
+            PlayersScreenEvent.ClickOnAllPlayers -> {}
+
+            PlayersScreenEvent.ClickOnFavoritePlayers -> {}
+
+            is PlayersScreenEvent.ClickOnListItem -> {}
+        }
 
     }
 

@@ -49,6 +49,7 @@ object VolleyTextFieldGradient {
         modifier: Modifier = Modifier,
         text: String = "",
         hint: String = stringResource(R.string.search_field_hint),
+        actionToTransferContent: (String) -> Unit,
         actionOnInputComplete: (String) -> Unit,
     ) {
         TextFieldBaseGradient(
@@ -59,7 +60,7 @@ object VolleyTextFieldGradient {
             fieldTextStyle = GradientFieldLight,
             keyboardActionButtonType = ImeAction.Search,
             actionOnInputCompleteButton = actionOnInputComplete,
-            actionToTransferContent = {},
+            actionToTransferContent = actionToTransferContent,
             composablePrefix = {
                 Icon(
                     painter = painterResource(R.drawable.ic_search),
@@ -290,7 +291,8 @@ private fun PreviewGradientTextFields() {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 
             VolleyTextFieldGradient.SearchField(
-                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp),
+                actionToTransferContent = {}
             ) { }
 
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
