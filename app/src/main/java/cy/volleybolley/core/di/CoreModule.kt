@@ -4,11 +4,13 @@ import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.presentation.ui.screens.profile.about.AboutScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.changephoto.ChangePhotoScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.EnterPaymentDataScreenViewModel
-import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.model.BackPaymentsHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.payments.model.BackPaymentsHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.faq.FaqScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -82,6 +84,12 @@ val coreModule = module {
             json = get(),
             paymentTypeName = paymentTypeName,
             paymentsJsonStringFromPaymentsScreen = paymentsJsonString
+        )
+    }
+    viewModel { (backPlayerHolder: BackPlayerHolder) ->
+        PlayersScreenViewModel(
+            backPlayerHolder = backPlayerHolder,
+            json = get(),
         )
     }
 

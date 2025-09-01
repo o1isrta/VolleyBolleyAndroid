@@ -52,10 +52,12 @@ import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.Persona
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.EnterPaymentDataScreenViewModel
-import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.model.BackPaymentsHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.payments.model.BackPaymentsHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -154,7 +156,12 @@ fun NavHostContainer(
 
         composable<PlayerProfileRoute> { PlayerProfileScreen(navController) }
 
-        composable<PlayersRoute> { PlayersScreen(navController) }
+        composable<PlayersRoute> { backStackEntry ->
+            val viewModel = koinViewModel<PlayersScreenViewModel> {
+                parametersOf(BackPlayerHolder(backStackEntry.savedStateHandle))
+            }
+            PlayersScreen(navController, viewModel)
+        }
 
         composable<ProfileRoute> { ProfileScreen(navController) }
 

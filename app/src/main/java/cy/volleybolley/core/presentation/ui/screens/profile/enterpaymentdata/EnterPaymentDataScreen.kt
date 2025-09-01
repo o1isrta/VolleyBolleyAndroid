@@ -44,7 +44,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.Ent
 import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.EnterPaymentDataScreenEvent.AccountTextChanged
 import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.EnterPaymentDataScreenEvent.ClickOnBackFromEnterPaymentData
 import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.EnterPaymentDataScreenEvent.OnSaveButtonClick
-import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.model.BackPaymentsHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.payments.model.BackPaymentsHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.model.EnterPaymentDialogType
 import cy.volleybolley.profile.domain.model.PaymentType
 

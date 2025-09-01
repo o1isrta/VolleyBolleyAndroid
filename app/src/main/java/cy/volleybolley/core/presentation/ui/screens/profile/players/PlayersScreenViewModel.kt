@@ -1,8 +1,13 @@
 package cy.volleybolley.core.presentation.ui.screens.profile.players
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerHolder
+import kotlinx.serialization.json.Json
 
-class PlayersScreenViewModel : BaseViewModel<PlayersScreenState, PlayersScreenEvent, PlayersScreenEffect> (
+class PlayersScreenViewModel(
+    private val backPlayerHolder: BackPlayerHolder,
+    private val json: Json,
+) : BaseViewModel<PlayersScreenState, PlayersScreenEvent, PlayersScreenEffect> (
     initialState = PlayersScreenState()
 ) {
     override val tag = TAG

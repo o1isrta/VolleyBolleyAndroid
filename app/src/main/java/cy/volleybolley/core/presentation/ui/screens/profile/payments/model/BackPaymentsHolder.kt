@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.model
+package cy.volleybolley.core.presentation.ui.screens.profile.payments.model
 
 import androidx.lifecycle.SavedStateHandle
 

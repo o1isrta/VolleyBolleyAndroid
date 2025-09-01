@@ -2,7 +2,7 @@ package cy.volleybolley.core.presentation.ui.screens.profile.payments
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.navigation.EnterPaymentDataRoute
-import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.model.BackPaymentsHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.payments.model.BackPaymentsHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEffect.NavigateFromPaymentsScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEvent.ClickOnBackFromPayments
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEvent.ClickOnPaymentsItem
