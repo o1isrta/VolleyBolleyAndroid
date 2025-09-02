@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -24,16 +26,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.google.firebase.annotations.concurrent.Background
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
+import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -42,6 +45,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScree
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.ClickOnBackFromPlayers
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.ClickOnSearchButton
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.SearchTextChanged
+import cy.volleybolley.core.presentation.ui.screens.profile.players.model.PlayerTemp
 
 @Composable
 fun PlayersScreen(
@@ -103,6 +107,25 @@ private fun PlayersScreen(
                 onAllClick = {},
                 onFavoriteClick = {},
             )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+            if (state.players.isEmpty()) {
+                VolleyText.BodyRegular(
+                    text = stringResource(R.string.no_players_found),
+                    color = VolleyColor.White,
+                    maxLines = 1,
+                )
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    state.players.forEachIndexed { index, player ->
+                        PlayersListItem(player) { /*указать обработку нажатия - уходим на экран деталей*/}
+                        if (index < state.players.size - 1) Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                    }
+                }
+            }
         }
     }
 
@@ -111,6 +134,87 @@ private fun PlayersScreen(
             is NavigateFromPlayersScreen -> navigateAction(effect.route)
             null -> {}
         }
+    }
+}
+
+@Composable
+private fun PlayersListItem(
+    player: PlayerTemp,
+    onItemClick: () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = onItemClick
+            )
+    ) {
+        AvatarSmall(player.avatarUrl)
+        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+        VolleyText.BodyRegular(
+            text = "${player.firstName} ${player.lastName}",
+            color = VolleyColor.White,
+            maxLines = 1,
+            modifier = Modifier
+                .weight(1f)
+        )
+        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+        FavoriteMark(isFavorite = player.isFavorite)
+        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+        LevelContainer(levelValue = player.level)
+    }
+}
+
+@Composable
+private fun AvatarSmall(
+    avatarUrl: String? = null
+) {
+    VolleyAvatar.CircularAvatar(
+        avatar = avatarUrl,
+        size = VolleyDimens.DIMEN_40.dp
+    )
+}
+
+@Composable
+private fun FavoriteMark(
+    isFavorite: Boolean,
+) {
+    val painter = painterResource(
+        if (isFavorite) R.drawable.ic_favorite_star_fill else R.drawable.ic_favorite_star_empty
+    )
+    Icon(
+        contentDescription = null,
+        painter = painter,
+        tint = VolleyColor.OrangeHard
+    )
+}
+
+@Composable
+private fun LevelContainer(
+    paddingValues: PaddingValues = PaddingValues(),
+    levelValue: String,
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .padding(paddingValues)
+            .size(
+                width = VolleyDimens.DIMEN_30.dp,
+                height = VolleyDimens.DIMEN_23.dp
+            )
+            .background(
+                color = VolleyColor.GreyDark,
+                shape = RoundedCornerShape(VolleyDimens.DIMEN_10.dp)
+            )
+    ) {
+        VolleyText.BodyRegular(
+            text = levelValue.take(1),
+            color = VolleyColor.White,
+            maxLines = 1,
+        )
     }
 }
 
@@ -201,8 +305,14 @@ private fun PreviewPlayersScreen() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
+            val mockPlayers: List<PlayerTemp> = listOf(
+                PlayerTemp(id = 1, firstName = "Иван", lastName = "Иванов", avatarUrl = null, isFavorite = true, level = "LIGHT"),
+                PlayerTemp(id = 2, firstName = "Анна", lastName = "Петрова", avatarUrl = null, isFavorite = false, level = "MEDIUM"),
+                PlayerTemp(id = 3, firstName = "Сергей", lastName = "Смирнов", avatarUrl = null, isFavorite = true, level = "HARD"),
+                PlayerTemp(id = 4, firstName = "Елена", lastName = "Васильева", avatarUrl = null, isFavorite = false, level = "PRO"),
+            )
             PlayersScreen(
-                state = PlayersScreenState(),
+                state = PlayersScreenState(players = mockPlayers),
                 effect = null,
                 navigateAction = {},
                 eventCallback = {}
