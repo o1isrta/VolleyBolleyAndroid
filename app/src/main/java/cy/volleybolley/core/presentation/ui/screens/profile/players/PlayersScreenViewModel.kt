@@ -20,7 +20,8 @@ class PlayersScreenViewModel(
 ) : BaseViewModel<PlayersScreenState, PlayersScreenEvent, PlayersScreenEffect> (
     initialState = PlayersScreenState()
 ) {
-    private val originPlayers: List<PlayerTemp>
+    private val originAllPlayers: MutableList<PlayerTemp> = mutableListOf()
+    private val originFavoritePlayers: MutableList<PlayerTemp> = mutableListOf()
     val mockPlayers: List<PlayerTemp> = listOf(
         PlayerTemp(id = 1, firstName = "Иван", lastName = "Иванов", avatarUrl = null, isFavorite = true, level = "LIGHT"),
         PlayerTemp(id = 2, firstName = "Анна", lastName = "Петрова", avatarUrl = null, isFavorite = false, level = "MEDIUM"),
@@ -36,8 +37,9 @@ class PlayersScreenViewModel(
 
     init {
         // getPlayers()
-        originPlayers = mockPlayers
-        _uiState.update { it.copy(players = originPlayers) }
+        originAllPlayers.addAll(mockPlayers)
+        originFavoritePlayers.addAll(getFavoritePlayers(originAllPlayers))
+        _uiState.update { it.copy(players = originAllPlayers) }
     }
 
     override val tag = TAG
@@ -52,11 +54,20 @@ class PlayersScreenViewModel(
 
             is ClickOnSearchButton -> {
                 _uiState.update {
-                    it.copy(
-                        players = it.players.filter { player ->
-                            filterPlayerByText(player, event.text)
-                        }
-                    )
+                    if (it.showAllPlayers) {
+                        it.copy(
+                            players = originAllPlayers.filter { player ->
+                                isPlayerExistByText(player, event.text)
+                            }
+                        )
+                    } else {
+                        it.copy(
+                            players = originFavoritePlayers.filter { player ->
+                                isPlayerExistByText(player, event.text)
+                            }
+                        )
+                    }
+
                 }
             }
 
@@ -65,7 +76,7 @@ class PlayersScreenViewModel(
                     _uiState.update {
                         it.copy(
                             showAllPlayers = true,
-                            players = originPlayers
+                            players = originAllPlayers
                         )
                     }
                 }
@@ -76,7 +87,7 @@ class PlayersScreenViewModel(
                     _uiState.update {
                         it.copy(
                             showAllPlayers = false,
-                            players = originPlayers.filter { it.isFavorite }
+                            players = originFavoritePlayers
                         )
                     }
                 }
@@ -84,15 +95,18 @@ class PlayersScreenViewModel(
 
             is ClickOnListItem -> sendUiEffect(NavigateFromPlayersScreen(PlayerProfileRoute(event.playerId)))
         }
-
     }
 
-    private fun filterPlayerByText(player: PlayerTemp, text: String): Boolean {
-        val fullName = "${player.firstName} ${player.lastName}"
-        val textChunks = text.split(" ")
+    private fun getFavoritePlayers(allPlayers: List<PlayerTemp>): List<PlayerTemp> =
+        originAllPlayers.filter { it.isFavorite }
+
+    private fun isPlayerExistByText(player: PlayerTemp, text: String): Boolean {
+        val correctText = text.lowercase()
+        val fullName = "${player.firstName} ${player.lastName}".lowercase()
+        val textChunks = correctText.split(" ", ignoreCase = true)
         return when {
-            fullName.contains(text) -> true
-            checkNameByChunks(player.firstName, player.lastName, textChunks) -> true
+            fullName.contains(correctText) -> true
+            checkNameByChunks(player.firstName.lowercase(), player.lastName.lowercase(), textChunks) -> true
             else -> false
         }
     }

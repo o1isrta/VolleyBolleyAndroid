@@ -107,6 +107,7 @@ private fun PlayersScreen(
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
             PlayersListModeSwitch(
+                showAllPlayers = state.showAllPlayers,
                 onAllClick = { eventCallback(ClickOnAllPlayers) },
                 onFavoriteClick = { eventCallback(ClickOnFavoritePlayers) },
             )
@@ -226,7 +227,7 @@ private fun PlayersListModeSwitch(
     paddingValues: PaddingValues = PaddingValues(),
     height: Int = VolleyDimens.DIMEN_32,
     cornerRadius: Int = VolleyDimens.DIMEN_16,
-    showAllPlayers: Boolean = true,
+    showAllPlayers: Boolean,
     onAllClick: () -> Unit,
     onFavoriteClick: () -> Unit,
 ) {
