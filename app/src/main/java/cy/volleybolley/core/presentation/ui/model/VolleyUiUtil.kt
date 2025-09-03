@@ -8,6 +8,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.model.
 import cy.volleybolley.core.presentation.ui.screens.profile.players.model.PlayerTemp
 import cy.volleybolley.courts.domain.model.Location
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -24,9 +25,12 @@ object VolleyUiUtil {
     const val DATE_FIELD_HINT = "__ /__ /____"
     const val DATE_OF_BIRTH_FIELD_PATTERN = "dd/MM/yyyy"
     const val DATE_OF_BIRTH_PATTERN_FOR_SERVER = "yyyy-MM-dd"
+    const val TIME_PATTERN_FOR_PARSE = "yyyy-MM-dd'T'HH:mm:ss"
+    const val MILLIS_IN_HOUR = 3_600_000L
 
     const val FAQ_BULLET_OUT_PREFIX = " • "
     const val NEXT_LINE = "\n"
+
     // temp mock value
     const val MOCK_FAQ = "# Registration\n" +
         "To find the right games and teammates, choose your current skill level:\n" +
@@ -58,10 +62,38 @@ object VolleyUiUtil {
         "Play fair — your level will speak for itself."
 
     val mockPlayers: List<PlayerTemp> = listOf(
-        PlayerTemp(id = 1, firstName = "Иван", lastName = "Иванов", avatarUrl = null, isFavorite = true, level = "LIGHT"),
-        PlayerTemp(id = 2, firstName = "Анна", lastName = "Петрова", avatarUrl = null, isFavorite = false, level = "MEDIUM"),
-        PlayerTemp(id = 3, firstName = "Сергей", lastName = "Смирнов", avatarUrl = null, isFavorite = true, level = "HARD"),
-        PlayerTemp(id = 4, firstName = "Елена", lastName = "Васильева", avatarUrl = null, isFavorite = false, level = "PRO"),
+        PlayerTemp(
+            id = 1,
+            firstName = "Иван",
+            lastName = "Иванов",
+            avatarUrl = null,
+            isFavorite = true,
+            level = "LIGHT"
+        ),
+        PlayerTemp(
+            id = 2,
+            firstName = "Анна",
+            lastName = "Петрова",
+            avatarUrl = null,
+            isFavorite = false,
+            level = "MEDIUM"
+        ),
+        PlayerTemp(
+            id = 3,
+            firstName = "Сергей",
+            lastName = "Смирнов",
+            avatarUrl = null,
+            isFavorite = true,
+            level = "HARD"
+        ),
+        PlayerTemp(
+            id = 4,
+            firstName = "Елена",
+            lastName = "Васильева",
+            avatarUrl = null,
+            isFavorite = false,
+            level = "PRO"
+        ),
     )
 
     val mockPlayerDetails: List<PlayerDetailTemp> = listOf(
@@ -73,8 +105,24 @@ object VolleyUiUtil {
             isFavorite = true,
             level = "LIGHT",
             latestActivity = listOf(
-                PlayerActivityTemp(eventTimestamp = "2025-08-28T14:23:45Z", courtLocation = Location(longitude = 37.6184, latitude = 55.7512, courtName = "Футбольное поле №1", locationName = "Москва")),
-                PlayerActivityTemp(eventTimestamp = "2025-08-11T14:23:45Z", courtLocation = Location(longitude = 37.5884, latitude = 55.7284, courtName = "Корты Олимпия", locationName = "Санкт-Петербург"))
+                PlayerActivityTemp(
+                    eventTimestamp = "2025-08-28T14:23:45Z",
+                    courtLocation = Location(
+                        longitude = 37.6184,
+                        latitude = 55.7512,
+                        courtName = "Футбольное поле №1",
+                        locationName = "Москва"
+                    )
+                ),
+                PlayerActivityTemp(
+                    eventTimestamp = "2025-08-11T14:23:45Z",
+                    courtLocation = Location(
+                        longitude = 37.5884,
+                        latitude = 55.7284,
+                        courtName = "Корты Олимпия",
+                        locationName = "Санкт-Петербург"
+                    )
+                )
             )
         ),
         PlayerDetailTemp(
@@ -85,7 +133,15 @@ object VolleyUiUtil {
             isFavorite = false,
             level = "MEDIUM",
             latestActivity = listOf(
-                PlayerActivityTemp(eventTimestamp = "2025-07-13T14:23:45Z", courtLocation = Location(longitude = 37.6173, latitude = 55.7558, courtName = "Спортивный комплекс", locationName = "Красногорск")),
+                PlayerActivityTemp(
+                    eventTimestamp = "2025-07-13T14:23:45Z",
+                    courtLocation = Location(
+                        longitude = 37.6173,
+                        latitude = 55.7558,
+                        courtName = "Спортивный комплекс",
+                        locationName = "Красногорск"
+                    )
+                ),
             )
         ),
         PlayerDetailTemp(
@@ -96,8 +152,24 @@ object VolleyUiUtil {
             isFavorite = true,
             level = "HARD",
             latestActivity = listOf(
-                PlayerActivityTemp(eventTimestamp = "2025-08-16T14:23:45Z", courtLocation = Location(longitude = 37.6156, latitude = 55.7536, courtName = "Зал №2", locationName = "Химки")),
-                PlayerActivityTemp(eventTimestamp = "2025-08-14T14:23:45Z", courtLocation = Location(longitude = 37.6194, latitude = 55.7523, courtName = "Арена Восток", locationName = "Казань"))
+                PlayerActivityTemp(
+                    eventTimestamp = "2025-08-16T14:23:45Z",
+                    courtLocation = Location(
+                        longitude = 37.6156,
+                        latitude = 55.7536,
+                        courtName = "Зал №2",
+                        locationName = "Химки"
+                    )
+                ),
+                PlayerActivityTemp(
+                    eventTimestamp = "2025-08-14T14:23:45Z",
+                    courtLocation = Location(
+                        longitude = 37.6194,
+                        latitude = 55.7523,
+                        courtName = "Арена Восток",
+                        locationName = "Казань"
+                    )
+                )
             )
         ),
         PlayerDetailTemp(
@@ -108,7 +180,15 @@ object VolleyUiUtil {
             isFavorite = false,
             level = "PRO",
             latestActivity = listOf(
-                PlayerActivityTemp(eventTimestamp = "2025-08-16T14:23:45Z", courtLocation = Location(longitude = 37.6176, latitude = 55.7538, courtName = "Турнир Кубка", locationName = "Новосибирск")),
+                PlayerActivityTemp(
+                    eventTimestamp = "2025-08-16T14:23:45Z",
+                    courtLocation = Location(
+                        longitude = 37.6176,
+                        latitude = 55.7538,
+                        courtName = "Турнир Кубка",
+                        locationName = "Новосибирск"
+                    )
+                ),
             )
         )
     )
@@ -138,6 +218,17 @@ object VolleyUiUtil {
         val formatter = SimpleDateFormat(stringPattern, Locale.getDefault())
         val date = formatter.parse(dateText)
         return date?.time ?: 0L
+    }
+
+    @JvmStatic
+    fun parseTimeStringToActivityDateString(utcString: String, hoursOffset: Int): String {
+        val formatter = SimpleDateFormat(TIME_PATTERN_FOR_PARSE, Locale.getDefault())
+        val localDate = formatter.parse(utcString)
+        return localDate?.let {
+            it.time += hoursOffset * MILLIS_IN_HOUR
+            val calendar = Calendar.getInstance().apply { time = localDate }
+            "${calendar.get(Calendar.DAY_OF_MONTH)} ${VolleyMonths.getNameByIndex(calendar.get(Calendar.MONTH))}"
+        } ?: ""
     }
 
     @JvmStatic
