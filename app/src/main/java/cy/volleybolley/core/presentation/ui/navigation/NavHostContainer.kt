@@ -154,7 +154,10 @@ fun NavHostContainer(
             PersonalDataScreen(navController, viewModel)
         }
 
-        composable<PlayerProfileRoute> { PlayerProfileScreen(navController) }
+        composable<PlayerProfileRoute> { backStackEntry ->
+            val playerId = backStackEntry.toRoute<PlayerProfileRoute>().playerId
+            PlayerProfileScreen(navController)
+        }
 
         composable<PlayersRoute> { backStackEntry ->
             val viewModel = koinViewModel<PlayersScreenViewModel> {

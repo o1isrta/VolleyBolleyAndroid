@@ -42,7 +42,10 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEffect.NavigateFromPlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.ClickOnAllPlayers
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.ClickOnBackFromPlayers
+import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.ClickOnFavoritePlayers
+import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.ClickOnListItem
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.ClickOnSearchButton
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.SearchTextChanged
 import cy.volleybolley.core.presentation.ui.screens.profile.players.model.PlayerTemp
@@ -98,14 +101,14 @@ private fun PlayersScreen(
             VolleyTextFieldGradient.SearchField(
                 text = state.searchText,
                 actionToTransferContent = { fieldText -> eventCallback(SearchTextChanged(fieldText)) },
-                actionOnInputComplete = { playerName -> eventCallback(ClickOnSearchButton(playerName)) }
+                actionOnInputComplete = { playerName -> eventCallback(ClickOnSearchButton(playerName.trim())) }
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
             PlayersListModeSwitch(
-                onAllClick = {},
-                onFavoriteClick = {},
+                onAllClick = { eventCallback(ClickOnAllPlayers) },
+                onFavoriteClick = { eventCallback(ClickOnFavoritePlayers) },
             )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -121,7 +124,7 @@ private fun PlayersScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     state.players.forEachIndexed { index, player ->
-                        PlayersListItem(player) { /*указать обработку нажатия - уходим на экран деталей*/}
+                        PlayersListItem(player) { playerId -> eventCallback(ClickOnListItem(playerId)) }
                         if (index < state.players.size - 1) Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
                     }
                 }
@@ -140,7 +143,7 @@ private fun PlayersScreen(
 @Composable
 private fun PlayersListItem(
     player: PlayerTemp,
-    onItemClick: () -> Unit,
+    onItemClick: (String) -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -149,7 +152,7 @@ private fun PlayersListItem(
             .clickable(
                 interactionSource = null,
                 indication = null,
-                onClick = onItemClick
+                onClick = { onItemClick(player.id.toString()) }
             )
     ) {
         AvatarSmall(player.avatarUrl)
