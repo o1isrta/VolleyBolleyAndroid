@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.profile.players.model
+package cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.model
 
 import cy.volleybolley.courts.domain.model.Location
 

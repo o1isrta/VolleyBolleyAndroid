@@ -8,5 +8,5 @@ sealed interface PlayersScreenEvent : UiEvent {
     data class ClickOnSearchButton(val text: String) : PlayersScreenEvent
     data object ClickOnAllPlayers : PlayersScreenEvent
     data object ClickOnFavoritePlayers : PlayersScreenEvent
-    data class ClickOnListItem(val playerId: String) : PlayersScreenEvent
+    data class ClickOnListItem(val playerId: Int) : PlayersScreenEvent
 }

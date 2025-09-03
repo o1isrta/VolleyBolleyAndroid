@@ -49,13 +49,14 @@ import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.Ent
 import cy.volleybolley.core.presentation.ui.screens.profile.faq.FaqScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.enterpaymentdata.EnterPaymentDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.model.BackPaymentsHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.PlayerProfileScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreen
@@ -156,7 +157,10 @@ fun NavHostContainer(
 
         composable<PlayerProfileRoute> { backStackEntry ->
             val playerId = backStackEntry.toRoute<PlayerProfileRoute>().playerId
-            PlayerProfileScreen(navController)
+            val viewModel = koinViewModel<PlayerProfileScreenViewModel> {
+                parametersOf(playerId)
+            }
+            PlayerProfileScreen(navController, viewModel)
         }
 
         composable<PlayersRoute> { backStackEntry ->

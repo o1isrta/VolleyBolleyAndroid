@@ -1,6 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.profile.players
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.PlayerProfileRoute
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEffect.NavigateFromPlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.ClickOnAllPlayers
@@ -22,22 +23,10 @@ class PlayersScreenViewModel(
 ) {
     private val originAllPlayers: MutableList<PlayerTemp> = mutableListOf()
     private val originFavoritePlayers: MutableList<PlayerTemp> = mutableListOf()
-    val mockPlayers: List<PlayerTemp> = listOf(
-        PlayerTemp(id = 1, firstName = "Иван", lastName = "Иванов", avatarUrl = null, isFavorite = true, level = "LIGHT"),
-        PlayerTemp(id = 2, firstName = "Анна", lastName = "Петрова", avatarUrl = null, isFavorite = false, level = "MEDIUM"),
-        PlayerTemp(id = 3, firstName = "Сергей", lastName = "Смирнов", avatarUrl = null, isFavorite = true, level = "HARD"),
-        PlayerTemp(id = 4, firstName = "Елена", lastName = "Васильева", avatarUrl = null, isFavorite = false, level = "PRO"),
-        PlayerTemp(id = 5, firstName = "Дмитрий", lastName = "Попов", avatarUrl = null, isFavorite = false, level = "LIGHT"),
-        PlayerTemp(id = 6, firstName = "Ольга", lastName = "Кузнецова", avatarUrl = null, isFavorite = true, level = "MEDIUM"),
-        PlayerTemp(id = 7, firstName = "Петр", lastName = "Новиков", avatarUrl = null, isFavorite = false, level = "HARD"),
-        PlayerTemp(id = 8, firstName = "Марина", lastName = "Иванова", avatarUrl = null, isFavorite = false, level = "PRO"),
-        PlayerTemp(id = 9, firstName = "Максим", lastName = "Семенов", avatarUrl = null, isFavorite = false, level = "LIGHT"),
-        PlayerTemp(id = 10, firstName = "Светлана", lastName = "Дмитриева", avatarUrl = null, isFavorite = false, level = "MEDIUM"),
-    )
 
     init {
         // getPlayers()
-        originAllPlayers.addAll(mockPlayers)
+        originAllPlayers.addAll(VolleyUiUtil.mockPlayers)
         originFavoritePlayers.addAll(getFavoritePlayers(originAllPlayers))
         _uiState.update { it.copy(players = originAllPlayers) }
     }

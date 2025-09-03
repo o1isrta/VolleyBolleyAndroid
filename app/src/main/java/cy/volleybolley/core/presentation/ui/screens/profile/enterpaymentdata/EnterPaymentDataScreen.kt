@@ -55,10 +55,9 @@ fun EnterPaymentDataScreen(
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
-    val screenPaymentType = viewModel.originPaymentType
 
     EnterPaymentDataScreen(
-        screenPaymentType = screenPaymentType,
+        screenPaymentType = viewModel.originPaymentType,
         state = state,
         effect = effect,
         eventCallback = { event -> viewModel.obtainEvent(event) },

@@ -147,7 +147,7 @@ object PersonalDataRoute : NavMap
 
 @Serializable
 data class PlayerProfileRoute(
-    val playerId: String
+    val playerId: Int
 ) : NavMap
 
 @Serializable

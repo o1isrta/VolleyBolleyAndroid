@@ -144,7 +144,7 @@ private fun PlayersScreen(
 @Composable
 private fun PlayersListItem(
     player: PlayerTemp,
-    onItemClick: (String) -> Unit,
+    onItemClick: (Int) -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -153,7 +153,7 @@ private fun PlayersListItem(
             .clickable(
                 interactionSource = null,
                 indication = null,
-                onClick = { onItemClick(player.id.toString()) }
+                onClick = { onItemClick(player.id) }
             )
     ) {
         AvatarSmall(player.avatarUrl)

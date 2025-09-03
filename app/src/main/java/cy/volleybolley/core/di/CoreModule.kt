@@ -9,6 +9,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.faq.FaqScreenViewMod
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.PersonalDataScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.PlayerProfileScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenViewModel
@@ -90,6 +91,11 @@ val coreModule = module {
         PlayersScreenViewModel(
             backPlayerHolder = backPlayerHolder,
             json = get(),
+        )
+    }
+    viewModel { (playerId: Int) ->
+        PlayerProfileScreenViewModel(
+            playerId = playerId,
         )
     }
 
