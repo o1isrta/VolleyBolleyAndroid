@@ -131,7 +131,7 @@ private fun GetPaymentItemByType(
 ) {
     payments.find { it.type == itemType }?.let { payment ->
         PaymentsComponent(
-            checkBoxEnabled = payment.account.isNotEmpty(),
+            checkBoxEnabled = if (itemType == PaymentType.CASH) true else payment.account.isNotEmpty(),
             checkBoxIsChecked = payment.isPreferred,
             title = itemType.getSimpleName(),
             onTitleClick = { onTitleClick(itemType) },
