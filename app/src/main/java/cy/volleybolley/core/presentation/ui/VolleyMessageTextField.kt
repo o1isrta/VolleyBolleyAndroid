@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
+import cy.volleybolley.core.presentation.ui.VolleyMessageTextField.MessageContainer
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -135,12 +137,13 @@ object VolleyMessageTextField {
     }
 
     @Composable
-    private fun MessageContainer(
+    fun MessageContainer(
         modifier: Modifier = Modifier,
         blurRadius: Int = VolleyDimens.DIMEN_24,
         cornerRadius: Int = VolleyDimens.DIMEN_16,
         mainContainerAlignment: Alignment = Alignment.TopStart,
         contentContainerAlignment: Alignment = Alignment.TopStart,
+        minHeight: Dp = VolleyDimens.DIMEN_90.dp,
         content: @Composable BoxScope.() -> Unit
     ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
@@ -149,6 +152,7 @@ object VolleyMessageTextField {
                 mainContainerAlignment = mainContainerAlignment,
                 contentContainerAlignment = contentContainerAlignment,
                 modifier = modifier,
+                minHeight = minHeight,
                 content = content
             )
         } else {
@@ -158,6 +162,7 @@ object VolleyMessageTextField {
                 mainContainerAlignment = mainContainerAlignment,
                 contentContainerAlignment = contentContainerAlignment,
                 modifier = modifier,
+                minHeight = minHeight,
                 content = content
             )
         }
@@ -170,6 +175,7 @@ object VolleyMessageTextField {
         cornerRadius: Int = VolleyDimens.DIMEN_16,
         mainContainerAlignment: Alignment = Alignment.TopStart,
         contentContainerAlignment: Alignment = Alignment.TopStart,
+        minHeight: Dp,
         content: @Composable BoxScope.() -> Unit
     ) {
         val density = LocalDensity.current
@@ -198,6 +204,7 @@ object VolleyMessageTextField {
             MessageContentBox(
                 screenDensity = density,
                 contentContainerAlignment = contentContainerAlignment,
+                minHeight = minHeight,
                 content = content,
                 setBackgroundHeightCallback = { height -> backgroundHeight = height }
             )
@@ -210,6 +217,7 @@ object VolleyMessageTextField {
         cornerRadius: Int = VolleyDimens.DIMEN_16,
         mainContainerAlignment: Alignment = Alignment.TopStart,
         contentContainerAlignment: Alignment = Alignment.TopStart,
+        minHeight: Dp,
         content: @Composable BoxScope.() -> Unit
     ) {
         val density = LocalDensity.current
@@ -255,6 +263,7 @@ object VolleyMessageTextField {
             MessageContentBox(
                 screenDensity = density,
                 contentContainerAlignment = contentContainerAlignment,
+                minHeight = minHeight,
                 content = content,
                 setBackgroundHeightCallback = { height -> backgroundHeight = height }
             )
@@ -268,6 +277,7 @@ object VolleyMessageTextField {
         screenDensity: Density,
         contentContainerAlignment: Alignment = Alignment.TopStart,
         setBackgroundHeightCallback: (Dp) -> Unit,
+        minHeight: Dp,
         content: @Composable BoxScope.() -> Unit
     ) {
         Box(
@@ -276,12 +286,35 @@ object VolleyMessageTextField {
                     val pxHeight = size.height
                     val dpHeight = with(screenDensity) { pxHeight.toDp() }
                     setBackgroundHeightCallback(
-                        if (dpHeight.value < VolleyDimens.DIMEN_90.toFloat()) VolleyDimens.DIMEN_90.dp else dpHeight
+                        if (dpHeight < minHeight) minHeight else dpHeight
                     )
                 },
             contentAlignment = contentContainerAlignment,
             content = content
         )
+    }
+
+    @Composable
+    fun MessageBubble(
+        text: String,
+        modifier: Modifier = Modifier,
+        maxLength: Int = Int.MAX_VALUE
+    ) {
+        val limited = remember(text) { VolleyUiUtil.getLimitedText(maxLength, text) }
+
+        MessageContainer(
+            modifier = modifier,
+            minHeight = VolleyDimens.DIMEN_52.dp
+        ) {
+            VolleyText.BodyRegular(
+                text = limited,
+                color = VolleyColor.White,
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_16.dp)
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Start
+            )
+        }
     }
 }
 
@@ -311,6 +344,20 @@ private fun PreviewMessageField() {
                 modifier = Modifier
                     .padding(VolleyDimens.DIMEN_20.dp, 0.dp)
             ) { }
+
+            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_24.dp))
+
+            MessageContainer(
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_20.dp, 0.dp)
+                    .fillMaxWidth()
+            ) {
+                VolleyText.BodySmall(
+                    text = "This is a simple bubble preview using MessageContainer",
+                    color = VolleyColor.White,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
     }
 }

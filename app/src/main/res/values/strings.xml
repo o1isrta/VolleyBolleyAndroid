@@ -19,6 +19,8 @@
     <string name="donate">Donate</string>
     <string name="home">Home</string>
     <string name="my_games">My games</string>
+    <string name="my_game">My game</string>
+    <string name="my_tourney">My tourney</string>
     <string name="profile">Profile</string>
     <string name="map">Map</string>
     <string name="list">List</string>
@@ -190,7 +192,8 @@
     <string name="team_number">Team %1$d</string>
     <string name="free_spot">Free spot</string>
     <string name="choose_team_big">CHOOSE TEAM</string>
-    <string name="joined_players">Joined players %1$d/%2$d</string>
+    <string name="joined_players">Joined players</string>
+    <string name="joined_players_">Joined players %1$d/%2$d</string>
     <string name="you_are_in_the_game">You are in the game</string>
     <string name="game_host">Game host</string>
     <string name="choose_this_game">CHOOSE THIS GAME</string>
@@ -221,4 +224,20 @@
     <string name="top_bar_level_content_description">User level</string>
     <string name="registration_date_of_birth_string_pattern">MM/dd/yyyy</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
+    <string name="players_title">Players</string>
+    <string name="type_your_message_hint">Type your message...</string>
+    <string name="when_label">When:</string>
+    <string name="level_label">Level:</string>
+    <string name="gender_label">Gender:</string>
+    <string name="payment_type_and_account">%1$s · %2$s</string>
+    <string name="per_person_amount">Per person: %1$s %2$s</string>
+    <string name="remove_player_cd">Remove player</string>
+    <string name="open_with">Open with</string>
+
+    <!-- Демоданные для превью (удалить позже) -->
+    <string name="player_demo_1">Anton Ivanov</string>
+    <string name="player_demo_2">Aleksandr Abramov</string>
+    <string name="player_demo_3">Anya Levan</string>
+    <string name="player_demo_4">Alina Lyubimova</string>
+    <string name="player_demo_5">Tatiana Kalinina</string>
 </resources>

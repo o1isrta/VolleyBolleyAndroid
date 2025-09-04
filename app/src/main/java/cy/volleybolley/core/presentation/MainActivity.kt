@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +24,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRU
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
 import cy.volleybolley.ui.theme.VolleybolleyTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,14 +37,48 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
-                ButtonDemo()
             }
         }
     }
 }
 
 @Composable
-@Stable
+fun RootContainer(
+    content: @Composable (PaddingValues) -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(VolleyColor.TurquoiseDark),
+    ) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            containerColor = VolleyColor.TurquoiseDark,
+            content = content
+        )
+    }
+}
+
+//Preview
+@Preview(showBackground = true, name = "App NavHost")
+@Composable
+private fun AppPreview() {
+    VolleybolleyTheme {
+        RootContainer { padding ->
+            NavHostContainer(modifier = Modifier.padding(padding))
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Buttons Demo")
+@Composable
+private fun ButtonDemoPreview() {
+    VolleybolleyTheme {
+        ButtonDemo()
+    }
+}
+
+@Composable
 private fun ButtonDemo() {
     Column(
         modifier = Modifier
@@ -113,32 +147,5 @@ private fun ButtonDemo() {
                 .fillMaxWidth(),
             onSelected = {}
         )
-    }
-}
-
-@Composable
-fun RootContainer(
-    content: @Composable (PaddingValues) -> Unit
-) {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(VolleyColor.TurquoiseDark),
-    ) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = VolleyColor.TurquoiseDark,
-            content = content
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Preview() {
-    VolleybolleyTheme {
-        RootContainer { padding ->
-            NavHostContainer(modifier = Modifier.padding(padding))
-        }
     }
 }
