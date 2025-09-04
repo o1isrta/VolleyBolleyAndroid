@@ -8,11 +8,11 @@ enum class GenderType(
     FEMALE(2, "FEMALE"),
     UNKNOWN(0, "");
 
-    companion object{
+    companion object {
         @JvmStatic
         fun getIdByStringValue(value: String): Int = entries.find { it.nameValue == value }?.id ?: UNKNOWN.id
 
         @JvmStatic
-        fun getNameValueById(inputId: Int): String = entries.find { it.id ==  inputId}?.nameValue ?: UNKNOWN.nameValue
+        fun getNameValueById(inputId: Int): String = entries.find { it.id == inputId }?.nameValue ?: UNKNOWN.nameValue
     }
 }

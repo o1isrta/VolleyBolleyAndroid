@@ -126,12 +126,14 @@ private fun EnterPaymentDataScreen(
     LaunchedEffect(effect) {
         when (effect) {
             is NavigateFromEnterPaymentDataScreen -> navigateAction(effect.updatedPaymentsJsonString)
+
             is ShowInfoDialog -> {
                 val definedDialog = EnterPaymentDialogType.SUCCESS.apply {
                     setDoneAction(effect.onDoneButtonClick)
                 }
                 dialogType = definedDialog
             }
+
             null -> {}
         }
     }
@@ -152,14 +154,14 @@ private fun PaymentAccField(
     paymentType: PaymentType,
     actionToTransferContent: (String) -> Unit,
 ) {
-    val hint = when(paymentType) {
+    val hint = when (paymentType) {
         PaymentType.REVOLUT -> stringResource(R.string.enter_payment_revolut_hint)
         PaymentType.CASH -> ""
         PaymentType.THAIBANK -> stringResource(R.string.enter_payment_thaibank_hint)
         PaymentType.UNKNOWN -> ""
     }
 
-    val showPrefix = when(paymentType) {
+    val showPrefix = when (paymentType) {
         PaymentType.REVOLUT -> true
         PaymentType.CASH -> false
         PaymentType.THAIBANK -> false
@@ -180,7 +182,7 @@ private fun PaymentAccField(
 private fun OutsideHint(
     paymentType: PaymentType,
 ) {
-    val text = when(paymentType) {
+    val text = when (paymentType) {
         PaymentType.REVOLUT -> stringResource(R.string.user_name)
         PaymentType.CASH -> ""
         PaymentType.THAIBANK -> stringResource(R.string.enter_account_id)

@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.update
 
 class PlayersScreenViewModel(
     private val backPlayerIdHolder: BackPlayerIdHolder,
-) : BaseViewModel<PlayersScreenState, PlayersScreenEvent, PlayersScreenEffect> (
+) : BaseViewModel<PlayersScreenState, PlayersScreenEvent, PlayersScreenEffect>(
     initialState = PlayersScreenState()
 ) {
     private val originAllPlayers: MutableList<PlayerTemp> = mutableListOf()
@@ -32,7 +32,7 @@ class PlayersScreenViewModel(
     override val tag = TAG
 
     override fun obtainEvent(event: PlayersScreenEvent) {
-        when(event) {
+        when (event) {
             ClickOnBackFromPlayers -> sendUiEffect(NavigateFromPlayersScreen(null))
 
             is SearchTextChanged -> {

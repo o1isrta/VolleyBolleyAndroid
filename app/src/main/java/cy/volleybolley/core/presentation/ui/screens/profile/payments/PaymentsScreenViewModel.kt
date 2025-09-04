@@ -22,20 +22,21 @@ class PaymentsScreenViewModel(
     private val json: Json,
 ) : BaseViewModel<PaymentsScreenState, PaymentsScreenEvent, PaymentsScreenEffect>(
     initialState = PaymentsScreenState(),
-){
+) {
     init {
 //        getPayments()  >> execute getPaymentsUseCase
         _uiState.update { it.copy(payments = VolleyUiUtil.mockPayments) }
     }
+
     override val tag: String = TAG
 
     override fun obtainEvent(event: PaymentsScreenEvent) {
-        when(event) {
+        when (event) {
             ClickOnBackFromPayments -> sendUiEffect(NavigateFromPaymentsScreen(null))
 
             is ClickOnPaymentsItem -> {
-                when(event.itemType) {
-                    PaymentType.REVOLUT, PaymentType.THAIBANK  -> {
+                when (event.itemType) {
+                    PaymentType.REVOLUT, PaymentType.THAIBANK -> {
                         sendUiEffect(
                             NavigateFromPaymentsScreen(
                                 EnterPaymentDataRoute(
@@ -45,6 +46,7 @@ class PaymentsScreenViewModel(
                             )
                         )
                     }
+
                     else -> Unit
                 }
             }

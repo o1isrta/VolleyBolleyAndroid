@@ -37,7 +37,7 @@ class PlayerProfileScreenViewModel(
     }
 
     override fun obtainEvent(event: PlayerProfileScreenEvent) {
-        when(event) {
+        when (event) {
             ClickOnBackFromPlayerDetails -> sendUiEffect(
                 if (uiState.value.playerDetail.isFavorite == originFavoriteStatus) {
                     NavigateFromPlayerDetailScreen(null)

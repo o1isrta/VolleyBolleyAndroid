@@ -226,9 +226,9 @@ private fun ProfileComponent(
             modifier = Modifier
                 .weight(1f)
                 .padding(
-                horizontal = VolleyDimens.DIMEN_8.dp,
-                vertical = 0.dp
-            )
+                    horizontal = VolleyDimens.DIMEN_8.dp,
+                    vertical = 0.dp
+                )
         )
     }
 }

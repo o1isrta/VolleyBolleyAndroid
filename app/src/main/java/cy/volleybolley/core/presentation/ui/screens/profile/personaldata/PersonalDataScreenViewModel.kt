@@ -26,7 +26,7 @@ class PersonalDataScreenViewModel(
     private val updatePersonalDataUseCase: UpdatePersonalDataUseCase,
 ) : BaseViewModel<PersonalDataScreenState, PersonalDataScreenEvent, PersonalDataScreenEffect>(
     initialState = PersonalDataScreenState()
-){
+) {
     private lateinit var originState: PersonalDataScreenState
 
     val mockPersonalData = PersonalData(
@@ -51,7 +51,7 @@ class PersonalDataScreenViewModel(
     override val tag: String = TAG
 
     override fun obtainEvent(event: PersonalDataScreenEvent) {
-        when(event) {
+        when (event) {
             OnBackFromPersonalDataClick -> sendUiEffect(
                 PersonalDataScreenEffect.NavigateFromPersonalDataScreen(null)
             )

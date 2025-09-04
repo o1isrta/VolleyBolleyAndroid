@@ -25,32 +25,36 @@ class ProfileScreenViewModel(
     private val deleteProfileUseCase: DeleteProfileUseCase,
 ) : BaseViewModel<ProfileScreenState, ProfileScreenEvent, ProfileScreenEffect>(
     initialState = ProfileScreenState
-){
+) {
     override val tag: String = TAG
 
     override fun obtainEvent(event: ProfileScreenEvent) {
-        when(event) {
+        when (event) {
             OnPlayersClick -> sendUiEffect(
                 NavigateFromProfileScreen(
                     PlayersRoute
                 )
             )
+
             OnPersonalDataClick -> sendUiEffect(
                 NavigateFromProfileScreen(
                     PersonalDataRoute
                 )
             )
+
             OnPaymentsClick -> sendUiEffect(
                 NavigateFromProfileScreen(
                     PaymentsRoute
                 )
             )
+
             OnSupportClick -> {}
             OnFaqClick -> sendUiEffect(
                 NavigateFromProfileScreen(
                     FaqRoute
                 )
             )
+
             OnAboutClick -> sendUiEffect(
                 NavigateFromProfileScreen(
                     AboutRoute

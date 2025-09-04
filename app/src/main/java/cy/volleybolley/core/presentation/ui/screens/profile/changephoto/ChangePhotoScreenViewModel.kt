@@ -17,13 +17,13 @@ class ChangePhotoScreenViewModel(
     private val deleteAvatarUseCase: DeleteAvatarUseCase,
 ) : BaseViewModel<ChangePhotoScreenState, ChangePhotoScreenEvent, ChangePhotoScreenEffect>(
     initialState = ChangePhotoScreenState()
-){
+) {
     private var originAvatar: String? = uiState.value.avatarUrl
 
     override val tag: String = TAG
 
     override fun obtainEvent(event: ChangePhotoScreenEvent) {
-        when(event) {
+        when (event) {
             is GetAvatarFromPersonalData -> {
                 originAvatar = event.avatar
                 _uiState.update { it.copy(avatarUrl = event.avatar) }

@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.profile.playerprofile
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -100,7 +99,7 @@ private fun PlayerProfileScreen(
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
-            Column (
+            Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -161,7 +160,7 @@ private fun PlayerProfileScreen(
     }
 
     LaunchedEffect(effect) {
-        when(effect) {
+        when (effect) {
             is NavigateFromPlayerDetailScreen -> navigateAction(effect.playerIdWithChangedFavoriteStatus)
             null -> {}
         }
@@ -290,7 +289,7 @@ private fun FavoriteManagementButton(
             color = textColor,
             maxLines = 1,
 
-        )
+            )
     }
 }
 

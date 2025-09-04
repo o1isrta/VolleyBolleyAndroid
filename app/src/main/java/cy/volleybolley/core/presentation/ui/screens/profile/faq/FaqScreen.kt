@@ -114,7 +114,7 @@ private fun Faq(
 
 @Composable
 private fun FaqBlock(faqString: FaqString) {
-    when(faqString.type) {
+    when (faqString.type) {
         FaqStringType.HEADER -> {
             if (faqString.index != 0) {
                 FaqScreenDivider()

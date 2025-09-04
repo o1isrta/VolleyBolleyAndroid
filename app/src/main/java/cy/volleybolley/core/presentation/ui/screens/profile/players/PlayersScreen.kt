@@ -77,7 +77,7 @@ private fun PlayersScreen(
     effect: PlayersScreenEffect?,
     navigateAction: (NavMap?) -> Unit,
     eventCallback: (PlayersScreenEvent) -> Unit,
-){
+) {
     val scrollState = rememberScrollState()
 
     VolleyContainersRootTransparent.TransparentContainer(
@@ -135,7 +135,7 @@ private fun PlayersScreen(
     }
 
     LaunchedEffect(effect) {
-        when(effect) {
+        when (effect) {
             is NavigateFromPlayersScreen -> navigateAction(effect.route)
             null -> {}
         }
@@ -244,7 +244,8 @@ private fun PlayersListModeSwitch(
     val shape = RoundedCornerShape(cornerRadius.dp)
 
     Box(
-        modifier = Modifier.padding(paddingValues)
+        modifier = Modifier
+            .padding(paddingValues)
             .height(height.dp)
             .fillMaxWidth()
             .background(gradientBrush, shape)
@@ -281,7 +282,8 @@ private fun ChangedBackgroundBox(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier.fillMaxHeight()
+        modifier = modifier
+            .fillMaxHeight()
             .background(
                 color = if (showBackground) VolleyColor.White else Color.Transparent,
                 shape = shape
@@ -311,10 +313,38 @@ private fun PreviewPlayersScreen() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             val mockPlayers: List<PlayerTemp> = listOf(
-                PlayerTemp(id = 1, firstName = "Иван", lastName = "Иванов", avatarUrl = null, isFavorite = true, level = "LIGHT"),
-                PlayerTemp(id = 2, firstName = "Анна", lastName = "Петрова", avatarUrl = null, isFavorite = false, level = "MEDIUM"),
-                PlayerTemp(id = 3, firstName = "Сергей", lastName = "Смирнов", avatarUrl = null, isFavorite = true, level = "HARD"),
-                PlayerTemp(id = 4, firstName = "Елена", lastName = "Васильева", avatarUrl = null, isFavorite = false, level = "PRO"),
+                PlayerTemp(
+                    id = 1,
+                    firstName = "Иван",
+                    lastName = "Иванов",
+                    avatarUrl = null,
+                    isFavorite = true,
+                    level = "LIGHT"
+                ),
+                PlayerTemp(
+                    id = 2,
+                    firstName = "Анна",
+                    lastName = "Петрова",
+                    avatarUrl = null,
+                    isFavorite = false,
+                    level = "MEDIUM"
+                ),
+                PlayerTemp(
+                    id = 3,
+                    firstName = "Сергей",
+                    lastName = "Смирнов",
+                    avatarUrl = null,
+                    isFavorite = true,
+                    level = "HARD"
+                ),
+                PlayerTemp(
+                    id = 4,
+                    firstName = "Елена",
+                    lastName = "Васильева",
+                    avatarUrl = null,
+                    isFavorite = false,
+                    level = "PRO"
+                ),
             )
             PlayersScreen(
                 state = PlayersScreenState(players = mockPlayers),

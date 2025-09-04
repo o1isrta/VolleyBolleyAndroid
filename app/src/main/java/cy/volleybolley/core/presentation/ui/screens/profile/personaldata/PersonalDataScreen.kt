@@ -173,14 +173,16 @@ private fun PersonalDataScreen(
             VolleyButton.ActiveButton(
                 enabled = state.buttonEnabled,
                 text = stringResource(R.string.update),
-                modifier = Modifier.fillMaxWidth().height(VolleyDimens.DIMEN_44.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(VolleyDimens.DIMEN_44.dp)
             ) { eventCallback(OnUpdateButtonClick) }
 
         }
     }
 
     LaunchedEffect(effect) {
-        when(effect) {
+        when (effect) {
             is NavigateFromPersonalDataScreen -> navigateAction(effect.route)
             null -> {}
         }
@@ -258,7 +260,9 @@ private fun PreviewAvatarBlock() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             AvatarBlock(
-                modifier = Modifier.fillMaxWidth().padding(VolleyDimens.DIMEN_8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(VolleyDimens.DIMEN_8.dp)
             )
         }
     }

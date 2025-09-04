@@ -19,7 +19,7 @@ class EnterPaymentDataScreenViewModel(
     paymentsJsonStringFromPaymentsScreen: String,
 ) : BaseViewModel<EnterPaymentDataScreenState, EnterPaymentDataScreenEvent, EnterPaymentDataScreenEffect>(
     initialState = EnterPaymentDataScreenState()
-){
+) {
     private val originPayments: List<Payment> = json.decodeFromString(paymentsJsonStringFromPaymentsScreen)
     val originPaymentType: PaymentType = PaymentType.findByName(paymentTypeName)
 
@@ -38,7 +38,7 @@ class EnterPaymentDataScreenViewModel(
     }
 
     override fun obtainEvent(event: EnterPaymentDataScreenEvent) {
-        when(event) {
+        when (event) {
             ClickOnBackFromEnterPaymentData -> {
                 sendUiEffect(NavigateFromEnterPaymentDataScreen(savedPaymentsJsonString))
             }
