@@ -55,6 +55,7 @@ fun PlayersScreen(
     navController: NavHostController,
     viewModel: PlayersScreenViewModel,
 ) {
+    viewModel.handleBackPlayerId()
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 

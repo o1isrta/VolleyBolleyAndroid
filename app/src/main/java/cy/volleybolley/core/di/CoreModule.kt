@@ -11,7 +11,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.Persona
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.PlayerProfileScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenViewModel
-import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerIdHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreenViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -87,10 +87,9 @@ val coreModule = module {
             paymentsJsonStringFromPaymentsScreen = paymentsJsonString
         )
     }
-    viewModel { (backPlayerHolder: BackPlayerHolder) ->
+    viewModel { (backPlayerHolder: BackPlayerIdHolder) ->
         PlayersScreenViewModel(
-            backPlayerHolder = backPlayerHolder,
-            json = get(),
+            backPlayerIdHolder = backPlayerHolder,
         )
     }
     viewModel { (playerId: Int) ->

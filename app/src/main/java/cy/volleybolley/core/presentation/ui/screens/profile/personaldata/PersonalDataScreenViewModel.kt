@@ -103,6 +103,7 @@ class PersonalDataScreenViewModel(
             val newAvatar = if (avatarValue.isEmpty()) null else avatarValue
             originState = originState.copy(avatar = newAvatar)
             _uiState.update { it.copy(avatar = newAvatar) }
+            backAvatarHolder.clearBackAvatar()
         }
     }
 

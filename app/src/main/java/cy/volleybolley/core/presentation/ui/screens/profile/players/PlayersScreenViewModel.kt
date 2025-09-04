@@ -10,14 +10,12 @@ import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScree
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.ClickOnListItem
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.ClickOnSearchButton
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenEvent.SearchTextChanged
-import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerIdHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.players.model.PlayerTemp
 import kotlinx.coroutines.flow.update
-import kotlinx.serialization.json.Json
 
 class PlayersScreenViewModel(
-    private val backPlayerHolder: BackPlayerHolder,
-    private val json: Json,
+    private val backPlayerIdHolder: BackPlayerIdHolder,
 ) : BaseViewModel<PlayersScreenState, PlayersScreenEvent, PlayersScreenEffect> (
     initialState = PlayersScreenState()
 ) {
@@ -27,7 +25,7 @@ class PlayersScreenViewModel(
     init {
         // getPlayers()
         originAllPlayers.addAll(VolleyUiUtil.mockPlayers)
-        originFavoritePlayers.addAll(getFavoritePlayers(originAllPlayers))
+        originFavoritePlayers.addAll(getFavoritePlayers())
         _uiState.update { it.copy(players = originAllPlayers) }
     }
 
@@ -86,8 +84,13 @@ class PlayersScreenViewModel(
         }
     }
 
-    private fun getFavoritePlayers(allPlayers: List<PlayerTemp>): List<PlayerTemp> =
+    private fun getFavoritePlayers(): List<PlayerTemp> =
         originAllPlayers.filter { it.isFavorite }
+
+    private fun updateFavoritePlayers() {
+        originFavoritePlayers.clear()
+        originFavoritePlayers.addAll(getFavoritePlayers())
+    }
 
     private fun isPlayerExistByText(player: PlayerTemp, text: String): Boolean {
         val correctText = text.lowercase()
@@ -105,6 +108,18 @@ class PlayersScreenViewModel(
             false
         } else {
             firstName.contains(chunks[0]) || lastName.contains(chunks[1])
+        }
+    }
+
+    fun handleBackPlayerId() {
+        backPlayerIdHolder.getPlayerId()?.let { idForChangeFavoriteStatus ->
+            val changesIndex = originAllPlayers.indexOfFirst { it.id == idForChangeFavoriteStatus }
+            if (changesIndex != -1) {
+                val newFavoriteStatus = !originAllPlayers[changesIndex].isFavorite
+                originAllPlayers[changesIndex] = originAllPlayers[changesIndex].copy(isFavorite = newFavoriteStatus)
+                updateFavoritePlayers()
+            }
+            backPlayerIdHolder.clearBackPlayerId()
         }
     }
 

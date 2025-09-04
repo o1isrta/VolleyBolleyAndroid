@@ -58,7 +58,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.Persona
 import cy.volleybolley.core.presentation.ui.screens.profile.personaldata.model.BackAvatarHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.PlayerProfileScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.profile.players.PlayersScreenViewModel
-import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerHolder
+import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerIdHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.profile.ProfileScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -165,7 +165,7 @@ fun NavHostContainer(
 
         composable<PlayersRoute> { backStackEntry ->
             val viewModel = koinViewModel<PlayersScreenViewModel> {
-                parametersOf(BackPlayerHolder(backStackEntry.savedStateHandle))
+                parametersOf(BackPlayerIdHolder(backStackEntry.savedStateHandle))
             }
             PlayersScreen(navController, viewModel)
         }

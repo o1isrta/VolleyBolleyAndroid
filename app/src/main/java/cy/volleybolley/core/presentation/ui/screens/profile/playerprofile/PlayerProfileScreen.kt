@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.profile.playerprofile
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.credentials.exceptions.domerrors.NamespaceError
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cy.volleybolley.R
@@ -41,9 +41,12 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.PlayerProfileScreenEffect.NavigateFromPlayerDetailScreen
+import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.PlayerProfileScreenEvent.ClickOnActivityMapButton
 import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.PlayerProfileScreenEvent.ClickOnBackFromPlayerDetails
+import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.PlayerProfileScreenEvent.ClickOnFavoriteManagementButton
 import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.model.PlayerActivityTemp
 import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.model.PlayerDetailTemp
+import cy.volleybolley.core.presentation.ui.screens.profile.players.model.BackPlayerIdHolder
 import cy.volleybolley.courts.domain.model.Location
 
 @Composable
@@ -54,6 +57,18 @@ fun PlayerProfileScreen(
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    PlayerProfileScreen(
+        state = state,
+        effect = effect,
+        userHoursOffset = 3, // пока нет ручек для хранения профиля пользователя
+        eventCallback = { event -> viewModel.obtainEvent(event) },
+        navigateAction = { backPlayerId ->
+            backPlayerId?.let {
+                navController.previousBackStackEntry?.savedStateHandle?.set(BackPlayerIdHolder.PLAYER_ID_KEY, it)
+                navController.popBackStack()
+            } ?: navController.popBackStack()
+        }
+    )
 }
 
 @Composable
@@ -120,7 +135,7 @@ private fun PlayerProfileScreen(
                             courtName = activity.courtLocation.courtName,
                             dateStamp = activity.eventTimestamp,
                             userHoursOffset = userHoursOffset,
-                            onMapClick = {}
+                            onMapClick = { eventCallback(ClickOnActivityMapButton) }
                         )
 
                         if (index < countOfActivities - 1) {
@@ -140,7 +155,7 @@ private fun PlayerProfileScreen(
 
             FavoriteManagementButton(
                 isFavorite = state.playerDetail.isFavorite,
-                onClick = {}
+                onClick = { eventCallback(ClickOnFavoriteManagementButton(!state.playerDetail.isFavorite)) }
             )
         }
     }
@@ -299,7 +314,7 @@ private fun PreviewPlayerProfileScreen() {
                     level = "HARD",
                     latestActivity = listOf(
                         PlayerActivityTemp(
-                            eventTimestamp = "2025-08-16T14:23:45Z",
+                            eventTimestamp = "2025-08-16T14:30:45Z",
                             courtLocation = Location(
                                 longitude = 37.6156,
                                 latitude = 55.7536,
@@ -308,7 +323,7 @@ private fun PreviewPlayerProfileScreen() {
                             )
                         ),
                         PlayerActivityTemp(
-                            eventTimestamp = "2025-07-14T20:23:45Z",
+                            eventTimestamp = "2025-07-14T23:23:45Z",
                             courtLocation = Location(
                                 longitude = 37.6194,
                                 latitude = 55.7523,

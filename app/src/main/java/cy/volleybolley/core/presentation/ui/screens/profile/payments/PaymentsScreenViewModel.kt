@@ -76,8 +76,8 @@ class PaymentsScreenViewModel(
     fun handleBackPayments() {
         backPaymentsHolder.getPaymentsJsonString()?.let { jsonString ->
             _uiState.update { it.copy(payments = json.decodeFromString<List<Payment>>(jsonString)) }
+            backPaymentsHolder.clearBackPayments()
         }
-        backPaymentsHolder.clearBackPayments()
     }
 
     private fun changePreferred(oldPayments: List<Payment>, chosenType: PaymentType): List<Payment> {
