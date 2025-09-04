@@ -1,6 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.profile.payments
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.EnterPaymentDataRoute
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.model.BackPaymentsHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEffect.NavigateFromPaymentsScreen
@@ -22,27 +23,9 @@ class PaymentsScreenViewModel(
 ) : BaseViewModel<PaymentsScreenState, PaymentsScreenEvent, PaymentsScreenEffect>(
     initialState = PaymentsScreenState(),
 ){
-    private val mockPayments: List<Payment> = listOf(
-        Payment(
-            type = PaymentType.THAIBANK,
-            account = "000 000 0000",
-            isPreferred = false
-        ),
-        Payment(
-            type = PaymentType.CASH,
-            account = "",
-            isPreferred = true
-        ),
-//        Payment(
-//            type = PaymentType.REVOLUT,
-//            account = "@AnonymousNemislimus",
-//            isPreferred = false
-//        )
-    )
-
     init {
 //        getPayments()  >> execute getPaymentsUseCase
-        _uiState.update { it.copy(payments = mockPayments) }
+        _uiState.update { it.copy(payments = VolleyUiUtil.mockPayments) }
     }
     override val tag: String = TAG
 

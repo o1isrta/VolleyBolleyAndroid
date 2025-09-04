@@ -131,7 +131,7 @@ private fun GetPaymentItemByType(
 ) {
     payments.find { it.type == itemType }?.let { payment ->
         PaymentsComponent(
-            checkBoxEnabled = true,
+            checkBoxEnabled = payment.account.isNotEmpty(),
             checkBoxIsChecked = payment.isPreferred,
             title = itemType.getSimpleName(),
             onTitleClick = { onTitleClick(itemType) },
@@ -144,7 +144,6 @@ private fun GetPaymentItemByType(
         title = itemType.getSimpleName(),
         onTitleClick = { onTitleClick(itemType) },
         onCheckBoxClick = {}
-
     )
 }
 

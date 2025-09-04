@@ -7,6 +7,8 @@ import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.model.
 import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.model.PlayerDetailTemp
 import cy.volleybolley.core.presentation.ui.screens.profile.players.model.PlayerTemp
 import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.profile.domain.model.Payment
+import cy.volleybolley.profile.domain.model.PaymentType
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -171,6 +173,24 @@ object VolleyUiUtil {
                     )
                 ),
             )
+        )
+    )
+
+    val mockPayments: List<Payment> = listOf(
+        Payment(
+            type = PaymentType.THAIBANK,
+            account = "000 000 0000",
+            isPreferred = false
+        ),
+        Payment(
+            type = PaymentType.CASH,
+            account = "",
+            isPreferred = true
+        ),
+        Payment(
+            type = PaymentType.REVOLUT,
+            account = "",
+            isPreferred = false
         )
     )
 
