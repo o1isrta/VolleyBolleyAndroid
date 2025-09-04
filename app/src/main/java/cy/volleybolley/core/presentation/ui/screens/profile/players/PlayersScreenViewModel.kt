@@ -54,7 +54,6 @@ class PlayersScreenViewModel(
                             }
                         )
                     }
-
                 }
             }
 
@@ -62,6 +61,7 @@ class PlayersScreenViewModel(
                 if (!uiState.value.showAllPlayers) {
                     _uiState.update {
                         it.copy(
+                            searchText = "",
                             showAllPlayers = true,
                             players = originAllPlayers
                         )
@@ -73,6 +73,7 @@ class PlayersScreenViewModel(
                 if (uiState.value.showAllPlayers) {
                     _uiState.update {
                         it.copy(
+                            searchText = "",
                             showAllPlayers = false,
                             players = originFavoritePlayers
                         )

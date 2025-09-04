@@ -104,26 +104,7 @@ object VolleyUiUtil {
             avatarUrl = null,
             isFavorite = true,
             level = "LIGHT",
-            latestActivity = listOf(
-                PlayerActivityTemp(
-                    eventTimestamp = "2025-08-28T14:23:45Z",
-                    courtLocation = Location(
-                        longitude = 37.6184,
-                        latitude = 55.7512,
-                        courtName = "Футбольное поле №1",
-                        locationName = "Москва"
-                    )
-                ),
-                PlayerActivityTemp(
-                    eventTimestamp = "2025-08-11T14:23:45Z",
-                    courtLocation = Location(
-                        longitude = 37.5884,
-                        latitude = 55.7284,
-                        courtName = "Корты Олимпия",
-                        locationName = "Санкт-Петербург"
-                    )
-                )
-            )
+            latestActivity = listOf()
         ),
         PlayerDetailTemp(
             id = 2,
