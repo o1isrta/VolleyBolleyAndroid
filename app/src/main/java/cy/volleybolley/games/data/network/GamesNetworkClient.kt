@@ -12,7 +12,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.path
 
-class GamesNetworkClient() : KtorNetworkClient<GamesRequest, GamesResponse>() {
+class GamesNetworkClient : KtorNetworkClient<GamesRequest, GamesResponse>() {
     override suspend fun sendRequestByType(request: GamesRequest): HttpResponse {
         return when (request) {
             is GamesRequest.CreateGame -> httpClient.post(BuildConfig.BASE_URL) {

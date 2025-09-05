@@ -2,13 +2,13 @@ package cy.volleybolley.games.domain.api
 
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
+import cy.volleybolley.games.domain.model.entity.PlayerShort
+import cy.volleybolley.games.domain.model.entity.RatePlayer
+import cy.volleybolley.games.domain.model.event.Event
+import cy.volleybolley.games.domain.model.event.Preview
 import cy.volleybolley.games.domain.model.event.game.CreateGame
 import cy.volleybolley.games.domain.model.event.game.CreatedGame
-import cy.volleybolley.games.domain.model.event.Event
 import cy.volleybolley.games.domain.model.event.game.GameDetails
-import cy.volleybolley.games.domain.model.entity.PlayerShort
-import cy.volleybolley.games.domain.model.event.Preview
-import cy.volleybolley.games.domain.model.entity.RatePlayer
 import cy.volleybolley.games.domain.model.event.game.JoinedGame
 
 interface GamesRepository {

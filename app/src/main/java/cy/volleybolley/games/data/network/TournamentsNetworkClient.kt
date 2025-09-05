@@ -11,7 +11,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.path
 
-class TournamentsNetworkClient() : KtorNetworkClient<TournamentsRequest, TournamentsResponse>() {
+class TournamentsNetworkClient : KtorNetworkClient<TournamentsRequest, TournamentsResponse>() {
     override suspend fun sendRequestByType(request: TournamentsRequest): HttpResponse {
         return when (request) {
             is TournamentsRequest.CreateTournament -> httpClient.post(BuildConfig.BASE_URL) {
