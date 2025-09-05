@@ -53,19 +53,23 @@ sealed interface TournamentsResponse {
     @Serializable
     class JoinTournament(
         @SerialName("tournament_id") val tournamentId: Int,
-        @SerialName("is_joined") val isJoined: Boolean,
-        @SerialName("is_individual") val isIndividual: Boolean,
-        @SerialName("court_location") val courtLocation: LocationDto,
+        @SerialName("tournament_type") val gameType: String,
+        @SerialName("host") val host: HostDto,
+        @SerialName("message") val message: String,
         @SerialName("start_time") val startTime: String,
         @SerialName("end_time") val endTime: String,
         @SerialName("levels") val levels: List<String>,
         @SerialName("gender") val gender: String,
+        @SerialName("is_joined") val isJoined: Boolean,
+        @SerialName("is_individual") val isIndividual: Boolean,
+        @SerialName("court_location") val courtLocation: LocationDto,
         @SerialName("currency_type") val currencyType: String,
         @SerialName("payment_type") val paymentType: String,
         @SerialName("payment_account") val paymentAccount: String,
         @SerialName("price_per_person") val pricePerPerson: String,
         @SerialName("maximum_players") val maximumPlayers: Int,
         @SerialName("maximum_teams") val maximumTeams: Int,
+        @SerialName("teams") val teams: List<TeamDto>,
     ) : TournamentsResponse
 
     class DeclineTournamentInvite : TournamentsResponse

@@ -10,10 +10,11 @@ import cy.volleybolley.games.data.dto.mappers.toPlayersData
 import cy.volleybolley.games.data.network.TournamentsRequest
 import cy.volleybolley.games.data.network.TournamentsResponse
 import cy.volleybolley.games.domain.api.TournamentsRepository
-import cy.volleybolley.games.domain.model.event.tournament.CreateTournament
-import cy.volleybolley.games.domain.model.event.tournament.CreatedTournament
 import cy.volleybolley.games.domain.model.entity.PlayerShort
 import cy.volleybolley.games.domain.model.entity.RatePlayer
+import cy.volleybolley.games.domain.model.event.tournament.CreateTournament
+import cy.volleybolley.games.domain.model.event.tournament.CreatedTournament
+import cy.volleybolley.games.domain.model.event.tournament.JoinedTournament
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 
 class TournamentsRepositoryImpl(
@@ -60,14 +61,15 @@ class TournamentsRepositoryImpl(
         }
     }
 
-    override suspend fun joinTournament(tournamentId: Int): VolleyResult<Unit, ErrorType> {
+    override suspend fun joinTournament(tournamentId: Int): VolleyResult<JoinedTournament, ErrorType> {
         val response = networkClient.getResponse(TournamentsRequest.JoinTournament(tournamentId = tournamentId))
 
-        return if (response.isSuccess) {
-            VolleyResult.Success(Unit)
-        } else {
-            VolleyResult.Failure(response.resultCode.mapToErrorType())
+        if (!response.isSuccess) {
+            return VolleyResult.Failure(response.resultCode.mapToErrorType())
         }
+
+        val tournament = (response.body as? TournamentsResponse.JoinTournament)?.toDomain()
+        return tournament?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
     override suspend fun declineTournamentInvite(tournamentId: Int): VolleyResult<Unit, ErrorType> {

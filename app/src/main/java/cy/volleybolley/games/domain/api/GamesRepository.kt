@@ -9,6 +9,7 @@ import cy.volleybolley.games.domain.model.event.game.GameDetails
 import cy.volleybolley.games.domain.model.entity.PlayerShort
 import cy.volleybolley.games.domain.model.event.Preview
 import cy.volleybolley.games.domain.model.entity.RatePlayer
+import cy.volleybolley.games.domain.model.event.game.JoinedGame
 
 interface GamesRepository {
     suspend fun createGame(game: CreateGame): VolleyResult<CreatedGame, ErrorType>
@@ -19,7 +20,7 @@ interface GamesRepository {
     suspend fun getInvites(): VolleyResult<List<Event>, ErrorType>
     suspend fun getArchive(): VolleyResult<List<Event>, ErrorType>
     suspend fun getUpcoming(): VolleyResult<List<Event>, ErrorType>
-    suspend fun joinGame(gameId: Int): VolleyResult<Unit, ErrorType>
+    suspend fun joinGame(gameId: Int): VolleyResult<JoinedGame, ErrorType>
     suspend fun declineGameInvite(gameId: Int): VolleyResult<Unit, ErrorType>
     suspend fun cancelGame(gameId: Int): VolleyResult<Unit, ErrorType>
     suspend fun getPlayersToRate(gameId: Int): VolleyResult<List<PlayerShort>, ErrorType>

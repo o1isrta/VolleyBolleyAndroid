@@ -37,10 +37,6 @@ fun TeamDto.toDomain(): Team = Team(
     players = players.toDomain()
 )
 
-fun ShortTeam.toData(): PlayersDto = PlayersDto(
-    players = players
-)
-
 fun GamesResponse.GetPreview.toDomain(): Preview = Preview(
     upcomingGame = upcomingGame,
     invites = invites

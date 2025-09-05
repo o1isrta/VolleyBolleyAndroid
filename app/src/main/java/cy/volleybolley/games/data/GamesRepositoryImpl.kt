@@ -17,6 +17,7 @@ import cy.volleybolley.games.domain.model.event.game.GameDetails
 import cy.volleybolley.games.domain.model.entity.PlayerShort
 import cy.volleybolley.games.domain.model.event.Preview
 import cy.volleybolley.games.domain.model.entity.RatePlayer
+import cy.volleybolley.games.domain.model.event.game.JoinedGame
 
 class GamesRepositoryImpl(
     val networkClient: NetworkClient<GamesRequest, GamesResponse>
@@ -121,14 +122,17 @@ class GamesRepositoryImpl(
         )
     }
 
-    override suspend fun joinGame(gameId: Int): VolleyResult<Unit, ErrorType> {
+    override suspend fun joinGame(gameId: Int): VolleyResult<JoinedGame, ErrorType> {
         val response = networkClient.getResponse(GamesRequest.JoinGame(gameId = gameId))
 
-        return if (response.isSuccess) {
-            VolleyResult.Success(Unit)
-        } else {
-            VolleyResult.Failure(response.resultCode.mapToErrorType())
-        }
+        if (!response.isSuccess) return VolleyResult.Failure(response.resultCode.mapToErrorType())
+
+        val game = (response.body as? GamesResponse.JoinGame)
+            ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+
+        return VolleyResult.Success(
+            data = game.toDomain()
+        )
     }
 
     override suspend fun declineGameInvite(gameId: Int): VolleyResult<Unit, ErrorType> {
