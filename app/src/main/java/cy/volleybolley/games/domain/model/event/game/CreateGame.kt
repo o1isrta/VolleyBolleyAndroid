@@ -1,6 +1,6 @@
 package cy.volleybolley.games.domain.model.event.game
 
-data class CreateGame (
+data class CreateGame(
     val courtId: Int,
     val message: String,
     val startTime: String,

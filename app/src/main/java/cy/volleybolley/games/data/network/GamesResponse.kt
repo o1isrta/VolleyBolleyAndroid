@@ -97,7 +97,7 @@ sealed interface GamesResponse {
         @SerialName("price_per_person") val pricePerPerson: String,
         @SerialName("maximum_players") val maximumPlayers: Int,
         @SerialName("players") val players: List<PlayerShortDto>,
-        ) : GamesResponse
+    ) : GamesResponse
 
     class DeclineGameInvite : GamesResponse
 

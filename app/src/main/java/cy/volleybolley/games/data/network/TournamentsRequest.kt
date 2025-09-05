@@ -1,8 +1,8 @@
 package cy.volleybolley.games.data.network
 
+import cy.volleybolley.games.data.dto.CreateTournamentDto
 import cy.volleybolley.games.data.dto.PlayersDto
 import cy.volleybolley.games.data.dto.RatePlayerDto
-import cy.volleybolley.games.data.dto.CreateTournamentDto
 import cy.volleybolley.games.data.network.GamesRequest.Companion.INVITES
 import cy.volleybolley.games.data.network.GamesRequest.Companion.INVITE_PLAYERS
 import cy.volleybolley.games.data.network.GamesRequest.Companion.JOIN_TOURNAMENT

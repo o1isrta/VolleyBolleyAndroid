@@ -6,7 +6,7 @@ import cy.volleybolley.games.domain.api.GamesRepository
 import cy.volleybolley.games.domain.api.game.JoinGameUseCase
 import cy.volleybolley.games.domain.model.event.game.JoinedGame
 
-class JoinGameUseCaseImpl(private val repository: GamesRepository): JoinGameUseCase {
+class JoinGameUseCaseImpl(private val repository: GamesRepository) : JoinGameUseCase {
     override suspend fun joinGame(gameId: Int): VolleyResult<JoinedGame, ErrorType> {
         return repository.joinGame(gameId)
     }

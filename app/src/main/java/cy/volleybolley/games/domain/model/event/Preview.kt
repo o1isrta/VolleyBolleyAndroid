@@ -1,6 +1,6 @@
 package cy.volleybolley.games.domain.model.event
 
-data class Preview (
+data class Preview(
     val upcomingGame: String,
     val invites: Int,
 )

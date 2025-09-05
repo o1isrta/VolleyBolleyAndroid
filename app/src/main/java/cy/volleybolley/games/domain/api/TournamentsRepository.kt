@@ -2,10 +2,10 @@ package cy.volleybolley.games.domain.api
 
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
-import cy.volleybolley.games.domain.model.event.tournament.CreateTournament
-import cy.volleybolley.games.domain.model.event.tournament.CreatedTournament
 import cy.volleybolley.games.domain.model.entity.PlayerShort
 import cy.volleybolley.games.domain.model.entity.RatePlayer
+import cy.volleybolley.games.domain.model.event.tournament.CreateTournament
+import cy.volleybolley.games.domain.model.event.tournament.CreatedTournament
 import cy.volleybolley.games.domain.model.event.tournament.JoinedTournament
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 

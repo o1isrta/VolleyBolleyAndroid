@@ -7,6 +7,3 @@ import kotlinx.serialization.Serializable
 class PlayersDto(
     @SerialName("players") val players: List<Int>,
 )
-
-
-

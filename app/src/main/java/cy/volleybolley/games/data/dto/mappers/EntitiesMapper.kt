@@ -8,10 +8,10 @@ import cy.volleybolley.games.data.dto.TeamDto
 import cy.volleybolley.games.data.network.GamesResponse
 import cy.volleybolley.games.domain.model.entity.Host
 import cy.volleybolley.games.domain.model.entity.PlayerShort
-import cy.volleybolley.games.domain.model.event.Preview
 import cy.volleybolley.games.domain.model.entity.RatePlayer
 import cy.volleybolley.games.domain.model.entity.ShortTeam
 import cy.volleybolley.games.domain.model.entity.Team
+import cy.volleybolley.games.domain.model.event.Preview
 
 fun HostDto.toDomain(): Host = Host(
     id = id,

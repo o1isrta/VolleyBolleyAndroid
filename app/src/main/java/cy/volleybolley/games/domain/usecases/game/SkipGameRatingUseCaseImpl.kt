@@ -7,7 +7,7 @@ import cy.volleybolley.games.domain.api.game.SkipGameRatingUseCase
 
 class SkipGameRatingUseCaseImpl(
     private val repository: GamesRepository
-): SkipGameRatingUseCase {
+) : SkipGameRatingUseCase {
     override suspend fun skipRating(gameId: Int): VolleyResult<Unit, ErrorType> {
         return repository.skipRating(gameId = gameId)
     }

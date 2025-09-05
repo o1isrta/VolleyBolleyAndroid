@@ -2,8 +2,8 @@ package cy.volleybolley.games.domain.usecases.tournament
 
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
-import cy.volleybolley.games.domain.api.tournament.GetTournamentPlayersToRateUseCase
 import cy.volleybolley.games.domain.api.TournamentsRepository
+import cy.volleybolley.games.domain.api.tournament.GetTournamentPlayersToRateUseCase
 import cy.volleybolley.games.domain.model.entity.PlayerShort
 
 class GetTournamentPlayersToRateUseCaseImpl(

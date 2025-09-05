@@ -8,7 +8,7 @@ import cy.volleybolley.games.domain.model.event.game.GameDetails
 
 class GetGameDetailsUseCaseImpl(
     private val repository: GamesRepository
-): GetGameDetailsUseCase {
+) : GetGameDetailsUseCase {
     override suspend fun getGameDetails(gameId: Int): VolleyResult<GameDetails, ErrorType> {
         return repository.getGameDetails(gameId = gameId)
     }

@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class GamePreviewDto (
+class GamePreviewDto(
     @SerialName("game_id") val gameId: Int,
     @SerialName("host") val host: HostDto,
     @SerialName("court_location") val location: LocationDto,
