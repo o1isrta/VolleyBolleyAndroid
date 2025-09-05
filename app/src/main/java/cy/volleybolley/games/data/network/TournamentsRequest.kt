@@ -68,7 +68,8 @@ sealed interface TournamentsRequest {
     }
 
     class RatePlayers(
-        val tournamentId: Int, val players: List<RatePlayerDto>
+        val tournamentId: Int,
+        val players: List<RatePlayerDto>
     ) : TournamentsRequest {
         fun fullPath(): String {
             return "$TOURNAMENTS/$tournamentId/$RATE_PLAYERS"
