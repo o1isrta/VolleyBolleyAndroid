@@ -1,5 +1,6 @@
 package cy.volleybolley.games.data.dto.mappers
 
+import cy.volleybolley.core.domain.model.LevelType
 import cy.volleybolley.games.data.dto.HostDto
 import cy.volleybolley.games.data.dto.PlayerShortDto
 import cy.volleybolley.games.data.dto.PlayersDto
@@ -17,13 +18,13 @@ fun HostDto.toDomain(): Host = Host(
     id = id,
     name = "$firstName $lastName",
     avatar = avatar,
-    level = level
+    level = enumValues<LevelType>().firstOrNull { it.name.equals(level, ignoreCase = true) } ?: LevelType.UNCONFINED
 )
 
 fun PlayerShortDto.toDomain(): PlayerShort = PlayerShort(
     playerId = playerId,
     name = "$firstName $lastName",
-    level = level ?: "",
+    level = enumValues<LevelType>().firstOrNull { it.name.equals(level, ignoreCase = true) } ?: LevelType.UNCONFINED,
     avatar = avatar ?: "",
 )
 
@@ -44,7 +45,7 @@ fun GamesResponse.GetPreview.toDomain(): Preview = Preview(
 
 fun RatePlayer.toData(): RatePlayerDto = RatePlayerDto(
     playerId = playerId,
-    levelChanged = levelChanged,
+    levelChanged = levelChanged.name,
 )
 
 fun List<RatePlayer>.toData(): List<RatePlayerDto> = this.map { it.toData() }

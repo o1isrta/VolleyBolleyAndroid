@@ -1,5 +1,6 @@
 package cy.volleybolley.games.domain.model.event.tournament
 
+import cy.volleybolley.core.domain.model.PaymentType
 import cy.volleybolley.games.domain.model.entity.ShortTeam
 
 data class CreatedTournament(
@@ -14,7 +15,7 @@ data class CreatedTournament(
     val maximumPlayers: Int,
     val maximumTeams: Int,
     val pricePerPerson: String,
-    val paymentType: String,
+    val paymentType: PaymentType,
     val paymentAccount: String?,
     val currencyType: String,
     val teams: List<ShortTeam>,

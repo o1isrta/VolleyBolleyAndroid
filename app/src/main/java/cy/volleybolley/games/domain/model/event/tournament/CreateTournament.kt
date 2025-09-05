@@ -1,5 +1,7 @@
 package cy.volleybolley.games.domain.model.event.tournament
 
+import cy.volleybolley.core.domain.model.PaymentType
+
 data class CreateTournament(
     val courtId: Int,
     val message: String,
@@ -11,6 +13,6 @@ data class CreateTournament(
     val maximumPlayers: Int,
     val maximumTeams: Int,
     val pricePerPerson: String,
-    val paymentType: String,
+    val paymentType: PaymentType,
     val teams: List<List<Int>>,
 )

@@ -1,5 +1,6 @@
 package cy.volleybolley.games.data.dto.mappers
 
+import cy.volleybolley.core.domain.model.PaymentType
 import cy.volleybolley.courts.data.dto.toDomain
 import cy.volleybolley.games.data.dto.CreateTournamentDto
 import cy.volleybolley.games.data.dto.PlayersDto
@@ -23,7 +24,7 @@ fun CreateTournament.toData(): CreateTournamentDto = CreateTournamentDto(
     maximumPlayers = maximumPlayers,
     maximumTeams = maximumTeams,
     price = pricePerPerson,
-    paymentType = paymentType,
+    paymentType = paymentType.name,
     teams = teams.map { PlayersDto(it) }
 )
 
@@ -39,7 +40,7 @@ fun TournamentsResponse.CreateTournament.toDomain(): CreatedTournament = Created
     maximumPlayers = maximumPlayers,
     maximumTeams = maximumTeams,
     pricePerPerson = price,
-    paymentType = paymentType,
+    paymentType = enumValues<PaymentType>().firstOrNull { it.name == paymentType } ?: PaymentType.CASH,
     paymentAccount = paymentAccount,
     currencyType = currencyType,
     teams = teams.toDomainShort()
@@ -58,7 +59,7 @@ fun TournamentsResponse.GetTournamentDetails.toDomain(): TournamentDetails = Tou
     gender = gender,
     pricePerPerson = pricePerPerson,
     currencyType = currencyType,
-    paymentType = paymentType,
+    paymentType = enumValues<PaymentType>().firstOrNull { it.name == paymentType } ?: PaymentType.CASH,
     paymentAccount = paymentAccount,
     maximumPlayers = maximumPlayers,
     maximumTeams = maximumTeams,
@@ -78,7 +79,7 @@ fun TournamentsResponse.JoinTournament.toDomain(): JoinedTournament = JoinedTour
     gender = gender,
     pricePerPerson = pricePerPerson,
     currencyType = currencyType,
-    paymentType = paymentType,
+    paymentType = enumValues<PaymentType>().firstOrNull { it.name == paymentType } ?: PaymentType.CASH,
     paymentAccount = paymentAccount,
     maximumPlayers = maximumPlayers,
     maximumTeams = maximumTeams,

@@ -1,5 +1,7 @@
 package cy.volleybolley.games.domain.model.event.game
 
+import cy.volleybolley.core.domain.model.PaymentType
+
 data class CreateGame(
     val courtId: Int,
     val message: String,
@@ -10,6 +12,6 @@ data class CreateGame(
     val isPrivate: Boolean = false,
     val maximumPlayers: Int,
     val pricePerPerson: String,
-    val paymentType: String,
+    val paymentType: PaymentType,
     val players: List<Int>,
 )

@@ -1,5 +1,6 @@
 package cy.volleybolley.games.domain.model.event.tournament
 
+import cy.volleybolley.core.domain.model.PaymentType
 import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.games.domain.model.entity.Host
 import cy.volleybolley.games.domain.model.entity.Team
@@ -19,7 +20,7 @@ data class JoinedTournament(
     val pricePerPerson: String,
     val maximumPlayers: Int,
     val maximumTeams: Int,
-    val paymentType: String,
+    val paymentType: PaymentType,
     val paymentAccount: String,
     val currencyType: String,
     val teams: List<Team>

@@ -1,5 +1,6 @@
 package cy.volleybolley.games.data.dto.mappers
 
+import cy.volleybolley.core.domain.model.PaymentType
 import cy.volleybolley.courts.data.dto.toDomain
 import cy.volleybolley.games.data.dto.CreateGameDto
 import cy.volleybolley.games.data.dto.GamePreviewDto
@@ -21,7 +22,7 @@ fun CreateGame.toData(): CreateGameDto = CreateGameDto(
     isPrivate = isPrivate,
     maximumPlayers = maximumPlayers,
     price = pricePerPerson,
-    paymentType = paymentType,
+    paymentType = paymentType.name,
     players = players
 )
 
@@ -36,7 +37,7 @@ fun GamesResponse.CreateGame.toDomain(): CreatedGame = CreatedGame(
     isPrivate = isPrivate,
     maximumPlayers = maximumPlayers,
     pricePerPerson = price,
-    paymentType = paymentType,
+    paymentType = enumValues<PaymentType>().firstOrNull { it.name == paymentType } ?: PaymentType.CASH,
     paymentAccount = paymentAccount,
     currencyType = currencyType,
     players = players,
@@ -54,7 +55,7 @@ fun GamesResponse.GetGameDetails.toDomain(): GameDetails = GameDetails(
     gender = gender,
     pricePerPerson = pricePerPerson,
     currencyType = currencyType,
-    paymentType = paymentType,
+    paymentType = enumValues<PaymentType>().firstOrNull { it.name == paymentType } ?: PaymentType.CASH,
     paymentAccount = paymentAccount,
     maximumPlayers = maximumPlayers,
     players = players.map { it.toDomain() },
@@ -74,7 +75,7 @@ fun GamesResponse.JoinGame.toDomain(): JoinedGame = JoinedGame(
     levels = levels,
     pricePerPerson = pricePerPerson,
     maximumPlayers = maximumPlayers,
-    paymentType = paymentType,
+    paymentType = enumValues<PaymentType>().firstOrNull { it.name == paymentType } ?: PaymentType.CASH,
     paymentAccount = paymentAccount,
     currencyType = currencyType,
     players = players.toDomain()
