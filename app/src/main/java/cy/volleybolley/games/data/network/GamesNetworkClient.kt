@@ -109,7 +109,8 @@ class GamesNetworkClient : KtorNetworkClient<GamesRequest, GamesResponse>() {
     }
 
     override suspend fun getResponseBodyByRequestType(
-        requestType: GamesRequest, httpResponse: HttpResponse
+        requestType: GamesRequest,
+        httpResponse: HttpResponse
     ): GamesResponse {
         return when (requestType) {
             is GamesRequest.CreateGame -> {

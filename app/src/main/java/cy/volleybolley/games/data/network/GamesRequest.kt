@@ -27,31 +27,31 @@ sealed interface GamesRequest {
         }
     }
 
-    class GetPreview() : GamesRequest {
+    class GetPreview : GamesRequest {
         fun fullPath(): String {
             return "$GAMES/$PREVIEW"
         }
     }
 
-    class GetMyGames() : GamesRequest {
+    class GetMyGames : GamesRequest {
         fun fullPath(): String {
             return "$GAMES/$MY_GAMES"
         }
     }
 
-    class GetArchive() : GamesRequest {
+    class GetArchive : GamesRequest {
         fun fullPath(): String {
             return "$GAMES/$ARCHIVE"
         }
     }
 
-    class GetInvites() : GamesRequest {
+    class GetInvites : GamesRequest {
         fun fullPath(): String {
             return "$GAMES/$INVITES"
         }
     }
 
-    class GetUpcoming() : GamesRequest {
+    class GetUpcoming : GamesRequest {
         fun fullPath(): String {
             return "$GAMES/$UPCOMING"
         }
