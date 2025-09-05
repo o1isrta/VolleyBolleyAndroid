@@ -1,18 +1,15 @@
 package cy.volleybolley.games.data.dto.mappers
 
-import android.R.attr.host
-import android.R.id.message
 import cy.volleybolley.courts.data.dto.toDomain
 import cy.volleybolley.games.data.dto.CreateGameDto
 import cy.volleybolley.games.data.dto.GamePreviewDto
 import cy.volleybolley.games.data.network.GamesResponse
-import cy.volleybolley.games.domain.model.event.game.CreateGame
-import cy.volleybolley.games.domain.model.event.game.CreatedGame
 import cy.volleybolley.games.domain.model.event.Event
 import cy.volleybolley.games.domain.model.event.EventType
+import cy.volleybolley.games.domain.model.event.game.CreateGame
+import cy.volleybolley.games.domain.model.event.game.CreatedGame
 import cy.volleybolley.games.domain.model.event.game.GameDetails
 import cy.volleybolley.games.domain.model.event.game.JoinedGame
-import java.lang.reflect.Modifier.isPrivate
 
 fun CreateGame.toData(): CreateGameDto = CreateGameDto(
     courtId = courtId,
