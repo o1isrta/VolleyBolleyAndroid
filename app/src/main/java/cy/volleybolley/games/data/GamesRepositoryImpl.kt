@@ -76,11 +76,9 @@ class GamesRepositoryImpl(
         if (!response.isSuccess) return VolleyResult.Failure(response.resultCode.mapToErrorType())
 
         val myGames = (response.body as? GamesResponse.GetMyGames)
-            ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
 
-        return VolleyResult.Success(
-            data = myGames.toDomain()
-        )
+        return myGames?.let { VolleyResult.Success(data = it.toDomain()) }
+            ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
     override suspend fun getInvites(): VolleyResult<List<Event>, ErrorType> {
@@ -89,11 +87,9 @@ class GamesRepositoryImpl(
         if (!response.isSuccess) return VolleyResult.Failure(response.resultCode.mapToErrorType())
 
         val invites = (response.body as? GamesResponse.GetInvites)
-            ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
 
-        return VolleyResult.Success(
-            data = invites.toDomain()
-        )
+        return invites?.let { VolleyResult.Success(data = it.toDomain()) }
+            ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
     override suspend fun getArchive(): VolleyResult<List<Event>, ErrorType> {
@@ -102,11 +98,9 @@ class GamesRepositoryImpl(
         if (!response.isSuccess) return VolleyResult.Failure(response.resultCode.mapToErrorType())
 
         val archives = (response.body as? GamesResponse.GetArchive)
-            ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
 
-        return VolleyResult.Success(
-            data = archives.toDomain()
-        )
+        return archives?.let { VolleyResult.Success(data = it.toDomain()) }
+            ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
     override suspend fun getUpcoming(): VolleyResult<List<Event>, ErrorType> {
@@ -115,11 +109,9 @@ class GamesRepositoryImpl(
         if (!response.isSuccess) return VolleyResult.Failure(response.resultCode.mapToErrorType())
 
         val upcoming = (response.body as? GamesResponse.GetUpcoming)
-            ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
 
-        return VolleyResult.Success(
-            data = upcoming.toDomain()
-        )
+        return upcoming?.let { VolleyResult.Success(data = it.toDomain()) }
+            ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
     override suspend fun joinGame(gameId: Int): VolleyResult<JoinedGame, ErrorType> {
@@ -128,11 +120,10 @@ class GamesRepositoryImpl(
         if (!response.isSuccess) return VolleyResult.Failure(response.resultCode.mapToErrorType())
 
         val game = (response.body as? GamesResponse.JoinGame)
-            ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
 
-        return VolleyResult.Success(
-            data = game.toDomain()
-        )
+        return game?.let {
+            VolleyResult.Success(data = game.toDomain())
+        } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
     override suspend fun declineGameInvite(gameId: Int): VolleyResult<Unit, ErrorType> {

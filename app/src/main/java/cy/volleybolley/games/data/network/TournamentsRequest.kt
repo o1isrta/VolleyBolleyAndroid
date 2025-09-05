@@ -17,7 +17,6 @@ sealed interface TournamentsRequest {
         val tournament: CreateTournamentDto,
     ) : TournamentsRequest
 
-
     class GetTournamentDetails(
         val tournamentId: Int,
     ) : TournamentsRequest {

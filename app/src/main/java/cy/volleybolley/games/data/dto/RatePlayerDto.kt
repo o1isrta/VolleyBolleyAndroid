@@ -7,5 +7,4 @@ import kotlinx.serialization.Serializable
 class RatePlayerDto(
     @SerialName("player_id") val playerId: Int,
     @SerialName("level_changed") val levelChanged: String,
-
-    )
+)
