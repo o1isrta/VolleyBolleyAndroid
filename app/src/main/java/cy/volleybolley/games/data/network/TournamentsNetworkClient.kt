@@ -28,6 +28,12 @@ class TournamentsNetworkClient : KtorNetworkClient<TournamentsRequest, Tournamen
                 }
             }
 
+            is TournamentsRequest.CancelTournament -> httpClient.post(BuildConfig.BASE_URL) {
+                url {
+                    path(request.fullPath())
+                }
+            }
+
             is TournamentsRequest.InvitePlayersToTournament -> httpClient.post(BuildConfig.BASE_URL) {
                 url {
                     path(request.fullPath())
@@ -105,6 +111,10 @@ class TournamentsNetworkClient : KtorNetworkClient<TournamentsRequest, Tournamen
 
             is TournamentsRequest.SkipRating -> {
                 httpResponse.body<TournamentsResponse.SkipRating>()
+            }
+
+            is TournamentsRequest.CancelTournament -> {
+                httpResponse.body<TournamentsResponse.CancelTournament>()
             }
         }
     }

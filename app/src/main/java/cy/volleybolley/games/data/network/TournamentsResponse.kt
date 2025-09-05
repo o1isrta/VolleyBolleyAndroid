@@ -48,6 +48,8 @@ sealed interface TournamentsResponse {
         @SerialName("teams") val teams: List<TeamDto>,
     ) : TournamentsResponse
 
+    class CancelTournament : TournamentsResponse
+
     class InvitePlayersToTournament : TournamentsResponse
 
     @Serializable

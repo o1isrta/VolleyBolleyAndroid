@@ -2,12 +2,12 @@ package cy.volleybolley.games.domain.usecases.game
 
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
-import cy.volleybolley.games.domain.api.GamesRepository
+import cy.volleybolley.games.domain.api.GameRatingRepository
 import cy.volleybolley.games.domain.api.game.RateGamePlayersUseCase
 import cy.volleybolley.games.domain.model.entity.RatePlayer
 
 class RateGamePlayersUseCaseImpl(
-    private val repository: GamesRepository
+    private val repository: GameRatingRepository
 ) : RateGamePlayersUseCase {
     override suspend fun ratePlayers(
         gameId: Int,
