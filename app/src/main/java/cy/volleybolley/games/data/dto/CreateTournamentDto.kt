@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class TournamentDto(
+class CreateTournamentDto(
     @SerialName("court_id") val courtId: Int,
     @SerialName("message") val message: String,
     @SerialName("start_time") val startTime: String,

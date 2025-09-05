@@ -10,17 +10,18 @@ import cy.volleybolley.games.data.dto.mappers.toPlayersData
 import cy.volleybolley.games.data.network.GamesRequest
 import cy.volleybolley.games.data.network.GamesResponse
 import cy.volleybolley.games.domain.api.GamesRepository
-import cy.volleybolley.games.domain.model.Game
-import cy.volleybolley.games.domain.model.GamePreview
-import cy.volleybolley.games.domain.model.PlayerShort
-import cy.volleybolley.games.domain.model.Preview
-import cy.volleybolley.games.domain.model.Tournament
-import cy.volleybolley.games.domain.model.TournamentPreview
+import cy.volleybolley.games.domain.model.event.game.CreateGame
+import cy.volleybolley.games.domain.model.event.game.CreatedGame
+import cy.volleybolley.games.domain.model.event.Event
+import cy.volleybolley.games.domain.model.event.game.GameDetails
+import cy.volleybolley.games.domain.model.entity.PlayerShort
+import cy.volleybolley.games.domain.model.event.Preview
+import cy.volleybolley.games.domain.model.entity.RatePlayer
 
 class GamesRepositoryImpl(
     val networkClient: NetworkClient<GamesRequest, GamesResponse>
 ) : GamesRepository {
-    override suspend fun createGame(game: Game): VolleyResult<Game, ErrorType> {
+    override suspend fun createGame(game: CreateGame): VolleyResult<CreatedGame, ErrorType> {
         val response = networkClient.getResponse(GamesRequest.CreateGame(game = game.toData()))
 
         if (!response.isSuccess) {
@@ -31,7 +32,7 @@ class GamesRepositoryImpl(
         return game?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
-    override suspend fun getGameDetails(gameId: Int): VolleyResult<Game, ErrorType> {
+    override suspend fun getGameDetails(gameId: Int): VolleyResult<GameDetails, ErrorType> {
         val response = networkClient.getResponse(GamesRequest.GetGameDetails(gameId = gameId))
 
         if (!response.isSuccess) {
@@ -42,29 +43,7 @@ class GamesRepositoryImpl(
         return game?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
-    suspend fun createTournament(tournament: Tournament): VolleyResult<Tournament, ErrorType> {
-        val response = networkClient.getResponse(GamesRequest.CreateTournament(tournament = tournament.toData()))
-
-        if (!response.isSuccess) {
-            return VolleyResult.Failure(response.resultCode.mapToErrorType())
-        }
-
-        val tournament = (response.body as? GamesResponse.CreateTournament)?.toDomain()
-        return tournament?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
-    }
-
-    suspend fun getTournamentDetails(tournamentId: Int): VolleyResult<Tournament, ErrorType> {
-        val response = networkClient.getResponse(GamesRequest.GetTournamentDetails(tournamentId = tournamentId))
-
-        if (!response.isSuccess) {
-            return VolleyResult.Failure(response.resultCode.mapToErrorType())
-        }
-
-        val tournament = (response.body as? GamesResponse.GetTournamentDetails)?.toDomain()
-        return tournament?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
-    }
-
-    suspend fun invitePlayersToGame(gameId: Int, players: List<PlayerShort>): VolleyResult<Unit, ErrorType> {
+    override suspend fun invitePlayersToGame(gameId: Int, players: List<PlayerShort>): VolleyResult<Unit, ErrorType> {
         val response = networkClient.getResponse(
             GamesRequest.InvitePlayersToGame(
                 gameId = gameId,
@@ -79,25 +58,7 @@ class GamesRepositoryImpl(
         }
     }
 
-    suspend fun invitePlayersToTournament(
-        tournamentId: Int,
-        players: List<PlayerShort>
-    ): VolleyResult<Unit, ErrorType> {
-        val response = networkClient.getResponse(
-            GamesRequest.InvitePlayersToTournament(
-                tournamentId = tournamentId,
-                players = players.toPlayersData()
-            )
-        )
-
-        return if (response.isSuccess) {
-            VolleyResult.Success(Unit)
-        } else {
-            VolleyResult.Failure(response.resultCode.mapToErrorType())
-        }
-    }
-
-    suspend fun getPreview(): VolleyResult<Preview, ErrorType> {
+    override suspend fun getPreview(): VolleyResult<Preview, ErrorType> {
         val response = networkClient.getResponse(GamesRequest.GetPreview())
 
         if (!response.isSuccess) {
@@ -108,7 +69,7 @@ class GamesRepositoryImpl(
         return preview?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
-    suspend fun getMyGames(): VolleyResult<Pair<List<GamePreview>, List<TournamentPreview>>, ErrorType> {
+    override suspend fun getMyGames(): VolleyResult<List<Event>, ErrorType> {
         val response = networkClient.getResponse(GamesRequest.GetMyGames())
 
         if (!response.isSuccess) return VolleyResult.Failure(response.resultCode.mapToErrorType())
@@ -117,96 +78,105 @@ class GamesRepositoryImpl(
             ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
 
         return VolleyResult.Success(
-            myGames.games.map { it.toDomain() } to myGames.tournaments.map { it.toDomain() }
+            data = myGames.toDomain()
         )
     }
 
-    suspend fun getInvites(): VolleyResult<Pair<List<GamePreview>, List<TournamentPreview>>, ErrorType> {
+    override suspend fun getInvites(): VolleyResult<List<Event>, ErrorType> {
         val response = networkClient.getResponse(GamesRequest.GetInvites())
 
         if (!response.isSuccess) return VolleyResult.Failure(response.resultCode.mapToErrorType())
 
-        val myGames = (response.body as? GamesResponse.GetInvites)
+        val invites = (response.body as? GamesResponse.GetInvites)
             ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
 
         return VolleyResult.Success(
-            myGames.games.map { it.toDomain() } to myGames.tournaments.map { it.toDomain() }
+            data = invites.toDomain()
         )
     }
 
-    suspend fun getArchive(): VolleyResult<Pair<List<GamePreview>, List<TournamentPreview>>, ErrorType> {
+    override suspend fun getArchive(): VolleyResult<List<Event>, ErrorType> {
         val response = networkClient.getResponse(GamesRequest.GetArchive())
 
         if (!response.isSuccess) return VolleyResult.Failure(response.resultCode.mapToErrorType())
 
-        val myGames = (response.body as? GamesResponse.GetArchive)
+        val archives = (response.body as? GamesResponse.GetArchive)
             ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
 
         return VolleyResult.Success(
-            myGames.games.map { it.toDomain() } to myGames.tournaments.map { it.toDomain() }
+            data = archives.toDomain()
         )
     }
 
-    suspend fun getUpcoming(): VolleyResult<Pair<List<GamePreview>, List<TournamentPreview>>, ErrorType> {
+    override suspend fun getUpcoming(): VolleyResult<List<Event>, ErrorType> {
         val response = networkClient.getResponse(GamesRequest.GetUpcoming())
 
         if (!response.isSuccess) return VolleyResult.Failure(response.resultCode.mapToErrorType())
 
-        val myGames = (response.body as? GamesResponse.GetUpcoming)
+        val upcoming = (response.body as? GamesResponse.GetUpcoming)
             ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
 
         return VolleyResult.Success(
-            myGames.games.map { it.toDomain() } to myGames.tournaments.map { it.toDomain() }
+            data = upcoming.toDomain()
         )
     }
-    /*
 
-        is GamesRequest.JoinGame -> httpClient.post(BuildConfig.BASE_URL) {
-            url {
-                path(request.fullPath())
-            }
-        }
+    override suspend fun joinGame(gameId: Int): VolleyResult<Unit, ErrorType> {
+        val response = networkClient.getResponse(GamesRequest.JoinGame(gameId = gameId))
 
-        is GamesRequest.JoinTournament -> httpClient.post(BuildConfig.BASE_URL) {
-            url {
-                path(request.fullPath())
-            }
-        }
-
-        is GamesRequest.DeclineGameInvite -> httpClient.delete(BuildConfig.BASE_URL) {
-            url {
-                path(request.fullPath())
-            }
-        }
-
-        is GamesRequest.DeclineTournamentInvite -> httpClient.delete(BuildConfig.BASE_URL) {
-            url {
-                path(request.fullPath())
-            }
-        }
-
-        is GamesRequest.GetPlayersToRate -> httpClient.get(BuildConfig.BASE_URL) {
-            url {
-                path(request.fullPath())
-            }
-        }
-
-        is GamesRequest.RatePlayers -> httpClient.post(BuildConfig.BASE_URL) {
-            url {
-                path(request.fullPath())
-            }
-            contentType(ContentType.Application.Json)
-            setBody(request.players)
-        }
-
-        is GamesRequest.SkipRating -> httpClient.post(BuildConfig.BASE_URL) {
-            url {
-                path(request.fullPath())
-            }
+        return if (response.isSuccess) {
+            VolleyResult.Success(Unit)
+        } else {
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
         }
     }
 
-}
+    override suspend fun declineGameInvite(gameId: Int): VolleyResult<Unit, ErrorType> {
+        val response = networkClient.getResponse(GamesRequest.DeclineGameInvite(gameId = gameId))
 
-     */
+        return if (response.isSuccess) {
+            VolleyResult.Success(Unit)
+        } else {
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
+        }
+    }
+
+    override suspend fun cancelGame(gameId: Int): VolleyResult<Unit, ErrorType> {
+        val response = networkClient.getResponse(GamesRequest.CancelGame(gameId = gameId))
+
+        return if (response.isSuccess) {
+            VolleyResult.Success(Unit)
+        } else {
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
+        }
+    }
+
+    override suspend fun getPlayersToRate(gameId: Int): VolleyResult<List<PlayerShort>, ErrorType> {
+        val response = networkClient.getResponse(GamesRequest.GetPlayersToRate(gameId = gameId))
+
+        if (!response.isSuccess) return VolleyResult.Failure(response.resultCode.mapToErrorType())
+
+        val preview = (response.body as? GamesResponse.GetPlayersToRate)?.players?.toDomain()
+        return preview?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+    }
+
+    override suspend fun ratePlayers(gameId: Int, players: List<RatePlayer>): VolleyResult<Unit, ErrorType> {
+        val response = networkClient.getResponse(GamesRequest.RatePlayers(gameId = gameId, players = players.toData()))
+
+        return if (response.isSuccess) {
+            VolleyResult.Success(Unit)
+        } else {
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
+        }
+    }
+
+    override suspend fun skipRating(gameId: Int): VolleyResult<Unit, ErrorType> {
+        val response = networkClient.getResponse(GamesRequest.SkipRating(gameId = gameId))
+
+        return if (response.isSuccess) {
+            VolleyResult.Success(Unit)
+        } else {
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
+        }
+    }
 }

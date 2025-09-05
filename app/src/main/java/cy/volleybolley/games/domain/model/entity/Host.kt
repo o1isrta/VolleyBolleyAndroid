@@ -1,4 +1,4 @@
-package cy.volleybolley.games.domain.model
+package cy.volleybolley.games.domain.model.entity
 
 data class Host(
     val id: Int,

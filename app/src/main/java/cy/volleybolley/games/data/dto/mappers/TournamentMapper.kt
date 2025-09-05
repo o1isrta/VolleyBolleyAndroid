@@ -1,13 +1,34 @@
 package cy.volleybolley.games.data.dto.mappers
 
 import cy.volleybolley.courts.data.dto.toDomain
-import cy.volleybolley.games.data.dto.TournamentDto
+import cy.volleybolley.games.data.dto.CreateTournamentDto
+import cy.volleybolley.games.data.dto.PlayersDto
 import cy.volleybolley.games.data.dto.TournamentPreviewDto
-import cy.volleybolley.games.data.network.GamesResponse
-import cy.volleybolley.games.domain.model.Tournament
-import cy.volleybolley.games.domain.model.TournamentPreview
+import cy.volleybolley.games.data.dto.mappers.toDomain
+import cy.volleybolley.games.data.network.TournamentsResponse
+import cy.volleybolley.games.domain.model.event.tournament.CreateTournament
+import cy.volleybolley.games.domain.model.event.tournament.CreatedTournament
+import cy.volleybolley.games.domain.model.event.Event
+import cy.volleybolley.games.domain.model.event.EventType
+import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
+import kotlin.collections.map
 
-fun GamesResponse.CreateTournament.toDomain(): Tournament = Tournament(
+fun CreateTournament.toData(): CreateTournamentDto = CreateTournamentDto(
+    courtId = courtId,
+    message = message,
+    startTime = startTime,
+    endTime = endTime,
+    isIndividual = isIndividual,
+    gender = gender,
+    levels = levels,
+    maximumPlayers = maximumPlayers,
+    maximumTeams = maximumTeams,
+    price = pricePerPerson,
+    paymentType = paymentType,
+    teams = teams.map { PlayersDto(it) }
+)
+
+fun TournamentsResponse.CreateTournament.toDomain(): CreatedTournament = CreatedTournament(
     tournamentId = tournamentId,
     courtId = courtId,
     message = message,
@@ -22,28 +43,13 @@ fun GamesResponse.CreateTournament.toDomain(): Tournament = Tournament(
     paymentType = paymentType,
     paymentAccount = paymentAccount,
     currencyType = currencyType,
-    teams = teams.toDomain()
+    teams = teams.toDomainShort()
 )
 
-fun Tournament.toData(): TournamentDto = TournamentDto(
-    courtId = courtId ?: 0,
-    message = message,
-    startTime = startTime,
-    endTime = endTime,
-    isIndividual = isIndividual,
-    gender = gender,
-    levels = levels,
-    maximumPlayers = maximumPlayers,
-    maximumTeams = maximumTeams,
-    price = pricePerPerson,
-    paymentType = paymentType,
-    teams = teams.toPlayersData()
-)
-
-fun GamesResponse.GetTournamentDetails.toDomain(): Tournament = Tournament(
+fun TournamentsResponse.GetTournamentDetails.toDomain(): TournamentDetails = TournamentDetails(
     tournamentId = tournamentId,
     isIndividual = isIndividual,
-    gameType = gameType,
+    tournamentType = gameType,
     host = host.toDomain(),
     message = message,
     courtLocation = courtLocation.toDomain(),
@@ -57,11 +63,12 @@ fun GamesResponse.GetTournamentDetails.toDomain(): Tournament = Tournament(
     paymentAccount = paymentAccount,
     maximumPlayers = maximumPlayers,
     maximumTeams = maximumTeams,
-    teams = teams.toDomain(),
+    teams = teams.map { it.toDomain() },
 )
 
-fun TournamentPreviewDto.toDomain(): TournamentPreview = TournamentPreview(
-    tournamentId = tournamentId,
+fun TournamentPreviewDto.toDomain(): Event = Event(
+    id = tournamentId,
+    type = EventType.TOURNAMENT,
     host = host.toDomain(),
     location = location.toDomain(),
     message = message,

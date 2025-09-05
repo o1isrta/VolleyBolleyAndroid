@@ -23,36 +23,13 @@ class GamesNetworkClient() : KtorNetworkClient<GamesRequest, GamesResponse>() {
                 setBody(request.game)
             }
 
-            is GamesRequest.CreateTournament -> httpClient.post(BuildConfig.BASE_URL) {
-                url {
-                    path(request.path)
-                }
-                contentType(ContentType.Application.Json)
-                setBody(request.tournament)
-            }
-
             is GamesRequest.GetGameDetails -> httpClient.get(BuildConfig.BASE_URL) {
                 url {
                     path(request.fullPath())
                 }
             }
 
-            is GamesRequest.GetTournamentDetails -> httpClient.get(BuildConfig.BASE_URL) {
-                url {
-                    path(request.fullPath())
-                }
-            }
-
-
             is GamesRequest.InvitePlayersToGame -> httpClient.post(BuildConfig.BASE_URL) {
-                url {
-                    path(request.fullPath())
-                }
-                contentType(ContentType.Application.Json)
-                setBody(request.players)
-            }
-
-            is GamesRequest.InvitePlayersToTournament -> httpClient.post(BuildConfig.BASE_URL) {
                 url {
                     path(request.fullPath())
                 }
@@ -96,19 +73,13 @@ class GamesNetworkClient() : KtorNetworkClient<GamesRequest, GamesResponse>() {
                 }
             }
 
-            is GamesRequest.JoinTournament -> httpClient.post(BuildConfig.BASE_URL) {
-                url {
-                    path(request.fullPath())
-                }
-            }
-
             is GamesRequest.DeclineGameInvite -> httpClient.delete(BuildConfig.BASE_URL) {
                 url {
                     path(request.fullPath())
                 }
             }
 
-            is GamesRequest.DeclineTournamentInvite -> httpClient.delete(BuildConfig.BASE_URL) {
+            is GamesRequest.CancelGame -> httpClient.post(BuildConfig.BASE_URL) {
                 url {
                     path(request.fullPath())
                 }
@@ -145,24 +116,8 @@ class GamesNetworkClient() : KtorNetworkClient<GamesRequest, GamesResponse>() {
                 httpResponse.body<GamesResponse.CreateGame>()
             }
 
-            is GamesRequest.CreateTournament -> {
-                httpResponse.body<GamesResponse.CreateTournament>()
-            }
-
             is GamesRequest.GetGameDetails -> {
                 httpResponse.body<GamesResponse.GetGameDetails>()
-            }
-
-            is GamesRequest.GetTournamentDetails -> {
-                httpResponse.body<GamesResponse.GetTournamentDetails>()
-            }
-
-            is GamesRequest.InvitePlayersToGame -> {
-                httpResponse.body<GamesResponse.InvitePlayersToGame>()
-            }
-
-            is GamesRequest.InvitePlayersToTournament -> {
-                httpResponse.body<GamesResponse.InvitePlayersToTournament>()
             }
 
             is GamesRequest.GetPreview -> {
@@ -189,16 +144,8 @@ class GamesNetworkClient() : KtorNetworkClient<GamesRequest, GamesResponse>() {
                 httpResponse.body<GamesResponse.JoinGame>()
             }
 
-            is GamesRequest.JoinTournament -> {
-                httpResponse.body<GamesResponse.JoinTournament>()
-            }
-
             is GamesRequest.DeclineGameInvite -> {
                 httpResponse.body<GamesResponse.DeclineGameInvite>()
-            }
-
-            is GamesRequest.DeclineTournamentInvite -> {
-                httpResponse.body<GamesResponse.DeclineTournamentInvite>()
             }
 
             is GamesRequest.GetPlayersToRate -> {
@@ -211,6 +158,14 @@ class GamesNetworkClient() : KtorNetworkClient<GamesRequest, GamesResponse>() {
 
             is GamesRequest.SkipRating -> {
                 httpResponse.body<GamesResponse.SkipRating>()
+            }
+
+            is GamesRequest.InvitePlayersToGame -> {
+                httpResponse.body<GamesResponse.InvitePlayersToGame>()
+            }
+
+            is GamesRequest.CancelGame -> {
+                httpResponse.body<GamesResponse.CancelGame>()
             }
         }
     }

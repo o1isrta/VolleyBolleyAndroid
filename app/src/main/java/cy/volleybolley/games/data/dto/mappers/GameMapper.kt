@@ -1,14 +1,30 @@
 package cy.volleybolley.games.data.dto.mappers
 
 import cy.volleybolley.courts.data.dto.toDomain
-import cy.volleybolley.games.data.dto.GameDto
+import cy.volleybolley.games.data.dto.CreateGameDto
 import cy.volleybolley.games.data.dto.GamePreviewDto
 import cy.volleybolley.games.data.network.GamesResponse
-import cy.volleybolley.games.domain.model.Game
-import cy.volleybolley.games.domain.model.GamePreview
-import cy.volleybolley.games.domain.model.PlayerShort
+import cy.volleybolley.games.domain.model.event.game.CreateGame
+import cy.volleybolley.games.domain.model.event.game.CreatedGame
+import cy.volleybolley.games.domain.model.event.Event
+import cy.volleybolley.games.domain.model.event.EventType
+import cy.volleybolley.games.domain.model.event.game.GameDetails
 
-fun GamesResponse.CreateGame.toDomain(): Game = Game(
+fun CreateGame.toData(): CreateGameDto = CreateGameDto(
+    courtId = courtId,
+    message = message,
+    startTime = startTime,
+    endTime = endTime,
+    gender = gender,
+    levels = levels,
+    isPrivate = isPrivate,
+    maximumPlayers = maximumPlayers,
+    price = pricePerPerson,
+    paymentType = paymentType,
+    players = players
+)
+
+fun GamesResponse.CreateGame.toDomain(): CreatedGame = CreatedGame(
     gameId = gameId,
     courtId = courtId,
     message = message,
@@ -22,24 +38,10 @@ fun GamesResponse.CreateGame.toDomain(): Game = Game(
     paymentType = paymentType,
     paymentAccount = paymentAccount,
     currencyType = currencyType,
-    players = players.map { PlayerShort(playerId = it) },
+    players = players,
 )
 
-fun Game.toData(): GameDto = GameDto(
-    courtId = courtId ?: 0,
-    message = message,
-    startTime = startTime,
-    endTime = endTime,
-    gender = gender,
-    levels = levels,
-    isPrivate = isPrivate,
-    maximumPlayers = maximumPlayers,
-    price = pricePerPerson,
-    paymentType = paymentType,
-    players = players.map { it.playerId }
-)
-
-fun GamesResponse.GetGameDetails.toDomain(): Game = Game(
+fun GamesResponse.GetGameDetails.toDomain(): GameDetails = GameDetails(
     gameId = gameId,
     gameType = gameType,
     host = host.toDomain(),
@@ -57,10 +59,27 @@ fun GamesResponse.GetGameDetails.toDomain(): Game = Game(
     players = players.map { it.toDomain() },
 )
 
-fun GamePreviewDto.toDomain(): GamePreview = GamePreview(
-    gameId = gameId,
+fun GamesResponse.GetMyGames.toDomain(): List<Event> {
+    return this.games.map { it.toDomain() } + this.tournaments.map { it.toDomain() }
+}
+
+fun GamesResponse.GetInvites.toDomain(): List<Event> {
+    return this.games.map { it.toDomain() } + this.tournaments.map { it.toDomain() }
+}
+
+fun GamesResponse.GetArchive.toDomain(): List<Event> {
+    return this.games.map { it.toDomain() } + this.tournaments.map { it.toDomain() }
+}
+
+fun GamesResponse.GetUpcoming.toDomain(): List<Event> {
+    return this.games.map { it.toDomain() } + this.tournaments.map { it.toDomain() }
+}
+
+fun GamePreviewDto.toDomain(): Event = Event(
+    id = gameId,
+    type = EventType.GAME,
     host = host.toDomain(),
-    locationDto = location.toDomain(),
+    location = location.toDomain(),
     message = message,
     startTime = startTime,
     endTime = endTime

@@ -3,12 +3,15 @@ package cy.volleybolley.games.data.dto.mappers
 import cy.volleybolley.games.data.dto.HostDto
 import cy.volleybolley.games.data.dto.PlayerShortDto
 import cy.volleybolley.games.data.dto.PlayersDto
+import cy.volleybolley.games.data.dto.RatePlayerDto
 import cy.volleybolley.games.data.dto.TeamDto
 import cy.volleybolley.games.data.network.GamesResponse
-import cy.volleybolley.games.domain.model.Host
-import cy.volleybolley.games.domain.model.PlayerShort
-import cy.volleybolley.games.domain.model.Preview
-import cy.volleybolley.games.domain.model.Team
+import cy.volleybolley.games.domain.model.entity.Host
+import cy.volleybolley.games.domain.model.entity.PlayerShort
+import cy.volleybolley.games.domain.model.event.Preview
+import cy.volleybolley.games.domain.model.entity.RatePlayer
+import cy.volleybolley.games.domain.model.entity.ShortTeam
+import cy.volleybolley.games.domain.model.entity.Team
 
 fun HostDto.toDomain(): Host = Host(
     id = id,
@@ -20,26 +23,22 @@ fun HostDto.toDomain(): Host = Host(
 fun PlayerShortDto.toDomain(): PlayerShort = PlayerShort(
     playerId = playerId,
     name = "$firstName $lastName",
-    level = level,
-    avatar = avatar,
+    level = level ?: "",
+    avatar = avatar ?: "",
 )
 
-fun PlayerShort.toData(): PlayerShortDto = PlayerShortDto(
-    playerId = playerId,
-    firstName = name?.split(" ")[0],
-    lastName = name?.split(" ")[1],
-    level = level,
-    avatar = avatar
+fun TeamDto.toDomainShort(): ShortTeam = ShortTeam(
+    teamId = teamId ?: -1,
+    players = players.map { it.playerId }
 )
 
 fun TeamDto.toDomain(): Team = Team(
-    teamId = teamId,
+    teamId = teamId ?: -1,
     players = players.toDomain()
 )
 
-fun Team.toData(): TeamDto = TeamDto(
-    teamId = teamId,
-    players = players.toData()
+fun ShortTeam.toData(): PlayersDto = PlayersDto(
+    players = players
 )
 
 fun GamesResponse.GetPreview.toDomain(): Preview = Preview(
@@ -47,23 +46,15 @@ fun GamesResponse.GetPreview.toDomain(): Preview = Preview(
     invites = invites
 )
 
+fun RatePlayer.toData(): RatePlayerDto = RatePlayerDto(
+    playerId = playerId,
+    levelChanged = levelChanged,
+)
+
+fun List<RatePlayer>.toData(): List<RatePlayerDto> = this.map { it.toData() }
+
 fun List<PlayerShortDto>.toDomain(): List<PlayerShort> = this.map { it.toDomain() }
 
-fun List<PlayerShort>.toData(): List<PlayerShortDto> = this.map { it.toData() }
+fun List<PlayerShort>.toPlayersData(): PlayersDto = PlayersDto(this.map { it.playerId })
 
-fun List<PlayerShort>.toPlayersData():PlayersDto  = PlayersDto(this.map { it.playerId })
-
-fun List<TeamDto>.toDomain(): List<Team> = this.map { it.toDomain() }
-
-fun List<Team>.toData(): List<TeamDto> = this.map { it.toData() }
-
-fun List<Team>.toPlayersData(): List<PlayersDto> {
-    val players = mutableListOf<PlayersDto>()
-    this.map {
-        players.add(PlayersDto(it.players.toListInt()))
-    }
-    return players.toList()
-}
-
-fun List<PlayerShort>.toListInt(): List<Int> = this.map { it.playerId }
-
+fun List<TeamDto>.toDomainShort(): List<ShortTeam> = this.map { it.toDomainShort() }

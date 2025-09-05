@@ -1,4 +1,4 @@
-package cy.volleybolley.games.domain.model
+package cy.volleybolley.games.domain.model.event
 
 data class Preview (
     val upcomingGame: String,

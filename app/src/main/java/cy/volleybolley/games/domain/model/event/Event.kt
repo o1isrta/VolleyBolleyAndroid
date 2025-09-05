@@ -1,9 +1,11 @@
-package cy.volleybolley.games.domain.model
+package cy.volleybolley.games.domain.model.event
 
 import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.games.domain.model.entity.Host
 
-data class TournamentPreview(
-    val tournamentId: Int,
+data class Event(
+    val id: Int,
+    val type: EventType,
     val host: Host,
     val location: Location,
     val message: String,

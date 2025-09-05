@@ -1,19 +1,13 @@
 package cy.volleybolley.games.data.network
 
-import cy.volleybolley.games.data.dto.GameDto
+import cy.volleybolley.games.data.dto.CreateGameDto
 import cy.volleybolley.games.data.dto.PlayersDto
 import cy.volleybolley.games.data.dto.RatePlayerDto
-import cy.volleybolley.games.data.dto.TournamentDto
 
 sealed interface GamesRequest {
     class CreateGame(
         val path: String = GAMES,
-        val game: GameDto,
-    ) : GamesRequest
-
-    class CreateTournament(
-        val path: String = TOURNAMENTS,
-        val tournament: TournamentDto,
+        val game: CreateGameDto,
     ) : GamesRequest
 
     class GetGameDetails(
@@ -24,29 +18,12 @@ sealed interface GamesRequest {
         }
     }
 
-    class GetTournamentDetails(
-        val tournamentId: Int,
-    ) : GamesRequest {
-        fun fullPath(): String {
-            return "$TOURNAMENTS/$tournamentId"
-        }
-    }
-
     class InvitePlayersToGame(
         val gameId: Int,
         val players: PlayersDto,
     ) : GamesRequest {
         fun fullPath(): String {
             return "$GAMES/$gameId/$INVITE_PLAYERS"
-        }
-    }
-
-    class InvitePlayersToTournament(
-        val tournamentId: Int,
-        val players: PlayersDto,
-    ) : GamesRequest {
-        fun fullPath(): String {
-            return "$TOURNAMENTS/$tournamentId/$INVITE_PLAYERS"
         }
     }
 
@@ -88,14 +65,6 @@ sealed interface GamesRequest {
         }
     }
 
-    class JoinTournament(
-        val tournamentId: Int,
-    ) : GamesRequest {
-        fun fullPath(): String {
-            return "$GAMES/$tournamentId/$JOIN_TOURNAMENT"
-        }
-    }
-
     class DeclineGameInvite(
         val gameId: Int,
     ) : GamesRequest {
@@ -104,11 +73,11 @@ sealed interface GamesRequest {
         }
     }
 
-    class DeclineTournamentInvite(
-        val tournamentId: Int,
+    class CancelGame(
+        val gameId: Int
     ) : GamesRequest {
         fun fullPath(): String {
-            return "$TOURNAMENTS/$tournamentId/$INVITES"
+            return "$GAMES/$gameId/$CANCEL"
         }
     }
 
@@ -148,6 +117,7 @@ sealed interface GamesRequest {
         const val UPCOMING = "upcoming"
         const val JOIN_GAME = "join-game"
         const val JOIN_TOURNAMENT = "join-tournament"
+        const val CANCEL = "cancel"
         const val RATE_PLAYERS = "rate-players"
         const val SKIP = "skip"
     }
