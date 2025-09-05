@@ -12,6 +12,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.path
 
+@Suppress("LongMethod")
 class GamesNetworkClient : KtorNetworkClient<GamesRequest, GamesResponse>() {
     override suspend fun sendRequestByType(request: GamesRequest): HttpResponse {
         return when (request) {
