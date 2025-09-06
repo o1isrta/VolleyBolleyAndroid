@@ -6,9 +6,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.faq.FaqScreenEffect.
 import cy.volleybolley.core.presentation.ui.screens.profile.faq.FaqScreenEvent.OnBackFromFaqClick
 import kotlinx.coroutines.flow.update
 
-class FaqScreenViewModel(
-//    private val getFaqUseCase: GetFaqUseCase,
-) : BaseViewModel<FaqScreenState, FaqScreenEvent, FaqScreenEffect>(
+class FaqScreenViewModel : BaseViewModel<FaqScreenState, FaqScreenEvent, FaqScreenEffect>(
     initialState = FaqScreenState()
 ) {
     init {

@@ -46,7 +46,7 @@ class PlayerProfileScreenViewModel(
                 }
             )
 
-            PlayerProfileScreenEvent.ClickOnActivityMapButton -> {/*пока не ясно что тут должно быть*/}
+            PlayerProfileScreenEvent.ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/ }
 
             is ClickOnFavoriteManagementButton -> _uiState.update {
                 it.copy(

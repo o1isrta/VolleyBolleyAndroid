@@ -6,9 +6,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.about.AboutScreenEve
 import cy.volleybolley.core.presentation.ui.screens.profile.about.AboutScreenEvent.OnStateInitialiseByResources
 import kotlinx.coroutines.flow.update
 
-class AboutScreenViewModel(
-
-) : BaseViewModel<AboutScreenState, AboutScreenEvent, AboutScreenEffect>(
+class AboutScreenViewModel : BaseViewModel<AboutScreenState, AboutScreenEvent, AboutScreenEffect>(
     initialState = AboutScreenState(),
 ) {
     override val tag: String = TAG

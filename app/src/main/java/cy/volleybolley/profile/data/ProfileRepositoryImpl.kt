@@ -2,6 +2,7 @@ package cy.volleybolley.profile.data
 
 import android.content.Context
 import android.util.Base64
+import androidx.core.net.toUri
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.data.network.model.mapToErrorType
 import cy.volleybolley.core.domain.model.ErrorType
@@ -16,7 +17,6 @@ import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PersonalData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import androidx.core.net.toUri
 
 class ProfileRepositoryImpl(
     private val networkClient: NetworkClient<ProfileRequest, ProfileResponse>,

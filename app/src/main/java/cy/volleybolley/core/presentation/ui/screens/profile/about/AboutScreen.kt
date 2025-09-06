@@ -27,6 +27,7 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.screens.profile.about.AboutScreenEffect.NavigateFromAboutScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.about.AboutScreenEvent.OnBackFromAboutClick
@@ -61,13 +62,15 @@ private fun AboutScreen(
     eventCallback: (AboutScreenEvent) -> Unit,
 ) {
     val scrollState = rememberScrollState()
-    if (!state.isInitializedState) eventCallback(
-        OnStateInitialiseByResources(
-            founderName = stringResource(R.string.about_founder_value),
-            designersNames = stringResource(R.string.about_designers_value),
-            developersNames = stringResource(R.string.about_developers_value),
+    if (!state.isInitializedState) {
+        eventCallback(
+            OnStateInitialiseByResources(
+                founderName = stringResource(R.string.about_founder_value),
+                designersNames = stringResource(R.string.about_designers_value),
+                developersNames = stringResource(R.string.about_developers_value),
+            )
         )
-    )
+    }
 
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
@@ -134,14 +137,14 @@ private fun AboutTextLine(
             text = title,
             textAlign = TextAlign.Start,
             maxLines = 1,
-            modifier = Modifier.weight(0.37f)
+            modifier = Modifier.weight(VolleyUiUtil.ABOUT_SCREEN_TITLES_WEIGHT)
         )
 
         VolleyText.BodyRegular(
             text = value,
             textAlign = TextAlign.Start,
             color = VolleyColor.White,
-            modifier = Modifier.weight(0.63f)
+            modifier = Modifier.weight(VolleyUiUtil.ABOUT_SCREEN_CONTENT_WEIGHT)
         )
     }
 

@@ -33,6 +33,25 @@ object VolleyUiUtil {
     const val FAQ_BULLET_OUT_PREFIX = " • "
     const val NEXT_LINE = "\n"
 
+    // Months indexes for enum
+    const val INDEX_JANUARY: Int = 0
+    const val INDEX_FEBRUARY = 1
+    const val INDEX_MARCH = 2
+    const val INDEX_APRIL = 3
+    const val INDEX_MAY = 4
+    const val INDEX_JUNE = 5
+    const val INDEX_JULY = 6
+    const val INDEX_AUGUST = 7
+    const val INDEX_SEPTEMBER = 8
+    const val INDEX_OCTOBER = 9
+    const val INDEX_NOVEMBER = 10
+    const val INDEX_DECEMBER = 11
+    const val INDEX_UNKNOWN = -1
+
+    // Weight ratio for About Screen
+    const val ABOUT_SCREEN_TITLES_WEIGHT = 0.37f
+    const val ABOUT_SCREEN_CONTENT_WEIGHT = 0.37f
+
     // temp mock value
     const val MOCK_FAQ = "# Registration\n" +
         "To find the right games and teammates, choose your current skill level:\n" +

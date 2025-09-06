@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
-import cy.volleybolley.profile.domain.model.PaymentType
 import kotlinx.serialization.Serializable
 
 @Serializable

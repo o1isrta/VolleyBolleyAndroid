@@ -288,8 +288,7 @@ private fun FavoriteManagementButton(
             text = buttonText,
             color = textColor,
             maxLines = 1,
-
-            )
+        )
     }
 }
 

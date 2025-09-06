@@ -1,20 +1,33 @@
 package cy.volleybolley.core.presentation.ui.model
 
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_APRIL
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_AUGUST
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_DECEMBER
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_FEBRUARY
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_JANUARY
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_JULY
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_JUNE
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_MARCH
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_MAY
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_NOVEMBER
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_OCTOBER
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_SEPTEMBER
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.INDEX_UNKNOWN
 
 enum class VolleyMonths(val index: Int, val simpleName: String) {
-    JANUARY(0, "january"),
-    FEBRUARY(1, "february"),
-    MARCH(2, "march"),
-    APRIL(3, "april"),
-    MAY(4, "may"),
-    JUNE(5, "june"),
-    JULY(6, "july"),
-    AUGUST(7, "august"),
-    SEPTEMBER(8, "september"),
-    OCTOBER(9, "october"),
-    NOVEMBER(10, "november"),
-    DECEMBER(11, "december"),
-    UNKNOWN(-1, "unknown");
+    JANUARY(INDEX_JANUARY, "january"),
+    FEBRUARY(INDEX_FEBRUARY, "february"),
+    MARCH(INDEX_MARCH, "march"),
+    APRIL(INDEX_APRIL, "april"),
+    MAY(INDEX_MAY, "may"),
+    JUNE(INDEX_JUNE, "june"),
+    JULY(INDEX_JULY, "july"),
+    AUGUST(INDEX_AUGUST, "august"),
+    SEPTEMBER(INDEX_SEPTEMBER, "september"),
+    OCTOBER(INDEX_OCTOBER, "october"),
+    NOVEMBER(INDEX_NOVEMBER, "november"),
+    DECEMBER(INDEX_DECEMBER, "december"),
+    UNKNOWN(INDEX_UNKNOWN, "unknown");
 
     companion object {
         @JvmStatic

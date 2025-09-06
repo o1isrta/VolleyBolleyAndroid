@@ -3,11 +3,11 @@ package cy.volleybolley.core.presentation.ui.screens.profile.payments
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.EnterPaymentDataRoute
-import cy.volleybolley.core.presentation.ui.screens.profile.payments.model.BackPaymentsHolder
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEffect.NavigateFromPaymentsScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEvent.ClickOnBackFromPayments
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEvent.ClickOnPaymentsItem
 import cy.volleybolley.core.presentation.ui.screens.profile.payments.PaymentsScreenEvent.ClickOnPaymentsItemCheckBox
+import cy.volleybolley.core.presentation.ui.screens.profile.payments.model.BackPaymentsHolder
 import cy.volleybolley.profile.domain.GetPaymentsUseCase
 import cy.volleybolley.profile.domain.UpdatePaymentsUseCase
 import cy.volleybolley.profile.domain.model.Payment
