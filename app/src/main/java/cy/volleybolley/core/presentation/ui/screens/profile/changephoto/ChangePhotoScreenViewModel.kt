@@ -26,21 +26,21 @@ class ChangePhotoScreenViewModel(
         when (event) {
             is GetAvatarFromPersonalData -> {
                 originAvatar = event.avatar
-                _uiState.update { it.copy(avatarUrl = event.avatar) }
+                uiStateMutable.update { it.copy(avatarUrl = event.avatar) }
             }
 
             OnBackFromChangePhotoClick -> sendUiEffect(NavigateFromChangePhotoScreen(null))
 
             is OnGalleryPhotoSelect -> {
-                _uiState.update { checkStateForButtonEnabled(event.uriString) }
+                uiStateMutable.update { checkStateForButtonEnabled(event.uriString) }
             }
 
             is OnCameraPhotoCreate -> {
-                _uiState.update { checkStateForButtonEnabled(event.photoUri) }
+                uiStateMutable.update { checkStateForButtonEnabled(event.photoUri) }
             }
 
             OnDeletePhotoClick -> {
-                _uiState.update { checkStateForButtonEnabled(null) }
+                uiStateMutable.update { checkStateForButtonEnabled(null) }
             }
 
             OnSaveButtonClick -> {

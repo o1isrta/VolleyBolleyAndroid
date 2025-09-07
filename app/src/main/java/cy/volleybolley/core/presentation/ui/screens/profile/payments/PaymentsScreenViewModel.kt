@@ -25,7 +25,7 @@ class PaymentsScreenViewModel(
 ) {
     init {
 //        getPayments()  >> execute getPaymentsUseCase
-        _uiState.update { it.copy(payments = VolleyUiUtil.mockPayments) }
+        uiStateMutable.update { it.copy(payments = VolleyUiUtil.mockPayments) }
     }
 
     override val tag: String = TAG
@@ -53,14 +53,14 @@ class PaymentsScreenViewModel(
 
             is ClickOnPaymentsItemCheckBox -> {
                 // Execute updatePaymentsUseCase and update local state on success
-                _uiState.update { it.copy(changePreferred(it.payments, event.itemType)) }
+                uiStateMutable.update { it.copy(changePreferred(it.payments, event.itemType)) }
             }
         }
     }
 
     fun handleBackPayments() {
         backPaymentsHolder.getPaymentsJsonString()?.let { jsonString ->
-            _uiState.update { it.copy(payments = json.decodeFromString<List<Payment>>(jsonString)) }
+            uiStateMutable.update { it.copy(payments = json.decodeFromString<List<Payment>>(jsonString)) }
             backPaymentsHolder.clearBackPayments()
         }
     }

@@ -11,7 +11,7 @@ class FaqScreenViewModel : BaseViewModel<FaqScreenState, FaqScreenEvent, FaqScre
 ) {
     init {
         // Mock init
-        _uiState.update { FaqScreenState(faqText = VolleyUiUtil.parseMarkdown(VolleyUiUtil.MOCK_FAQ)) }
+        uiStateMutable.update { FaqScreenState(faqText = VolleyUiUtil.parseMarkdown(VolleyUiUtil.MOCK_FAQ)) }
     }
 
     override val tag: String = TAG

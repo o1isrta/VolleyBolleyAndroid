@@ -26,7 +26,7 @@ class PlayersScreenViewModel(
         // getPlayers()
         originAllPlayers.addAll(VolleyUiUtil.mockPlayers)
         originFavoritePlayers.addAll(getFavoritePlayers())
-        _uiState.update { it.copy(players = originAllPlayers) }
+        uiStateMutable.update { it.copy(players = originAllPlayers) }
     }
 
     override val tag = TAG
@@ -36,11 +36,11 @@ class PlayersScreenViewModel(
             ClickOnBackFromPlayers -> sendUiEffect(NavigateFromPlayersScreen(null))
 
             is SearchTextChanged -> {
-                _uiState.update { it.copy(searchText = event.text) }
+                uiStateMutable.update { it.copy(searchText = event.text) }
             }
 
             is ClickOnSearchButton -> {
-                _uiState.update {
+                uiStateMutable.update {
                     if (it.showAllPlayers) {
                         it.copy(
                             players = originAllPlayers.filter { player ->
@@ -88,7 +88,7 @@ class PlayersScreenViewModel(
         }
 
         if (condition) {
-            _uiState.update {
+            uiStateMutable.update {
                 it.copy(
                     searchText = "",
                     showAllPlayers = showAllStatus,

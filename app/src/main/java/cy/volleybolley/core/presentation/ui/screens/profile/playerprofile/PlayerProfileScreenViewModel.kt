@@ -33,7 +33,7 @@ class PlayerProfileScreenViewModel(
             it.id == playerId
         } ?: VolleyUiUtil.mockPlayerDetails[0]
         originFavoriteStatus = details.isFavorite
-        _uiState.update { it.copy(playerDetail = details) }
+        uiStateMutable.update { it.copy(playerDetail = details) }
     }
 
     override fun obtainEvent(event: PlayerProfileScreenEvent) {
@@ -48,7 +48,7 @@ class PlayerProfileScreenViewModel(
 
             PlayerProfileScreenEvent.ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/ }
 
-            is ClickOnFavoriteManagementButton -> _uiState.update {
+            is ClickOnFavoriteManagementButton -> uiStateMutable.update {
                 it.copy(
                     playerDetail = it.playerDetail.copy(isFavorite = event.isFavorite)
                 )

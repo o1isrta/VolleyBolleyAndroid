@@ -32,7 +32,7 @@ class EnterPaymentDataScreenViewModel(
     override val tag: String = TAG
 
     init {
-        _uiState.update {
+        uiStateMutable.update {
             it.copy(accountValue = savedAccountValue)
         }
     }
@@ -44,7 +44,7 @@ class EnterPaymentDataScreenViewModel(
             }
 
             is AccountTextChanged -> {
-                _uiState.update { checkStateForButtonEnabled(event.text) }
+                uiStateMutable.update { checkStateForButtonEnabled(event.text) }
             }
 
             OnSaveButtonClick -> {
@@ -60,12 +60,12 @@ class EnterPaymentDataScreenViewModel(
                         originPayments.map {
                             if (it.type == newPayment.type) newPayment.copy(isPreferred = it.isPreferred) else it
                         }
-                    } ?: (originPayments + newPayment)
+                    } ?: originPaymentsWithNewOne(newPayment)
                     savedPaymentsJsonString = json.encodeToString(updatedPayments)
                     // here we must do updatePaymentsUseCase.execute(updatedPayments) >> on success actions below:
 
                     savedAccountValue = uiState.value.accountValue.trim()
-                    _uiState.update { checkStateForButtonEnabled(savedAccountValue) }
+                    uiStateMutable.update { checkStateForButtonEnabled(savedAccountValue) }
                     sendUiEffect(
                         ShowInfoDialog(
                             onDoneButtonClick = {
@@ -77,6 +77,8 @@ class EnterPaymentDataScreenViewModel(
             }
         }
     }
+
+    private fun originPaymentsWithNewOne(newPayment: Payment): List<Payment> = originPayments + newPayment
 
     private fun checkStateForButtonEnabled(newAccount: String): EnterPaymentDataScreenState {
         return EnterPaymentDataScreenState(

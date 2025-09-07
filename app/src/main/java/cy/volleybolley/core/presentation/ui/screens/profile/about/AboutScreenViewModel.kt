@@ -16,7 +16,7 @@ class AboutScreenViewModel : BaseViewModel<AboutScreenState, AboutScreenEvent, A
             OnBackFromAboutClick -> sendUiEffect(NavigateFromAboutScreen(null))
 
             is OnStateInitialiseByResources -> {
-                _uiState.update { currentState ->
+                uiStateMutable.update { currentState ->
                     currentState.copy(
                         founder = event.founderName,
                         designedBy = adaptStringFromResources(event.designersNames),

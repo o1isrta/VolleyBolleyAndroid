@@ -27,7 +27,7 @@ class PersonalDataScreenViewModel(
 ) : BaseViewModel<PersonalDataScreenState, PersonalDataScreenEvent, PersonalDataScreenEffect>(
     initialState = PersonalDataScreenState()
 ) {
-    private lateinit var originState: PersonalDataScreenState
+    private var originState: PersonalDataScreenState = uiState.value
 
     val mockPersonalData = PersonalData(
         firstName = "Anonymous",
@@ -41,10 +41,10 @@ class PersonalDataScreenViewModel(
     )
 
     init {
-        // getState()
+        // getState() пока нельзя тестировать - убрал
         launchSafe(getErrorLogMessage = { "PersonalDataScreen >> init: ${it.message}" }) {
             originState = mockPersonalData.toState()
-            _uiState.update { originState }
+            uiStateMutable.update { originState }
         }
     }
 
@@ -70,26 +70,26 @@ class PersonalDataScreenViewModel(
                             getPersonalDataUseCase.execute()
                                 .onSuccess { personalData ->
                                     originState = personalData.toState()
-                                    _uiState.update { originState }
+                                    uiStateMutable.update { originState }
                                 }
                         }
                 }
             }
 
             is NameChanged -> {
-                _uiState.update { checkStateForButtonEnabled(it.copy(name = event.newName)) }
+                uiStateMutable.update { checkStateForButtonEnabled(it.copy(name = event.newName)) }
             }
 
             is SurnameChanged -> {
-                _uiState.update { checkStateForButtonEnabled(it.copy(surname = event.newSurname)) }
+                uiStateMutable.update { checkStateForButtonEnabled(it.copy(surname = event.newSurname)) }
             }
 
             is GenderSelect -> {
-                _uiState.update { checkStateForButtonEnabled(it.copy(genderId = event.genderId)) }
+                uiStateMutable.update { checkStateForButtonEnabled(it.copy(genderId = event.genderId)) }
             }
 
             is DateSelect -> {
-                _uiState.update { checkStateForButtonEnabled(it.copy(dateOfBirth = event.date)) }
+                uiStateMutable.update { checkStateForButtonEnabled(it.copy(dateOfBirth = event.date)) }
             }
 
             is CountrySelect -> {}
@@ -102,19 +102,8 @@ class PersonalDataScreenViewModel(
         backAvatarHolder.getAvatarChanges()?.let { avatarValue ->
             val newAvatar = if (avatarValue.isEmpty()) null else avatarValue
             originState = originState.copy(avatar = newAvatar)
-            _uiState.update { it.copy(avatar = newAvatar) }
+            uiStateMutable.update { it.copy(avatar = newAvatar) }
             backAvatarHolder.clearBackAvatar()
-        }
-    }
-
-    // Неполный метод, потом дописать как будет реализовано API
-    private fun getState() {
-        launchSafe(getErrorLogMessage = { "PersonalDataScreen >> getState: ${it.message}" }) {
-            getPersonalDataUseCase.execute()
-                .onSuccess {
-                    originState = it.toState()
-                    _uiState.update { originState }
-                }
         }
     }
 

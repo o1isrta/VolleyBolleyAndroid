@@ -68,7 +68,8 @@ object VolleyUiUtil {
         "- 5+ negative ratings — demoted one step\n" +
         "- Mixed feedback — level stays the same\n" +
         "# Want to move to the next category?\n" +
-        "Earn 10 points from higher-level players within the last 60 days. The higher the evaluator's level, the more weight their rating carries.\n" +
+        "Earn 10 points from higher-level players within the last 60 days. The higher the evaluator's level," +
+        " the more weight their rating carries.\n" +
         "# Levels can drop due to:\n" +
         "Ratings (6 within 60 days, 5+ downs = demotion)\n" +
         "Inactivity:\n" +
