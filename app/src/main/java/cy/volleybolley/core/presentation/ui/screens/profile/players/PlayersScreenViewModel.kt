@@ -58,30 +58,43 @@ class PlayersScreenViewModel(
             }
 
             ClickOnAllPlayers -> {
-                if (!uiState.value.showAllPlayers) {
-                    _uiState.update {
-                        it.copy(
-                            searchText = "",
-                            showAllPlayers = true,
-                            players = originAllPlayers
-                        )
-                    }
-                }
+                clickOnModeSwitchButton(isClickOnAllPlayers = true)
             }
 
             ClickOnFavoritePlayers -> {
-                if (uiState.value.showAllPlayers) {
-                    _uiState.update {
-                        it.copy(
-                            searchText = "",
-                            showAllPlayers = false,
-                            players = originFavoritePlayers
-                        )
-                    }
-                }
+                clickOnModeSwitchButton(isClickOnAllPlayers = false)
             }
 
             is ClickOnListItem -> sendUiEffect(NavigateFromPlayersScreen(PlayerProfileRoute(event.playerId)))
+        }
+    }
+
+    private fun clickOnModeSwitchButton(isClickOnAllPlayers: Boolean) {
+        val condition: Boolean
+        val playersListToUpdate: List<PlayerTemp>
+        val showAllStatus: Boolean
+        when (isClickOnAllPlayers) {
+            true -> {
+                condition = !uiState.value.showAllPlayers
+                playersListToUpdate = originAllPlayers
+                showAllStatus = true
+            }
+
+            else -> {
+                condition = uiState.value.showAllPlayers
+                playersListToUpdate = originFavoritePlayers
+                showAllStatus = false
+            }
+        }
+
+        if (condition) {
+            _uiState.update {
+                it.copy(
+                    searchText = "",
+                    showAllPlayers = showAllStatus,
+                    players = playersListToUpdate
+                )
+            }
         }
     }
 

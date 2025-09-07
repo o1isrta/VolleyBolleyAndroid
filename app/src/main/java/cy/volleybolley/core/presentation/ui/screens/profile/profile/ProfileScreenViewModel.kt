@@ -61,41 +61,45 @@ class ProfileScreenViewModel(
                 )
             )
 
-            OnLogoutClick -> {
-                sendUiEffect(
-                    ShowLogoutDialog(
-                        onPositiveButtonClick = {
-                            launchSafe(
-                                getErrorLogMessage = { throwable ->
-                                    "ProfileScreen >> Logout dialog >> YES-button: ${throwable.message}"
-                                }
-                            ) {
+            OnLogoutClick -> { onLogoutClick() }
+
+            OnDeleteAccountClick -> { onDeleteAccountClick() }
+        }
+    }
+
+    private fun onLogoutClick() {
+        sendUiEffect(
+            ShowLogoutDialog(
+                onPositiveButtonClick = {
+                    launchSafe(
+                        getErrorLogMessage = { throwable ->
+                            "ProfileScreen >> Logout dialog >> YES-button: ${throwable.message}"
+                        }
+                    ) {
+                        sendUiEffect(NavigateFromProfileScreen(LaunchRoute))
+                    }
+                },
+            )
+        )
+    }
+
+    private fun onDeleteAccountClick() {
+        sendUiEffect(
+            ShowDeleteAccountDialog(
+                onPositiveButtonClick = {
+                    launchSafe(
+                        getErrorLogMessage = { throwable ->
+                            "ProfileScreen >> Delete account dialog >> YES-button: ${throwable.message}"
+                        }
+                    ) {
+                        deleteProfileUseCase.execute()
+                            .onSuccess {
                                 sendUiEffect(NavigateFromProfileScreen(LaunchRoute))
                             }
-                        },
-                    )
-                )
-            }
-
-            OnDeleteAccountClick -> {
-                sendUiEffect(
-                    ShowDeleteAccountDialog(
-                        onPositiveButtonClick = {
-                            launchSafe(
-                                getErrorLogMessage = { throwable ->
-                                    "ProfileScreen >> Delete account dialog >> YES-button: ${throwable.message}"
-                                }
-                            ) {
-                                deleteProfileUseCase.execute()
-                                    .onSuccess {
-                                        sendUiEffect(NavigateFromProfileScreen(LaunchRoute))
-                                    }
-                            }
-                        },
-                    )
-                )
-            }
-        }
+                    }
+                },
+            )
+        )
     }
 
     companion object {
