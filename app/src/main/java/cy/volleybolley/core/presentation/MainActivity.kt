@@ -60,6 +60,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val state by viewModel.uiState.collectAsState()
+
             LaunchedEffect(Unit) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                     !viewModel.isNotificationPermissionGranted()
@@ -75,6 +76,7 @@ class MainActivity : ComponentActivity() {
                     viewModel.updateTokenBasedOnPermission()
                 }
             }
+
             VolleybolleyTheme {
                 RootContainer(
                     state = state,
@@ -90,6 +92,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+
             ButtonDemo()
         }
     }

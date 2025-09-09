@@ -42,7 +42,6 @@ import cy.volleybolley.core.presentation.ui.screens.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
-import cy.volleybolley.notification.ui.NotificationsScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.AboutScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
@@ -52,6 +51,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.PersonalDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
+import cy.volleybolley.notification.ui.NotificationsScreen
 
 @Composable
 fun NavHostContainer(
@@ -132,7 +132,7 @@ fun NavHostContainer(
         composable<ProfileRoute> { ProfileScreen(navController) }
         composable<EnterPaymentDataRoute> { EnterPaymentDataScreen(navController) }
 
-        //Notifications
+        // notifications
         composable<NotificationsRoute> { NotificationsScreen(navController) }
     }
 }

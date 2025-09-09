@@ -33,6 +33,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 import cy.volleybolley.notification.ui.component.NotificationsScreenComponents.NotificationListContent
 import cy.volleybolley.notification.ui.model.NotificationItem
+import cy.volleybolley.notification.ui.model.RouteScreen
 
 object NotificationsScreenComponents {
     @Composable
@@ -166,40 +167,39 @@ private fun PreviewNotificationsScreen() {
             title = "New invite",
             message = "Anton Ivanov invited you",
             createdAt = "28.08.2025",
-            screen = "",
+            screen = RouteScreen.JOIN_GAME.screenName,
             id = 1
         ),
         NotificationItem(
             title = "Removed from game",
             message = "1 September, 6:00–8:00 pm",
             createdAt = "27.08.2025",
-            screen = "VolleyBolley",
+            screen = RouteScreen.JOIN_GAME.screenName,
             id = 2
         ),
         NotificationItem(
             title = "Tourney cancelled",
             message = "12 September, 2:00–8:00 pm",
             createdAt = "26.08.2025",
-            screen = "VolleyBolley",
+            screen = RouteScreen.JOIN_GAME.screenName,
             id = 3
         ),
         NotificationItem(
             title = "Removed from tourney",
             message = "15 September, 9:00–11:00 am",
             createdAt = "25.08.2025",
-            screen = "VolleyBolley",
+            screen = RouteScreen.JOIN_GAME.screenName,
             id = 4
         ),
         NotificationItem(
             title = "Game cancelled",
             message = "5 September, 4:00–6:00 pm",
             createdAt = "24.09.2025",
-            screen = "VolleyBolley",
+            screen = RouteScreen.JOIN_GAME.screenName,
             id = 5
         )
     )
-    Box()
-    {
+    Box() {
         NotificationListContent(
             navController = rememberNavController(),
             notifications = sampleData,
