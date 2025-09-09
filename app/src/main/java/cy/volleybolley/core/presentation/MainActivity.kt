@@ -35,8 +35,8 @@ import cy.volleybolley.core.presentation.ui.model.state.MainActivityEvent
 import cy.volleybolley.core.presentation.ui.model.state.MainActivityState
 import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
-import cy.volleybolley.notification.presentation.GlobalAlertDialog
-import cy.volleybolley.notification.presentation.resolveNotificationRoute
+import cy.volleybolley.notification.ui.component.GlobalAlertDialog
+import cy.volleybolley.notification.ui.component.resolveNotificationRoute
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -58,7 +58,6 @@ class MainActivity : ComponentActivity() {
             )
         )
         enableEdgeToEdge()
-        setContent {
             setContent {
                 val state by viewModel.uiState.collectAsState()
                 LaunchedEffect(Unit) {
@@ -93,7 +92,6 @@ class MainActivity : ComponentActivity() {
                 }
                 ButtonDemo()
             }
-        }
     }
 
     override fun onNewIntent(intent: Intent) {

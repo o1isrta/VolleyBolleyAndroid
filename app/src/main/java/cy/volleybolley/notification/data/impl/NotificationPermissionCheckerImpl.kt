@@ -1,9 +1,10 @@
-package cy.volleybolley.notification.data
+package cy.volleybolley.notification.data.impl
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import cy.volleybolley.notification.domain.api.NotificationPermissionChecker
+import cy.volleybolley.notification.domain.api.permission.NotificationPermissionChecker
 
 class NotificationPermissionCheckerImpl(
     private val context: Context
@@ -12,7 +13,7 @@ class NotificationPermissionCheckerImpl(
     override fun isNotificationPermissionGranted(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.checkSelfPermission(
-                android.Manifest.permission.POST_NOTIFICATIONS
+                Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         } else {
             true

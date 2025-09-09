@@ -1,4 +1,4 @@
-package cy.volleybolley.notification.data.network
+package cy.volleybolley.notification.data.network.firebase
 
 import cy.volleybolley.notification.data.dto.UpdateDeviceTokenRequest
 

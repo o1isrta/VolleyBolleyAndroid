@@ -11,7 +11,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.MainActivity
-import cy.volleybolley.notification.domain.api.FCMTokenStore
+import cy.volleybolley.notification.domain.api.storages.FCMTokenStore
 import org.koin.android.ext.android.inject
 import org.koin.core.component.KoinComponent
 

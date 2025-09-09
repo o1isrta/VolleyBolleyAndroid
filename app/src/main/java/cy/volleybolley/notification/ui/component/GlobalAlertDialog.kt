@@ -1,4 +1,4 @@
-package cy.volleybolley.notification.presentation
+package cy.volleybolley.notification.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

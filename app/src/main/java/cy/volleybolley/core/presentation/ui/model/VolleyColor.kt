@@ -90,4 +90,9 @@ object VolleyColor {
      * Затемнение для диалогов
      */
     val DialogBlackout = Color(color = 0xB2555252)
+
+    /**
+     * Уведомления
+     */
+    val NotificationColor = Color(color = 0x30AAC8E0)
 }

@@ -1,4 +1,4 @@
-package cy.volleybolley.notification.presentation
+package cy.volleybolley.notification.ui.model
 
 enum class RouteScreen(val screenName: String) {
     JOIN_GAME("joinGame"),

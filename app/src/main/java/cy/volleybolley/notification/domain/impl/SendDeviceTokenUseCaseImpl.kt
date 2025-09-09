@@ -1,4 +1,4 @@
-package cy.volleybolley.notification.domain
+package cy.volleybolley.notification.domain.impl
 
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult

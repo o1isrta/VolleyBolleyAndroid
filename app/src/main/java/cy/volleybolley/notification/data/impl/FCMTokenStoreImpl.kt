@@ -1,7 +1,7 @@
-package cy.volleybolley.notification.data
+package cy.volleybolley.notification.data.impl
 
 import android.content.SharedPreferences
-import cy.volleybolley.notification.domain.api.FCMTokenStore
+import cy.volleybolley.notification.domain.api.storages.FCMTokenStore
 import cy.volleybolley.notification.utils.Constants.FCM_TOKEN
 
 class FCMTokenStoreImpl(

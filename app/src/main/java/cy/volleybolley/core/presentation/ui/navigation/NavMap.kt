@@ -153,3 +153,6 @@ object ProfileRoute : NavMap
 
 @Serializable
 object EnterPaymentDataRoute : NavMap
+
+@Serializable
+object NotificationsRoute : NavMap

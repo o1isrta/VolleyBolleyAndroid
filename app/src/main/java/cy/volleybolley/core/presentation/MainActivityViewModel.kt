@@ -8,9 +8,9 @@ import com.google.firebase.messaging.FirebaseMessaging
 import cy.volleybolley.core.presentation.ui.model.state.MainActivityEvent
 import cy.volleybolley.core.presentation.ui.model.state.MainActivityState
 import cy.volleybolley.core.presentation.ui.model.state.data.DialogData
-import cy.volleybolley.notification.domain.api.FCMTokenStore
-import cy.volleybolley.notification.domain.api.NotificationPermissionChecker
+import cy.volleybolley.notification.domain.api.permission.NotificationPermissionChecker
 import cy.volleybolley.notification.domain.api.registration.SendDeviceTokenUseCase
+import cy.volleybolley.notification.domain.api.storages.FCMTokenStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,12 +24,11 @@ class MainActivityViewModel(
     private val sendDeviceTokenUseCase: SendDeviceTokenUseCase,
     private val fcmTokenStore: FCMTokenStore,
     private val notificationPermissionChecker: NotificationPermissionChecker,
-    private val isUserAuthorized: Boolean = false,
+    private val isUserAuthorized: Boolean = true,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainActivityState())
     val uiState: StateFlow<MainActivityState> = _uiState.asStateFlow()
-
     fun updateTokenBasedOnPermission() {
         viewModelScope.launch {
             if (isUserAuthorized) {

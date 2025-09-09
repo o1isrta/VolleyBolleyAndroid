@@ -5,7 +5,8 @@ import org.koin.core.qualifier.named
 enum class HttpClientQualifier(val value: String) {
     COURTS("courts"),
     DEVICE_TOKEN("device_token"),
-    PROFILE("profile");
+    PROFILE("profile"),
+    NOTIFICATIONS("notifications");
 
     val qualifier get() = named(value)
 }

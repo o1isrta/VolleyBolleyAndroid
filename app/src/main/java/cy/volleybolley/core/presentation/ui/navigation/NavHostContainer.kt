@@ -42,6 +42,7 @@ import cy.volleybolley.core.presentation.ui.screens.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
+import cy.volleybolley.notification.ui.NotificationsScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.AboutScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
@@ -130,5 +131,8 @@ fun NavHostContainer(
         composable<PlayersRoute> { PlayersScreen(navController) }
         composable<ProfileRoute> { ProfileScreen(navController) }
         composable<EnterPaymentDataRoute> { EnterPaymentDataScreen(navController) }
+
+        //Notifications
+        composable<NotificationsRoute> { NotificationsScreen(navController) }
     }
 }

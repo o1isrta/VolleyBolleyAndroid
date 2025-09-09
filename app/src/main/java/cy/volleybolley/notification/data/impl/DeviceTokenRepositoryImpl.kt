@@ -1,12 +1,12 @@
-package cy.volleybolley.notification.data
+package cy.volleybolley.notification.data.impl
 
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.data.network.model.mapToErrorType
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.notification.data.dto.UpdateDeviceTokenRequest
-import cy.volleybolley.notification.data.network.DeviceTokenRequest
-import cy.volleybolley.notification.data.network.DeviceTokenResponse
+import cy.volleybolley.notification.data.network.firebase.DeviceTokenRequest
+import cy.volleybolley.notification.data.network.firebase.DeviceTokenResponse
 import cy.volleybolley.notification.domain.api.registration.DeviceTokenRepository
 
 class DeviceTokenRepositoryImpl(
