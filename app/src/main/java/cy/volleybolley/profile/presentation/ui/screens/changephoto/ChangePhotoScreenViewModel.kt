@@ -3,6 +3,13 @@ package cy.volleybolley.profile.presentation.ui.screens.changephoto
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.profile.domain.DeleteAvatarUseCase
 import cy.volleybolley.profile.domain.UpdateAvatarUseCase
+import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEffect.NavigateFromChangePhotoScreen
+import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.GetAvatarFromPersonalData
+import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.OnBackFromChangePhotoClick
+import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.OnCameraPhotoCreate
+import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.OnDeletePhotoClick
+import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.OnGalleryPhotoSelect
+import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.OnSaveButtonClick
 import kotlinx.coroutines.flow.update
 
 class ChangePhotoScreenViewModel(
@@ -17,32 +24,30 @@ class ChangePhotoScreenViewModel(
 
     override fun obtainEvent(event: ChangePhotoScreenEvent) {
         when (event) {
-            is ChangePhotoScreenEvent.GetAvatarFromPersonalData -> {
+            is GetAvatarFromPersonalData -> {
                 originAvatar = event.avatar
                 uiStateMutable.update { it.copy(avatarUrl = event.avatar) }
             }
 
-            ChangePhotoScreenEvent.OnBackFromChangePhotoClick -> sendUiEffect(
-                ChangePhotoScreenEffect.NavigateFromChangePhotoScreen(
-                    null
-                )
+            OnBackFromChangePhotoClick -> sendUiEffect(
+                NavigateFromChangePhotoScreen(null)
             )
 
-            is ChangePhotoScreenEvent.OnGalleryPhotoSelect -> {
+            is OnGalleryPhotoSelect -> {
                 uiStateMutable.update { checkStateForButtonEnabled(event.uriString) }
             }
 
-            is ChangePhotoScreenEvent.OnCameraPhotoCreate -> {
+            is OnCameraPhotoCreate -> {
                 uiStateMutable.update { checkStateForButtonEnabled(event.photoUri) }
             }
 
-            ChangePhotoScreenEvent.OnDeletePhotoClick -> {
+            OnDeletePhotoClick -> {
                 uiStateMutable.update { checkStateForButtonEnabled(null) }
             }
 
-            ChangePhotoScreenEvent.OnSaveButtonClick -> {
+            OnSaveButtonClick -> {
                 val newAvatar = uiState.value.avatarUrl ?: ""
-                sendUiEffect(ChangePhotoScreenEffect.NavigateFromChangePhotoScreen(newAvatar))
+                sendUiEffect(NavigateFromChangePhotoScreen(newAvatar))
             }
         }
     }

@@ -4,6 +4,9 @@ import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.profile.domain.UpdatePaymentsUseCase
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
+import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEvent.AccountTextChanged
+import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEvent.ClickOnBackFromEnterPaymentData
+import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEvent.OnSaveButtonClick
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.Json
 
@@ -34,15 +37,15 @@ class EnterPaymentDataScreenViewModel(
 
     override fun obtainEvent(event: EnterPaymentDataScreenEvent) {
         when (event) {
-            EnterPaymentDataScreenEvent.ClickOnBackFromEnterPaymentData -> {
+            ClickOnBackFromEnterPaymentData -> {
                 sendUiEffect(EnterPaymentDataScreenEffect.NavigateFromEnterPaymentDataScreen(savedPaymentsJsonString))
             }
 
-            is EnterPaymentDataScreenEvent.AccountTextChanged -> {
+            is AccountTextChanged -> {
                 uiStateMutable.update { checkStateForButtonEnabled(event.text) }
             }
 
-            EnterPaymentDataScreenEvent.OnSaveButtonClick -> {
+            OnSaveButtonClick -> {
                 launchSafe(getErrorLogMessage = { "EnterPaymentDataScreen >> Save button: ${it.message}" }) {
                     val newPayment = Payment(
                         type = originPaymentType,

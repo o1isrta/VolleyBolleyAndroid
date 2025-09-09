@@ -3,6 +3,13 @@ package cy.volleybolley.profile.presentation.ui.screens.players
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.PlayerProfileRoute
+import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEffect.NavigateFromPlayersScreen
+import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnAllPlayers
+import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnBackFromPlayers
+import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnFavoritePlayers
+import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnListItem
+import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnSearchButton
+import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.SearchTextChanged
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 import cy.volleybolley.profile.presentation.ui.screens.players.model.PlayerTemp
 import kotlinx.coroutines.flow.update
@@ -26,13 +33,13 @@ class PlayersScreenViewModel(
 
     override fun obtainEvent(event: PlayersScreenEvent) {
         when (event) {
-            PlayersScreenEvent.ClickOnBackFromPlayers -> sendUiEffect(PlayersScreenEffect.NavigateFromPlayersScreen(null))
+            ClickOnBackFromPlayers -> sendUiEffect(NavigateFromPlayersScreen(null))
 
-            is PlayersScreenEvent.SearchTextChanged -> {
+            is SearchTextChanged -> {
                 uiStateMutable.update { it.copy(searchText = event.text) }
             }
 
-            is PlayersScreenEvent.ClickOnSearchButton -> {
+            is ClickOnSearchButton -> {
                 uiStateMutable.update {
                     if (it.showAllPlayers) {
                         it.copy(
@@ -50,16 +57,16 @@ class PlayersScreenViewModel(
                 }
             }
 
-            PlayersScreenEvent.ClickOnAllPlayers -> {
+            ClickOnAllPlayers -> {
                 clickOnModeSwitchButton(isClickOnAllPlayers = true)
             }
 
-            PlayersScreenEvent.ClickOnFavoritePlayers -> {
+            ClickOnFavoritePlayers -> {
                 clickOnModeSwitchButton(isClickOnAllPlayers = false)
             }
 
-            is PlayersScreenEvent.ClickOnListItem -> sendUiEffect(
-                PlayersScreenEffect.NavigateFromPlayersScreen(
+            is ClickOnListItem -> sendUiEffect(
+                NavigateFromPlayersScreen(
                     PlayerProfileRoute(event.playerId)
                 )
             )

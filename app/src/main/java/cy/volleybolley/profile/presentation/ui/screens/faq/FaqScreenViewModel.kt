@@ -2,6 +2,8 @@ package cy.volleybolley.profile.presentation.ui.screens.faq
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
+import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEffect.NavigateFromFaqScreen
+import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEvent.OnBackFromFaqClick
 import kotlinx.coroutines.flow.update
 
 class FaqScreenViewModel : BaseViewModel<FaqScreenState, FaqScreenEvent, FaqScreenEffect>(
@@ -16,7 +18,7 @@ class FaqScreenViewModel : BaseViewModel<FaqScreenState, FaqScreenEvent, FaqScre
 
     override fun obtainEvent(event: FaqScreenEvent) {
         when (event) {
-            FaqScreenEvent.OnBackFromFaqClick -> sendUiEffect(FaqScreenEffect.NavigateFromFaqScreen(null))
+            OnBackFromFaqClick -> sendUiEffect(NavigateFromFaqScreen(null))
         }
     }
 

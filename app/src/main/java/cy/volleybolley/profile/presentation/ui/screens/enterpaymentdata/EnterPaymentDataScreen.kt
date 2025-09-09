@@ -39,7 +39,6 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.profile.presentation.ui.screens.payments.model.BackPaymentsHolder
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEffect.NavigateFromEnterPaymentDataScreen
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEffect.ShowInfoDialog
@@ -47,6 +46,7 @@ import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPay
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEvent.ClickOnBackFromEnterPaymentData
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEvent.OnSaveButtonClick
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.model.EnterPaymentDialogType
+import cy.volleybolley.profile.presentation.ui.screens.payments.model.BackPaymentsHolder
 
 @Composable
 fun EnterPaymentDataScreen(

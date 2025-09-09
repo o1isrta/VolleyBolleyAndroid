@@ -39,7 +39,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
-import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEffect.NavigateFromPlayerDetailScreen
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnActivityMapButton
@@ -47,6 +46,7 @@ import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfi
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnFavoriteManagementButton
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerActivityTemp
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerDetailTemp
+import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 
 @Composable
 fun PlayerProfileScreen(

@@ -7,6 +7,16 @@ import cy.volleybolley.core.presentation.ui.navigation.ChangePhotoRoute
 import cy.volleybolley.profile.domain.GetPersonalDataUseCase
 import cy.volleybolley.profile.domain.UpdatePersonalDataUseCase
 import cy.volleybolley.profile.domain.model.PersonalData
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEffect.NavigateFromPersonalDataScreen
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.CitySelect
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.CountrySelect
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.DateSelect
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.GenderSelect
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.NameChanged
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnAvatarEditClick
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnBackFromPersonalDataClick
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnUpdateButtonClick
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.SurnameChanged
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.BackAvatarHolder
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.GenderType
 import kotlinx.coroutines.flow.update
@@ -43,17 +53,17 @@ class PersonalDataScreenViewModel(
 
     override fun obtainEvent(event: PersonalDataScreenEvent) {
         when (event) {
-            PersonalDataScreenEvent.OnBackFromPersonalDataClick -> sendUiEffect(
-                PersonalDataScreenEffect.NavigateFromPersonalDataScreen(null)
+            OnBackFromPersonalDataClick -> sendUiEffect(
+                NavigateFromPersonalDataScreen(null)
             )
 
-            PersonalDataScreenEvent.OnAvatarEditClick -> sendUiEffect(
-                PersonalDataScreenEffect.NavigateFromPersonalDataScreen(
+            OnAvatarEditClick -> sendUiEffect(
+                NavigateFromPersonalDataScreen(
                     ChangePhotoRoute(avatarUrl = originState.avatar)
                 )
             )
 
-            PersonalDataScreenEvent.OnUpdateButtonClick -> {
+            OnUpdateButtonClick -> {
                 launchSafe(getErrorLogMessage = { "PersonalDataScreen >> Update button: ${it.message}" }) {
                     val newPersonalData = uiState.value.toPersonalData()
                     updatePersonalDataUseCase.execute(newPersonalData)
@@ -67,25 +77,25 @@ class PersonalDataScreenViewModel(
                 }
             }
 
-            is PersonalDataScreenEvent.NameChanged -> {
+            is NameChanged -> {
                 uiStateMutable.update { checkStateForButtonEnabled(it.copy(name = event.newName)) }
             }
 
-            is PersonalDataScreenEvent.SurnameChanged -> {
+            is SurnameChanged -> {
                 uiStateMutable.update { checkStateForButtonEnabled(it.copy(surname = event.newSurname)) }
             }
 
-            is PersonalDataScreenEvent.GenderSelect -> {
+            is GenderSelect -> {
                 uiStateMutable.update { checkStateForButtonEnabled(it.copy(genderId = event.genderId)) }
             }
 
-            is PersonalDataScreenEvent.DateSelect -> {
+            is DateSelect -> {
                 uiStateMutable.update { checkStateForButtonEnabled(it.copy(dateOfBirth = event.date)) }
             }
 
-            is PersonalDataScreenEvent.CountrySelect -> {}
+            is CountrySelect -> {}
 
-            is PersonalDataScreenEvent.CitySelect -> {}
+            is CitySelect -> {}
         }
     }
 

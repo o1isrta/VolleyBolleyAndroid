@@ -9,6 +9,16 @@ import cy.volleybolley.core.presentation.ui.navigation.PaymentsRoute
 import cy.volleybolley.core.presentation.ui.navigation.PersonalDataRoute
 import cy.volleybolley.core.presentation.ui.navigation.PlayersRoute
 import cy.volleybolley.profile.domain.DeleteProfileUseCase
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.NavigateFromProfileScreen
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.ShowDeleteAccountDialog
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.ShowLogoutDialog
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEvent.OnDeleteAccountClick
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEvent.OnFaqClick
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEvent.OnLogoutClick
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEvent.OnPaymentsClick
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEvent.OnPersonalDataClick
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEvent.OnPlayersClick
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEvent.OnSupportClick
 
 class ProfileScreenViewModel(
     private val deleteProfileUseCase: DeleteProfileUseCase,
@@ -19,53 +29,53 @@ class ProfileScreenViewModel(
 
     override fun obtainEvent(event: ProfileScreenEvent) {
         when (event) {
-            ProfileScreenEvent.OnPlayersClick -> sendUiEffect(
-                ProfileScreenEffect.NavigateFromProfileScreen(
+            OnPlayersClick -> sendUiEffect(
+                NavigateFromProfileScreen(
                     PlayersRoute
                 )
             )
 
-            ProfileScreenEvent.OnPersonalDataClick -> sendUiEffect(
-                ProfileScreenEffect.NavigateFromProfileScreen(
+            OnPersonalDataClick -> sendUiEffect(
+                NavigateFromProfileScreen(
                     PersonalDataRoute
                 )
             )
 
-            ProfileScreenEvent.OnPaymentsClick -> sendUiEffect(
-                ProfileScreenEffect.NavigateFromProfileScreen(
+            OnPaymentsClick -> sendUiEffect(
+                NavigateFromProfileScreen(
                     PaymentsRoute
                 )
             )
 
-            ProfileScreenEvent.OnSupportClick -> {}
-            ProfileScreenEvent.OnFaqClick -> sendUiEffect(
-                ProfileScreenEffect.NavigateFromProfileScreen(
+            OnSupportClick -> {}
+            OnFaqClick -> sendUiEffect(
+                NavigateFromProfileScreen(
                     FaqRoute
                 )
             )
 
             ProfileScreenEvent.OnAboutClick -> sendUiEffect(
-                ProfileScreenEffect.NavigateFromProfileScreen(
+                NavigateFromProfileScreen(
                     AboutRoute
                 )
             )
 
-            ProfileScreenEvent.OnLogoutClick -> { onLogoutClick() }
+            OnLogoutClick -> { onLogoutClick() }
 
-            ProfileScreenEvent.OnDeleteAccountClick -> { onDeleteAccountClick() }
+            OnDeleteAccountClick -> { onDeleteAccountClick() }
         }
     }
 
     private fun onLogoutClick() {
         sendUiEffect(
-            ProfileScreenEffect.ShowLogoutDialog(
+            ShowLogoutDialog(
                 onPositiveButtonClick = {
                     launchSafe(
                         getErrorLogMessage = { throwable ->
                             "ProfileScreen >> Logout dialog >> YES-button: ${throwable.message}"
                         }
                     ) {
-                        sendUiEffect(ProfileScreenEffect.NavigateFromProfileScreen(LaunchRoute))
+                        sendUiEffect(NavigateFromProfileScreen(LaunchRoute))
                     }
                 },
             )
@@ -74,7 +84,7 @@ class ProfileScreenViewModel(
 
     private fun onDeleteAccountClick() {
         sendUiEffect(
-            ProfileScreenEffect.ShowDeleteAccountDialog(
+            ShowDeleteAccountDialog(
                 onPositiveButtonClick = {
                     launchSafe(
                         getErrorLogMessage = { throwable ->
@@ -83,7 +93,7 @@ class ProfileScreenViewModel(
                     ) {
                         deleteProfileUseCase.execute()
                             .onSuccess {
-                                sendUiEffect(ProfileScreenEffect.NavigateFromProfileScreen(LaunchRoute))
+                                sendUiEffect(NavigateFromProfileScreen(LaunchRoute))
                             }
                     }
                 },

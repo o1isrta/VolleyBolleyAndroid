@@ -2,6 +2,10 @@ package cy.volleybolley.profile.presentation.ui.screens.playerprofile
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
+import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEffect.NavigateFromPlayerDetailScreen
+import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnActivityMapButton
+import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnBackFromPlayerDetails
+import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnFavoriteManagementButton
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerDetailTemp
 import kotlinx.coroutines.flow.update
 
@@ -35,17 +39,17 @@ class PlayerProfileScreenViewModel(
 
     override fun obtainEvent(event: PlayerProfileScreenEvent) {
         when (event) {
-            PlayerProfileScreenEvent.ClickOnBackFromPlayerDetails -> sendUiEffect(
+            ClickOnBackFromPlayerDetails -> sendUiEffect(
                 if (uiState.value.playerDetail.isFavorite == originFavoriteStatus) {
-                    PlayerProfileScreenEffect.NavigateFromPlayerDetailScreen(null)
+                    NavigateFromPlayerDetailScreen(null)
                 } else {
-                    PlayerProfileScreenEffect.NavigateFromPlayerDetailScreen(uiState.value.playerDetail.id)
+                    NavigateFromPlayerDetailScreen(uiState.value.playerDetail.id)
                 }
             )
 
-            PlayerProfileScreenEvent.ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/ }
+            ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/ }
 
-            is PlayerProfileScreenEvent.ClickOnFavoriteManagementButton -> uiStateMutable.update {
+            is ClickOnFavoriteManagementButton -> uiStateMutable.update {
                 it.copy(
                     playerDetail = it.playerDetail.copy(isFavorite = event.isFavorite)
                 )
