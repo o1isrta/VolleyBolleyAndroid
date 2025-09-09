@@ -58,40 +58,40 @@ class MainActivity : ComponentActivity() {
             )
         )
         enableEdgeToEdge()
-            setContent {
-                val state by viewModel.uiState.collectAsState()
-                LaunchedEffect(Unit) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                        !viewModel.isNotificationPermissionGranted()
-                    ) {
-                        viewModel.showNotificationPermissionDialog(
-                            title = getString(R.string.notifications),
-                            message = getString(R.string.notifications_alert_dialog),
-                            onConfirm = {
-                                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                            }
-                        )
-                    } else {
-                        viewModel.updateTokenBasedOnPermission()
-                    }
-                }
-                VolleybolleyTheme {
-                    RootContainer(
-                        state = state,
-                        onRequestPermission = {
+        setContent {
+            val state by viewModel.uiState.collectAsState()
+            LaunchedEffect(Unit) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    !viewModel.isNotificationPermissionGranted()
+                ) {
+                    viewModel.showNotificationPermissionDialog(
+                        title = getString(R.string.notifications),
+                        message = getString(R.string.notifications_alert_dialog),
+                        onConfirm = {
                             requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                        },
-                        onDismissDialog = { viewModel.dismissGlobalDialog() }
-                    ) { innerPadding ->
-                        val routeNotification = resolveNotificationRoute(state.screen, state.gameId)
-                        NavHostContainer(
-                            modifier = Modifier.padding(innerPadding),
-                            startDestination = routeNotification ?: LaunchRoute
-                        )
-                    }
+                        }
+                    )
+                } else {
+                    viewModel.updateTokenBasedOnPermission()
                 }
-                ButtonDemo()
             }
+            VolleybolleyTheme {
+                RootContainer(
+                    state = state,
+                    onRequestPermission = {
+                        requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    },
+                    onDismissDialog = { viewModel.dismissGlobalDialog() }
+                ) { innerPadding ->
+                    val routeNotification = resolveNotificationRoute(state.screen, state.gameId)
+                    NavHostContainer(
+                        modifier = Modifier.padding(innerPadding),
+                        startDestination = routeNotification ?: LaunchRoute
+                    )
+                }
+            }
+            ButtonDemo()
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
