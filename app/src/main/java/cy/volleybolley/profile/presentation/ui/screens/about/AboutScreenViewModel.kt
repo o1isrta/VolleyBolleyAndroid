@@ -1,0 +1,33 @@
+package cy.volleybolley.profile.presentation.ui.screens.about
+
+import cy.volleybolley.core.presentation.base.BaseViewModel
+import kotlinx.coroutines.flow.update
+
+class AboutScreenViewModel : BaseViewModel<AboutScreenState, AboutScreenEvent, AboutScreenEffect>(
+    initialState = AboutScreenState(),
+) {
+    override val tag: String = TAG
+
+    override fun obtainEvent(event: AboutScreenEvent) {
+        when (event) {
+            AboutScreenEvent.OnBackFromAboutClick -> sendUiEffect(AboutScreenEffect.NavigateFromAboutScreen(null))
+
+            is AboutScreenEvent.OnStateInitialiseByResources -> {
+                uiStateMutable.update { currentState ->
+                    currentState.copy(
+                        founder = event.founderName,
+                        designedBy = adaptStringFromResources(event.designersNames),
+                        developedBy = adaptStringFromResources(event.developersNames),
+                        isInitializedState = true
+                    )
+                }
+            }
+        }
+    }
+
+    private fun adaptStringFromResources(resourceString: String): String = resourceString.replace(",", "\n", true)
+
+    companion object {
+        val TAG: String = AboutScreenViewModel::class.simpleName ?: "AboutScreenViewModel"
+    }
+}

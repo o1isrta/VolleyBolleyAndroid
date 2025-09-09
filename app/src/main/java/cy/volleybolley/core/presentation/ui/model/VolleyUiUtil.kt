@@ -1,11 +1,11 @@
 package cy.volleybolley.core.presentation.ui.model
 
 import androidx.compose.ui.unit.IntSize
-import cy.volleybolley.core.presentation.ui.screens.profile.faq.model.FaqString
-import cy.volleybolley.core.presentation.ui.screens.profile.faq.model.FaqStringType
-import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.model.PlayerActivityTemp
-import cy.volleybolley.core.presentation.ui.screens.profile.playerprofile.model.PlayerDetailTemp
-import cy.volleybolley.core.presentation.ui.screens.profile.players.model.PlayerTemp
+import cy.volleybolley.profile.presentation.ui.screens.faq.model.FaqString
+import cy.volleybolley.profile.presentation.ui.screens.faq.model.FaqStringType
+import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerActivityTemp
+import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerDetailTemp
+import cy.volleybolley.profile.presentation.ui.screens.players.model.PlayerTemp
 import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
