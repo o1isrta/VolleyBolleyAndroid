@@ -1,8 +1,10 @@
 package cy.volleybolley.core.presentation.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -331,6 +334,85 @@ object VolleyTextFieldAttribute {
         }
     }
 
+    @Composable
+    fun DurationFieldWithArrows(
+        modifier: Modifier = Modifier,
+        cornerRadius: Int = VolleyDimens.DIMEN_16,
+        inputTime: VolleyTimeStamp?,
+        actionForSaveTime: (VolleyTimeStamp?) -> Unit,
+    ) {
+        var showTimePicker by remember { mutableStateOf(false) }
+        val correctTimeString = inputTime?.getCorrectTimeString() ?: stringResource(R.string.duration_time_hint)
+        val correctAfternoonMark: String = inputTime?.getAfternoonMark() ?: VolleyTimeStamp.PM_MARK
+
+        VolleyContainersRootTransparent.TransparentContainer(
+            cornerRadius = cornerRadius,
+            modifier = modifier
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(16.dp,6.dp)
+                    .clickable {
+                        showTimePicker = true
+                    }
+            ) {
+                VolleyText.BodyRegular(
+                    text = correctTimeString,
+                    color = VolleyColor.White,
+                    maxLines = 1,
+                    modifier = Modifier
+                    /*    .padding(
+                            start = VolleyDimens.DIMEN_16.dp,
+                            top = VolleyDimens.DIMEN_13.dp,
+                            end = VolleyDimens.DIMEN_4.dp,
+                            bottom = VolleyDimens.DIMEN_13.dp
+                        )*/
+                )
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_4.dp))
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.width(24.dp)
+                )
+                {
+                    Image(
+                        painter = painterResource(R.drawable.up),
+                        contentDescription = null,
+                        modifier = Modifier.size(width = 8.dp, height = 4.dp)
+                    )
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_4.dp))
+
+                    VolleyText.BodySmall(
+                        text = correctAfternoonMark,
+                        color = VolleyColor.White,
+                        maxLines = 1,
+                        modifier = Modifier
+//                         //   .padding(
+//                          //      start = VolleyDimens.DIMEN_4.dp,
+//                         //       top = 0.dp,
+//                         //       end = VolleyDimens.DIMEN_16.dp,
+//                         //       bottom = 0.dp
+//                        //    )
+                    )
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_4.dp))
+                    Image(
+                        painter = painterResource(R.drawable.down),
+                        contentDescription = null,
+                        modifier = Modifier.size(width = 8.dp, height = 4.dp)
+                    )
+                }
+            }
+        }
+
+        if (showTimePicker) {
+            TimePickerDialog(
+                onDismiss = { showTimePicker = false },
+                actionForSaveTime = actionForSaveTime,
+            )
+        }
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun TimePickerDialog(
@@ -434,11 +516,27 @@ private fun PreviewGradientTextFields() {
                     .padding(VolleyDimens.DIMEN_16.dp)
             ) { }
 
+            VolleyTextFieldAttribute.DurationFieldWithArrows(
+                inputTime = null,
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_16.dp)
+            ) { }
+
             VolleyTextFieldAttribute.DurationField(
                 inputTime = VolleyTimeStamp(
                     VolleyDimens.DIMEN_4,
                     VolleyDimens.DIMEN_20,
                     false
+                ),
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_16.dp)
+            ) { }
+
+            VolleyTextFieldAttribute.DurationFieldWithArrows(
+                inputTime = VolleyTimeStamp(
+                    14,
+                    0,
+                    true
                 ),
                 modifier = Modifier
                     .padding(VolleyDimens.DIMEN_16.dp)
