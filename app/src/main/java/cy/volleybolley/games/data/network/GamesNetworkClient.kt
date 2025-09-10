@@ -14,72 +14,80 @@ class GamesNetworkClient : KtorNetworkClient<GamesRequest, GamesResponse>() {
             when (request) {
                 is GamesRequest.CreateGame -> {
                     method = HttpMethod.Post
-                    requestConfigure(path = request.path, accessToken = request.accessToken)
+                    requestConfigure(request.path, request.accessToken, body = request.game)
                 }
 
                 is GamesRequest.GetGameDetails -> {
                     method = HttpMethod.Get
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
-                }
-
-                is GamesRequest.CancelGame -> {
-                    method = HttpMethod.Post
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
+                    requestConfigure(request.fullPath(), request.accessToken)
                 }
 
                 is GamesRequest.InvitePlayersToGame -> {
                     method = HttpMethod.Post
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
+                    requestConfigure(
+                        request.fullPath(),
+                        request.accessToken,
+                        body = request.players
+                    )
                 }
 
                 is GamesRequest.GetPreview -> {
                     method = HttpMethod.Get
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
-                }
-
-                is GamesRequest.GetArchive -> {
-                    method = HttpMethod.Get
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
-                }
-
-                is GamesRequest.GetInvites -> {
-                    method = HttpMethod.Get
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
+                    requestConfigure(request.fullPath(), request.accessToken)
                 }
 
                 is GamesRequest.GetMyGames -> {
                     method = HttpMethod.Get
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
+                    requestConfigure(request.fullPath(), request.accessToken)
+                }
+
+                is GamesRequest.GetInvites -> {
+                    method = HttpMethod.Get
+                    requestConfigure(request.fullPath(), request.accessToken)
+                }
+
+                is GamesRequest.GetArchive -> {
+                    method = HttpMethod.Get
+                    requestConfigure(request.fullPath(), request.accessToken)
                 }
 
                 is GamesRequest.GetUpcoming -> {
                     method = HttpMethod.Get
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
+                    requestConfigure(request.fullPath(), request.accessToken)
                 }
 
                 is GamesRequest.JoinGame -> {
                     method = HttpMethod.Post
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
+                    requestConfigure(request.fullPath(), request.accessToken)
                 }
 
                 is GamesRequest.DeclineGameInvite -> {
                     method = HttpMethod.Delete
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
+                    requestConfigure(request.fullPath(), request.accessToken)
+                }
+
+                is GamesRequest.CancelGame -> {
+                    method = HttpMethod.Post
+                    requestConfigure(request.fullPath(), request.accessToken)
                 }
 
                 is GamesRequest.GetPlayersToRate -> {
                     method = HttpMethod.Get
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
+                    requestConfigure(request.fullPath(), request.accessToken)
                 }
 
                 is GamesRequest.RatePlayers -> {
                     method = HttpMethod.Post
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
+                    requestConfigure(
+                        request.fullPath(),
+                        request.accessToken,
+                        body = request.players
+                    )
                 }
 
                 is GamesRequest.SkipRating -> {
                     method = HttpMethod.Post
-                    requestConfigure(path = request.fullPath(), accessToken = request.accessToken)
+                    requestConfigure(request.fullPath(), request.accessToken)
                 }
             }
         }

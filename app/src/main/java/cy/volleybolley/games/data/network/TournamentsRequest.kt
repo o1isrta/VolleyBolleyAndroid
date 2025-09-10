@@ -12,6 +12,8 @@ import cy.volleybolley.games.data.network.GamesRequest.Companion.SKIP
 import cy.volleybolley.games.data.network.GamesRequest.Companion.TOURNAMENTS
 
 sealed interface TournamentsRequest {
+    val accessToken: String?
+        get() = null
 
     class CreateTournament(
         val path: String = TOURNAMENTS,
