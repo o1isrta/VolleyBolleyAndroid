@@ -43,46 +43,51 @@ fun BasicGameSetupScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
+            .padding(horizontal = VolleyDimens.DIMEN_20.dp)
     ) {
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+
         TitleWithBackArrow(
             title = stringResource(R.string.create_a_game),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp)
+            modifier = Modifier.fillMaxWidth()
         )
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
         VolleyText.TitleMedium(
             text = stringResource(R.string.your_message),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp),
+            modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
         )
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
         VolleyMessageTextField.MessageField(
             hint = stringResource(R.string.leave_a_note_for_players),
             textInput = "",
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp)
         ) { }
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
         HorizontalLine()
 
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
         VolleyText.TitleLarge(
             text = stringResource(R.string.place),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_12.dp),
+            modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
         )
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .height(VolleyDimens.DIMEN_60.dp)
+                .height(VolleyDimens.DIMEN_44.dp)
                 .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -116,57 +121,64 @@ fun BasicGameSetupScreen(navController: NavHostController) {
             }
 
             VolleyButton.ActiveGradientButton(
-                modifier = Modifier.height(VolleyDimens.DIMEN_44.dp),
+                modifier = Modifier,//.height(VolleyDimens.DIMEN_44.dp),
                 text = "Create"
             ) { }
         }
 
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
         HorizontalLine()
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
         VolleyText.TitleLarge(
             text = stringResource(R.string.date),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_12.dp),
+            modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
         )
 
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
         VolleyButton.GroupButtonsForDate2(
             checkId = 1,
-            modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp, 0.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_12.dp),
+            modifier = Modifier,
             onSelected = {}
         )
 
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
+
         // здесь будет календарь
-            /* Box(
+        /*    Box(
             modifier = Modifier
-                .padding(20.dp, 0.dp, 20.dp, 6.dp)
                 .fillMaxWidth()
                 .height(266.dp)
                 .clip(RoundedCornerShape(32.dp)) // Задаем скругление углов
                 .background(VolleyColor.White) // Цвет прямоугольника
-         )*/
-
+         )
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+        */
         VolleyText.BodyBold(
             text = stringResource(R.string.game_duration),
-            modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_2.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp),
-               color = VolleyColor.White
+            modifier = Modifier,
+            color = VolleyColor.White
         )
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp, 0.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
             VolleyText.BodyRegular(
                 text = stringResource(R.string.from),
                 modifier = Modifier,
                 color = VolleyColor.White
             )
+
             Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+
             VolleyTextFieldAttribute.DurationFieldWithArrows(
                 inputTime = VolleyTimeStamp(
                     14,
@@ -174,13 +186,17 @@ fun BasicGameSetupScreen(navController: NavHostController) {
                     true
                 )
             ) { }
+
             Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+
             VolleyText.BodyRegular(
                 text = stringResource(R.string.to),
                 modifier = Modifier,
                 color = VolleyColor.White
             )
+
             Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+
             VolleyTextFieldAttribute.DurationFieldWithArrows(
                 inputTime = VolleyTimeStamp(
                     15,
@@ -191,22 +207,58 @@ fun BasicGameSetupScreen(navController: NavHostController) {
         }
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+        HorizontalLine()
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
         VolleyText.TitleLarge(
             text = stringResource(R.string.tourney_type),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_12.dp),
+            modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
         )
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
         VolleyButton.GroupButtonsForTourneyType(
-            modifier = Modifier
-                .padding(horizontal = 20.dp),
+            modifier = Modifier,
                 onClick = {}
         )
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+        HorizontalLine()
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+        VolleyText.TitleLarge(
+            text = stringResource(R.string.gender),
+            modifier = Modifier.fillMaxWidth(),
+            color = VolleyColor.White
+        )
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
+        VolleyButton.GroupButtonsForGender3(
+            modifier = Modifier,
+            onSelected = {}
+        )
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+        HorizontalLine()
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+        VolleyText.TitleLarge(
+            text = stringResource(R.string.player_level),
+            modifier = Modifier.fillMaxWidth(),
+            color = VolleyColor.White
+        )
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
+        VolleyButton.GroupButtonsForLevel(
+            checkId = 3,
+            modifier = Modifier,//.padding(vertical = 12.dp),
+            onSelected = {}
+        )
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
     }
 //    Button(onClick = { navController.popBackStack() }) {
 //        Text("Назад")
@@ -217,7 +269,7 @@ fun BasicGameSetupScreen(navController: NavHostController) {
 fun HorizontalLine(
 ) {
     HorizontalDivider(
-        modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_20.dp, VolleyDimens.DIMEN_8.dp),
+        modifier = Modifier,
         color = VolleyColor.Divider,
         thickness = VolleyDimens.DIMEN_1.dp
     )
