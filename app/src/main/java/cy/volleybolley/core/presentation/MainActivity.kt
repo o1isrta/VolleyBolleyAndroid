@@ -20,10 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,12 +34,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             VolleybolleyTheme {
-                RootContainer { innerPadding ->
-                    NavHostContainer(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-                ButtonDemo()
+                BasicGameSetupScreen(rememberNavController())
+               // RootContainer { innerPadding ->
+                   // NavHostContainer(
+                   //     modifier = Modifier.padding(innerPadding)
+                   // )
+              //  }
+               // ButtonDemo()
             }
         }
     }

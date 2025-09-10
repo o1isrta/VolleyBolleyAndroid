@@ -29,10 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.ACTIVE_BUTTON_TEXT
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -43,6 +45,45 @@ fun BasicGameSetupScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
+    ){
+
+    VolleyContainersRootTransparent.TransparentContainer(
+        cornerRadius = VolleyDimens.DIMEN_32,
+        modifier = Modifier
+            .padding(VolleyDimens.DIMEN_8.dp)
+    ) {
+        BasicGameSetupScreenContent()
+    }
+    VolleyButton.ActiveButton(
+        modifier = Modifier
+            .padding(VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_16.dp)
+            .height(44.dp)
+            .align(Alignment.CenterHorizontally),
+        text = stringResource(R.string.next_game),
+        onClick = {}
+    )
+}
+//    Button(onClick = { navController.popBackStack() }) {
+//        Text("Назад")
+//    }
+}
+
+@Composable
+fun HorizontalLine(
+) {
+    HorizontalDivider(
+        modifier = Modifier,
+        color = VolleyColor.Divider,
+        thickness = VolleyDimens.DIMEN_1.dp
+    )
+}
+
+@Composable
+fun BasicGameSetupScreenContent(
+) {
+    Column(
+        modifier = Modifier
+//.verticalScroll(rememberScrollState())
             .padding(horizontal = VolleyDimens.DIMEN_20.dp)
     ) {
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
@@ -93,12 +134,12 @@ fun BasicGameSetupScreen(navController: NavHostController) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .weight(1f), // Важно!  Занимает только часть доступного пространства,
-                    horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.Start
             ) {
                 Image(
                     painter = painterResource(R.drawable.ic_mark_yellow),
                     contentDescription = null,
-                 )
+                )
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
                 Column(
                     horizontalAlignment = Alignment.Start
@@ -150,14 +191,14 @@ fun BasicGameSetupScreen(navController: NavHostController) {
 
         // здесь будет календарь
         /*    Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(266.dp)
-                .clip(RoundedCornerShape(32.dp)) // Задаем скругление углов
-                .background(VolleyColor.White) // Цвет прямоугольника
-         )
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-        */
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(266.dp)
+        .clip(RoundedCornerShape(32.dp)) // Задаем скругление углов
+        .background(VolleyColor.White) // Цвет прямоугольника
+ )
+Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+*/
         VolleyText.BodyBold(
             text = stringResource(R.string.game_duration),
             modifier = Modifier,
@@ -220,7 +261,7 @@ fun BasicGameSetupScreen(navController: NavHostController) {
 
         VolleyButton.GroupButtonsForTourneyType(
             modifier = Modifier,
-                onClick = {}
+            onClick = {}
         )
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
@@ -254,25 +295,12 @@ fun BasicGameSetupScreen(navController: NavHostController) {
 
         VolleyButton.GroupButtonsForLevel(
             checkId = 3,
-            modifier = Modifier,//.padding(vertical = 12.dp),
+            modifier = Modifier,
             onSelected = {}
         )
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
     }
-//    Button(onClick = { navController.popBackStack() }) {
-//        Text("Назад")
-//    }
-}
-
-@Composable
-fun HorizontalLine(
-) {
-    HorizontalDivider(
-        modifier = Modifier,
-        color = VolleyColor.Divider,
-        thickness = VolleyDimens.DIMEN_1.dp
-    )
 }
 
 @Preview
