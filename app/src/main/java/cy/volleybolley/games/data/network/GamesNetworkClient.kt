@@ -7,14 +7,18 @@ import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpMethod
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "ComplexMethod")
 class GamesNetworkClient : KtorNetworkClient<GamesRequest, GamesResponse>() {
     override suspend fun sendRequestByType(request: GamesRequest): HttpResponse {
         return httpClient.request(urlString = BuildConfig.BASE_URL) {
             when (request) {
                 is GamesRequest.CreateGame -> {
                     method = HttpMethod.Post
-                    requestConfigure(request.path, request.accessToken, body = request.game)
+                    requestConfigure(
+                        request.path,
+                        request.accessToken,
+                        body = request.game
+                    )
                 }
 
                 is GamesRequest.GetGameDetails -> {
@@ -94,7 +98,8 @@ class GamesNetworkClient : KtorNetworkClient<GamesRequest, GamesResponse>() {
     }
 
     override suspend fun getResponseBodyByRequestType(
-        requestType: GamesRequest, httpResponse: HttpResponse
+        requestType: GamesRequest,
+        httpResponse: HttpResponse
     ): GamesResponse {
         return when (requestType) {
             is GamesRequest.CreateGame -> httpResponse.body<GamesResponse.CreateGame>()
@@ -113,7 +118,8 @@ class GamesNetworkClient : KtorNetworkClient<GamesRequest, GamesResponse>() {
 
             is GamesRequest.JoinGame -> httpResponse.body<GamesResponse.JoinGame>()
 
-            is GamesRequest.DeclineGameInvite -> httpResponse.body<GamesResponse.DeclineGameInvite>()
+            is GamesRequest.DeclineGameInvite ->
+                httpResponse.body<GamesResponse.DeclineGameInvite>()
 
             is GamesRequest.GetPlayersToRate -> httpResponse.body<GamesResponse.GetPlayersToRate>()
 
@@ -121,7 +127,8 @@ class GamesNetworkClient : KtorNetworkClient<GamesRequest, GamesResponse>() {
 
             is GamesRequest.SkipRating -> httpResponse.body<GamesResponse.SkipRating>()
 
-            is GamesRequest.InvitePlayersToGame -> httpResponse.body<GamesResponse.InvitePlayersToGame>()
+            is GamesRequest.InvitePlayersToGame ->
+                httpResponse.body<GamesResponse.InvitePlayersToGame>()
 
             is GamesRequest.CancelGame -> httpResponse.body<GamesResponse.CancelGame>()
         }

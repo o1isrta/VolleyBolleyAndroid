@@ -7,14 +7,18 @@ import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpMethod
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "ComplexMethod")
 class TournamentsNetworkClient : KtorNetworkClient<TournamentsRequest, TournamentsResponse>() {
     override suspend fun sendRequestByType(request: TournamentsRequest): HttpResponse {
         return httpClient.request(urlString = BuildConfig.BASE_URL) {
             when (request) {
                 is TournamentsRequest.CreateTournament -> {
                     method = HttpMethod.Post
-                    requestConfigure(request.path, request.accessToken, body = request.tournament)
+                    requestConfigure(
+                        request.path,
+                        request.accessToken,
+                        body = request.tournament
+                    )
                 }
 
                 is TournamentsRequest.GetTournamentDetails -> {
@@ -29,7 +33,11 @@ class TournamentsNetworkClient : KtorNetworkClient<TournamentsRequest, Tournamen
 
                 is TournamentsRequest.InvitePlayersToTournament -> {
                     method = HttpMethod.Post
-                    requestConfigure(request.fullPath(), request.accessToken, body = request.players)
+                    requestConfigure(
+                        request.fullPath(),
+                        request.accessToken,
+                        body = request.players
+                    )
                 }
 
                 is TournamentsRequest.JoinTournament -> {
@@ -49,7 +57,11 @@ class TournamentsNetworkClient : KtorNetworkClient<TournamentsRequest, Tournamen
 
                 is TournamentsRequest.RatePlayers -> {
                     method = HttpMethod.Post
-                    requestConfigure(request.fullPath(), request.accessToken, body = request.players)
+                    requestConfigure(
+                        request.fullPath(),
+                        request.accessToken,
+                        body = request.players
+                    )
                 }
 
                 is TournamentsRequest.SkipRating -> {
@@ -61,18 +73,21 @@ class TournamentsNetworkClient : KtorNetworkClient<TournamentsRequest, Tournamen
     }
 
     override suspend fun getResponseBodyByRequestType(
-        requestType: TournamentsRequest, httpResponse: HttpResponse
+        requestType: TournamentsRequest,
+        httpResponse: HttpResponse
     ): TournamentsResponse {
         return when (requestType) {
             is TournamentsRequest.CreateTournament -> httpResponse.body<TournamentsResponse.CreateTournament>()
 
-            is TournamentsRequest.DeclineTournamentInvite -> httpResponse.body<TournamentsResponse.DeclineTournamentInvite>()
+            is TournamentsRequest.DeclineTournamentInvite ->
+                httpResponse.body<TournamentsResponse.DeclineTournamentInvite>()
 
             is TournamentsRequest.GetPlayersToRate -> httpResponse.body<TournamentsResponse.GetPlayersToRate>()
 
             is TournamentsRequest.GetTournamentDetails -> httpResponse.body<TournamentsResponse.GetTournamentDetails>()
 
-            is TournamentsRequest.InvitePlayersToTournament -> httpResponse.body<TournamentsResponse.InvitePlayersToTournament>()
+            is TournamentsRequest.InvitePlayersToTournament ->
+                httpResponse.body<TournamentsResponse.InvitePlayersToTournament>()
 
             is TournamentsRequest.JoinTournament -> httpResponse.body<TournamentsResponse.JoinTournament>()
 
