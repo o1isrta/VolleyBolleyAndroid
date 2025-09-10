@@ -26,42 +26,36 @@ import cy.volleybolley.games.domain.api.game.CancelGameUseCase
 import cy.volleybolley.games.domain.api.game.CreateGameUseCase
 import cy.volleybolley.games.domain.api.game.DeclineGameInviteUseCase
 import cy.volleybolley.games.domain.api.game.GetGameDetailsUseCase
-import cy.volleybolley.games.domain.api.game.GetGamePlayersToRateUseCase
 import cy.volleybolley.games.domain.api.game.GetGameScreenPreviewUseCase
 import cy.volleybolley.games.domain.api.game.GetGamesUseCase
+import cy.volleybolley.games.domain.api.game.GetPlayersToRateUseCase
 import cy.volleybolley.games.domain.api.game.InvitePlayersToGameUseCase
 import cy.volleybolley.games.domain.api.game.JoinGameUseCase
-import cy.volleybolley.games.domain.api.game.RateGamePlayersUseCase
-import cy.volleybolley.games.domain.api.game.SkipGameRatingUseCase
+import cy.volleybolley.games.domain.api.game.RatePlayersUseCase
+import cy.volleybolley.games.domain.api.game.SkipRatingUseCase
 import cy.volleybolley.games.domain.api.tournament.CancelTournamentUseCase
 import cy.volleybolley.games.domain.api.tournament.CreateTournamentUseCase
 import cy.volleybolley.games.domain.api.tournament.DeclineTournamentInviteUseCase
 import cy.volleybolley.games.domain.api.tournament.GetTournamentDetailsUseCase
-import cy.volleybolley.games.domain.api.tournament.GetTournamentPlayersToRateUseCase
 import cy.volleybolley.games.domain.api.tournament.InvitePlayersToTournamentUseCase
 import cy.volleybolley.games.domain.api.tournament.JoinTournamentUseCase
-import cy.volleybolley.games.domain.api.tournament.RateTournamentPlayersUseCase
-import cy.volleybolley.games.domain.api.tournament.SkipTournamentRatingUseCase
 import cy.volleybolley.games.domain.usecases.game.CancelGameUseCaseImpl
 import cy.volleybolley.games.domain.usecases.game.CreateGameUseCaseImpl
 import cy.volleybolley.games.domain.usecases.game.DeclineGameInviteUseCaseImpl
 import cy.volleybolley.games.domain.usecases.game.GetGameDetailsUseCaseImpl
-import cy.volleybolley.games.domain.usecases.game.GetGamePlayersToRateUseCaseImpl
 import cy.volleybolley.games.domain.usecases.game.GetGameScreenPreviewUseCaseImpl
 import cy.volleybolley.games.domain.usecases.game.GetGamesUseCaseImpl
+import cy.volleybolley.games.domain.usecases.game.GetPlayersToRateUseCaseImpl
 import cy.volleybolley.games.domain.usecases.game.InvitePlayersToGameUseCaseImpl
 import cy.volleybolley.games.domain.usecases.game.JoinGameUseCaseImpl
-import cy.volleybolley.games.domain.usecases.game.RateGamePlayersUseCaseImpl
-import cy.volleybolley.games.domain.usecases.game.SkipGameRatingUseCaseImpl
+import cy.volleybolley.games.domain.usecases.game.RatePlayersUseCaseImpl
+import cy.volleybolley.games.domain.usecases.game.SkipRatingUseCaseImpl
 import cy.volleybolley.games.domain.usecases.tournament.CancelTournamentUseCaseImpl
 import cy.volleybolley.games.domain.usecases.tournament.CreateTournamentUseCaseImpl
 import cy.volleybolley.games.domain.usecases.tournament.DeclineTournamentInviteUseCaseImpl
 import cy.volleybolley.games.domain.usecases.tournament.GetTournamentDetailsUseCaseImpl
-import cy.volleybolley.games.domain.usecases.tournament.GetTournamentPlayersToRateUseCaseImpl
 import cy.volleybolley.games.domain.usecases.tournament.InvitePlayersToTournamentUseCaseImpl
 import cy.volleybolley.games.domain.usecases.tournament.JoinTournamentUseCaseImpl
-import cy.volleybolley.games.domain.usecases.tournament.RateTournamentPlayersUseCaseImpl
-import cy.volleybolley.games.domain.usecases.tournament.SkipTournamentRatingUseCaseImpl
 import org.koin.dsl.module
 
 val gamesModule = module {
@@ -108,9 +102,24 @@ val gamesModule = module {
     factory<DeclineGameInviteUseCase> { DeclineGameInviteUseCaseImpl(repository = get()) }
     factory<InvitePlayersToGameUseCase> { InvitePlayersToGameUseCaseImpl(repository = get()) }
 
-    factory<GetGamePlayersToRateUseCase> { GetGamePlayersToRateUseCaseImpl(repository = get()) }
-    factory<RateGamePlayersUseCase> { RateGamePlayersUseCaseImpl(repository = get()) }
-    factory<SkipGameRatingUseCase> { SkipGameRatingUseCaseImpl(repository = get()) }
+    factory<GetPlayersToRateUseCase> {
+        GetPlayersToRateUseCaseImpl(
+            gameRepository = get(),
+            tournamentRepository = get()
+        )
+    }
+    factory<RatePlayersUseCase> {
+        RatePlayersUseCaseImpl(
+            gameRepository = get(),
+            tournamentRepository = get()
+        )
+    }
+    factory<SkipRatingUseCase> {
+        SkipRatingUseCaseImpl(
+            gameRepository = get(),
+            tournamentRepository = get()
+        )
+    }
 
     factory<CreateTournamentUseCase> { CreateTournamentUseCaseImpl(repository = get()) }
     factory<GetTournamentDetailsUseCase> { GetTournamentDetailsUseCaseImpl(repository = get()) }
@@ -119,10 +128,6 @@ val gamesModule = module {
     factory<JoinTournamentUseCase> { JoinTournamentUseCaseImpl(repository = get()) }
     factory<DeclineTournamentInviteUseCase> { DeclineTournamentInviteUseCaseImpl(repository = get()) }
     factory<InvitePlayersToTournamentUseCase> { InvitePlayersToTournamentUseCaseImpl(repository = get()) }
-
-    factory<GetTournamentPlayersToRateUseCase> { GetTournamentPlayersToRateUseCaseImpl(repository = get()) }
-    factory<RateTournamentPlayersUseCase> { RateTournamentPlayersUseCaseImpl(repository = get()) }
-    factory<SkipTournamentRatingUseCase> { SkipTournamentRatingUseCaseImpl(repository = get()) }
 
     // ViewModel
 }
