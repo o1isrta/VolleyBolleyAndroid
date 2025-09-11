@@ -12,8 +12,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RatePlayersViewModel(
-    private val ratePlayersUseCase: Any,
-    private val getPlayersToRateUseCase: Any,
+    private val eventId: Int,
+    private val eventType: String,
+    //private val ratePlayersUseCase: Any,
+    //private val getPlayersToRateUseCase: Any,
     private val appScope: CoroutineScope
 ) : ViewModel() {
 
@@ -26,26 +28,61 @@ class RatePlayersViewModel(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             /*
-            getPlayersToRateUseCase.get(id)
+            getPlayersToRateUseCase.get(id, type)
             Получение и маппинг в ui модель, чтобы сразу ставить RatingType
             Новый state:
                 isLoading = false
                 players = PlayersShortUI
              */
+            // моковые данные
+            _state.update { currentState ->
+                currentState.copy(
+                    isLoading = false,
+                    players = listOf(
+                        PlayerShortUI(
+                            playerId = 1,
+                            name = "Kristina Popova",
+                            level = LevelType.LIGHT,
+                            avatar = null,
+                            rating = RatingType.CONFIRM
+                        ),
+                        PlayerShortUI(
+                            playerId = 2,
+                            name = "Jane Dow",
+                            level = LevelType.HARD,
+                            avatar = null,
+                            rating = RatingType.CONFIRM
+                        ),
+                        PlayerShortUI(
+                            playerId = 3,
+                            name = "John Smith",
+                            level = LevelType.LIGHT,
+                            avatar = null,
+                            rating = RatingType.CONFIRM
+                        )
+                    )
+                )
+            }
         }
     }
 
-    fun dispatch(action: RatePlayersAction) {
-        when (action) {
-            RatePlayersAction.ConfirmRate -> confirmRating()
-            is RatePlayersAction.RatePlayer -> ratePlayer(action.playerId, action.rating)
+    fun obtainEvent(event: RatePlayersEvent) {
+        when (event) {
+            RatePlayersEvent.ConfirmRate -> confirmRating()
+            is RatePlayersEvent.RatePlayer -> ratePlayer(event.playerId, event.rating)
         }
     }
 
     private fun confirmRating() {
         appScope.launch(Dispatchers.IO) {
+            val ratingPlayers = _state.value.players.map { player ->
+                RatePlayer(
+                    playerId = player.playerId,
+                    levelChanged = player.rating
+                )
+            }
             /*
-            ratePlayersUseCase.ratePlayers(_state.players)
+            ratePlayersUseCase.ratePlayers(ratingPlayers)
              */
             emit(RatePlayersEffect.CloseScreen)
         }

@@ -121,7 +121,10 @@ object HomeRoute : NavMap
 object SearchCourtRoute : NavMap
 
 @Serializable
-object RatePlayersRoute : NavMap
+data class RatePlayersRoute(
+    val eventId: Int,
+    val eventType: String,
+) : NavMap
 
 @Serializable
 object SuccessRoute : NavMap

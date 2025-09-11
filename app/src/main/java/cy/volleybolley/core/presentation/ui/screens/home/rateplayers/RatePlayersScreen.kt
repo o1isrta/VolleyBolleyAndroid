@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.home.rateplayers
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,14 +21,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
@@ -39,27 +35,42 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.ui.theme.VolleybolleyTheme
-import kotlinx.coroutines.flow.collectLatest
-
 
 @Composable
+
 fun RatePlayersScreen(
     navController: NavHostController,
-    viewModel: RatePlayersViewModel = viewModel()
+    viewModel: RatePlayersViewModel,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val context = LocalContext.current
+    val effect by viewModel.effects.collectAsStateWithLifecycle(null)
 
+    RatePlayersScreen(
+        state = state,
+        effect = effect,
+        navigateAction = {
+            navController.popBackStack()
+        },
+        eventCallback = { event ->
+            viewModel.obtainEvent(event)
+        }
+    )
+}
+
+@Composable
+private fun RatePlayersScreen(
+    state: RatePlayersState,
+    effect: RatePlayersEffect?,
+    navigateAction: () -> Unit,
+    eventCallback: (RatePlayersEvent) -> Unit,
+) {
     LaunchedEffect(Unit) {
-        viewModel.effects.collectLatest { effect ->
-            when (effect) {
-                RatePlayersEffect.CloseScreen -> navController.popBackStack()
-                is RatePlayersEffect.ShowError -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-                }
-            }
+        when (effect) {
+            RatePlayersEffect.CloseScreen -> navigateAction
+            null -> Unit
         }
     }
+
     Box(Modifier.fillMaxSize()) {
         TransparentContainer(
             modifier = Modifier.padding(
@@ -71,6 +82,7 @@ fun RatePlayersScreen(
         ) {
             if (state.isLoading) {
                 Box(
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
@@ -87,10 +99,10 @@ fun RatePlayersScreen(
                             PlayerBox(
                                 player = player,
                                 onSelected = {
-                                    viewModel.dispatch(
-                                        RatePlayersAction.RatePlayer(
+                                    eventCallback(
+                                        RatePlayersEvent.RatePlayer(
                                             player.playerId,
-                                            RatingType.entries[it]
+                                            RatingType.entries[it - 1]
                                         )
                                     )
                                 }
@@ -103,7 +115,7 @@ fun RatePlayersScreen(
                             .fillMaxWidth()
                             .padding(top = VolleyDimens.DIMEN_16.dp)
                     ) {
-                        viewModel.dispatch(RatePlayersAction.ConfirmRate)
+                        eventCallback(RatePlayersEvent.ConfirmRate)
                     }
                 }
             }
@@ -137,7 +149,7 @@ fun PlayerBox(
     ) {
         PlayerInfo(player = player)
         GroupButtonsForChangeLevel(
-            checkId = 2,
+            checkId = player.rating.checkId,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             onSelected = onSelected
         )
@@ -185,7 +197,39 @@ private fun RatePlayersPreview() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-            RatePlayersScreen(navController = rememberNavController())
+
+            val state = RatePlayersState(
+                isLoading = false,
+                players = listOf(
+                    PlayerShortUI(
+                        playerId = 1,
+                        name = "Kristina Popova",
+                        level = LevelType.LIGHT,
+                        avatar = null,
+                        rating = RatingType.CONFIRM
+                    ),
+                    PlayerShortUI(
+                        playerId = 2,
+                        name = "Jane Dow",
+                        level = LevelType.HARD,
+                        avatar = null,
+                        rating = RatingType.UP
+                    ),
+                    PlayerShortUI(
+                        playerId = 2,
+                        name = "John Smith",
+                        level = LevelType.LIGHT,
+                        avatar = null,
+                        rating = RatingType.DOWN
+                    )
+                )
+            )
+            RatePlayersScreen(
+                state = state,
+                effect = null,
+                navigateAction = {},
+                eventCallback = {}
+            )
         }
     }
 }

@@ -1,9 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.home.rateplayers
 
-data class RatePlayersState (
+data class RatePlayersState(
     val isLoading: Boolean = true,
     val players: List<PlayerShortUI> = emptyList(),
-    val error: String? = null
 )
 
 data class RatePlayer(
@@ -11,17 +10,17 @@ data class RatePlayer(
     val levelChanged: RatingType,
 )
 
-enum class RatingType {
-    UP,
-    CONFIRM,
-    DOWN,
+enum class RatingType(val checkId: Int) {
+    UP(1),
+    CONFIRM(2),
+    DOWN(3),
 }
 
 data class PlayerShortUI(
     val playerId: Int,
     val name: String,
     val level: LevelType,
-    val avatar: String,
+    val avatar: String?,
     val rating: RatingType = RatingType.CONFIRM
 )
 
