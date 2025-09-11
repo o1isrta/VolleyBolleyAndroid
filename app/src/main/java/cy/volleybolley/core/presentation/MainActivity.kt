@@ -35,8 +35,8 @@ import cy.volleybolley.core.presentation.ui.model.state.MainActivityEvent
 import cy.volleybolley.core.presentation.ui.model.state.MainActivityState
 import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
-import cy.volleybolley.notification.ui.component.GlobalAlertDialog
-import cy.volleybolley.notification.ui.component.resolveNotificationRoute
+import cy.volleybolley.notification.presentation.ui.component.GlobalAlertDialog
+import cy.volleybolley.notification.presentation.ui.component.resolveNotificationRoute
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

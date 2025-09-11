@@ -5,5 +5,6 @@ data class Notification(
     val createdAt: String,
     val title: String,
     val message: String,
-    val screen: String
+    val screen: String?,
+    val gameId: String?,
 )

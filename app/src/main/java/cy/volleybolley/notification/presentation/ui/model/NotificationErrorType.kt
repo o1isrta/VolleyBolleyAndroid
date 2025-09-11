@@ -1,4 +1,4 @@
-package cy.volleybolley.notification.ui.model
+package cy.volleybolley.notification.presentation.ui.model
 
 enum class NotificationErrorType(val message: String) {
     NETWORK("Network error"),

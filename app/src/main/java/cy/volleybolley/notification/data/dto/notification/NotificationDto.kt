@@ -9,5 +9,6 @@ data class NotificationDto(
     @SerialName("created_at") val createdAt: String,
     @SerialName("title") val title: String,
     @SerialName("message") val message: String,
-    @SerialName("screen") val screen: String
+    @SerialName("screen") val screen: String?,
+    @SerialName("game_id") val gameId: String?
 )

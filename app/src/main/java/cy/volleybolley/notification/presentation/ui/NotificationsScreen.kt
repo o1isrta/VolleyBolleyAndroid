@@ -1,4 +1,4 @@
-package cy.volleybolley.notification.ui
+package cy.volleybolley.notification.presentation.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -18,7 +18,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 import cy.volleybolley.notification.presentation.NotificationsViewModel
 import cy.volleybolley.notification.presentation.model.NotificationsEffect
 import cy.volleybolley.notification.presentation.model.NotificationsEvent
-import cy.volleybolley.notification.ui.component.NotificationsScreenComponents.NotificationListContent
+import cy.volleybolley.notification.presentation.ui.component.NotificationsScreenComponents.NotificationListContent
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 

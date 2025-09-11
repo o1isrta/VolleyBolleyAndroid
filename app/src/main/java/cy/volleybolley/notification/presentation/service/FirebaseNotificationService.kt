@@ -1,4 +1,4 @@
-package cy.volleybolley.notification.service
+package cy.volleybolley.notification.presentation.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -12,6 +12,7 @@ import com.google.firebase.messaging.RemoteMessage
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.MainActivity
 import cy.volleybolley.notification.domain.api.storages.FCMTokenStore
+import cy.volleybolley.notification.presentation.ui.model.NotificationItem
 import org.koin.android.ext.android.inject
 import org.koin.core.component.KoinComponent
 
@@ -24,29 +25,24 @@ class FirebaseNotificationService : FirebaseMessagingService(), KoinComponent {
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        val title = remoteMessage.notification?.title ?: "FCM"
-        val message = remoteMessage.notification?.body ?: ""
-        val screen = remoteMessage.data["screen"]
-        val gameId = remoteMessage.data["gameId"]
-        showNotification(
-            title = title,
-            message = message,
-            screen = screen,
-            gameId = gameId
+        val data = remoteMessage.data
+        val notificationItem = NotificationItem(
+            id = data["notification_id"]?.toIntOrNull() ?: 0,
+            createdAt = data["created_at"] ?: "",
+            title = data["title"] ?: "FCM",
+            message = data["message"] ?: "",
+            screen = data["screen"],
+            gameId = data["game_id"]
         )
+        showNotification(notificationItem)
     }
 
-    private fun showNotification(
-        title: String,
-        message: String,
-        screen: String? = null,
-        gameId: String? = null
-    ) {
+    private fun showNotification(item: NotificationItem) {
         val channelId = "default_channel"
 
         val intent = Intent(this, MainActivity::class.java).apply {
-            screen?.let { putExtra("screen", it) }
-            gameId?.let { putExtra("gameId", it) }
+            item.screen?.let { putExtra("screen", it) }
+            item.gameId?.let { putExtra("gameId", it) }
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
@@ -59,8 +55,8 @@ class FirebaseNotificationService : FirebaseMessagingService(), KoinComponent {
 
         val builder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.mipmap.ic_notification)
-            .setContentTitle(title)
-            .setContentText(message)
+            .setContentTitle(item.title)
+            .setContentText(item.message)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
@@ -75,7 +71,7 @@ class FirebaseNotificationService : FirebaseMessagingService(), KoinComponent {
             )
             notificationManager.createNotificationChannel(channel)
         }
-        val notificationId = System.currentTimeMillis().toInt()
-        notificationManager.notify(notificationId, builder.build())
+
+        notificationManager.notify(item.id, builder.build())
     }
 }

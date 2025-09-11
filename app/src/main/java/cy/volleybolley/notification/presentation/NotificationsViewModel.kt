@@ -12,10 +12,11 @@ import cy.volleybolley.notification.presentation.model.NotificationsEffect
 import cy.volleybolley.notification.presentation.model.NotificationsEvent
 import cy.volleybolley.notification.presentation.model.NotificationsState
 import cy.volleybolley.notification.presentation.model.toUi
-import cy.volleybolley.notification.ui.model.NotificationErrorType
-import cy.volleybolley.notification.ui.model.NotificationItem
+import cy.volleybolley.notification.presentation.ui.model.NotificationErrorType
+import cy.volleybolley.notification.presentation.ui.model.NotificationItem
 import cy.volleybolley.notification.utils.Constants.ERROR_MARK_READ
 import io.ktor.network.sockets.SocketTimeoutException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
 import java.util.concurrent.TimeoutException
 import kotlin.coroutines.cancellation.CancellationException
@@ -71,7 +73,9 @@ class NotificationsViewModel(
         handleResult(
             result,
             onSuccess = {
-                _effect.emit(NotificationsEffect.NavigateTo(notification.screen))
+                notification.screen?.let { screen ->
+                    _effect.emit(NotificationsEffect.NavigateTo(screen,gameId = notificationItem.gameId))
+                }
             },
             onFailure = {
                 _effect.emit(NotificationsEffect.ShowError(ERROR_MARK_READ))
@@ -93,7 +97,9 @@ class NotificationsViewModel(
     private fun launchHandling(block: suspend () -> Unit) {
         viewModelScope.launch {
             try {
-                block()
+                withContext(Dispatchers.IO) {
+                    block()
+                }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: SocketTimeoutException) {
