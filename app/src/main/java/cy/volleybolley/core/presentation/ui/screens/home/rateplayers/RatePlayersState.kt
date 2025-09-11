@@ -17,8 +17,7 @@ object RatingIds {
 }
 
 enum class RatingType(val checkId: Int) {
-    UP(RatingIds.
-    UP_LEVEL),
+    UP(RatingIds.UP_LEVEL),
     CONFIRM(RatingIds.CONFIRM_LEVEL),
     DOWN(RatingIds.DOWN_LEVEL)
 }
