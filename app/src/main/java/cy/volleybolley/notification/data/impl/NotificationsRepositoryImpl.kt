@@ -33,19 +33,19 @@ class NotificationsRepositoryImpl(
 
     override suspend fun markNotificationsAsRead(notificationIds: List<Int>): VolleyResult<Unit, ErrorType> =
         withContext(Dispatchers.IO) {
-        val response = networkClient.getResponse(
-            NotificationsRequest.MarkNotificationsAsRead(notificationIds)
-        )
+            val response = networkClient.getResponse(
+                NotificationsRequest.MarkNotificationsAsRead(notificationIds)
+            )
 
-        if (!response.isSuccess) {
-            VolleyResult.Failure(response.resultCode.mapToErrorType())
-        } else {
-            val body = response.body as? NotificationsResponse.MarkNotificationsAsRead
-            if (body != null) {
-                VolleyResult.Success(Unit)
+            if (!response.isSuccess) {
+                VolleyResult.Failure(response.resultCode.mapToErrorType())
             } else {
-                VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+                val body = response.body as? NotificationsResponse.MarkNotificationsAsRead
+                if (body != null) {
+                    VolleyResult.Success(Unit)
+                } else {
+                    VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+                }
             }
         }
-    }
 }
