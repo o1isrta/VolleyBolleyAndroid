@@ -11,15 +11,16 @@ data class RatePlayer(
 )
 
 object RatingIds {
-    const val UP = 1
-    const val CONFIRM = 2
-    const val DOWN = 3
+    const val UP_LEVEL = 1
+    const val CONFIRM_LEVEL = 2
+    const val DOWN_LEVEL = 3
 }
 
 enum class RatingType(val checkId: Int) {
-    UP(RatingIds.UP),
-    CONFIRM(RatingIds.CONFIRM),
-    DOWN(RatingIds.DOWN)
+    UP(RatingIds.
+    UP_LEVEL),
+    CONFIRM(RatingIds.CONFIRM_LEVEL),
+    DOWN(RatingIds.DOWN_LEVEL)
 }
 
 data class PlayerShortUI(
