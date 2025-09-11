@@ -71,7 +71,7 @@ class GamesNetworkClient : KtorNetworkClient<GamesRequest, GamesResponse>() {
                 }
 
                 is GamesRequest.CancelGame -> {
-                    method = HttpMethod.Post
+                    method = HttpMethod.Delete
                     requestConfigure(request.fullPath(), request.accessToken)
                 }
 

@@ -45,7 +45,6 @@ fun GamesResponse.CreateGame.toDomain(): CreatedGame = CreatedGame(
 
 fun GamesResponse.GetGameDetails.toDomain(): GameDetails = GameDetails(
     gameId = gameId,
-    gameType = gameType,
     host = host.toDomain(),
     message = message,
     courtLocation = courtLocation.toDomain(),

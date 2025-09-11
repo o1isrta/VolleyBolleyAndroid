@@ -7,7 +7,6 @@ import cy.volleybolley.games.domain.model.entity.PlayerShort
 
 data class GameDetails(
     val gameId: Int,
-    val gameType: String,
     val host: Host,
     val message: String,
     val courtLocation: Location,

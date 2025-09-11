@@ -27,7 +27,7 @@ class TournamentsNetworkClient : KtorNetworkClient<TournamentsRequest, Tournamen
                 }
 
                 is TournamentsRequest.CancelTournament -> {
-                    method = HttpMethod.Post
+                    method = HttpMethod.Delete
                     requestConfigure(request.fullPath(), request.accessToken)
                 }
 

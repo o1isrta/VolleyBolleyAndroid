@@ -8,7 +8,6 @@ import cy.volleybolley.games.domain.model.entity.Team
 data class TournamentDetails(
     val tournamentId: Int,
     val isIndividual: Boolean,
-    val tournamentType: String,
     val host: Host,
     val message: String,
     val courtLocation: Location,

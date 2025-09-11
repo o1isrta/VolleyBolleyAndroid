@@ -31,7 +31,6 @@ sealed interface TournamentsResponse {
     class GetTournamentDetails(
         @SerialName("tournament_id") val tournamentId: Int,
         @SerialName("is_individual") val isIndividual: Boolean,
-        @SerialName("tournament_type") val gameType: String,
         @SerialName("host") val host: HostDto,
         @SerialName("message") val message: String,
         @SerialName("court_location") val courtLocation: LocationDto,

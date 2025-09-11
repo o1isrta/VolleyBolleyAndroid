@@ -30,7 +30,6 @@ sealed interface GamesResponse {
     @Serializable
     class GetGameDetails(
         @SerialName("game_id") val gameId: Int,
-        @SerialName("game_type") val gameType: String,
         @SerialName("host") val host: HostDto,
         @SerialName("message") val message: String,
         @SerialName("court_location") val courtLocation: LocationDto,

@@ -49,7 +49,6 @@ fun TournamentsResponse.CreateTournament.toDomain(): CreatedTournament = Created
 fun TournamentsResponse.GetTournamentDetails.toDomain(): TournamentDetails = TournamentDetails(
     tournamentId = tournamentId,
     isIndividual = isIndividual,
-    tournamentType = gameType,
     host = host.toDomain(),
     message = message,
     courtLocation = courtLocation.toDomain(),
