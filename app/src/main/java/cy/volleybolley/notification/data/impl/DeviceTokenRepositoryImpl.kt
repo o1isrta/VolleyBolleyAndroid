@@ -8,20 +8,21 @@ import cy.volleybolley.notification.data.dto.UpdateDeviceTokenRequest
 import cy.volleybolley.notification.data.network.firebase.DeviceTokenRequest
 import cy.volleybolley.notification.data.network.firebase.DeviceTokenResponse
 import cy.volleybolley.notification.domain.api.registration.DeviceTokenRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class DeviceTokenRepositoryImpl(
     private val networkClient: NetworkClient<DeviceTokenRequest, DeviceTokenResponse>
 ) : DeviceTokenRepository {
-    override suspend fun updateToken(token: String): VolleyResult<Unit, ErrorType> {
-        val body = UpdateDeviceTokenRequest(
-            token = token,
-        )
+
+    override suspend fun updateToken(token: String): VolleyResult<Unit, ErrorType> = withContext(Dispatchers.IO) {
+        val body = UpdateDeviceTokenRequest(token = token)
         val response = networkClient.getResponse(DeviceTokenRequest.UpdateToken(body = body))
 
         if (!response.isSuccess) {
-            return VolleyResult.Failure(response.resultCode.mapToErrorType())
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
+        } else {
+            VolleyResult.Success(Unit)
         }
-
-        return VolleyResult.Success(Unit)
     }
 }

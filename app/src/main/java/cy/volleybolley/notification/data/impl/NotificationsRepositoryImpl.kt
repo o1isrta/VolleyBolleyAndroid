@@ -9,40 +9,43 @@ import cy.volleybolley.notification.data.network.notifications.NotificationsRequ
 import cy.volleybolley.notification.data.network.notifications.NotificationsResponse
 import cy.volleybolley.notification.domain.api.notifications.NotificationsRepository
 import cy.volleybolley.notification.domain.model.Notification
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class NotificationsRepositoryImpl(
     private val networkClient: NetworkClient<NotificationsRequest, NotificationsResponse>
 ) : NotificationsRepository {
 
-    override suspend fun getNotifications(): VolleyResult<List<Notification>, ErrorType> {
+    override suspend fun getNotifications(): VolleyResult<List<Notification>, ErrorType> = withContext(Dispatchers.IO) {
         val response = networkClient.getResponse(NotificationsRequest.GetNotifications())
 
         if (!response.isSuccess) {
-            return VolleyResult.Failure(response.resultCode.mapToErrorType())
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
+        } else {
+            val body = response.body as? NotificationsResponse.GetNotifications
+            val notifications = body?.notifications?.map { it.toDomain() }
+
+            notifications?.let {
+                VolleyResult.Success(it)
+            } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
         }
-
-        val body = response.body as? NotificationsResponse.GetNotifications
-        val notifications = body?.notifications?.map { it.toDomain() }
-
-        return notifications?.let {
-            VolleyResult.Success(it)
-        } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
-    override suspend fun markNotificationsAsRead(notificationIds: List<Int>): VolleyResult<Unit, ErrorType> {
+    override suspend fun markNotificationsAsRead(notificationIds: List<Int>): VolleyResult<Unit, ErrorType> =
+        withContext(Dispatchers.IO) {
         val response = networkClient.getResponse(
             NotificationsRequest.MarkNotificationsAsRead(notificationIds)
         )
 
         if (!response.isSuccess) {
-            return VolleyResult.Failure(response.resultCode.mapToErrorType())
-        }
-
-        val body = response.body as? NotificationsResponse.MarkNotificationsAsRead
-        return if (body != null) {
-            VolleyResult.Success(Unit)
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
         } else {
-            VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+            val body = response.body as? NotificationsResponse.MarkNotificationsAsRead
+            if (body != null) {
+                VolleyResult.Success(Unit)
+            } else {
+                VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+            }
         }
     }
 }

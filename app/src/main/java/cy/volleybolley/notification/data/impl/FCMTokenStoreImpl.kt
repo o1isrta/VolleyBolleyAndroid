@@ -8,7 +8,7 @@ class FCMTokenStoreImpl(
     private val prefs: SharedPreferences
 ) : FCMTokenStore {
     override fun saveToken(token: String) {
-        prefs.edit().putString(FCM_TOKEN, token).commit()
+        prefs.edit().putString(FCM_TOKEN, token).apply()
     }
 
     override fun getToken(): String? = prefs.getString(FCM_TOKEN, null)
