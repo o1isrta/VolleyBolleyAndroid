@@ -37,7 +37,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 @Composable
-
 fun RatePlayersScreen(
     navController: NavHostController,
     viewModel: RatePlayersViewModel,
@@ -129,10 +128,12 @@ fun Header() {
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
     ) {
         VolleyText.TitleLarge(
-            text = stringResource(R.string.game_completed), color = VolleyColor.White
+            text = stringResource(R.string.game_completed),
+            color = VolleyColor.White
         )
         VolleyText.TitleMedium(
-            text = stringResource(R.string.rate_the_players_level), color = VolleyColor.White
+            text = stringResource(R.string.rate_the_players_level),
+            color = VolleyColor.White
         )
     }
 }
@@ -187,7 +188,9 @@ private fun LevelPill(level: String) {
 }
 
 @Preview(
-    showBackground = true, showSystemUi = true, device = "spec:width=411dp,height=1000dp,dpi=420"
+    showBackground = true,
+    showSystemUi = true,
+    device = "spec:width=411dp,height=1000dp,dpi=420"
 )
 @Composable
 private fun RatePlayersPreview() {
@@ -197,7 +200,6 @@ private fun RatePlayersPreview() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-
             val state = RatePlayersState(
                 isLoading = false,
                 players = listOf(

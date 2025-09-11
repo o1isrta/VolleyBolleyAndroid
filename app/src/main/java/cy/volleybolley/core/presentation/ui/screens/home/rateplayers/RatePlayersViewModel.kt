@@ -14,8 +14,6 @@ import kotlinx.coroutines.launch
 class RatePlayersViewModel(
     private val eventId: Int,
     private val eventType: String,
-    //private val ratePlayersUseCase: Any,
-    //private val getPlayersToRateUseCase: Any,
     private val appScope: CoroutineScope
 ) : ViewModel() {
 
@@ -34,6 +32,7 @@ class RatePlayersViewModel(
                 isLoading = false
                 players = PlayersShortUI
              */
+
             // моковые данные
             _state.update { currentState ->
                 currentState.copy(

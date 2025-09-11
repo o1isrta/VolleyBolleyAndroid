@@ -10,10 +10,16 @@ data class RatePlayer(
     val levelChanged: RatingType,
 )
 
+object RatingIds {
+    const val UP = 1
+    const val CONFIRM = 2
+    const val DOWN = 3
+}
+
 enum class RatingType(val checkId: Int) {
-    UP(1),
-    CONFIRM(2),
-    DOWN(3),
+    UP(RatingIds.UP),
+    CONFIRM(RatingIds.CONFIRM),
+    DOWN(RatingIds.DOWN)
 }
 
 data class PlayerShortUI(
@@ -31,3 +37,4 @@ enum class LevelType(val level: String) {
     HARD("Hard"),
     PRO("Pro")
 }
+
