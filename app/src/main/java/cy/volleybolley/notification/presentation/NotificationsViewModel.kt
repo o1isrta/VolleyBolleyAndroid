@@ -74,7 +74,7 @@ class NotificationsViewModel(
             result,
             onSuccess = {
                 notification.screen?.let { screen ->
-                    _effect.emit(NotificationsEffect.NavigateTo(screen,gameId = notificationItem.gameId))
+                    _effect.emit(NotificationsEffect.NavigateTo(screen))
                 }
             },
             onFailure = {
