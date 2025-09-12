@@ -12,7 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import cy.volleybolley.core.presentation.ui.navigation.SignUpRoute
+import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
 
 @Composable
 fun OnboardingScreen(navController: NavHostController) {
@@ -22,12 +24,17 @@ fun OnboardingScreen(navController: NavHostController) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        VolleyText.TitleLarge(
+            text = "ONBOARDING",
+            color = VolleyColor.White
+        )
         Text("Welcome to OnboardingScreen")
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(64.dp))
+
         Button(onClick = {
-            navController.navigate(SignUpRoute)
+            navController.navigate(HomeTopLevelRoute)
         }) {
-            Text("Go to Sign Up Screen")
+            Text("GET STARTED (go to Home)")
         }
     }
 }
