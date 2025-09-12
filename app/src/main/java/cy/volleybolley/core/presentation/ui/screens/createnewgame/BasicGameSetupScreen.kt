@@ -247,8 +247,8 @@ Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
             ) { }
         }
 
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-        HorizontalLine()
+            /*Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+            HorizontalLine()
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
         VolleyText.TitleLarge(
@@ -262,7 +262,7 @@ Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
         VolleyButton.GroupButtonsForTourneyType(
             modifier = Modifier,
             onClick = {}
-        )
+        )*/
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
         HorizontalLine()
