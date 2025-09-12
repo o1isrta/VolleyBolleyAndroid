@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
@@ -31,15 +32,16 @@ import cy.volleybolley.ui.theme.VolleybolleyTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+     //   enableEdgeToEdge()
         setContent {
             VolleybolleyTheme {
-                BasicGameSetupScreen(rememberNavController())
-               // RootContainer { innerPadding ->
-                   // NavHostContainer(
-                   //     modifier = Modifier.padding(innerPadding)
-                   // )
-              //  }
+              // BasicGameSetupScreen(rememberNavController())
+                RootContainer { innerPadding, navController ->
+                    NavHostContainer(
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
                // ButtonDemo()
             }
         }
@@ -121,8 +123,9 @@ private fun ButtonDemo() {
 
 @Composable
 fun RootContainer(
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues, NavHostController) -> Unit
 ) {
+    val navController = rememberNavController()
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -131,7 +134,10 @@ fun RootContainer(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = VolleyColor.TurquoiseDark,
-            content = content
+            //content = content
+            content = { paddingValues -> //  Захватываем navController
+                content(paddingValues, navController)
+            }
         )
     }
 }
@@ -140,8 +146,8 @@ fun RootContainer(
 @Composable
 fun Preview() {
     VolleybolleyTheme {
-        RootContainer { padding ->
-            NavHostContainer(modifier = Modifier.padding(padding))
+        RootContainer { padding, navController ->
+            NavHostContainer(modifier = Modifier.padding(padding), navController)
         }
     }
 }

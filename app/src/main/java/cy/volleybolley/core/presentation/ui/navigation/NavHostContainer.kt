@@ -2,6 +2,7 @@ package cy.volleybolley.core.presentation.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -55,9 +56,10 @@ import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
 @Composable
 fun NavHostContainer(
     modifier: Modifier = Modifier,
-    startDestination: NavMap = LaunchRoute
+    navController: NavHostController,
+    startDestination: NavMap = BasicGameSetupRoute //LaunchRoute
 ) {
-    val navController = rememberNavController()
+   // val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = startDestination,

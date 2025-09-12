@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -34,7 +33,6 @@ import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.ACTIVE_BUTTON_TEXT
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -42,9 +40,10 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 
 @Composable
 fun BasicGameSetupScreen(navController: NavHostController) {
+    val scrollState = rememberScrollState() //Состояние скролла
     Column(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
     ){
 
     VolleyContainersRootTransparent.TransparentContainer(
@@ -58,7 +57,8 @@ fun BasicGameSetupScreen(navController: NavHostController) {
         modifier = Modifier
             .padding(VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_16.dp)
             .height(44.dp)
-            .align(Alignment.CenterHorizontally),
+            .align(Alignment.CenterHorizontally)
+            .fillMaxWidth(),
         text = stringResource(R.string.next_game),
         onClick = {}
     )
@@ -190,7 +190,7 @@ fun BasicGameSetupScreenContent(
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
 
         // здесь будет календарь
-        /*    Box(
+       /*     Box(
     modifier = Modifier
         .fillMaxWidth()
         .height(266.dp)
@@ -305,7 +305,7 @@ Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
 
 @Preview
 @Composable
-private fun GameSetupScreenPreview() {
+private fun BasicGameSetupScreenPreview() {
     val navController = rememberNavController() // Создаем моковый NavHostController
     Box(
         modifier = Modifier

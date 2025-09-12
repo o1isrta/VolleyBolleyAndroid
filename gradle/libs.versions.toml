@@ -11,7 +11,7 @@ versionName = "1.0.0"
 versionCode = "1"
 javaVersion = "11"
 # Plugins
-agp = "8.10.1"
+agp = "8.11.2"
 kotlin = "2.1.21"
 navigation = "2.9.2"
 ksp = "2.1.21-2.0.1"

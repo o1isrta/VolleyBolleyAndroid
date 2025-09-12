@@ -201,7 +201,7 @@
     <string name="no_games_found">No games found.\n Would you like to create a game?</string>
     <string name="create_a_game">Create a game</string>
     <string name="upcoming_games">Upcoming games</string>
-    <string name="next_game">Next game: %1$s</string>
+    <string name="next_game">Next game</string>
     <string name="game_invites">Game invites</string>
     <string name="archive">Archive</string>
     <string name="when">When:</string>
