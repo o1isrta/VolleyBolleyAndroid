@@ -7,7 +7,11 @@ import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 
 interface AuthorizationUseCase {
-    suspend fun authorization(authType: AuthorizationType, idToken: String): VolleyResult<AuthorizationResult, ErrorType>
+    suspend fun authorization(
+        authType: AuthorizationType,
+        idToken: String
+    ): VolleyResult<AuthorizationResult, ErrorType>
+
     suspend fun registration(accessToken: String, registrationData: Player): VolleyResult<Unit, ErrorType>
-    fun logOut ()
+    fun logOut()
 }

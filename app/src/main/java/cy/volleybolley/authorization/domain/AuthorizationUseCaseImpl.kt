@@ -30,6 +30,4 @@ class AuthorizationUseCaseImpl(
     override fun logOut() {
         TokensManager.clear()
     }
-
-
 }

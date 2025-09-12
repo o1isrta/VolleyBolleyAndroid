@@ -1,7 +1,7 @@
 package cy.volleybolley.authorization.data
 
-import cy.volleybolley.authorization.data.dto.AuthorizationRequest
 import cy.volleybolley.authorization.data.dto.AuthorizationBody
+import cy.volleybolley.authorization.data.dto.AuthorizationRequest
 import cy.volleybolley.authorization.data.dto.AuthorizationResponse
 import cy.volleybolley.authorization.data.dto.toData
 import cy.volleybolley.authorization.data.dto.toDomain
@@ -27,11 +27,13 @@ class AuthorizationRepositoryImpl(
                     body = AuthorizationBody(idToken = idToken)
                 )
             }
+
             AuthorizationType.FACEBOOK_AUTORIZATION -> {
                 AuthorizationRequest.FacebookAuthorizationRequest(
                     body = AuthorizationBody(idToken = idToken)
                 )
             }
+
             AuthorizationType.PHONE_NUMBER_AUTORIZATION -> {
                 AuthorizationRequest.PhoneNumberAuthorizationRequest(
                     body = AuthorizationBody(idToken = idToken)
@@ -39,12 +41,13 @@ class AuthorizationRepositoryImpl(
             }
         }
         val response = client.getResponse(request)
-        return when(response.isSuccess) {
+        return when (response.isSuccess) {
             true -> {
                 VolleyResult.Success(
                     (response.body!! as AuthorizationResponse.AuthResponse).toDomain(),
                 )
             }
+
             else -> {
                 VolleyResult.Failure(response.resultCode.mapToErrorType())
             }

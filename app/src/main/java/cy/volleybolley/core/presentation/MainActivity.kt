@@ -26,7 +26,6 @@ import cy.volleybolley.R
 import cy.volleybolley.auth.ui.AuthScreen
 import cy.volleybolley.authorization.data.AuthorizationRepositoryImpl
 import cy.volleybolley.authorization.data.network.AuthorizationKtorNetworkClient
-import cy.volleybolley.authorization.domain.api.AuthorizationRepository
 import cy.volleybolley.authorization.domain.model.AuthorizationType
 import cy.volleybolley.core.TokensManager
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -35,19 +34,18 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val id = getString(R.string.default_web_client_id)
+        val defaultClientId = getString(R.string.default_web_client_id)
         val client = AuthorizationKtorNetworkClient()
         val repository = AuthorizationRepositoryImpl(client)
         TokensManager.init(this)
         setContent {
             VolleybolleyTheme {
-                AuthScreen(id) { token ->
+                AuthScreen(defaultClientId) { token ->
                     lifecycleScope.launch {
                         Log.d("МОЁ", "Запуск")
                         Log.d("МОЁ", token)

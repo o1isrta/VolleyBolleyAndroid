@@ -14,9 +14,9 @@ import cy.volleybolley.core.domain.model.onFailure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AuthorizationViewModel (
+class AuthorizationViewModel(
     val useCase: AuthorizationUseCase
-): ViewModel() {
+) : ViewModel() {
 
     fun authorization(
         authType: AuthorizationType,
@@ -25,7 +25,7 @@ class AuthorizationViewModel (
         idToken?.let {
             viewModelScope.launch(Dispatchers.IO) {
                 val result = useCase.authorization(authType, idToken)
-                if(result is VolleyResult.Success) {
+                if (result is VolleyResult.Success) {
                     savingTokens(result.data)
                     savingUserData(result.data.player)
                 } else {
@@ -43,7 +43,7 @@ class AuthorizationViewModel (
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = useCase.registration(accessToken, registrationData)
-            if(result is VolleyResult.Success) {
+            if (result is VolleyResult.Success) {
                 savingUserData(registrationData)
             } else {
                 result.onFailure { errorType ->

@@ -14,15 +14,16 @@ import io.ktor.http.headers
 
 class AuthorizationKtorNetworkClient : KtorNetworkClient<AuthorizationRequest, AuthorizationResponse>() {
     override suspend fun sendRequestByType(request: AuthorizationRequest): HttpResponse {
-            return httpClient.post(BuildConfig.BASE_URL) {
+        return httpClient.post(BuildConfig.BASE_URL) {
             when (request) {
-                is AuthorizationRequest.GoogleAuthorizationRequest-> {
+                is AuthorizationRequest.GoogleAuthorizationRequest -> {
                     url {
                         protocol = URLProtocol.HTTP
                         if (request.path.isNotEmpty()) appendPathSegments(request.path)
                         setBody(request.body)
                     }
                 }
+
                 is AuthorizationRequest.FacebookAuthorizationRequest -> {
                     url {
                         protocol = URLProtocol.HTTP
@@ -30,6 +31,7 @@ class AuthorizationKtorNetworkClient : KtorNetworkClient<AuthorizationRequest, A
                         setBody(request.body)
                     }
                 }
+
                 is AuthorizationRequest.PhoneNumberAuthorizationRequest -> {
                     url {
                         protocol = URLProtocol.HTTP
@@ -37,6 +39,7 @@ class AuthorizationKtorNetworkClient : KtorNetworkClient<AuthorizationRequest, A
                         setBody(request.body)
                     }
                 }
+
                 is AuthorizationRequest.PlayerRegistrationRequest -> {
                     url {
                         protocol = URLProtocol.HTTP
@@ -58,10 +61,10 @@ class AuthorizationKtorNetworkClient : KtorNetworkClient<AuthorizationRequest, A
         return when (requestType) {
             is AuthorizationRequest.GoogleAuthorizationRequest,
             is AuthorizationRequest.FacebookAuthorizationRequest,
-            is AuthorizationRequest.PhoneNumberAuthorizationRequest
-                -> {
+            is AuthorizationRequest.PhoneNumberAuthorizationRequest -> {
                 httpResponse.body<AuthorizationResponse.AuthResponse>()
             }
+
             is AuthorizationRequest.PlayerRegistrationRequest -> AuthorizationResponse.RegistrationResponse
         }
     }

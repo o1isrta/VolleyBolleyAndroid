@@ -4,7 +4,7 @@ sealed interface AuthorizationRequest {
     class GoogleAuthorizationRequest(
         val path: List<String> = listOf("auth", "google", "login"),
         var body: AuthorizationBody,
-        ) : AuthorizationRequest
+    ) : AuthorizationRequest
 
     class FacebookAuthorizationRequest(
         var path: List<String> = listOf(),

@@ -10,8 +10,7 @@ sealed interface AuthorizationResponse {
         @SerialName("refresh_token") val refreshToken: String,
         @SerialName("is_registered") val isRegistered: Boolean,
         val player: PlayerDto
-    ): AuthorizationResponse
+    ) : AuthorizationResponse
 
     object RegistrationResponse : AuthorizationResponse
 }
-
