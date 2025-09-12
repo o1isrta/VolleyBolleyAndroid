@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
-                ButtonDemo()
+                // ButtonDemo()
             }
         }
     }

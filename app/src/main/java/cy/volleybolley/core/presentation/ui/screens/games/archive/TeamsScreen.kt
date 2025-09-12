@@ -26,7 +26,7 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Player
+import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.PlayerShort
 import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Team
 
 @Composable
@@ -36,26 +36,26 @@ fun TeamsScreen(navController: NavHostController) {
         teams = listOf(
             Team(
                 listOf(
-                    Player("Anton Ivanov", "H"),
-                    Player("Aleksandr Abramov", "H")
+                    PlayerShort(0, "Anton Ivanov", "H"),
+                    PlayerShort(1, "Aleksandr Abramov", "H")
                 )
             ),
             Team(
                 listOf(
-                    Player("Anya Levan", "H"),
-                    Player("Alina Lyubimova", "H")
+                    PlayerShort(0, "Anya Levan", "H"),
+                    PlayerShort(1, "Alina Lyubimova", "H")
                 )
             ),
             Team(
                 listOf(
-                    Player("Maxim Petrov", "H"),
-                    Player("Julia Petrova", "H")
+                    PlayerShort(0, "Maxim Petrov", "H"),
+                    PlayerShort(1, "Julia Petrova", "H")
                 )
             ),
             Team(
                 listOf(
-                    Player("Tatiana Kalinina", "H"),
-                    Player("Artem Artemov", "H")
+                    PlayerShort(0,"Tatiana Kalinina", "H"),
+                    PlayerShort(1,"Artem Artemov", "H")
                 )
             )
         ),
@@ -66,8 +66,7 @@ fun TeamsScreen(navController: NavHostController) {
 @Composable
 private fun TeamsScreen(
     teams: List<Team>,
-    onBackClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onBackClick: () -> Unit
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
@@ -130,8 +129,7 @@ private fun TeamsHeader(
 @Composable
 private fun TeamBlock(
     team: Team,
-    teamIndex: Int,
-    modifier: Modifier = Modifier
+    teamIndex: Int
 ) {
     val topPadding = if (teamIndex == 0) VolleyDimens.DIMEN_16.dp else VolleyDimens.DIMEN_20.dp
 
@@ -154,8 +152,7 @@ private fun TeamBlock(
 
 @Composable
 private fun PlayerRow(
-    player: Player,
-    modifier: Modifier = Modifier
+    player: PlayerShort
 ) {
     Row(
         modifier = Modifier

@@ -55,7 +55,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
 @Composable
 fun NavHostContainer(
     modifier: Modifier = Modifier,
-    startDestination: NavMap = LaunchRoute
+    startDestination: NavMap = ArchiveRoute // LaunchRoute
 ) {
     val navController = rememberNavController()
     NavHost(

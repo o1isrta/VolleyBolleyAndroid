@@ -149,6 +149,7 @@ object VolleyButton {
         modifier: Modifier = Modifier,
         text: String,
         paddingValues: PaddingValues = PaddingValues(16.dp, 12.dp, 16.dp, 12.dp),
+        cornerRadius: Int = 16,
         onClick: () -> Unit
     ) {
         Button(
@@ -157,7 +158,7 @@ object VolleyButton {
             colors = ButtonDefaults.buttonColors(
                 containerColor = VolleyColor.OrangeHard
             ),
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(cornerRadius.dp),
             contentPadding = paddingValues
         ) {
             Text(
