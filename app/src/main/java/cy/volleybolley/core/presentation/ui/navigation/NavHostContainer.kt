@@ -2,9 +2,9 @@ package cy.volleybolley.core.presentation.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.core.presentation.ui.screens.authorization.AboutLevelsScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScreen
@@ -55,9 +55,10 @@ import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
 @Composable
 fun NavHostContainer(
     modifier: Modifier = Modifier,
-    startDestination: NavMap = LaunchRoute
+    navController: NavHostController,
+    startDestination: NavMap = LaunchRoute,
+    activityFinisher: () -> Unit,
 ) {
-    val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -105,7 +106,12 @@ fun NavHostContainer(
         composable<GameHomeRoute> { GameHomeScreen(navController) }
         composable<ManagePlayersRoute> { ManagePlayersScreen(navController) }
         composable<MyGameRoute> { MyGameScreen(navController) }
-        composable<MyGamesRoute> { MyGamesScreen(navController) }
+        composable<MyGamesRoute> {
+            MyGamesScreen(
+                navController = navController,
+                finisher = activityFinisher,
+            )
+        }
         composable<MyTourneyRoute> { MyTourneyScreen(navController) }
 
         // upcoming games
@@ -115,7 +121,12 @@ fun NavHostContainer(
         composable<UpcomingTourneyDetailsRoute> { UpcomingTourneyDetailsScreen(navController) }
 
         // home
-        composable<HomeRoute> { HomeScreen(navController) }
+        composable<HomeRoute> {
+            HomeScreen(
+                navController = navController,
+                finisher = activityFinisher,
+            )
+        }
         composable<SearchCourtRoute> { SearchCourtScreen(navController) }
         composable<RatePlayersRoute> { RatePlayersScreen(navController) }
         composable<SuccessRoute> { SuccessScreen(navController) }
@@ -128,7 +139,12 @@ fun NavHostContainer(
         composable<PersonalDataRoute> { PersonalDataScreen(navController) }
         composable<PlayerProfileRoute> { PlayerProfileScreen(navController) }
         composable<PlayersRoute> { PlayersScreen(navController) }
-        composable<ProfileRoute> { ProfileScreen(navController) }
+        composable<ProfileRoute> {
+            ProfileScreen(
+                navController = navController,
+                finisher = activityFinisher,
+            )
+        }
         composable<EnterPaymentDataRoute> { EnterPaymentDataScreen(navController) }
     }
 }

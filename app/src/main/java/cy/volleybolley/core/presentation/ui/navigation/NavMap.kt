@@ -7,9 +7,6 @@ sealed interface NavMap
 
 // --- top level routes ---
 @Serializable
-object LaunchTopLevelRoute : NavMap
-
-@Serializable
 object HomeTopLevelRoute : NavMap
 
 @Serializable
