@@ -90,7 +90,8 @@ fun RootContainer(
                 if (showTopBar) {
                     VolleyTopBar.TopBar(
                         firstName = "nemislimus",
-                        avatar = "https://cdn.fishki.net/upload/post/2021/03/29/3682461/gallery/tn/wil-hughes-troll-face.jpg",
+                        avatar = "https://cdn.fishki.net/upload/post/2021/03/29/3682461/gallery/tn/" +
+                            "wil-hughes-troll-face.jpg",
                         levelName = "PRO"
                     )
                 }

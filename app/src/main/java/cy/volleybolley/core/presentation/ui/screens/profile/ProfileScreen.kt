@@ -44,7 +44,7 @@ fun ProfileScreen(
         Spacer(Modifier.height(VolleyDimens.DIMEN_36.dp))
         Button(
             onClick = {
-                navController.navigate(LaunchRoute){
+                navController.navigate(LaunchRoute) {
                     popUpTo(LaunchRoute) { inclusive = true }
                 }
             }
