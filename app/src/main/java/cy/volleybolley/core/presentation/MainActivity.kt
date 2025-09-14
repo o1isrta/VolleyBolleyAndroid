@@ -91,7 +91,7 @@ fun RootContainer(
                     VolleyTopBar.TopBar(
                         firstName = "nemislimus",
                         avatar = "https://cdn.fishki.net/upload/post/2021/03/29/3682461/gallery/tn/wil-hughes-troll-face.jpg",
-                        levelName = "pro"
+                        levelName = "PRO"
                     )
                 }
             },
@@ -146,7 +146,7 @@ private fun BottomNavComponent(
                 color = VolleyColor.TurquoiseBottom,
                 shape = shape
             )
-            .padding(bottom = VolleyDimens.DIMEN_44.dp)
+            .padding(bottom = VolleyDimens.DIMEN_40.dp)
             .clip(shape)
     ) {
         val navBackStackEntry = navController.currentBackStackEntryAsState().value
