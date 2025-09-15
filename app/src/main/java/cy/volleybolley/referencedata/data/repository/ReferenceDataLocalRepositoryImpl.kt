@@ -1,5 +1,7 @@
 package cy.volleybolley.referencedata.data.repository
 
+import android.util.Log
+import cy.volleybolley.BuildConfig
 import cy.volleybolley.referencedata.data.cache.ReferenceDataLocalRepository
 import cy.volleybolley.referencedata.data.localdto.CountryLocalDto
 import cy.volleybolley.referencedata.data.localdto.CurrencyLocalDto
@@ -14,51 +16,97 @@ class ReferenceDataLocalRepositoryImpl(private val cacheDir: File, private val j
         return File(cacheDir, "$key.json")
     }
 
-    override suspend fun saveCountries(data: List<CountryLocalDto>) {
+    override suspend fun saveCountries(data: List<CountryLocalDto>): Boolean {
         val jsonString = json.encodeToString(data)
-        getFile(COUNTRIES_CACHE).writeText(jsonString)
+        runCatching {
+            getFile(COUNTRIES_CACHE).writeText(jsonString)
+        }.onFailure { exception ->
+            if (BuildConfig.DEBUG) {
+                Log.e(ERROR_TAG, "Save $COUNTRIES_CACHE error", exception)
+                return false
+            }
+        }
+        return true
     }
 
     override suspend fun loadCountries(): List<CountryLocalDto>? {
-        val file = getFile(COUNTRIES_CACHE)
-        return if (file.exists()) {
-            json.decodeFromString(file.readText())
-        } else {
-            null
-        }
+        return runCatching {
+            val file = getFile(COUNTRIES_CACHE)
+
+            if (file.exists()) {
+                json.decodeFromString<List<CountryLocalDto>>(file.readText())
+            } else {
+                null
+            }
+        }.onFailure { exception ->
+            if (BuildConfig.DEBUG) {
+                Log.e(ERROR_TAG, "Load $COUNTRIES_CACHE error", exception)
+            }
+        }.getOrNull()
     }
 
-    override suspend fun saveCurrencies(data: List<CurrencyLocalDto>) {
+    override suspend fun saveCurrencies(data: List<CurrencyLocalDto>): Boolean {
         val jsonString = json.encodeToString(data)
-        getFile(CURRENCIES_CACHE).writeText(jsonString)
+        runCatching {
+            getFile(CURRENCIES_CACHE).writeText(jsonString)
+        }.onFailure { exception ->
+            if (BuildConfig.DEBUG) {
+                Log.e(ERROR_TAG, "Save $CURRENCIES_CACHE error", exception)
+                return false
+            }
+        }
+        return true
     }
 
     override suspend fun loadCurrencies(): List<CurrencyLocalDto>? {
-        val file = getFile(CURRENCIES_CACHE)
-        return if (file.exists()) {
-            json.decodeFromString(file.readText())
-        } else {
-            null
-        }
+        return runCatching {
+            val file = getFile(CURRENCIES_CACHE)
+
+            if (file.exists()) {
+                json.decodeFromString<List<CurrencyLocalDto>>(file.readText())
+            } else {
+                null
+            }
+        }.onFailure { exception ->
+            if (BuildConfig.DEBUG) {
+                Log.e(ERROR_TAG, "Load $CURRENCIES_CACHE error", exception)
+            }
+        }.getOrNull()
     }
 
-    override suspend fun saveFaq(data: FaqLocalDto) {
+    override suspend fun saveFaq(data: FaqLocalDto): Boolean {
         val jsonString = json.encodeToString(data)
-        getFile(FAQ_CACHE).writeText(jsonString)
+        runCatching {
+            getFile(FAQ_CACHE).writeText(jsonString)
+        }.onFailure { exception ->
+            if (BuildConfig.DEBUG) {
+                Log.e(ERROR_TAG, "Save $FAQ_CACHE error", exception)
+                return false
+            }
+        }
+        return true
     }
 
     override suspend fun loadFaq(): FaqLocalDto? {
-        val file = getFile(FAQ_CACHE)
-        return if (file.exists()) {
-            json.decodeFromString(file.readText())
-        } else {
-            null
-        }
+        return runCatching {
+            val file = getFile(FAQ_CACHE)
+
+            if (file.exists()) {
+                json.decodeFromString<FaqLocalDto>(file.readText())
+            } else {
+                null
+            }
+        }.onFailure { exception ->
+            if (BuildConfig.DEBUG) {
+                Log.e(ERROR_TAG, "Load $FAQ_CACHE error", exception)
+            }
+        }.getOrNull()
     }
 
     companion object {
         private const val COUNTRIES_CACHE = "countries_cache"
         private const val CURRENCIES_CACHE = "currencies_cache"
         private const val FAQ_CACHE = "faq_cache"
+        private const val ERROR_TAG = "ReferenceDataCaching"
     }
 }

@@ -11,6 +11,7 @@ import cy.volleybolley.referencedata.data.localdto.FaqLocalDto
 import cy.volleybolley.referencedata.domain.model.City
 import cy.volleybolley.referencedata.domain.model.Country
 import cy.volleybolley.referencedata.domain.model.Currency
+import cy.volleybolley.referencedata.domain.model.CurrencyType
 import cy.volleybolley.referencedata.domain.model.Faq
 
 // Remote Dto mappers
@@ -38,7 +39,7 @@ fun List<CountryDto>.mapToDomain(): List<Country> {
 fun CurrencyDto.mapToDomain(): Currency {
     return Currency(
         id = id,
-        type = type,
+        type = CurrencyType.getCurrencyByName(type),
         name = name,
         countryId = countryId.id
     )
@@ -100,7 +101,7 @@ fun List<Country>.mapToLocalDto(): List<CountryLocalDto> {
 fun CurrencyLocalDto.mapToDomain(): Currency {
     return Currency(
         id = id,
-        type = type,
+        type = CurrencyType.getCurrencyByName(type),
         name = name,
         countryId = countryId
     )
@@ -109,7 +110,7 @@ fun CurrencyLocalDto.mapToDomain(): Currency {
 fun Currency.mapToLocalDto(): CurrencyLocalDto {
     return CurrencyLocalDto(
         id = id,
-        type = type,
+        type = type.currencyValue,
         name = name,
         countryId = countryId
     )

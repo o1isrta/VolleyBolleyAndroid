@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CurrencyDto(
+class CurrencyDto(
     @SerialName("currency_id")
     val id: Int,
     @SerialName("currency_type")

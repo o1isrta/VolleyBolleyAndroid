@@ -1,6 +1,5 @@
 package cy.volleybolley.referencedata.di
 
-import android.content.Context
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.di.HttpClientQualifier
 import cy.volleybolley.referencedata.data.cache.ReferenceDataLocalRepository
@@ -16,12 +15,12 @@ import cy.volleybolley.referencedata.domain.api.ReferenceDataRemoteRepository
 import cy.volleybolley.referencedata.domain.impl.GetCountriesUseCaseImpl
 import cy.volleybolley.referencedata.domain.impl.GetCurrenciesUseCaseImpl
 import cy.volleybolley.referencedata.domain.impl.GetFaqUseCaseImpl
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val referenceDataModule = module {
     single {
-        val context = get<Context>()
-        context.cacheDir
+        androidContext().cacheDir
     }
 
     single<NetworkClient<ReferenceDataRequest, ReferenceDataResponse>>(
@@ -44,12 +43,21 @@ val referenceDataModule = module {
     }
 
     single<GetCountriesUseCase> {
-        GetCountriesUseCaseImpl(remoteRepository = get())
+        GetCountriesUseCaseImpl(
+            remoteRepository = get(),
+            localRepository = get()
+        )
     }
     single<GetCurrenciesUseCase> {
-        GetCurrenciesUseCaseImpl(remoteRepository = get())
+        GetCurrenciesUseCaseImpl(
+            remoteRepository = get(),
+            localRepository = get()
+        )
     }
     single<GetFaqUseCase> {
-        GetFaqUseCaseImpl(remoteRepository = get())
+        GetFaqUseCaseImpl(
+            remoteRepository = get(),
+            localRepository = get()
+        )
     }
 }

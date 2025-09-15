@@ -1,5 +1,5 @@
 package cy.volleybolley.referencedata.domain.model
 
-data class Faq(
+class Faq(
     val faq: String
 )

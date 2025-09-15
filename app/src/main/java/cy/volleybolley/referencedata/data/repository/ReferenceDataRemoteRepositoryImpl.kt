@@ -13,39 +13,34 @@ import cy.volleybolley.referencedata.domain.api.ReferenceDataRemoteRepository
 import cy.volleybolley.referencedata.domain.model.Country
 import cy.volleybolley.referencedata.domain.model.Currency
 import cy.volleybolley.referencedata.domain.model.Faq
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class ReferenceDataRemoteRepositoryImpl(
     private val networkClient: NetworkClient<ReferenceDataRequest, ReferenceDataResponse>,
     private val localRepository: ReferenceDataLocalRepository
 ) : ReferenceDataRemoteRepository {
-    override fun getCountries(): Flow<VolleyResult<List<Country>, ErrorType>> = flow {
+    override suspend fun getCountries(): VolleyResult<List<Country>, ErrorType> {
         val response = networkClient.getResponse(ReferenceDataRequest.CountriesRequest())
 
         when (response.isSuccess) {
             true -> {
                 val result =
                     (response.body as? ReferenceDataResponse.CountriesResponse)?.countries?.mapToDomain()
+
                 result?.let {
                     localRepository.saveCountries(it.mapToLocalDto())
-                    emit(VolleyResult.Success(it))
-                } ?: emit(VolleyResult.Failure(ErrorType.UNKNOWN_ERROR))
+                    return VolleyResult.Success(
+                        localRepository.loadCountries()?.mapToDomain().orEmpty()
+                    )
+                } ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
             }
 
             false -> {
-                val countriesFromCache = localRepository.loadCountries()
-                countriesFromCache?.let {
-                    emit(
-                        VolleyResult.Success(countriesFromCache.mapToDomain())
-                    )
-                } ?: emit(VolleyResult.Failure(response.resultCode.mapToErrorType()))
-
+                return VolleyResult.Failure(response.resultCode.mapToErrorType())
             }
         }
     }
 
-    override fun getCurrencies(): Flow<VolleyResult<List<Currency>, ErrorType>> = flow {
+    override suspend fun getCurrencies(): VolleyResult<List<Currency>, ErrorType> {
         val response = networkClient.getResponse(ReferenceDataRequest.CurrencyRequest())
 
         when (response.isSuccess) {
@@ -54,22 +49,20 @@ class ReferenceDataRemoteRepositoryImpl(
                     (response.body as? ReferenceDataResponse.CurrenciesResponse)?.currencies?.mapToDomain()
 
                 result?.let {
-                    localRepository.saveCurrencies(result.mapToLocalDto())
-                    emit(VolleyResult.Success(result))
-                } ?: emit(VolleyResult.Failure(ErrorType.UNKNOWN_ERROR))
+                    localRepository.saveCurrencies(it.mapToLocalDto())
+                    return VolleyResult.Success(
+                        localRepository.loadCurrencies()?.mapToDomain().orEmpty()
+                    )
+                } ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
             }
 
             false -> {
-                val currenciesFromCache = localRepository.loadCurrencies()
-
-                currenciesFromCache?.let {
-                    emit(VolleyResult.Success(currenciesFromCache.mapToDomain()))
-                } ?: emit(VolleyResult.Failure(response.resultCode.mapToErrorType()))
+                return VolleyResult.Failure(response.resultCode.mapToErrorType())
             }
         }
     }
 
-    override fun getFaq(): Flow<VolleyResult<Faq, ErrorType>> = flow {
+    override suspend fun getFaq(): VolleyResult<Faq, ErrorType> {
         val response = networkClient.getResponse(ReferenceDataRequest.FaqRequest())
 
         when (response.isSuccess) {
@@ -78,17 +71,15 @@ class ReferenceDataRemoteRepositoryImpl(
                     (response.body as? ReferenceDataResponse.FaqResponse)?.faqDto?.mapToDomain()
 
                 result?.let {
-                    localRepository.saveFaq(result.mapToLocalDto())
-                    emit(VolleyResult.Success(result))
-                } ?: emit(VolleyResult.Failure(ErrorType.UNKNOWN_ERROR))
+                    localRepository.saveFaq(it.mapToLocalDto())
+                    return VolleyResult.Success(
+                        localRepository.loadFaq()?.mapToDomain() ?: Faq("")
+                    )
+                } ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
             }
 
             false -> {
-                val faqFromCache = localRepository.loadFaq()
-
-                faqFromCache?.let {
-                    emit(VolleyResult.Success(faqFromCache.mapToDomain()))
-                } ?: emit(VolleyResult.Failure(response.resultCode.mapToErrorType()))
+                return VolleyResult.Failure(response.resultCode.mapToErrorType())
             }
         }
     }

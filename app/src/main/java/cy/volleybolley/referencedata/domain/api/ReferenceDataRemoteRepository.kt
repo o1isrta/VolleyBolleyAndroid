@@ -5,10 +5,9 @@ import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.referencedata.domain.model.Country
 import cy.volleybolley.referencedata.domain.model.Currency
 import cy.volleybolley.referencedata.domain.model.Faq
-import kotlinx.coroutines.flow.Flow
 
 interface ReferenceDataRemoteRepository {
-    fun getCountries(): Flow<VolleyResult<List<Country>, ErrorType>>
-    fun getCurrencies(): Flow<VolleyResult<List<Currency>, ErrorType>>
-    fun getFaq(): Flow<VolleyResult<Faq, ErrorType>>
+    suspend fun getCountries(): VolleyResult<List<Country>, ErrorType>
+    suspend fun getCurrencies(): VolleyResult<List<Currency>, ErrorType>
+    suspend fun getFaq(): VolleyResult<Faq, ErrorType>
 }
