@@ -15,7 +15,6 @@ class GetFaqUseCaseImpl(
     GetFaqUseCase {
     override suspend fun execute(): VolleyResult<Faq, ErrorType> {
         return when (val resultFromWeb = remoteRepository.getFaq()) {
-
             is VolleyResult.Success -> resultFromWeb
             is VolleyResult.Failure -> {
                 localRepository.loadFaq()?.let { faqFromCache ->

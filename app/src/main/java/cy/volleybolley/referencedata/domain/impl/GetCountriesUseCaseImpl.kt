@@ -14,7 +14,6 @@ class GetCountriesUseCaseImpl(
 ) : GetCountriesUseCase {
     override suspend fun execute(): VolleyResult<List<Country>, ErrorType> {
         return when (val resultFromWeb = remoteRepository.getCountries()) {
-
             is VolleyResult.Success -> resultFromWeb
             is VolleyResult.Failure -> {
                 localRepository.loadCountries()?.let { countriesFromCache ->

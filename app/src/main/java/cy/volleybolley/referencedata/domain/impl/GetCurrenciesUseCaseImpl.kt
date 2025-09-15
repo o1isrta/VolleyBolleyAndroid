@@ -15,7 +15,6 @@ class GetCurrenciesUseCaseImpl(
     GetCurrenciesUseCase {
     override suspend fun execute(): VolleyResult<List<Currency>, ErrorType> {
         return when (val resultFromWeb = remoteRepository.getCurrencies()) {
-
             is VolleyResult.Success -> resultFromWeb
             is VolleyResult.Failure -> {
                 localRepository.loadCurrencies()?.let { currenciesFromCache ->
