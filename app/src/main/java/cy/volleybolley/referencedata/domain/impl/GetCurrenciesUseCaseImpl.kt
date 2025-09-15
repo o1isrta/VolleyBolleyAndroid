@@ -14,18 +14,15 @@ class GetCurrenciesUseCaseImpl(
 ) :
     GetCurrenciesUseCase {
     override suspend fun execute(): VolleyResult<List<Currency>, ErrorType> {
-        when (val resultFromWeb = remoteRepository.getCurrencies()) {
-            is VolleyResult.Success -> {
-                return resultFromWeb
-            }
+        return when (val resultFromWeb = remoteRepository.getCurrencies()) {
 
+            is VolleyResult.Success -> resultFromWeb
             is VolleyResult.Failure -> {
-                val currenciesFromCache = localRepository.loadCurrencies()
-                currenciesFromCache?.let {
-                    return VolleyResult.Success(
+                localRepository.loadCurrencies()?.let { currenciesFromCache ->
+                    VolleyResult.Success(
                         currenciesFromCache.mapToDomain()
                     )
-                } ?: return resultFromWeb
+                } ?: resultFromWeb
             }
         }
     }

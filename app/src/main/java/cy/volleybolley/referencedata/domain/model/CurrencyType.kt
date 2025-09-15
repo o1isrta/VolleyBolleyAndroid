@@ -5,12 +5,10 @@ enum class CurrencyType(val currencyValue: String) {
     THB("THB"),
     UNKNOWN("UNKNOWN");
 
-    companion object{
+    companion object {
         @JvmStatic
         fun getCurrencyByName(currencyName: String): CurrencyType {
             return entries.find { it.currencyValue == currencyName } ?: UNKNOWN
         }
     }
 }
-
-

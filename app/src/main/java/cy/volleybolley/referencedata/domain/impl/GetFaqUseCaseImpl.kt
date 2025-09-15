@@ -10,21 +10,19 @@ import cy.volleybolley.referencedata.domain.model.Faq
 
 class GetFaqUseCaseImpl(
     private val remoteRepository: ReferenceDataRemoteRepository,
-    private val localRepository: ReferenceDataLocalRepository) :
+    private val localRepository: ReferenceDataLocalRepository
+) :
     GetFaqUseCase {
     override suspend fun execute(): VolleyResult<Faq, ErrorType> {
-        when (val resultFromWeb = remoteRepository.getFaq()) {
-            is VolleyResult.Success -> {
-                return resultFromWeb
-            }
-            is VolleyResult.Failure -> {
-                val faqFromCache = localRepository.loadFaq()
+        return when (val resultFromWeb = remoteRepository.getFaq()) {
 
-                faqFromCache?.let {
-                    return VolleyResult.Success(
+            is VolleyResult.Success -> resultFromWeb
+            is VolleyResult.Failure -> {
+                localRepository.loadFaq()?.let { faqFromCache ->
+                    VolleyResult.Success(
                         faqFromCache.mapToDomain()
                     )
-                } ?: return resultFromWeb
+                } ?: resultFromWeb
             }
         }
     }

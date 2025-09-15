@@ -13,18 +13,15 @@ class GetCountriesUseCaseImpl(
     private val localRepository: ReferenceDataLocalRepository
 ) : GetCountriesUseCase {
     override suspend fun execute(): VolleyResult<List<Country>, ErrorType> {
-        when (val resultFromWeb = remoteRepository.getCountries()) {
-            is VolleyResult.Success -> {
-                return resultFromWeb
-            }
+        return when (val resultFromWeb = remoteRepository.getCountries()) {
 
+            is VolleyResult.Success -> resultFromWeb
             is VolleyResult.Failure -> {
-                val countriesFromCache = localRepository.loadCountries()
-                countriesFromCache?.let {
-                    return VolleyResult.Success(
+                localRepository.loadCountries()?.let { countriesFromCache ->
+                    VolleyResult.Success(
                         countriesFromCache.mapToDomain()
                     )
-                } ?: return resultFromWeb
+                } ?: resultFromWeb
             }
         }
     }

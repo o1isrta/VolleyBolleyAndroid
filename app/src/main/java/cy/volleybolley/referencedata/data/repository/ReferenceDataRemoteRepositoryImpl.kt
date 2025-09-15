@@ -21,21 +21,21 @@ class ReferenceDataRemoteRepositoryImpl(
     override suspend fun getCountries(): VolleyResult<List<Country>, ErrorType> {
         val response = networkClient.getResponse(ReferenceDataRequest.CountriesRequest())
 
-        when (response.isSuccess) {
+        return when (response.isSuccess) {
             true -> {
                 val result =
                     (response.body as? ReferenceDataResponse.CountriesResponse)?.countries?.mapToDomain()
 
                 result?.let {
                     localRepository.saveCountries(it.mapToLocalDto())
-                    return VolleyResult.Success(
+                    VolleyResult.Success(
                         localRepository.loadCountries()?.mapToDomain().orEmpty()
                     )
-                } ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+                } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
             }
 
             false -> {
-                return VolleyResult.Failure(response.resultCode.mapToErrorType())
+                VolleyResult.Failure(response.resultCode.mapToErrorType())
             }
         }
     }
@@ -43,21 +43,21 @@ class ReferenceDataRemoteRepositoryImpl(
     override suspend fun getCurrencies(): VolleyResult<List<Currency>, ErrorType> {
         val response = networkClient.getResponse(ReferenceDataRequest.CurrencyRequest())
 
-        when (response.isSuccess) {
+        return when (response.isSuccess) {
             true -> {
                 val result =
                     (response.body as? ReferenceDataResponse.CurrenciesResponse)?.currencies?.mapToDomain()
 
                 result?.let {
                     localRepository.saveCurrencies(it.mapToLocalDto())
-                    return VolleyResult.Success(
+                    VolleyResult.Success(
                         localRepository.loadCurrencies()?.mapToDomain().orEmpty()
                     )
-                } ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+                } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
             }
 
             false -> {
-                return VolleyResult.Failure(response.resultCode.mapToErrorType())
+                VolleyResult.Failure(response.resultCode.mapToErrorType())
             }
         }
     }
@@ -65,21 +65,21 @@ class ReferenceDataRemoteRepositoryImpl(
     override suspend fun getFaq(): VolleyResult<Faq, ErrorType> {
         val response = networkClient.getResponse(ReferenceDataRequest.FaqRequest())
 
-        when (response.isSuccess) {
+        return when (response.isSuccess) {
             true -> {
                 val result =
                     (response.body as? ReferenceDataResponse.FaqResponse)?.faqDto?.mapToDomain()
 
                 result?.let {
                     localRepository.saveFaq(it.mapToLocalDto())
-                    return VolleyResult.Success(
+                    VolleyResult.Success(
                         localRepository.loadFaq()?.mapToDomain() ?: Faq("")
                     )
-                } ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+                } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
             }
 
             false -> {
-                return VolleyResult.Failure(response.resultCode.mapToErrorType())
+                VolleyResult.Failure(response.resultCode.mapToErrorType())
             }
         }
     }
