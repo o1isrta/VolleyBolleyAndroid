@@ -1,9 +1,11 @@
 package cy.volleybolley.core.presentation.ui.screens.home.rateplayers
 
+import cy.volleybolley.core.presentation.base.UiState
+
 data class RatePlayersState(
     val isLoading: Boolean = true,
     val players: List<PlayerShortUI> = emptyList(),
-)
+) : UiState
 
 data class RatePlayer(
     val playerId: Int,

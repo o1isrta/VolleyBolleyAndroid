@@ -1,5 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.home.rateplayers
 
-sealed interface RatePlayersEffect {
+import cy.volleybolley.core.presentation.base.UiEffect
+
+sealed interface RatePlayersEffect : UiEffect {
     data object CloseScreen : RatePlayersEffect
 }

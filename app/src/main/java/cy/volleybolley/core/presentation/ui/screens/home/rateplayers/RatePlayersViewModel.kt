@@ -1,27 +1,21 @@
 package cy.volleybolley.core.presentation.ui.screens.home.rateplayers
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RatePlayersViewModel(
     private val eventId: Int,
     private val eventType: String,
-    private val appScope: CoroutineScope
-) : ViewModel() {
+    private val appScope: CoroutineScope,
+) : BaseViewModel<RatePlayersState, RatePlayersEvent, RatePlayersEffect>(
+    initialState = RatePlayersState()
+) {
 
-    private val _state = MutableStateFlow(RatePlayersState())
-    val state = _state.asStateFlow()
-
-    private val _effects = MutableSharedFlow<RatePlayersEffect>()
-    val effects = _effects.asSharedFlow()
+    override val tag: String = TAG
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -34,7 +28,7 @@ class RatePlayersViewModel(
              */
 
             // моковые данные
-            _state.update { currentState ->
+            uiStateMutable.update { currentState ->
                 currentState.copy(
                     isLoading = false,
                     players = listOf(
@@ -65,7 +59,7 @@ class RatePlayersViewModel(
         }
     }
 
-    fun obtainEvent(event: RatePlayersEvent) {
+    override fun obtainEvent(event: RatePlayersEvent) {
         when (event) {
             RatePlayersEvent.ConfirmRate -> confirmRating()
             is RatePlayersEvent.RatePlayer -> ratePlayer(event.playerId, event.rating)
@@ -74,7 +68,7 @@ class RatePlayersViewModel(
 
     private fun confirmRating() {
         appScope.launch(Dispatchers.IO) {
-            val ratingPlayers = _state.value.players.map { player ->
+            val ratingPlayers = uiStateMutable.value.players.map { player ->
                 RatePlayer(
                     playerId = player.playerId,
                     levelChanged = player.rating
@@ -83,12 +77,12 @@ class RatePlayersViewModel(
             /*
             ratePlayersUseCase.ratePlayers(ratingPlayers)
              */
-            emit(RatePlayersEffect.CloseScreen)
+            sendUiEffect(RatePlayersEffect.CloseScreen)
         }
     }
 
     private fun ratePlayer(playerId: Int, newRating: RatingType) {
-        _state.update { currentState ->
+        uiStateMutable.update { currentState ->
             currentState.copy(
                 players = currentState.players.map { player ->
                     if (player.playerId == playerId) {
@@ -101,7 +95,7 @@ class RatePlayersViewModel(
         }
     }
 
-    private fun emit(effect: RatePlayersEffect) {
-        viewModelScope.launch { _effects.emit(effect) }
+    companion object {
+        val TAG = RatePlayersViewModel::class.simpleName ?: "RatePlayersViewModel"
     }
 }
