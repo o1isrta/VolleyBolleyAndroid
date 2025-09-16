@@ -12,13 +12,16 @@ import cy.volleybolley.players.domain.model.PlayerDetail
 import cy.volleybolley.players.domain.repository.PlayersRepository
 
 class PlayersRepositoryImpl(
-    private val networkClient: NetworkClient<PlayerRequest, PlayerResponse>
+    private val networkClient: NetworkClient<PlayerRequest, PlayerResponse>,
+    private val tokenProvider: suspend () -> String? = { null }
 ) : PlayersRepository {
 
     override suspend fun getAllPlayers(): VolleyResult<List<Player>, ErrorType> {
-        val response = networkClient.getResponse(PlayerRequest.GetAllPlayers)
+        val token = tokenProvider()
+        val response = networkClient.getResponse(PlayerRequest.GetAllPlayers(token))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
         val body = response.body as? PlayerResponse.GetAllPlayers
+
         return when {
             error != null -> VolleyResult.Failure(error)
             body == null -> VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
@@ -27,9 +30,11 @@ class PlayersRepositoryImpl(
     }
 
     override suspend fun searchPlayers(query: String): VolleyResult<List<Player>, ErrorType> {
-        val response = networkClient.getResponse(PlayerRequest.SearchPlayers(query))
+        val token = tokenProvider()
+        val response = networkClient.getResponse(PlayerRequest.SearchPlayers(name = query, authToken = token))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
         val body = response.body as? PlayerResponse.SearchPlayers
+
         return when {
             error != null -> VolleyResult.Failure(error)
             body == null -> VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
@@ -38,9 +43,11 @@ class PlayersRepositoryImpl(
     }
 
     override suspend fun getPlayerDetail(playerId: Int): VolleyResult<PlayerDetail, ErrorType> {
-        val response = networkClient.getResponse(PlayerRequest.GetPlayerDetail(playerId))
+        val token = tokenProvider()
+        val response = networkClient.getResponse(PlayerRequest.GetPlayerDetail(playerId = playerId, authToken = token))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
         val body = response.body as? PlayerResponse.GetPlayerDetail
+
         return when {
             error != null -> VolleyResult.Failure(error)
             body == null -> VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
@@ -49,9 +56,11 @@ class PlayersRepositoryImpl(
     }
 
     override suspend fun addToFavorites(playerId: Int): VolleyResult<Player, ErrorType> {
-        val response = networkClient.getResponse(PlayerRequest.AddToFavorites(playerId))
+        val token = tokenProvider()
+        val response = networkClient.getResponse(PlayerRequest.AddToFavorites(playerId = playerId, authToken = token))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
         val body = response.body as? PlayerResponse.AddToFavorites
+
         return when {
             error != null -> VolleyResult.Failure(error)
             body == null -> VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
@@ -60,8 +69,11 @@ class PlayersRepositoryImpl(
     }
 
     override suspend fun removeFromFavorites(playerId: Int): VolleyResult<Unit, ErrorType> {
-        val response = networkClient.getResponse(PlayerRequest.RemoveFromFavorites(playerId))
+        val token = tokenProvider()
+        val response =
+            networkClient.getResponse(PlayerRequest.RemoveFromFavorites(playerId = playerId, authToken = token))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
+
         return if (error != null) {
             VolleyResult.Failure(error)
         } else {

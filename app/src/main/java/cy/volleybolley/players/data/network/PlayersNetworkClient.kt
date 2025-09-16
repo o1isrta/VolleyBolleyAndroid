@@ -3,7 +3,6 @@ package cy.volleybolley.players.data.network
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
 import cy.volleybolley.players.data.dto.PlayerDto
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -12,9 +11,8 @@ import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 
 class PlayersNetworkClient(
-    lazyHttpClient: Lazy<HttpClient>,
     private val accessTokenProvider: suspend () -> String? = { null }
-) : KtorNetworkClient<PlayerRequest, PlayerResponse>(lazyHttpClient) {
+) : KtorNetworkClient<PlayerRequest, PlayerResponse>() {
 
     override suspend fun sendRequestByType(request: PlayerRequest): HttpResponse {
         return when (request) {
@@ -27,7 +25,7 @@ class PlayersNetworkClient(
             is PlayerRequest.SearchPlayers -> {
                 httpClient.get(BuildConfig.BASE_URL) {
                     requestConfigure(path = request.path, accessToken = accessTokenProvider())
-                    parameter("name", request.name)
+                    parameter("search", request.name)
                 }
             }
 
@@ -71,8 +69,8 @@ class PlayersNetworkClient(
             }
 
             is PlayerRequest.AddToFavorites -> {
-                val player = httpResponse.body<PlayerDto>()
-                PlayerResponse.AddToFavorites(player)
+                val dto = httpResponse.body<PlayerDto>()
+                PlayerResponse.AddToFavorites(dto)
             }
 
             is PlayerRequest.RemoveFromFavorites -> {

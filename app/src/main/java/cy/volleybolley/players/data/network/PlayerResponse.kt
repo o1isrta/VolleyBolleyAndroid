@@ -5,24 +5,24 @@ import cy.volleybolley.players.data.dto.PlayerDtoDetail
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-sealed class PlayerResponse {
+sealed interface PlayerResponse {
 
     data class GetAllPlayers(
         val players: List<PlayerDto>
-    ) : PlayerResponse()
+    ) : PlayerResponse
 
     data class SearchPlayers(
         val players: List<PlayerDto>
-    ) : PlayerResponse()
+    ) : PlayerResponse
 
     @Serializable
     data class GetPlayerDetail(
         @SerialName("player") val player: PlayerDtoDetail
-    ) : PlayerResponse()
+    ) : PlayerResponse
 
     data class AddToFavorites(
         val player: PlayerDto
-    ) : PlayerResponse()
+    ) : PlayerResponse
 
-    data object RemoveFromFavorites : PlayerResponse()
+    data object RemoveFromFavorites : PlayerResponse
 }
