@@ -1,12 +1,13 @@
 package cy.volleybolley.players.data.mapper
 
-import cy.volleybolley.courts.data.dto.toDomain
 import cy.volleybolley.players.data.dto.ActivityDto
 import cy.volleybolley.players.data.dto.PlayerDto
 import cy.volleybolley.players.data.dto.PlayerDtoDetail
 import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.players.domain.model.PlayerActivity
 import cy.volleybolley.players.domain.model.PlayerDetail
+import cy.volleybolley.courts.domain.model.Location as CourtsLocation
+import cy.volleybolley.players.data.dto.LocationDto as PlayersLocationDto
 
 fun PlayerDto.toDomain(): Player {
     return Player(
@@ -35,5 +36,14 @@ fun ActivityDto.toDomain(): PlayerActivity {
     return PlayerActivity(
         eventTimestamp = eventTimestamp,
         courtLocation = courtLocation.toDomain()
+    )
+}
+
+private fun PlayersLocationDto.toDomain(): CourtsLocation {
+    return CourtsLocation(
+        longitude = longitude,
+        latitude = latitude,
+        courtName = courtName,
+        locationName = locationName
     )
 }
