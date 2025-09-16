@@ -1,6 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.changeteam
 
 import androidx.compose.runtime.mutableStateListOf
+import cy.volleybolley.core.presentation.base.UiState
 
 data class ChangeTeamState(
     val teams: List<TeamUi> = listOf(
@@ -34,7 +35,7 @@ data class ChangeTeamState(
         )
     ),
     val selectedTeam: Int = 0
-)
+) : UiState
 
 data class TeamUi(
     val name: String,

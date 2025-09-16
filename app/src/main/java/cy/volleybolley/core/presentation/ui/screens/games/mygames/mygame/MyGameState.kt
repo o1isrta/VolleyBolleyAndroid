@@ -1,5 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.mygame
 
+import cy.volleybolley.core.presentation.base.UiState
+
 data class GameDetails(
     val gameId: Int,
     val gameType: String,
@@ -25,7 +27,7 @@ data class PlayerShort(val name: String, val level: String?)
 //State
 data class MyGameState(
     val details: GameDetails = myGameDetailsStub()
-)
+) : UiState
 
 // Стаб
 fun myGameDetailsStub() = GameDetails(

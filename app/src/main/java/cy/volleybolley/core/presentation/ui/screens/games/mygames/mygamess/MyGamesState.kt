@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess
 
+import cy.volleybolley.core.presentation.base.UiState
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.max
@@ -31,7 +32,7 @@ data class MyGamesState(
     val hasGames: Boolean = true, val games: List<GameDetails> = listOf(
         gameStub(1, "GAME"), gameStub(2, "TOURNAMENT")
     )
-)
+) : UiState
 
 // demo stub
 fun gameStub(id: Int, type: String) = GameDetails(

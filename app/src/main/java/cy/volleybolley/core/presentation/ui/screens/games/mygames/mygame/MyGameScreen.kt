@@ -69,14 +69,17 @@ import java.util.Locale
 
 // Обёртка для навигации
 @Composable
-fun MyGameScreen(navController: NavHostController) {
-    val viewModel: MyGameViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-    val state by viewModel.state.collectAsStateWithLifecycle()
+fun MyGameScreen(
+    navController: NavHostController,
+    viewModel: MyGameViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.effects.collectLatest { effect ->
+        viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
+                null -> Unit
                 MyGameEffect.NavigateBack -> navController.popBackStack()
                 is MyGameEffect.OpenMap -> openMap(context, effect.location)
                 MyGameEffect.InvitePlayers,
@@ -90,12 +93,12 @@ fun MyGameScreen(navController: NavHostController) {
 
     MyGameContent(
         details = state.details,
-        onBack = { viewModel.dispatch(MyGameAction.ClickBack) },
-        onOpenMap = { location -> viewModel.dispatch(MyGameAction.ClickMap(location)) },
-        onInvite = { viewModel.dispatch(MyGameAction.ClickInvite) },
-        onShare = { viewModel.dispatch(MyGameAction.ClickShare) },
-        onCancel = { viewModel.dispatch(MyGameAction.ClickCancel) },
-        onDeletePlayer = { index -> viewModel.dispatch(MyGameAction.DeletePlayer(index)) }
+        onBack = { viewModel.obtainEvent(MyGameAction.ClickBack) },
+        onOpenMap = { viewModel.obtainEvent(MyGameAction.ClickMap(it)) },
+        onInvite = { viewModel.obtainEvent(MyGameAction.ClickInvite) },
+        onShare = { viewModel.obtainEvent(MyGameAction.ClickShare) },
+        onCancel = { viewModel.obtainEvent(MyGameAction.ClickCancel) },
+        onDeletePlayer = { viewModel.obtainEvent(MyGameAction.DeletePlayer(it)) }
     )
 }
 

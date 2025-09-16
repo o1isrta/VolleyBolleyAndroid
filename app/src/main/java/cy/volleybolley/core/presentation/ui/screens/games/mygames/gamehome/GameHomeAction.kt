@@ -1,6 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.gamehome
 
-sealed interface GameHomeAction {
+import cy.volleybolley.core.presentation.base.UiEvent
+
+sealed interface GameHomeAction : UiEvent {
     data object ClickMyGames : GameHomeAction
     data object ClickUpcomingGames : GameHomeAction
     data object ClickInvites : GameHomeAction

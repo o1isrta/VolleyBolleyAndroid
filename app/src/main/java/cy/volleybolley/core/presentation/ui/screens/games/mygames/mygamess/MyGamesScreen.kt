@@ -69,12 +69,13 @@ fun MyGamesScreen(
     navController: NavHostController,
     viewModel: MyGamesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.effects.collectLatest { effect ->
+        viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
+                null -> Unit
                 MyGamesEffect.NavigateBack -> navController.popBackStack()
                 is MyGamesEffect.Navigate -> navController.navigate(effect.route)
                 is MyGamesEffect.OpenMap -> openMap(context, effect.location)
@@ -97,7 +98,7 @@ fun MyGamesScreen(
             ) {
                 CardHeader(
                     title = stringResource(R.string.my_games),
-                    onBack = { viewModel.dispatch(MyGamesAction.ClickBack) }
+                    onBack = { viewModel.obtainEvent(MyGamesAction.ClickBack) }
                 )
 
                 Image(
@@ -124,7 +125,7 @@ fun MyGamesScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(VolleyDimens.DIMEN_44.dp),
-                    onClick = { viewModel.dispatch(MyGamesAction.ClickCreateGame) }
+                    onClick = { viewModel.obtainEvent(MyGamesAction.ClickCreateGame) }
                 )
             }
         } else {
@@ -143,9 +144,9 @@ fun MyGamesScreen(
                         details = details,
                         showHeader = index == 0,
                         cardMinHeight = if (index == 0) 380.dp else 344.dp,
-                        onBack = { viewModel.dispatch(MyGamesAction.ClickBack) },
-                        onMapClick = { location -> viewModel.dispatch(MyGamesAction.ClickMap(location)) },
-                        onDetailsClick = { d -> viewModel.dispatch(MyGamesAction.ClickDetails(d)) }
+                        onBack = { viewModel.obtainEvent(MyGamesAction.ClickBack) },
+                        onMapClick = { location -> viewModel.obtainEvent(MyGamesAction.ClickMap(location)) },
+                        onDetailsClick = { d -> viewModel.obtainEvent(MyGamesAction.ClickDetails(d)) }
                     )
                 }
             }

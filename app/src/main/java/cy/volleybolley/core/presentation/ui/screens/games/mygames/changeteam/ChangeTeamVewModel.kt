@@ -1,31 +1,37 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.changeteam
 
-import androidx.lifecycle.ViewModel
+import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class ChangeTeamViewModel : ViewModel() {
+class ChangeTeamViewModel : BaseViewModel<ChangeTeamState, ChangeTeamAction, ChangeTeamEffect>(
+    initialState = ChangeTeamState()
+) {
+
+    override val tag: String = "ChangeTeamVM"
 
     private val _state = MutableStateFlow(ChangeTeamState())
     val state = _state.asStateFlow()
 
-    fun dispatch(action: ChangeTeamAction) {
-        when (action) {
+    override fun obtainEvent(event: ChangeTeamAction) {
+        when (event) {
             is ChangeTeamAction.SelectTeam -> {
-                _state.update { it.copy(selectedTeam = action.index) }
+                _state.update { it.copy(selectedTeam = event.index) }
             }
 
             is ChangeTeamAction.RemoveMember -> {
-                _state.update { state ->
-                    val newTeams = state.teams.toMutableList()
-                    val team = newTeams[action.teamIndex]
-                    team.members[action.memberIndex] = MemberUi(null, null)
-                    state.copy(teams = newTeams)
+                _state.update { current ->
+                    val newTeams = current.teams.toMutableList()
+                    val team = newTeams[event.teamIndex]
+                    val newMembers = team.members.toMutableList()
+                    newMembers[event.memberIndex] = MemberUi(null, null)
+                    newTeams[event.teamIndex] = team.copy(members = newMembers)
+                    current.copy(teams = newTeams)
                 }
             }
 
-            is ChangeTeamAction.ConfirmSelection -> {
+            ChangeTeamAction.ConfirmSelection -> {
                 // TODO: вызов domain-слоя
             }
         }

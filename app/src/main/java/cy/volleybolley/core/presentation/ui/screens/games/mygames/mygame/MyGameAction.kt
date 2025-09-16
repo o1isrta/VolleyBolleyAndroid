@@ -1,6 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.mygame
 
-sealed interface MyGameAction {
+import cy.volleybolley.core.presentation.base.UiEvent
+
+sealed interface MyGameAction : UiEvent {
     data object ClickBack : MyGameAction
     data class ClickMap(val location: Location) : MyGameAction
     data object Refresh : MyGameAction

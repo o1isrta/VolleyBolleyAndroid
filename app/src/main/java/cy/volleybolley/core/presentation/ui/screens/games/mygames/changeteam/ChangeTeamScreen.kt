@@ -74,9 +74,9 @@ fun ChangeTeamScreen(
                     TeamBlock(
                         team = team,
                         isSelected = state.selectedTeam == index,
-                        onSelect = { viewModel.dispatch(ChangeTeamAction.SelectTeam(index)) },
+                        onSelect = { viewModel.obtainEvent(ChangeTeamAction.SelectTeam(index)) },
                         onRemoveMember = { memberIndex ->
-                            viewModel.dispatch(ChangeTeamAction.RemoveMember(index, memberIndex))
+                            viewModel.obtainEvent(ChangeTeamAction.RemoveMember(index, memberIndex))
                         }
                     )
                 }
@@ -92,7 +92,7 @@ fun ChangeTeamScreen(
                 .padding(horizontal = VolleyDimens.DIMEN_8.dp)
                 .height(44.dp),
             onClick = {
-                viewModel.dispatch(ChangeTeamAction.ConfirmSelection)
+                viewModel.obtainEvent(ChangeTeamAction.ConfirmSelection)
                 navController.popBackStack()
             }
         )

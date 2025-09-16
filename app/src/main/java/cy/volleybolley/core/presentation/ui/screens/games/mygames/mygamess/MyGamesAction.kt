@@ -1,6 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess
 
-sealed interface MyGamesAction {
+import cy.volleybolley.core.presentation.base.UiEvent
+
+sealed interface MyGamesAction : UiEvent {
     data object ClickBack : MyGamesAction
     data object ClickCreateGame : MyGamesAction
     data class ClickDetails(val details: GameDetails) : MyGamesAction

@@ -51,12 +51,13 @@ fun ManagePlayersScreen(
     navController: NavHostController,
     viewModel: ManagePlayersViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle() // пока не используется
+    val state by viewModel.uiState.collectAsStateWithLifecycle() // пока не используется
 
     LaunchedEffect(Unit) {
-        viewModel.effects.collectLatest { effect ->
+        viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
                 ManagePlayersEffect.NavigateBack -> navController.popBackStack()
+                null -> Unit
             }
         }
     }
@@ -80,10 +81,10 @@ fun ManagePlayersScreen(
         ) {
             CardHeader(
                 title = stringResource(R.string.players_title),
-                onBack = { viewModel.dispatch(ManagePlayersAction.ClickBack) }
+                onBack = { viewModel.obtainEvent(ManagePlayersAction.ClickBack) }
             )
             PlayersList8(onRemove = { index ->
-                viewModel.dispatch(ManagePlayersAction.RemovePlayer(index))
+                viewModel.obtainEvent(ManagePlayersAction.RemovePlayer(index))
             })
         }
 

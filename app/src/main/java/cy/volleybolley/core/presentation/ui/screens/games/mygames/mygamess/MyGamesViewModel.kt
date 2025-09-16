@@ -1,50 +1,37 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess
 
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.navigation.BasicGameSetupRoute
 import cy.volleybolley.core.presentation.ui.navigation.MyGameRoute
 import cy.volleybolley.core.presentation.ui.navigation.MyTourneyRoute
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import java.util.Locale
 
-class MyGamesViewModel : ViewModel() {
+class MyGamesViewModel :
+    BaseViewModel<MyGamesState, MyGamesAction, MyGamesEffect>(initialState = MyGamesState()) {
 
-    private val _state = MutableStateFlow(MyGamesState()) // заглушка
-    val state = _state.asStateFlow()
+    override val tag: String = "MyGamesVM"
 
-    private val _effects = MutableSharedFlow<MyGamesEffect>()
-    val effects = _effects.asSharedFlow()
+    override fun obtainEvent(event: MyGamesAction) {
+        when (event) {
+            MyGamesAction.ClickBack -> sendUiEffect(MyGamesEffect.NavigateBack)
 
-    fun dispatch(action: MyGamesAction) {
-        when (action) {
-            MyGamesAction.ClickBack -> emit(MyGamesEffect.NavigateBack)
-
-            MyGamesAction.ClickCreateGame -> emit(MyGamesEffect.Navigate(BasicGameSetupRoute))
+            MyGamesAction.ClickCreateGame -> sendUiEffect(MyGamesEffect.Navigate(BasicGameSetupRoute))
 
             is MyGamesAction.ClickDetails -> {
-                val route = when (action.details.gameType.uppercase(Locale.ROOT)) {
+                val route = when (event.details.gameType.uppercase(Locale.ROOT)) {
                     "GAME" -> MyGameRoute
                     "TOURNAMENT" -> MyTourneyRoute
                     else -> MyGameRoute
                 }
-                emit(MyGamesEffect.Navigate(route))
+                sendUiEffect(MyGamesEffect.Navigate(route))
             }
 
-            is MyGamesAction.ClickMap -> emit(MyGamesEffect.OpenMap(action.location))
+            is MyGamesAction.ClickMap -> sendUiEffect(MyGamesEffect.OpenMap(event.location))
 
             MyGamesAction.Refresh -> {
                 // TODO: подтянуть из домейна список игр и hasGames
             }
         }
-    }
-
-    private fun emit(effect: MyGamesEffect) {
-        viewModelScope.launch { _effects.emit(effect) }
     }
 }

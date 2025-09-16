@@ -1,37 +1,25 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.manageplayers
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import cy.volleybolley.core.presentation.base.BaseViewModel
 
-class ManagePlayersViewModel : ViewModel() {
+class ManagePlayersViewModel :
+    BaseViewModel<ManagePlayersState, ManagePlayersAction, ManagePlayersEffect>(
+        initialState = ManagePlayersState()
+    ) {
 
-    private val _state = MutableStateFlow(ManagePlayersState())
-    val state = _state.asStateFlow()
+    override val tag: String = "ManagePlayersVM"
 
-    private val _effects = MutableSharedFlow<ManagePlayersEffect>()
-    val effects = _effects.asSharedFlow()
+    override fun obtainEvent(event: ManagePlayersAction) {
+        when (event) {
+            ManagePlayersAction.ClickBack -> sendUiEffect(ManagePlayersEffect.NavigateBack)
 
-    fun dispatch(action: ManagePlayersAction) {
-        when (action) {
-            ManagePlayersAction.ClickBack -> navigateBack()
             is ManagePlayersAction.RemovePlayer -> {
-                // TODO: use-case удаления
+                // TODO: вызов use-case удаления игрока и обновление состояния
             }
 
             ManagePlayersAction.Refresh -> {
-                // TODO: подтянуть актуальный список из домейна
+                // TODO: подтянуть актуальный список из домейна и обновить state
             }
-        }
-    }
-
-    private fun navigateBack() {
-        viewModelScope.launch {
-            _effects.emit(ManagePlayersEffect.NavigateBack)
         }
     }
 }

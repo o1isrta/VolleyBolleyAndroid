@@ -1,5 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.gamehome
 
-sealed interface GameHomeEffect {
+import cy.volleybolley.core.presentation.base.UiEffect
+
+sealed interface GameHomeEffect : UiEffect {
     data class Navigate(val route: Any) : GameHomeEffect
 }

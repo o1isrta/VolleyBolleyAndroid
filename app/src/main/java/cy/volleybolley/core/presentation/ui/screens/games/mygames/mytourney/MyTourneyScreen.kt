@@ -68,16 +68,17 @@ import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-//Обёртка
+// Обёртка
 @Composable
 fun MyTourneyScreen(navController: NavHostController) {
     val vm: MyTourneyViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-    val state by vm.state.collectAsStateWithLifecycle()
+    val state by vm.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        vm.effects.collectLatest { effect ->
+        vm.uiEffect.collectLatest { effect ->
             when (effect) {
+                null -> Unit
                 MyTourneyEffect.NavigateBack -> navController.popBackStack()
                 is MyTourneyEffect.Navigate -> navController.navigate(effect.route)
                 is MyTourneyEffect.OpenMap -> openMap(context, effect.location)
@@ -92,17 +93,12 @@ fun MyTourneyScreen(navController: NavHostController) {
 
     MyTourneyContent(
         details = state.details,
-        onBack = { vm.dispatch(MyTourneyAction.ClickBack) },
-        onOpenMap = { loc -> vm.dispatch(MyTourneyAction.ClickMap(loc)) },
-        onInvite = { vm.dispatch(MyTourneyAction.ClickInvite) },
-        onShare = { vm.dispatch(MyTourneyAction.ClickShare) },
-        onCancel = { vm.dispatch(MyTourneyAction.ClickCancel) },
-        onPlayersOrTeams = {
-            if (state.details.isIndividual)
-                vm.dispatch(MyTourneyAction.ClickManagePlayers)
-            else
-                vm.dispatch(MyTourneyAction.ClickChangeTeam)
-        }
+        onBack = { vm.obtainEvent(MyTourneyAction.ClickBack) },
+        onOpenMap = { vm.obtainEvent(MyTourneyAction.ClickMap(it)) },
+        onInvite = { vm.obtainEvent(MyTourneyAction.ClickInvite) },
+        onShare = { vm.obtainEvent(MyTourneyAction.ClickShare) },
+        onCancel = { vm.obtainEvent(MyTourneyAction.ClickCancel) },
+        onPlayersOrTeams = { vm.obtainEvent(MyTourneyAction.ClickPlayersOrTeams) }
     )
 }
 

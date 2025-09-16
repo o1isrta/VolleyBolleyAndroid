@@ -1,10 +1,11 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.mytourney
 
-sealed interface MyTourneyAction {
+import cy.volleybolley.core.presentation.base.UiEvent
+
+sealed interface MyTourneyAction : UiEvent {
     data object ClickBack : MyTourneyAction
     data class ClickMap(val location: Location) : MyTourneyAction
-    data object ClickManagePlayers : MyTourneyAction
-    data object ClickChangeTeam : MyTourneyAction
+    data object ClickPlayersOrTeams : MyTourneyAction
 
     // заглушки
     data object ClickInvite : MyTourneyAction

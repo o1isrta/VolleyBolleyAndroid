@@ -1,5 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.mytourney
 
+import cy.volleybolley.core.presentation.base.UiState
+
 data class TournamentDetails(
     val tournamentId: Int,
     val isIndividual: Boolean,
@@ -62,8 +64,7 @@ fun myTourneyStub(): TournamentDetails = TournamentDetails(
     )
 )
 
-/* ---------------- State ---------------- */
-
+//State
 data class MyTourneyState(
     val details: TournamentDetails = myTourneyStub()
-)
+) : UiState

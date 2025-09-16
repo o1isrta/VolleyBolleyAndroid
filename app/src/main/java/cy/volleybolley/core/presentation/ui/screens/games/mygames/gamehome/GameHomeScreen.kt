@@ -44,14 +44,13 @@ fun GameHomeScreen(
     navController: NavHostController,
     viewModel: GameHomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.effects.collectLatest { effect ->
+        viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
-                is GameHomeEffect.Navigate -> {
-                    navController.navigate(effect.route)
-                }
+                is GameHomeEffect.Navigate -> navController.navigate(effect.route)
+                null -> Unit
             }
         }
     }
@@ -60,7 +59,7 @@ fun GameHomeScreen(
         GlassCard {
             MenuItem(
                 text = stringResource(R.string.my_games),
-                onClick = { viewModel.dispatch(GameHomeAction.ClickMyGames) }
+                onClick = { viewModel.obtainEvent(GameHomeAction.ClickMyGames) }
             )
             HorizontalDivider(thickness = VolleyDimens.DIMEN_1.dp, color = VolleyColor.White)
 
@@ -74,7 +73,7 @@ fun GameHomeScreen(
             MenuItemWithSubtitle(
                 title = stringResource(R.string.upcoming_games),
                 subtitle = upcomingSubtitle,
-                onClick = { viewModel.dispatch(GameHomeAction.ClickUpcomingGames) }
+                onClick = { viewModel.obtainEvent(GameHomeAction.ClickUpcomingGames) }
             )
             HorizontalDivider(thickness = VolleyDimens.DIMEN_1.dp, color = VolleyColor.White)
 
@@ -86,13 +85,13 @@ fun GameHomeScreen(
                         CountBadge(text = state.invites.toString())
                     }
                 },
-                onClick = { viewModel.dispatch(GameHomeAction.ClickInvites) }
+                onClick = { viewModel.obtainEvent(GameHomeAction.ClickInvites) }
             )
             HorizontalDivider(thickness = VolleyDimens.DIMEN_1.dp, color = VolleyColor.White)
 
             MenuItem(
                 text = stringResource(R.string.archive),
-                onClick = { viewModel.dispatch(GameHomeAction.ClickArchive) }
+                onClick = { viewModel.obtainEvent(GameHomeAction.ClickArchive) }
             )
         }
     }
