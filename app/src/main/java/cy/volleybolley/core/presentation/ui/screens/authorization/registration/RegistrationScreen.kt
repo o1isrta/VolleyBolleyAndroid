@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization
+package cy.volleybolley.core.presentation.ui.screens.authorization.registration
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,16 +18,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
@@ -44,7 +44,21 @@ import cy.volleybolley.core.presentation.ui.navigation.AboutLevelsRoute
 import cy.volleybolley.core.presentation.ui.navigation.HomeRoute
 
 @Composable
-fun RegistrationScreen(navController: NavHostController) {
+fun RegistrationScreen(
+    navController: NavHostController,
+    vm: RegistrationViewModel = viewModel()
+) {
+    val state by vm.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        vm.uiEffect.collect { effect ->
+            when (effect) {
+                is RegistrationEffect.NavigateToAboutLevels -> navController.navigate(AboutLevelsRoute)
+                is RegistrationEffect.NavigateToHome -> navController.navigate(HomeRoute)
+                else -> {}
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -63,13 +77,6 @@ fun RegistrationScreen(navController: NavHostController) {
             contentAlignmentOnContainer = Alignment.TopStart
         ) {
             val scrollState = rememberScrollState()
-            var name by remember { mutableStateOf("") }
-            var surname by remember { mutableStateOf("") }
-            var selectedGender by remember { mutableStateOf(1) }
-            var selectedLevel by remember { mutableStateOf(1) }
-            var dateOfBirthMillis by remember { mutableStateOf<Long?>(null) }
-            var country by remember { mutableStateOf("") }
-            var city by remember { mutableStateOf("") }
 
             Column(
                 modifier = Modifier
@@ -92,9 +99,9 @@ fun RegistrationScreen(navController: NavHostController) {
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_8.dp))
                 VolleyTextFieldGradient.SimpleGradientTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    text = name,
+                    text = state.name,
                     hint = stringResource(id = R.string.name),
-                    actionToTransferContent = { value -> name = value }
+                    actionToTransferContent = { value -> vm.obtainEvent(RegistrationEvent.NameChanged(value)) }
                 )
 
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -114,9 +121,9 @@ fun RegistrationScreen(navController: NavHostController) {
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_8.dp))
                 VolleyTextFieldGradient.SimpleGradientTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    text = surname,
+                    text = state.surname,
                     hint = stringResource(id = R.string.surname),
-                    actionToTransferContent = { value -> surname = value }
+                    actionToTransferContent = { value -> vm.obtainEvent(RegistrationEvent.SurnameChanged(value)) }
                 )
 
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -135,9 +142,9 @@ fun RegistrationScreen(navController: NavHostController) {
                 )
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_8.dp))
                 GroupButtonsForGender2(
-                    checkId = selectedGender,
+                    checkId = state.gender,
                     modifier = Modifier.fillMaxWidth(),
-                    onSelected = { id -> selectedGender = id }
+                    onSelected = { id -> vm.obtainEvent(RegistrationEvent.GenderSelected(id)) }
                 )
 
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -157,8 +164,8 @@ fun RegistrationScreen(navController: NavHostController) {
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_8.dp))
                 VolleyTextFieldAttribute.DatePickerField(
                     modifier = Modifier.fillMaxWidth(),
-                    inputDate = dateOfBirthMillis,
-                    actionForSaveDate = { millis -> dateOfBirthMillis = millis }
+                    inputDate = state.dateOfBirthMillis,
+                    actionForSaveDate = { millis -> vm.obtainEvent(RegistrationEvent.DateOfBirthChanged(millis)) }
                 )
 
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -183,7 +190,7 @@ fun RegistrationScreen(navController: NavHostController) {
                     Box(
                         modifier = Modifier
                             .size(VolleyDimens.DIMEN_24.dp)
-                            .clickable { navController.navigate(AboutLevelsRoute) },
+                            .clickable { vm.obtainEvent(RegistrationEvent.AboutLevelsClicked) },
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
@@ -196,9 +203,9 @@ fun RegistrationScreen(navController: NavHostController) {
 
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_8.dp))
                 GroupButtonsForLevel(
-                    checkId = selectedLevel,
+                    checkId = state.level,
                     modifier = Modifier.fillMaxWidth(),
-                    onSelected = { id -> selectedLevel = id }
+                    onSelected = { id -> vm.obtainEvent(RegistrationEvent.LevelSelected(id)) }
                 )
 
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
@@ -226,7 +233,7 @@ fun RegistrationScreen(navController: NavHostController) {
                     contentAlignment = Alignment.CenterStart
                 ) {
                     VolleyText.BodyRegular(
-                        text = if (country.isEmpty()) stringResource(id = R.string.your_county) else country,
+                        text = if (state.country.isEmpty()) stringResource(id = R.string.your_county) else state.country,
                         color = VolleyColor.TextField
                     )
                     Icon(
@@ -264,7 +271,7 @@ fun RegistrationScreen(navController: NavHostController) {
                     contentAlignment = Alignment.CenterStart
                 ) {
                     VolleyText.BodyRegular(
-                        text = if (city.isEmpty()) stringResource(id = R.string.your_city) else city,
+                        text = if (state.city.isEmpty()) stringResource(id = R.string.your_city) else state.city,
                         color = VolleyColor.TextField
                     )
                     Icon(
@@ -284,7 +291,7 @@ fun RegistrationScreen(navController: NavHostController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(VolleyDimens.DIMEN_56.dp),
-                    onClick = { navController.navigate(HomeRoute) }
+                    onClick = { vm.obtainEvent(RegistrationEvent.GetStartedClicked) }
                 )
 
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_20.dp))

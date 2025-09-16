@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization
+package cy.volleybolley.core.presentation.ui.screens.authorization.launch
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -18,26 +20,42 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 import cy.volleybolley.core.presentation.ui.navigation.OnboardingRoute
-import kotlinx.coroutines.delay
-
-private const val LAUNCH_DELAY_MILLIS = 3_000L
 
 @Composable
-fun LaunchScreen(navController: NavHostController) {
+fun LaunchScreen(
+    navController: NavHostController,
+    vm: LaunchViewModel = viewModel()
+) {
+    val state by vm.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        vm.uiEffect.collect { effect ->
+            when (effect) {
+                is LaunchEffect.NavigateToOnboarding -> {
+                    navController.navigate(OnboardingRoute) {
+                        popUpTo(LaunchRoute) { inclusive = true }
+                    }
+                }
+                else -> {}
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.bg_launch), // твой png фон
+            painter = painterResource(id = R.drawable.bg_launch),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -51,21 +69,13 @@ fun LaunchScreen(navController: NavHostController) {
             Image(
                 painter = painterResource(id = R.drawable.ic_logo),
                 contentDescription = null,
-                modifier = Modifier.size(200.dp)
+                modifier = Modifier.size(VolleyDimens.DIMEN_200.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
             VolleyText.LogoDisplay(
                 text = stringResource(id = R.string.volleybolley),
                 color = VolleyColor.White
             )
-        }
-    }
-
-    // Через 3 сек переход дальше и удаление Launch из backstack
-    LaunchedEffect(Unit) {
-        delay(LAUNCH_DELAY_MILLIS)
-        navController.navigate(OnboardingRoute) {
-            popUpTo(LaunchRoute) { inclusive = true }
         }
     }
 }

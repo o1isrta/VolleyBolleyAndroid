@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization
+package cy.volleybolley.core.presentation.ui.screens.authorization.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -19,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
@@ -29,7 +33,20 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.SignUpRoute
 
 @Composable
-fun OnboardingScreen(navController: NavHostController) {
+fun OnboardingScreen(
+    navController: NavHostController,
+    vm: OnboardingViewModel = viewModel()
+) {
+    val state by vm.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        vm.uiEffect.collect { effect ->
+            when (effect) {
+                is OnboardingEffect.NavigateToSignUp -> navController.navigate(SignUpRoute)
+                else -> {}
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -71,7 +88,7 @@ fun OnboardingScreen(navController: NavHostController) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_logo),
                     contentDescription = null,
-                    modifier = Modifier.size(VolleyDimens.DIMEN_200.dp) // DIMEN_200 добавлен
+                    modifier = Modifier.size(VolleyDimens.DIMEN_200.dp)
                 )
                 Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
                 VolleyText.LogoDisplay(
@@ -93,7 +110,7 @@ fun OnboardingScreen(navController: NavHostController) {
                     modifier = Modifier
                         .width(VolleyDimens.DIMEN_335.dp)
                         .height(VolleyDimens.DIMEN_44.dp),
-                    onClick = { navController.navigate(SignUpRoute) }
+                    onClick = { vm.obtainEvent(OnboardingEvent.GetStartedClicked) }
                 )
             }
         }

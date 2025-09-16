@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization
+package cy.volleybolley.core.presentation.ui.screens.authorization.signup
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,6 +15,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -22,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
@@ -29,9 +33,24 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.RegistrationByPhoneRoute
+import cy.volleybolley.core.presentation.ui.navigation.RegistrationRoute
 
 @Composable
-fun SignUpScreen(navController: NavHostController) {
+fun SignUpScreen(
+    navController: NavHostController,
+    vm: SignUpViewModel = viewModel()
+) {
+    val state by vm.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        vm.uiEffect.collect { effect ->
+            when (effect) {
+                is SignUpEffect.NavigateToRegistrationByPhone -> navController.navigate(RegistrationByPhoneRoute)
+                is SignUpEffect.NavigateToRegistration -> navController.navigate(RegistrationRoute)
+                else -> {}
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -83,7 +102,7 @@ fun SignUpScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
-                onClick = { navController.navigate(RegistrationByPhoneRoute) },
+                onClick = { vm.obtainEvent(SignUpEvent.ContinueWithPhoneClicked) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(VolleyDimens.DIMEN_56.dp),
@@ -100,7 +119,7 @@ fun SignUpScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_12.dp))
 
             Button(
-                onClick = { /* google */ },
+                onClick = { vm.obtainEvent(SignUpEvent.ContinueWithGoogleClicked) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(VolleyDimens.DIMEN_56.dp),
@@ -127,7 +146,7 @@ fun SignUpScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_12.dp))
 
             Button(
-                onClick = { /* facebook */ },
+                onClick = { vm.obtainEvent(SignUpEvent.ContinueWithFacebookClicked) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(VolleyDimens.DIMEN_56.dp),

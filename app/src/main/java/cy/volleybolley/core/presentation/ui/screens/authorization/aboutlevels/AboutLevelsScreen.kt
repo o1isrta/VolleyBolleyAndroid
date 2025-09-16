@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization
+package cy.volleybolley.core.presentation.ui.screens.authorization.aboutlevels
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +16,9 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -23,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
@@ -33,7 +37,20 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 
 @Composable
-fun AboutLevelsScreen(navController: NavHostController) {
+fun AboutLevelsScreen(
+    navController: NavHostController,
+    vm: AboutLevelsViewModel = viewModel()
+) {
+    val state by vm.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        vm.uiEffect.collect { effect ->
+            when (effect) {
+                is AboutLevelsEffect.NavigateBack -> navController.popBackStack()
+                else -> {}
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -67,7 +84,7 @@ fun AboutLevelsScreen(navController: NavHostController) {
                         modifier = Modifier
                             .align(Alignment.CenterStart)
                             .size(VolleyDimens.DIMEN_24.dp)
-                            .clickable { navController.popBackStack() }
+                            .clickable { vm.obtainEvent(AboutLevelsEvent.OnBackClicked) }
                     )
                     VolleyText.TitleLarge(
                         text = stringResource(id = R.string.about_levels),

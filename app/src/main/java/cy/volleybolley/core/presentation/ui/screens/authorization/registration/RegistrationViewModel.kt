@@ -1,0 +1,23 @@
+package cy.volleybolley.core.presentation.ui.screens.authorization.registration
+
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import cy.volleybolley.core.presentation.base.BaseViewModel
+
+class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(RegistrationState()) {
+    override val tag: String = "RegistrationViewModel"
+
+    override fun obtainEvent(event: RegistrationEvent) {
+        when (event) {
+            RegistrationEvent.AboutLevelsClicked -> viewModelScope.launch { sendUiEffect(RegistrationEffect.NavigateToAboutLevels) }
+            RegistrationEvent.GetStartedClicked -> viewModelScope.launch { sendUiEffect(RegistrationEffect.NavigateToHome) }
+            is RegistrationEvent.NameChanged -> uiStateMutable.value = uiStateMutable.value.copy(name = event.value)
+            is RegistrationEvent.SurnameChanged -> uiStateMutable.value = uiStateMutable.value.copy(surname = event.value)
+            is RegistrationEvent.GenderSelected -> uiStateMutable.value = uiStateMutable.value.copy(gender = event.id)
+            is RegistrationEvent.LevelSelected -> uiStateMutable.value = uiStateMutable.value.copy(level = event.id)
+            is RegistrationEvent.DateOfBirthChanged -> uiStateMutable.value = uiStateMutable.value.copy(dateOfBirthMillis = event.millis)
+            is RegistrationEvent.CountryChanged -> uiStateMutable.value = uiStateMutable.value.copy(country = event.value)
+            is RegistrationEvent.CityChanged -> uiStateMutable.value = uiStateMutable.value.copy(city = event.value)
+        }
+    }
+}
