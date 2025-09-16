@@ -2,6 +2,21 @@ package cy.volleybolley.core.presentation.ui.screens.games.mygames.mygame
 
 import cy.volleybolley.core.presentation.base.UiState
 
+private const val TYPE_GAME = "GAME"
+private const val HOST_NAME = "Artem Ivanov"
+private const val PLAYER_ALEKSANDR = "Aleksandr Abramov"
+private const val LEVEL_L = "L"
+private const val GENDER_MIX = "Mix"
+private const val PAYMENT_TYPE_THAI_BANK = "Thai bank"
+private const val CURRENCY_USD = "$"
+private const val PAYMENT_ACCOUNT = "988 016 7890"
+private const val COURT_NAME = "Karon Beach Club"
+private const val LOCATION_NAME = "Patak Rd, Mueang Phuket"
+private const val MESSAGE =
+    "Hi! Just old friends meet at the court, beer afterwards, come see us :)"
+
+private val LEVELS_LIGHT = listOf("Light")
+
 data class GameDetails(
     val gameId: Int,
     val gameType: String,
@@ -20,38 +35,64 @@ data class GameDetails(
     val players: List<PlayerShort>,
 )
 
-data class Host(val id: Int, val name: String, val avatar: String?, val level: String)
-data class Location(val longitude: Double, val latitude: Double, val courtName: String, val locationName: String)
-data class PlayerShort(val name: String, val level: String?)
+data class Host(
+    val id: Int,
+    val name: String,
+    val avatar: String?,
+    val level: String,
+)
+
+data class Location(
+    val longitude: Double,
+    val latitude: Double,
+    val courtName: String,
+    val locationName: String,
+)
+
+data class PlayerShort(
+    val name: String,
+    val level: String?,
+)
 
 // State
 data class MyGameState(
-    val details: GameDetails = myGameDetailsStub()
+    val details: GameDetails = myGameDetailsStub(),
 ) : UiState
 
-// Стаб
-fun myGameDetailsStub() = GameDetails(
+// Stub
+fun myGameDetailsStub(): GameDetails = GameDetails(
     gameId = 1,
-    gameType = "GAME",
-    host = Host(id = 10, name = "Artem Ivanov", avatar = null, level = "L"),
-    message = "Hi! Just old friends meet at the court, beer afterwards, come see us :)",
+    gameType = TYPE_GAME,
+    host = Host(
+        id = 10,
+        name = HOST_NAME,
+        avatar = null,
+        level = LEVEL_L,
+    ),
+    message = MESSAGE,
     courtLocation = Location(
         longitude = 98.2929,
         latitude = 7.8471,
-        courtName = "Karon Beach Club",
-        locationName = "Patak Rd, Mueang Phuket"
+        courtName = COURT_NAME,
+        locationName = LOCATION_NAME,
     ),
     startTime = "2025-10-10T18:00:00",
     endTime = "2025-10-10T20:00:00",
-    gender = "Mix",
-    levels = listOf("Light"),
+    gender = GENDER_MIX,
+    levels = LEVELS_LIGHT,
     pricePerPerson = "2",
     maximumPlayers = 4,
-    paymentType = "Thai bank",
-    paymentAccount = "988 016 7890",
-    currencyType = "$",
+    paymentType = PAYMENT_TYPE_THAI_BANK,
+    paymentAccount = PAYMENT_ACCOUNT,
+    currencyType = CURRENCY_USD,
     players = listOf(
-        PlayerShort("Artem Ivanov", "L"),
-        PlayerShort("Aleksandr Abramov", "L")
-    )
+        PlayerShort(
+            name = HOST_NAME,
+            level = LEVEL_L,
+        ),
+        PlayerShort(
+            name = PLAYER_ALEKSANDR,
+            level = LEVEL_L,
+        ),
+    ),
 )

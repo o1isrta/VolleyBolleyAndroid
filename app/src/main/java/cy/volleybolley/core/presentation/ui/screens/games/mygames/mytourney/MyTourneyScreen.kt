@@ -316,7 +316,6 @@ private fun MyTourneyContent(
     }
 }
 
-
 @Composable
 private fun SquareIconTile(
     iconRes: Int,

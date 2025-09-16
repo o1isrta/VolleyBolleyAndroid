@@ -18,11 +18,11 @@ class MyGameViewModel :
             MyGameAction.ClickCancel -> sendUiEffect(MyGameEffect.CancelGame)
 
             is MyGameAction.DeletePlayer -> {
-                // TODO: домейн-удаление игрока, затем обновить state
+                // Домейн-удаление игрока, затем обновить state
             }
 
             MyGameAction.Refresh -> {
-                // TODO: подтянуть данные из домейна
+                // Подтянуть данные из домейна
             }
         }
     }
