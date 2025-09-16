@@ -274,7 +274,7 @@ private fun CardHeader(
                 painter = painterResource(R.drawable.ic_back_icon_white),
                 contentDescription = null,
                 tint = VolleyColor.White,
-                modifier = Modifier.size(width = (VolleyDimens.DIMEN_18.dp), height = (VolleyDimens.DIMEN_24.dp))
+                modifier = Modifier.size(width = VolleyDimens.DIMEN_18.dp, height = VolleyDimens.DIMEN_24.dp)
             )
         }
         VolleyText.TitleLarge(text = title, color = VolleyColor.White, modifier = Modifier.align(Alignment.Center))

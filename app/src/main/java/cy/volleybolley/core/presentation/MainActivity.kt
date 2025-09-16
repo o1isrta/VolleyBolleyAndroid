@@ -25,7 +25,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +58,7 @@ fun RootContainer(
     }
 }
 
-//Preview
+// Preview
 @Preview(showBackground = true, name = "App NavHost")
 @Composable
 private fun AppPreview() {

@@ -71,12 +71,12 @@ import java.util.Locale
 // Обёртка
 @Composable
 fun MyTourneyScreen(navController: NavHostController) {
-    val vm: MyTourneyViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-    val state by vm.uiState.collectAsStateWithLifecycle()
+    val viewModel: MyTourneyViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        vm.uiEffect.collectLatest { effect ->
+        viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
                 null -> Unit
                 MyTourneyEffect.NavigateBack -> navController.popBackStack()
@@ -93,12 +93,12 @@ fun MyTourneyScreen(navController: NavHostController) {
 
     MyTourneyContent(
         details = state.details,
-        onBack = { vm.obtainEvent(MyTourneyAction.ClickBack) },
-        onOpenMap = { vm.obtainEvent(MyTourneyAction.ClickMap(it)) },
-        onInvite = { vm.obtainEvent(MyTourneyAction.ClickInvite) },
-        onShare = { vm.obtainEvent(MyTourneyAction.ClickShare) },
-        onCancel = { vm.obtainEvent(MyTourneyAction.ClickCancel) },
-        onPlayersOrTeams = { vm.obtainEvent(MyTourneyAction.ClickPlayersOrTeams) }
+        onBack = { viewModel.obtainEvent(MyTourneyAction.ClickBack) },
+        onOpenMap = { viewModel.obtainEvent(MyTourneyAction.ClickMap(it)) },
+        onInvite = { viewModel.obtainEvent(MyTourneyAction.ClickInvite) },
+        onShare = { viewModel.obtainEvent(MyTourneyAction.ClickShare) },
+        onCancel = { viewModel.obtainEvent(MyTourneyAction.ClickCancel) },
+        onPlayersOrTeams = { viewModel.obtainEvent(MyTourneyAction.ClickPlayersOrTeams) }
     )
 }
 
@@ -315,6 +315,7 @@ private fun MyTourneyContent(
         Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
     }
 }
+
 
 @Composable
 private fun SquareIconTile(

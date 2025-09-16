@@ -45,6 +45,6 @@ data class TeamUi(
 )
 
 data class MemberUi(
-    val name: String?,// null => Free spot
-    val level: String?// null => нет бейджа
+    val name: String?, // null => Free spot
+    val level: String? // null => нет бейджа
 )

@@ -423,10 +423,11 @@ private fun SectionTitle(text: String) {
 @Composable
 private fun LabeledInlineRow(label: String, value: String) {
     Row(
-        verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         VolleyText.BodyBold(text = label, color = VolleyColor.White)
-        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+        Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_8.dp))
         VolleyText.BodyRegular(text = value, color = VolleyColor.White)
     }
 }
@@ -503,7 +504,7 @@ private fun PlayersList(
     }
 }
 
-//Карты
+// Карты
 private fun openMap(context: Context, location: Location) {
     val uri = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}(${
         Uri.encode(location.courtName)

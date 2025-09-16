@@ -65,8 +65,8 @@ data class PlayerShort(
     val level: String?,
 )
 
-// Заглушка
-fun myTourneyStub(): TournamentDetails = TournamentDetails(
+// Stub
+private val stubTournamentDetails: TournamentDetails = TournamentDetails(
     tournamentId = 1,
     isIndividual = true,
     tournamentType = TYPE_TOURNAMENT,
@@ -109,6 +109,8 @@ fun myTourneyStub(): TournamentDetails = TournamentDetails(
         ),
     ),
 )
+
+fun myTourneyStub(): TournamentDetails = stubTournamentDetails
 
 data class MyTourneyState(
     val details: TournamentDetails = myTourneyStub(),

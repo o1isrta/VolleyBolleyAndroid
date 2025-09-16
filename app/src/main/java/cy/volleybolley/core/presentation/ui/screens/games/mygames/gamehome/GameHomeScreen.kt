@@ -65,10 +65,11 @@ fun GameHomeScreen(
 
             // Upcoming games — подзаголовок только если есть дата
             val upcomingSubtitle =
-                if (state.upcomingGame.isNotBlank())
+                if (state.upcomingGame.isNotBlank()) {
                     stringResource(R.string.next_game, state.upcomingGame)
-                else
+                } else {
                     ""
+                }
 
             MenuItemWithSubtitle(
                 title = stringResource(R.string.upcoming_games),
@@ -220,10 +221,11 @@ private fun GameHomeScreenPreview() {
                     HorizontalDivider(thickness = VolleyDimens.DIMEN_1.dp, color = VolleyColor.White)
 
                     val upcomingSubtitle =
-                        if (fakeState.upcomingGame.isNotBlank())
+                        if (fakeState.upcomingGame.isNotBlank()) {
                             stringResource(R.string.next_game, fakeState.upcomingGame)
-                        else
+                        } else {
                             ""
+                        }
 
                     MenuItemWithSubtitle(
                         title = stringResource(R.string.upcoming_games),

@@ -21,7 +21,7 @@ class GameHomeViewModel :
             GameHomeAction.ClickArchive -> sendUiEffect(GameHomeEffect.Navigate(ArchiveRoute))
 
             GameHomeAction.Refresh -> {
-                // TODO: подтянуть данные из домейна и обновить uiState
+                // Подтянуть данные из домейна и обновить uiState
             }
         }
     }

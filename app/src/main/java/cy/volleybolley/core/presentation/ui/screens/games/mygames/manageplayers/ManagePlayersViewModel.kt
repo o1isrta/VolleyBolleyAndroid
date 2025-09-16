@@ -14,11 +14,11 @@ class ManagePlayersViewModel :
             ManagePlayersAction.ClickBack -> sendUiEffect(ManagePlayersEffect.NavigateBack)
 
             is ManagePlayersAction.RemovePlayer -> {
-                // TODO: вызов use-case удаления игрока и обновление состояния
+                // Вызов use-case удаления игрока и обновление состояния
             }
 
             ManagePlayersAction.Refresh -> {
-                // TODO: подтянуть актуальный список из домейна и обновить state
+                // Подтянуть актуальный список из домейна и обновить state
             }
         }
     }

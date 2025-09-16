@@ -14,6 +14,9 @@ private const val PAYMENT_TYPE_THAI_BANK = "Thai bank"
 private const val CURRENCY_USD = "$"
 private const val PAYMENT_ACCOUNT = "988 016 7890"
 
+private const val LATITUDE = 7.8471
+private const val LONGITUDE = 98.2929
+
 private val LEVELS_LIGHT = listOf("Light")
 
 private val LONG_MESSAGE: String = """
@@ -21,8 +24,7 @@ private val LONG_MESSAGE: String = """
     characters inside. It should properly wrap across multiple lines, no cuts.
 """.trimIndent()
 
-private const val SHORT_MESSAGE: String =
-    "Afterlunch meet. 6$ entry fee, our favorite place, don’t miss"
+private const val SHORT_MESSAGE: String = "Afterlunch meet. 6$ entry fee, our favorite place, don’t miss"
 
 data class GameDetails(
     val gameId: Int,
@@ -70,34 +72,60 @@ data class MyGamesState(
     ),
 ) : UiState
 
+private fun hostStub(): Host = Host(
+    id = 10,
+    name = HOST_NAME,
+    avatar = null,
+    level = LEVEL_L,
+)
+
+private fun messageFor(id: Int): String = if (id == 1) LONG_MESSAGE else SHORT_MESSAGE
+
+private fun locationFor(id: Int): Location = if (id == 1) {
+    Location(
+        longitude = LONGITUDE,
+        latitude = LATITUDE,
+        courtName = "Karon Beach Club",
+        locationName = "Karon",
+    )
+} else {
+    Location(
+        longitude = LONGITUDE,
+        latitude = LATITUDE,
+        courtName = "The Shore at Katathani Resort",
+        locationName = "Kata Noi",
+    )
+}
+
+private fun timeRangeFor(id: Int): Pair<String, String> = if (id == 1) {
+    "2025-10-10T18:00:00" to "2025-10-10T20:00:00"
+} else {
+    "2025-10-16T13:00:00" to "2025-10-16T14:00:00"
+}
+
+private fun playersStub(): List<PlayerShort> = listOf(
+    PlayerShort(
+        name = HOST_NAME,
+        level = LEVEL_L,
+    ),
+    PlayerShort(
+        name = "Aleksandr Abramov",
+        level = LEVEL_L,
+    ),
+)
+
 // Stub
 fun gameStub(
     id: Int,
     type: String,
 ): GameDetails {
-    val message = if (id == 1) LONG_MESSAGE else SHORT_MESSAGE
-    val courtName =
-        if (id == 1) "Karon Beach Club" else "The Shore at Katathani Resort"
-    val locationName = if (id == 1) "Karon" else "Kata Noi"
-    val startTime = if (id == 1) "2025-10-10T18:00:00" else "2025-10-16T13:00:00"
-    val endTime = if (id == 1) "2025-10-10T20:00:00" else "2025-10-16T14:00:00"
-
+    val (startTime, endTime) = timeRangeFor(id)
     return GameDetails(
         gameId = id,
         gameType = type,
-        host = Host(
-            id = 10,
-            name = HOST_NAME,
-            avatar = null,
-            level = LEVEL_L,
-        ),
-        message = message,
-        courtLocation = Location(
-            longitude = 98.2929,
-            latitude = 7.8471,
-            courtName = courtName,
-            locationName = locationName,
-        ),
+        host = hostStub(),
+        message = messageFor(id),
+        courtLocation = locationFor(id),
         startTime = startTime,
         endTime = endTime,
         gender = GENDER_MIX,
@@ -107,16 +135,7 @@ fun gameStub(
         paymentType = PAYMENT_TYPE_THAI_BANK,
         paymentAccount = PAYMENT_ACCOUNT,
         currencyType = CURRENCY_USD,
-        players = listOf(
-            PlayerShort(
-                name = HOST_NAME,
-                level = LEVEL_L,
-            ),
-            PlayerShort(
-                name = "Aleksandr Abramov",
-                level = LEVEL_L,
-            ),
-        ),
+        players = playersStub(),
     )
 }
 

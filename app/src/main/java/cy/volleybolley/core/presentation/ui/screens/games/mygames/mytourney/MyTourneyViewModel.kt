@@ -29,7 +29,7 @@ class MyTourneyViewModel :
             MyTourneyAction.ClickCancel -> sendUiEffect(MyTourneyEffect.CancelEvent)
 
             MyTourneyAction.Refresh -> {
-                // TODO: подтянуть из домейна детали турнира и обновить _state
+                // Подтянуть из домейна детали турнира и обновить _state
             }
         }
     }

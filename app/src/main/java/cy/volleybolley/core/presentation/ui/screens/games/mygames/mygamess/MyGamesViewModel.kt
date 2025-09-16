@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess
 
-
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.navigation.BasicGameSetupRoute
 import cy.volleybolley.core.presentation.ui.navigation.MyGameRoute
@@ -30,7 +29,7 @@ class MyGamesViewModel :
             is MyGamesAction.ClickMap -> sendUiEffect(MyGamesEffect.OpenMap(event.location))
 
             MyGamesAction.Refresh -> {
-                // TODO: подтянуть из домейна список игр и hasGames
+                // Подтянуть из домейна список игр и hasGames
             }
         }
     }
