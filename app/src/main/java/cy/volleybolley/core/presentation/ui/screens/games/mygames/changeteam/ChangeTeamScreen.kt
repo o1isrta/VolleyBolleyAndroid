@@ -189,8 +189,11 @@ private fun SelectDot(
     ) {
         Icon(
             painter = painterResource(
-                if (selected) R.drawable.ic_selected_dot
-                else R.drawable.ic_unselected_dot
+                if (selected) {
+                    R.drawable.ic_selected_dot
+                } else {
+                    R.drawable.ic_unselected_dot
+                }
             ),
             contentDescription = null,
             tint = Color.Unspecified,

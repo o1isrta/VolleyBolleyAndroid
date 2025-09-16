@@ -46,6 +46,8 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import kotlinx.coroutines.flow.collectLatest
 
+private const val LEVEL_HIGH = "H"
+
 @Composable
 fun ManagePlayersScreen(
     navController: NavHostController,
@@ -97,11 +99,11 @@ private fun PlayersList8(
     onRemove: (index: Int) -> Unit
 ) {
     val players = listOf(
-        PlayerUi(stringResource(R.string.player_demo_1), "H"),
-        PlayerUi(stringResource(R.string.player_demo_2), "H"),
-        PlayerUi(stringResource(R.string.player_demo_3), "H"),
-        PlayerUi(stringResource(R.string.player_demo_4), "H"),
-        PlayerUi(stringResource(R.string.player_demo_5), "H"),
+        PlayerUi(stringResource(R.string.player_demo_1), LEVEL_HIGH),
+        PlayerUi(stringResource(R.string.player_demo_2), LEVEL_HIGH),
+        PlayerUi(stringResource(R.string.player_demo_3), LEVEL_HIGH),
+        PlayerUi(stringResource(R.string.player_demo_4), LEVEL_HIGH),
+        PlayerUi(stringResource(R.string.player_demo_5), LEVEL_HIGH),
         PlayerUi(null, null),
         PlayerUi(null, null),
         PlayerUi(null, null)

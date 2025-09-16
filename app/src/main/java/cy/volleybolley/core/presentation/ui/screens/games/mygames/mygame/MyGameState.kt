@@ -24,7 +24,7 @@ data class Host(val id: Int, val name: String, val avatar: String?, val level: S
 data class Location(val longitude: Double, val latitude: Double, val courtName: String, val locationName: String)
 data class PlayerShort(val name: String, val level: String?)
 
-//State
+// State
 data class MyGameState(
     val details: GameDetails = myGameDetailsStub()
 ) : UiState

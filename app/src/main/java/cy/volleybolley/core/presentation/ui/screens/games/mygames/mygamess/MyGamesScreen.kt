@@ -176,10 +176,11 @@ fun GameCard(
         }
 
         VolleyText.BodyBold(
-            text = if (details.gameType.equals("TOURNAMENT", true))
+            text = if (details.gameType.equals("TOURNAMENT", ignoreCase = true)) {
                 stringResource(R.string.tourney_host)
-            else
-                stringResource(R.string.game_host),
+            } else {
+                stringResource(R.string.game_host)
+            },
             color = VolleyColor.White,
             modifier = Modifier.align(Alignment.Start)
         )

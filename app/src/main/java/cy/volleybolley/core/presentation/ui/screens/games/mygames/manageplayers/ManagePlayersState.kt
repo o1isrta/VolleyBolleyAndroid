@@ -8,6 +8,6 @@ data class ManagePlayersState(
 ) : UiState
 
 data class PlayerUi(
-    val name: String?,  // null => Free spot
-    val level: String?  // null => hide badge
+    val name: String?, // null => Free spot
+    val level: String? // null => hide badge
 )

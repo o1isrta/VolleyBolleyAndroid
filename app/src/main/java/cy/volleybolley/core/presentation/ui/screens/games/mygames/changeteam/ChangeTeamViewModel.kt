@@ -32,7 +32,7 @@ class ChangeTeamViewModel : BaseViewModel<ChangeTeamState, ChangeTeamAction, Cha
             }
 
             ChangeTeamAction.ConfirmSelection -> {
-                // TODO: вызов domain-слоя
+                // Вызов domain-слоя
             }
         }
     }

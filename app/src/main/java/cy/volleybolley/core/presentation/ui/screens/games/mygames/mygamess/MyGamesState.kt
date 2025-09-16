@@ -5,6 +5,25 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.max
 
+private const val TYPE_GAME = "GAME"
+private const val TYPE_TOURNAMENT = "TOURNAMENT"
+private const val HOST_NAME = "Artem Ivanov"
+private const val LEVEL_L = "L"
+private const val GENDER_MIX = "Mix"
+private const val PAYMENT_TYPE_THAI_BANK = "Thai bank"
+private const val CURRENCY_USD = "$"
+private const val PAYMENT_ACCOUNT = "988 016 7890"
+
+private val LEVELS_LIGHT = listOf("Light")
+
+private val LONG_MESSAGE: String = """
+    Hi! This is a really long test message to check how the bubble expands when there are many
+    characters inside. It should properly wrap across multiple lines, no cuts.
+""".trimIndent()
+
+private const val SHORT_MESSAGE: String =
+    "Afterlunch meet. 6$ entry fee, our favorite place, don’t miss"
+
 data class GameDetails(
     val gameId: Int,
     val gameType: String,
@@ -23,43 +42,83 @@ data class GameDetails(
     val players: List<PlayerShort>,
 )
 
-data class Host(val id: Int, val name: String, val avatar: String?, val level: String)
-data class Location(val longitude: Double, val latitude: Double, val courtName: String, val locationName: String)
-data class PlayerShort(val name: String, val level: String?)
+data class Host(
+    val id: Int,
+    val name: String,
+    val avatar: String?,
+    val level: String,
+)
+
+data class Location(
+    val longitude: Double,
+    val latitude: Double,
+    val courtName: String,
+    val locationName: String,
+)
+
+data class PlayerShort(
+    val name: String,
+    val level: String?,
+)
 
 // State
 data class MyGamesState(
-    val hasGames: Boolean = true, val games: List<GameDetails> = listOf(
-        gameStub(1, "GAME"), gameStub(2, "TOURNAMENT")
-    )
+    val hasGames: Boolean = true,
+    val games: List<GameDetails> = listOf(
+        gameStub(1, TYPE_GAME),
+        gameStub(2, TYPE_TOURNAMENT),
+    ),
 ) : UiState
 
-// demo stub
-fun gameStub(id: Int, type: String) = GameDetails(
-    gameId = id,
-    gameType = type,
-    host = Host(id = 10, name = "Artem Ivanov", avatar = null, level = "L"),
-    message = if (id == 1) "Hi! This is a really long test message to check how the bubble expands when there are many characters inside. It should properly wrap across multiple lines, no cuts."
-    else "Afterlunch meet. 6$ entry fee, our favorite place, don’t miss",
-    courtLocation = Location(
-        longitude = 98.2929,
-        latitude = 7.8471,
-        courtName = if (id == 1) "Karon Beach Club" else "The Shore at Katathani Resort",
-        locationName = if (id == 1) "Karon" else "Kata Noi"
-    ),
-    startTime = if (id == 1) "2025-10-10T18:00:00" else "2025-10-16T13:00:00",
-    endTime = if (id == 1) "2025-10-10T20:00:00" else "2025-10-16T14:00:00",
-    gender = "Mix",
-    levels = listOf("Light"),
-    pricePerPerson = "2",
-    maximumPlayers = 4,
-    paymentType = "Thai bank",
-    paymentAccount = "988 016 7890",
-    currencyType = "$",
-    players = listOf(
-        PlayerShort("Artem Ivanov", "L"), PlayerShort("Aleksandr Abramov", "L")
+// Stub
+fun gameStub(
+    id: Int,
+    type: String,
+): GameDetails {
+    val message = if (id == 1) LONG_MESSAGE else SHORT_MESSAGE
+    val courtName =
+        if (id == 1) "Karon Beach Club" else "The Shore at Katathani Resort"
+    val locationName = if (id == 1) "Karon" else "Kata Noi"
+    val startTime = if (id == 1) "2025-10-10T18:00:00" else "2025-10-16T13:00:00"
+    val endTime = if (id == 1) "2025-10-10T20:00:00" else "2025-10-16T14:00:00"
+
+    return GameDetails(
+        gameId = id,
+        gameType = type,
+        host = Host(
+            id = 10,
+            name = HOST_NAME,
+            avatar = null,
+            level = LEVEL_L,
+        ),
+        message = message,
+        courtLocation = Location(
+            longitude = 98.2929,
+            latitude = 7.8471,
+            courtName = courtName,
+            locationName = locationName,
+        ),
+        startTime = startTime,
+        endTime = endTime,
+        gender = GENDER_MIX,
+        levels = LEVELS_LIGHT,
+        pricePerPerson = "2",
+        maximumPlayers = 4,
+        paymentType = PAYMENT_TYPE_THAI_BANK,
+        paymentAccount = PAYMENT_ACCOUNT,
+        currencyType = CURRENCY_USD,
+        players = listOf(
+            PlayerShort(
+                name = HOST_NAME,
+                level = LEVEL_L,
+            ),
+            PlayerShort(
+                name = "Aleksandr Abramov",
+                level = LEVEL_L,
+            ),
+        ),
     )
-)
+}
 
 fun formatDateTimeRange(startIso: String, endIso: String): Pair<String, String> {
     val locale = Locale.ENGLISH
