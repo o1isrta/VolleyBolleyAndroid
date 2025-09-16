@@ -41,8 +41,8 @@ fun RatePlayersScreen(
     navController: NavHostController,
     viewModel: RatePlayersViewModel,
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val effect by viewModel.effects.collectAsStateWithLifecycle(null)
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     RatePlayersScreen(
         state = state,
