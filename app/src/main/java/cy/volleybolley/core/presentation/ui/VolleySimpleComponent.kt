@@ -69,7 +69,6 @@ object VolleySimpleComponent {
             modifier = modifier
         )
     }
-
 }
 
 

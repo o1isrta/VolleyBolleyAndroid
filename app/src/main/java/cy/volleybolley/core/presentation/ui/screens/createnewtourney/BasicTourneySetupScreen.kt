@@ -115,7 +115,7 @@ fun BasicTourneySetupScreenContent(
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-        VolleyText.TitleLarge(
+        VolleyText.TitleMedium(
             text = stringResource(R.string.place),
             modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
@@ -173,7 +173,7 @@ fun BasicTourneySetupScreenContent(
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-        VolleyText.TitleLarge(
+        VolleyText.TitleMedium(
             text = stringResource(R.string.date),
             modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
@@ -251,7 +251,7 @@ fun BasicTourneySetupScreenContent(
         HorizontalLine()
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-        VolleyText.TitleLarge(
+        VolleyText.TitleMedium(
             text = stringResource(R.string.tourney_type),
             modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
@@ -268,7 +268,7 @@ fun BasicTourneySetupScreenContent(
         HorizontalLine()
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-        VolleyText.TitleLarge(
+        VolleyText.TitleMedium(
             text = stringResource(R.string.gender),
             modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
@@ -285,7 +285,7 @@ fun BasicTourneySetupScreenContent(
         HorizontalLine()
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-        VolleyText.TitleLarge(
+        VolleyText.TitleMedium(
             text = stringResource(R.string.player_level),
             modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White

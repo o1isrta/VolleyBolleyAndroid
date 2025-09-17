@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
+import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -68,7 +69,7 @@ fun BasicGameSetupScreen(navController: NavHostController) {
 //    }
 }
 
-@Composable
+/*@Composable
 fun HorizontalLine(
 ) {
     HorizontalDivider(
@@ -76,7 +77,7 @@ fun HorizontalLine(
         color = VolleyColor.Divider,
         thickness = VolleyDimens.DIMEN_1.dp
     )
-}
+}*/
 
 @Composable
 fun BasicGameSetupScreenContent(
@@ -111,11 +112,11 @@ fun BasicGameSetupScreenContent(
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-        HorizontalLine()
+        VolleySimpleComponent.DividerLine()// HorizontalLine()
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-        VolleyText.TitleLarge(
+        VolleyText.TitleMedium(
             text = stringResource(R.string.place),
             modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
@@ -169,11 +170,11 @@ fun BasicGameSetupScreenContent(
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-        HorizontalLine()
+        VolleySimpleComponent.DividerLine() //HorizontalLine()
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-        VolleyText.TitleLarge(
+        VolleyText.TitleMedium(
             text = stringResource(R.string.date),
             modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
@@ -265,10 +266,10 @@ Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
         )*/
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-        HorizontalLine()
+        VolleySimpleComponent.DividerLine() //HorizontalLine()
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-        VolleyText.TitleLarge(
+        VolleyText.TitleMedium(
             text = stringResource(R.string.gender),
             modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
@@ -282,10 +283,10 @@ Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
         )
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-        HorizontalLine()
+        VolleySimpleComponent.DividerLine() //HorizontalLine()
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-        VolleyText.TitleLarge(
+        VolleyText.TitleMedium(
             text = stringResource(R.string.player_level),
             modifier = Modifier.fillMaxWidth(),
             color = VolleyColor.White
