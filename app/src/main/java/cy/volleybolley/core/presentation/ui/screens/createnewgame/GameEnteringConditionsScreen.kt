@@ -116,11 +116,26 @@ fun GameEnteringConditionsScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
-            VolleyText.BodyBold(
-                text = stringResource(R.string.per_person),
-                modifier = Modifier.fillMaxWidth(),
-                color = VolleyColor.White
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                VolleyText.BodyBold(
+                    text = stringResource(R.string.per_person),
+                    color = VolleyColor.White
+                )
+
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_9.dp))
+
+                VolleyTextFieldAttribute.DurationFieldWithArrows(
+                    inputTime = VolleyTimeStamp(
+                        14,
+                        0,
+                        true
+                    )
+                ) { }
+            }
 
             VolleyText.BodyRegular(
                 text = stringResource(R.string.current_account),

@@ -17,14 +17,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.rememberDatePickerState
@@ -39,14 +44,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.model.VolleyColor.TextField
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
@@ -388,12 +397,6 @@ object VolleyTextFieldAttribute {
                         color = VolleyColor.White,
                         maxLines = 1,
                         modifier = Modifier
-//                         //   .padding(
-//                          //      start = VolleyDimens.DIMEN_4.dp,
-//                         //       top = 0.dp,
-//                         //       end = VolleyDimens.DIMEN_16.dp,
-//                         //       bottom = 0.dp
-//                        //    )
                     )
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_4.dp))
                     Image(
@@ -411,6 +414,103 @@ object VolleyTextFieldAttribute {
                 actionForSaveTime = actionForSaveTime,
             )
         }
+    }
+
+    @Composable
+    fun PaymentField(
+        modifier: Modifier = Modifier,
+        height: Int = VolleyDimens.DIMEN_30,
+        width: Int = VolleyDimens.DIMEN_75,
+        cornerRadius: Int = VolleyDimens.DIMEN_16,
+        inputPayment: Double = 5.0
+    ) {
+        VolleyContainersRootTransparent.TransparentContainer(
+            modifier = modifier,
+            cornerRadius = cornerRadius
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .height(height.dp)
+                    .width(width.dp),
+                horizontalArrangement = Arrangement.Center
+
+            ) {
+                DecimalInputMask(height, width - 32)
+               /* VolleyText.BodyRegular(
+                    text = inputPayment.toString(),
+                    color = VolleyColor.White,
+                    maxLines = 1,
+                    modifier = Modifier
+                )*/
+
+               /* VolleyText.BodyRegular(
+                    text = stringResource(R.string.dollar),
+                    color = VolleyColor.White,
+                    maxLines = 1,
+                    modifier = Modifier
+                )*/
+            }
+        }
+    }
+
+    @Composable
+    fun DecimalInputMask(height: Int, width: Int) {
+        var text by remember { mutableStateOf("") }
+
+        OutlinedTextField(
+            value = text,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color.Transparent,      // Цвет обводки при фокусировке
+                unfocusedBorderColor = Color.Transparent,    // Цвет обводки в обычном состоянии
+                disabledBorderColor = Color.Transparent     // Цвет обводки в отключенном состоянии
+            ),
+            suffix = {
+                VolleyText.BodyRegular(
+                text = stringResource(R.string.dollar),
+                color = VolleyColor.White,
+                maxLines = 1,
+                modifier = Modifier
+            ) },
+            onValueChange = { newText ->
+                // 1. Удаляем все символы, кроме цифр и точки
+                val filteredText = newText.replace(Regex("[^0-9.]"), "")
+
+                // 2. Проверяем количество точек
+                val dotCount = filteredText.count { it == '.' }
+                if (dotCount > 1) {
+                    // Если больше одной точки, оставляем только первую
+                    text = text //не меняем значение
+
+                } else {
+                    // 3. Если есть точка, проверяем количество знаков после неё
+                    val parts = filteredText.split(".")
+                    if (parts.size == 2 && parts[1].length > 2) {
+                        //Если больше 2 символов оставляем предыдущее значение
+                        text = text
+                    } else {
+                        // 4. Обновляем текст, если все проверки пройдены
+                        text = filteredText
+                    }
+
+                }
+
+            },
+            //label = "",//{ Text("Введите число (до 2 знаков после запятой)") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+            modifier = Modifier
+                .height(height.dp)
+                .width(width.dp)
+               // .fillMaxWidth()
+               // .padding(16.dp)
+        )
+
+        //Можно попробовать парсить ввод
+        //    val number = text.toDoubleOrNull()
+        //    if (number!=null){
+        //        Text("Введенное значение $number")
+        //    }
+
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -541,6 +641,16 @@ private fun PreviewGradientTextFields() {
                 modifier = Modifier
                     .padding(VolleyDimens.DIMEN_16.dp)
             ) { }
+
+            VolleyTextFieldAttribute.PaymentField(
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_16.dp),
+
+            )
+
+            VolleyTextFieldAttribute.DecimalInputMask(30,30
+
+            )
         }
     }
 }
