@@ -1,5 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.home.success
 
+import android.content.Intent
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,14 +19,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
@@ -31,15 +38,87 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.navigation.HomeRoute
+import cy.volleybolley.core.presentation.ui.navigation.InvitePlayersRoute
+import cy.volleybolley.core.presentation.ui.navigation.NavMap
+import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
+
 @Composable
-fun SuccessScreen(navController: NavHostController) {
-    SuccessScreen()
+fun SuccessScreen(
+    navController: NavHostController,
+    viewModel: SuccessViewModel
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
+
+    SuccessScreen(
+        state = state,
+        effect = effect,
+        navigateAction = { route ->
+            when (route) {
+                HomeRoute -> {
+                    navController.navigate(HomeRoute) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = false
+                        }
+                        launchSingleTop = true
+                    }
+                }
+
+                else -> navController.navigate(route)
+            }
+        },
+        eventCallback = { event ->
+            viewModel.obtainEvent(event)
+        }
+    )
 }
 
 @Composable
-private fun SuccessScreen() {
+private fun SuccessScreen(
+    state: SuccessState,
+    effect: SuccessEffect?,
+    navigateAction: (NavMap) -> Unit,
+    eventCallback: (SuccessEvent) -> Unit,
+) {
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        when (effect) {
+            SuccessEffect.CloseScreen -> navigateAction(HomeRoute)
+            SuccessEffect.NavigateToInvitePlayers -> navigateAction(
+                InvitePlayersRoute(id = state.event.id)
+            )
+
+            SuccessEffect.ShareLink -> {
+                val deepLink = state.event.toDeepLink()
+
+                val shareText = when (state.event.type) {
+                    EventType.GAME -> context.getString(R.string.share_text_game, deepLink)
+                    EventType.TOURNAMENT -> context.getString(
+                        R.string.share_text_tournament,
+                        deepLink
+                    )
+                }
+
+                val sendIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, shareText)
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(
+                    sendIntent,
+                    context.getString(R.string.share_link_chooser_title)
+                )
+                context.startActivity(shareIntent)
+            }
+
+            null -> Unit
+        }
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         Column {
             TransparentContainer(
@@ -55,11 +134,33 @@ private fun SuccessScreen() {
                         .fillMaxWidth()
                         .padding(VolleyDimens.DIMEN_20.dp)
                 ) {
-                    Header()
-                    RowIconText()
-                    RowIconText()
-                    RowIconText()
-                    RowIconText()
+                    Header(
+                        title = when (state.event.type) {
+                            EventType.GAME -> R.string.game_created
+                            EventType.TOURNAMENT -> R.string.tourney_created
+                        }
+                    )
+                    RowIconText(
+                        painterResource = R.drawable.ic_geo,
+                        title = state.event.locationName,
+                        text = state.event.locationPlace
+                    )
+                    RowIconText(
+                        painterResource = R.drawable.ic_clock,
+                        title = state.event.date,
+                        text = state.event.time
+                    )
+                    RowIconText(
+                        painterResource = R.drawable.ic_ball,
+                        title = state.event.level,
+                        text = state.event.playersInfo
+                    )
+                    RowIconText(
+                        painterResource = R.drawable.ic_payment_card,
+                        title = state.event.pricePerPerson,
+                        text = state.event.paymentAccount ?: PaymentType.CASH.nameValue.lowercase()
+                            .replaceFirstChar { it.uppercaseChar() }
+                    )
                     ActiveButton(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -68,8 +169,9 @@ private fun SuccessScreen() {
                                 bottom = VolleyDimens.DIMEN_8.dp
                             ),
                         text = stringResource(R.string.done),
-                        onClick = {}
-                    )
+                    ) {
+                        eventCallback(SuccessEvent.OnDoneClick)
+                    }
                 }
             }
 
@@ -81,55 +183,70 @@ private fun SuccessScreen() {
                 ),
                 horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
             ) {
-                InvitePlayersButton(Modifier.weight(1f))
-                ShareButton(Modifier.weight(1f))
+                InvitePlayersButton(Modifier.weight(1f)) {
+                    eventCallback(SuccessEvent.OnInvitePlayers)
+                }
+                ShareButton(Modifier.weight(1f)) {
+                    eventCallback(SuccessEvent.OnShareLink)
+                }
             }
         }
     }
 }
 
 @Composable
-fun Header() {
+private fun Header(
+    @StringRes title: Int
+) {
     Column {
         VolleyText.TitleLarge(
-            text = stringResource(R.string.game_created),
+            text = stringResource(title),
             color = VolleyColor.White
         )
     }
 }
 
 @Composable
-fun RowIconText() {
+private fun RowIconText(
+    @DrawableRes painterResource: Int,
+    title: String,
+    text: String,
+) {
     Row(
         modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(R.drawable.ic_geo),
-            modifier = Modifier.size(VolleyDimens.DIMEN_16.dp, VolleyDimens.DIMEN_15.dp),
+            painter = painterResource(painterResource),
+            modifier = Modifier.size(VolleyDimens.DIMEN_24.dp),
             contentDescription = null
         )
         Column(
-            modifier = Modifier.padding(VolleyDimens.DIMEN_8.dp)
+            modifier = Modifier.padding(start = VolleyDimens.DIMEN_8.dp)
         ) {
-            VolleyText.BodyBold(text = "Karon Beach Club", color = VolleyColor.White)
-            VolleyText.BodyLight(text = "Patak Rd, Mueng Phuket", color = VolleyColor.White)
-
+            VolleyText.BodyBold(text = title, color = VolleyColor.White)
+            VolleyText.BodyLight(text = text, color = VolleyColor.White)
         }
     }
 }
 
 @Composable
-fun InvitePlayersButton(modifier: Modifier) {
+private fun InvitePlayersButton(
+    modifier: Modifier,
+    onClick: () -> Unit
+) {
     Button(
         modifier = modifier.height(VolleyDimens.DIMEN_180.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = VolleyColor.YellowPro,
         ),
-        contentPadding = PaddingValues(top = VolleyDimens.DIMEN_20.dp, start = VolleyDimens.DIMEN_20.dp),
+        contentPadding = PaddingValues(
+            top = VolleyDimens.DIMEN_20.dp,
+            start = VolleyDimens.DIMEN_20.dp
+        ),
         shape = RoundedCornerShape(VolleyDimens.DIMEN_32.dp),
-        onClick = {}) {
-
+        onClick = onClick
+    ) {
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -149,7 +266,10 @@ fun InvitePlayersButton(modifier: Modifier) {
 }
 
 @Composable
-fun ShareButton(modifier: Modifier) {
+private fun ShareButton(
+    modifier: Modifier,
+    onClick: () -> Unit
+) {
     TransparentContainer(
         modifier = modifier.height(VolleyDimens.DIMEN_180.dp),
     ) {
@@ -158,10 +278,13 @@ fun ShareButton(modifier: Modifier) {
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
             ),
-            contentPadding = PaddingValues(top = VolleyDimens.DIMEN_20.dp, start = VolleyDimens.DIMEN_20.dp),
+            contentPadding = PaddingValues(
+                top = VolleyDimens.DIMEN_20.dp,
+                start = VolleyDimens.DIMEN_20.dp
+            ),
             shape = RoundedCornerShape(VolleyDimens.DIMEN_32.dp),
-            onClick = {}) {
-
+            onClick = onClick
+        ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
             ) {
@@ -193,7 +316,27 @@ private fun RatePlayersPreview() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-            SuccessScreen()
+            val state = SuccessState(
+                CreatedEvent(
+                    id = 1,
+                    type = EventType.TOURNAMENT,
+                    locationName = "Karon Beach Club",
+                    locationPlace = "Patak Rd, Mueng Phuket",
+                    date = "Starts today",
+                    time = "2:00-3:00 PM",
+                    level = "Level: Light, Medium, Hard",
+                    playersInfo = "Mix · 4 players · private game",
+                    pricePerPerson = "5\$ per person",
+                    paymentType = PaymentType.CASH,
+                    paymentAccount = null
+                )
+            )
+            SuccessScreen(
+                state = state,
+                effect = null,
+                navigateAction = {},
+                eventCallback = {}
+            )
         }
     }
 }

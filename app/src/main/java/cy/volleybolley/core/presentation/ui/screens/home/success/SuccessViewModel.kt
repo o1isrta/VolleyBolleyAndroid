@@ -2,11 +2,22 @@ package cy.volleybolley.core.presentation.ui.screens.home.success
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
 
-class SuccessViewModel() : BaseViewModel<SuccessState, SuccessEvent, SuccessEffect>(SuccessState()) {
+class SuccessViewModel(
+    createdEvent: CreatedEvent,
+) :
+    BaseViewModel<SuccessState, SuccessEvent, SuccessEffect>(SuccessState(event = createdEvent)) {
 
-    override val tag: String = "ggg"
+    override val tag: String = TAG
 
     override fun obtainEvent(event: SuccessEvent) {
-        TODO("Not yet implemented")
+        when (event) {
+            SuccessEvent.OnDoneClick -> sendUiEffect(SuccessEffect.CloseScreen)
+            is SuccessEvent.OnInvitePlayers -> sendUiEffect(SuccessEffect.NavigateToInvitePlayers)
+            SuccessEvent.OnShareLink -> sendUiEffect(SuccessEffect.ShareLink)
+        }
+    }
+
+    companion object {
+        val TAG = SuccessViewModel::class.simpleName ?: "SuccessViewModel"
     }
 }
