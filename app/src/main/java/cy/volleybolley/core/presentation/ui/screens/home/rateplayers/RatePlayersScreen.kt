@@ -123,7 +123,7 @@ private fun RatePlayersScreen(
 }
 
 @Composable
-fun Header() {
+private fun Header() {
     Column(
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
     ) {
@@ -139,7 +139,7 @@ fun Header() {
 }
 
 @Composable
-fun PlayerBox(
+private fun PlayerBox(
     player: PlayerShortUI,
     onSelected: (Int) -> Unit
 ) {
@@ -158,7 +158,7 @@ fun PlayerBox(
 }
 
 @Composable
-fun PlayerInfo(
+private fun PlayerInfo(
     player: PlayerShortUI
 ) {
     Row(
