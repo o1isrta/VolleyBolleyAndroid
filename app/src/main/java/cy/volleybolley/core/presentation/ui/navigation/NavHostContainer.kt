@@ -138,7 +138,8 @@ fun NavHostContainer(
                 navController = navController,
                 viewModel = koinViewModel {
                     parametersOf(event)
-                })
+                }
+            )
         }
 
         // profile

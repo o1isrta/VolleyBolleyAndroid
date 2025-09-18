@@ -63,7 +63,7 @@ val coreModule = module {
         )
     }
 
-    viewModel {( event: CreatedEvent) ->
+    viewModel { (event: CreatedEvent) ->
         SuccessViewModel(
             createdEvent = event
         )

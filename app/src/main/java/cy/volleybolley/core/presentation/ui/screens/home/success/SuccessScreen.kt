@@ -44,7 +44,6 @@ import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
-
 @Composable
 fun SuccessScreen(
     navController: NavHostController,
@@ -257,7 +256,7 @@ private fun InvitePlayersButton(
                 contentDescription = null
             )
             VolleyText.TitleLarge(
-                modifier = Modifier.rotate(-8f),
+                modifier = Modifier.rotate(VolleyDimens.ROTATION_8),
                 text = stringResource(R.string.invite_players),
                 color = VolleyColor.TextDark
             )
@@ -294,7 +293,7 @@ private fun ShareButton(
                     contentDescription = null
                 )
                 VolleyText.TitleLarge(
-                    modifier = Modifier.rotate(-8f),
+                    modifier = Modifier.rotate(VolleyDimens.ROTATION_8),
                     text = stringResource(R.string.share_link),
                     color = VolleyColor.White
                 )
