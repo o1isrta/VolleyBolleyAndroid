@@ -29,6 +29,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
@@ -44,7 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -425,46 +426,34 @@ object VolleyTextFieldAttribute {
         inputPayment: Double = 5.0
     ) {
         VolleyContainersRootTransparent.TransparentContainer(
-            modifier = modifier,
+            modifier = modifier,//.height(height.dp).width(width.dp),
             cornerRadius = cornerRadius
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .height(height.dp)
-                    .width(width.dp),
-                horizontalArrangement = Arrangement.Center
-
-            ) {
-                DecimalInputMask(height, width - 32)
-               /* VolleyText.BodyRegular(
-                    text = inputPayment.toString(),
-                    color = VolleyColor.White,
-                    maxLines = 1,
-                    modifier = Modifier
-                )*/
-
-               /* VolleyText.BodyRegular(
-                    text = stringResource(R.string.dollar),
-                    color = VolleyColor.White,
-                    maxLines = 1,
-                    modifier = Modifier
-                )*/
-            }
+                DecimalInputMask(modifier, inputPayment)
         }
     }
 
     @Composable
-    fun DecimalInputMask(height: Int, width: Int) {
-        var text by remember { mutableStateOf("") }
+    fun DecimalInputMask(modifier: Modifier, inputPayment: Double) {
+        var text by remember { mutableStateOf(inputPayment.toString()) }
 
+       /* Text(
+            text = "5.0",
+            color = Color.Red,
+            modifier = Modifier
+                .height(height.dp)
+                .width(width.dp)
+        )*/
         OutlinedTextField(
-            value = text,
+            modifier = Modifier,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color.Transparent,      // Цвет обводки при фокусировке
                 unfocusedBorderColor = Color.Transparent,    // Цвет обводки в обычном состоянии
-                disabledBorderColor = Color.Transparent     // Цвет обводки в отключенном состоянии
+                disabledBorderColor = Color.Transparent,     // Цвет обводки в отключенном состоянии
+                unfocusedTextColor = VolleyColor.White,
+                focusedTextColor = VolleyColor.White
             ),
+            value = text,
             suffix = {
                 VolleyText.BodyRegular(
                 text = stringResource(R.string.dollar),
@@ -481,7 +470,6 @@ object VolleyTextFieldAttribute {
                 if (dotCount > 1) {
                     // Если больше одной точки, оставляем только первую
                     text = text //не меняем значение
-
                 } else {
                     // 3. Если есть точка, проверяем количество знаков после неё
                     val parts = filteredText.split(".")
@@ -492,17 +480,11 @@ object VolleyTextFieldAttribute {
                         // 4. Обновляем текст, если все проверки пройдены
                         text = filteredText
                     }
-
                 }
-
             },
             //label = "",//{ Text("Введите число (до 2 знаков после запятой)") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-            modifier = Modifier
-                .height(height.dp)
-                .width(width.dp)
-               // .fillMaxWidth()
-               // .padding(16.dp)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
+
         )
 
         //Можно попробовать парсить ввод
@@ -643,14 +625,28 @@ private fun PreviewGradientTextFields() {
             ) { }
 
             VolleyTextFieldAttribute.PaymentField(
+                inputPayment = 6.0,
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp),
-
+                    .padding(VolleyDimens.DIMEN_16.dp)
             )
 
-            VolleyTextFieldAttribute.DecimalInputMask(30,30
+           /* VolleyTextFieldAttribute.DecimalInputMask(30,75)
 
-            )
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_16.dp)
+                    .height(30.dp)
+                    .width(75.dp)
+                    .background(color = Color.White, shape = RoundedCornerShape(16.dp))
+
+            ) {
+                Text(
+                    text = "fgh",
+                    color = VolleyColor.TextField,
+                    style = GradientFieldMedium,
+                )
+            }*/
         }
     }
 }
