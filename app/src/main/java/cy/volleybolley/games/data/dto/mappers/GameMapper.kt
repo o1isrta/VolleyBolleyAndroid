@@ -41,6 +41,7 @@ fun GamesResponse.CreateGame.toDomain(): CreatedGame = CreatedGame(
     paymentAccount = paymentAccount,
     currencyType = currencyType,
     players = players,
+    location = location.toDomain()
 )
 
 fun GamesResponse.GetGameDetails.toDomain(): GameDetails = GameDetails(

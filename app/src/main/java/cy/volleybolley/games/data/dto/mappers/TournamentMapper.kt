@@ -43,7 +43,8 @@ fun TournamentsResponse.CreateTournament.toDomain(): CreatedTournament = Created
     paymentType = enumValues<PaymentType>().firstOrNull { it.name == paymentType } ?: PaymentType.CASH,
     paymentAccount = paymentAccount,
     currencyType = currencyType,
-    teams = teams.toDomainShort()
+    teams = teams.toDomainShort(),
+    location = location.toDomain()
 )
 
 fun TournamentsResponse.GetTournamentDetails.toDomain(): TournamentDetails = TournamentDetails(

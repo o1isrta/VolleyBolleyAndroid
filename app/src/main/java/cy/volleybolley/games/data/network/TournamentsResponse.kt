@@ -25,6 +25,7 @@ sealed interface TournamentsResponse {
         @SerialName("payment_account") val paymentAccount: String?,
         @SerialName("currency_type") val currencyType: String,
         @SerialName("teams") val teams: List<TeamDto>,
+        @SerialName("court_location") val location: LocationDto,
     ) : TournamentsResponse
 
     @Serializable

@@ -25,6 +25,7 @@ sealed interface GamesResponse {
         @SerialName("payment_account") val paymentAccount: String?,
         @SerialName("currency_type") val currencyType: String,
         @SerialName("players") val players: List<Int>,
+        @SerialName("court_location") val location: LocationDto,
     ) : GamesResponse
 
     @Serializable

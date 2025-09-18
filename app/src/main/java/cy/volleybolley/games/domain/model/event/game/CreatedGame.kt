@@ -1,6 +1,7 @@
 package cy.volleybolley.games.domain.model.event.game
 
 import cy.volleybolley.core.domain.model.PaymentType
+import cy.volleybolley.courts.domain.model.Location
 
 data class CreatedGame(
     val gameId: Int,
@@ -17,5 +18,6 @@ data class CreatedGame(
     val paymentAccount: String?,
     val currencyType: String,
     val players: List<Int>,
+    val location: Location,
 )
 
