@@ -231,12 +231,22 @@ fun RegistrationScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(VolleyDimens.DIMEN_52.dp)
-                        .background(VolleyColor.White, shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp))
-                        .padding(start = VolleyDimens.DIMEN_16.dp, end = VolleyDimens.DIMEN_16.dp),
+                        .background(
+                            color = VolleyColor.White,
+                            shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp)
+                        )
+                        .padding(
+                            start = VolleyDimens.DIMEN_16.dp,
+                            end = VolleyDimens.DIMEN_16.dp
+                        ),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     VolleyText.BodyRegular(
-                        text = if (state.country.isEmpty()) stringResource(id = R.string.your_county) else state.country,
+                        text = if (state.country.isEmpty()) {
+                            stringResource(id = R.string.your_county)
+                        } else {
+                            state.country
+                        },
                         color = VolleyColor.TextField
                     )
                     Icon(
