@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
@@ -48,10 +50,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
@@ -62,6 +70,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldMedium
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
+import cy.volleybolley.ui.theme.Background
 import java.util.Calendar
 
 @UiLibraryMarker
@@ -420,79 +429,116 @@ object VolleyTextFieldAttribute {
     @Composable
     fun PaymentField(
         modifier: Modifier = Modifier,
-        height: Int = VolleyDimens.DIMEN_30,
         width: Int = VolleyDimens.DIMEN_75,
+        height: Int = VolleyDimens.DIMEN_30,
         cornerRadius: Int = VolleyDimens.DIMEN_16,
         inputPayment: Double = 5.0
     ) {
         VolleyContainersRootTransparent.TransparentContainer(
-            modifier = modifier,//.height(height.dp).width(width.dp),
-            cornerRadius = cornerRadius
+            cornerRadius = cornerRadius,
+            modifier = modifier //modifier.height(height.dp).width(width.dp),
         ) {
-                DecimalInputMask(modifier, inputPayment)
+              DecimalInputMask(/*modifier,*/ width, height, inputPayment)
         }
     }
 
     @Composable
-    fun DecimalInputMask(modifier: Modifier, inputPayment: Double) {
+    fun DecimalInputMask(/*modifier: Modifier, */width: Int, height: Int, inputPayment: Double) {
         var text by remember { mutableStateOf(inputPayment.toString()) }
 
-       /* Text(
-            text = "5.0",
-            color = Color.Red,
+        Row(
             modifier = Modifier
-                .height(height.dp)
-                .width(width.dp)
-        )*/
-        OutlinedTextField(
-            modifier = Modifier,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Transparent,      // Цвет обводки при фокусировке
-                unfocusedBorderColor = Color.Transparent,    // Цвет обводки в обычном состоянии
-                disabledBorderColor = Color.Transparent,     // Цвет обводки в отключенном состоянии
-                unfocusedTextColor = VolleyColor.White,
-                focusedTextColor = VolleyColor.White
-            ),
-            value = text,
-            suffix = {
-                VolleyText.BodyRegular(
-                text = stringResource(R.string.dollar),
-                color = VolleyColor.White,
-                maxLines = 1,
+            .height(height.dp)
+            .width(width.dp))
+        {
+            /*OutlinedTextField(
                 modifier = Modifier
-            ) },
-            onValueChange = { newText ->
-                // 1. Удаляем все символы, кроме цифр и точки
-                val filteredText = newText.replace(Regex("[^0-9.]"), "")
+                     .fillMaxSize(), // Занимаем все доступное пространство Box
+               // modifier = Modifier,
+                   // .height(30.dp)
+                   // .width(75.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Transparent,      // Цвет обводки при фокусировке
+                    unfocusedBorderColor = Color.Transparent,    // Цвет обводки в обычном состоянии
+                    disabledBorderColor = Color.Transparent,     // Цвет обводки в отключенном состоянии
+                    unfocusedTextColor = VolleyColor.White,
+                    focusedTextColor = VolleyColor.White
+                ),
+                value = text,
+                suffix = {
+                    VolleyText.BodyRegular(
+                        text = stringResource(R.string.dollar),
+                        color = VolleyColor.White,
+                        maxLines = 1,
+                        modifier = Modifier
+                    )
+                },
+                onValueChange = { newText ->
+                    // 1. Удаляем все символы, кроме цифр и точки
+                    val filteredText = newText.replace(Regex("[^0-9.]"), "")
 
-                // 2. Проверяем количество точек
-                val dotCount = filteredText.count { it == '.' }
-                if (dotCount > 1) {
-                    // Если больше одной точки, оставляем только первую
-                    text = text //не меняем значение
-                } else {
-                    // 3. Если есть точка, проверяем количество знаков после неё
-                    val parts = filteredText.split(".")
-                    if (parts.size == 2 && parts[1].length > 2) {
-                        //Если больше 2 символов оставляем предыдущее значение
-                        text = text
+                    // 2. Проверяем количество точек
+                    val dotCount = filteredText.count { it == '.' }
+                    if (dotCount > 1) {
+                        // Если больше одной точки, оставляем только первую
+                        text = text //не меняем значение
                     } else {
-                        // 4. Обновляем текст, если все проверки пройдены
-                        text = filteredText
+                        // 3. Если есть точка, проверяем количество знаков после неё
+                        val parts = filteredText.split(".")
+                        if (parts.size == 2 && parts[1].length > 2) {
+                            //Если больше 2 символов оставляем предыдущее значение
+                            text = text
+                        } else {
+                            // 4. Обновляем текст, если все проверки пройдены
+                            text = filteredText
+                        }
                     }
-                }
-            },
-            //label = "",//{ Text("Введите число (до 2 знаков после запятой)") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
+                },
+                //label = "",//{ Text("Введите число (до 2 знаков после запятой)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
+            )*/
+            TextField(
+                value = text,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    unfocusedTextColor = VolleyColor.White,
+                    focusedTextColor = VolleyColor.White
+                ),
+                suffix = {
+                    VolleyText.BodyRegular(
+                        text = stringResource(R.string.dollar),
+                        color = VolleyColor.White,
+                        maxLines = 1,
+                        modifier = Modifier
+                    )
+                },
+                onValueChange = { newText ->
+                    // 1. Удаляем все символы, кроме цифр и точки
+                    val filteredText = newText.replace(Regex("[^0-9.]"), "")
 
-        )
-
-        //Можно попробовать парсить ввод
-        //    val number = text.toDoubleOrNull()
-        //    if (number!=null){
-        //        Text("Введенное значение $number")
-        //    }
-
+                    // 2. Проверяем количество точек
+                    val dotCount = filteredText.count { it == '.' }
+                    if (dotCount > 1) {
+                        // Если больше одной точки, оставляем только первую
+                        text = text //не меняем значение
+                    } else {
+                        // 3. Если есть точка, проверяем количество знаков после неё
+                        val parts = filteredText.split(".")
+                        if (parts.size == 2 && parts[1].length > 2) {
+                            //Если больше 2 символов оставляем предыдущее значение
+                            text = text
+                        } else {
+                            // 4. Обновляем текст, если все проверки пройдены
+                            text = filteredText
+                        }
+                    }
+                },
+                //label = "",//{ Text("Введите число (до 2 знаков после запятой)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                modifier = Modifier.padding(0.dp)
+            )
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -562,6 +608,93 @@ object VolleyTextFieldAttribute {
             }
         )
     }
+    @Composable
+    fun MyTextField(modifier: Modifier = Modifier) {
+        var text by remember { mutableStateOf("") }
+
+        Box(
+            modifier = modifier
+                .size(width = 75.dp, height = 30.dp) // Сначала задаем размер
+               // .then(modifier) // Потом применяем переданный modifier (который может содержать padding)
+                .background(Color.White, shape = RoundedCornerShape(16.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            BasicTextField(
+                value = text,
+                onValueChange = { newValue ->
+                    if (newValue.matches(Regex("[0-9.]*"))) {
+                        text = newValue
+                    }
+                },
+                textStyle = TextStyle(color = Color.Black, fontSize = 14.sp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                decorationBox = { innerTextField ->
+                    Row(
+                        modifier = Modifier
+                         //   .padding(horizontal = 8.dp)
+                         //   .height(IntrinsicSize.Max),
+                      ,  verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(Modifier.weight(1f)) {
+                            if (text.isEmpty()) {
+                                Text(
+                                    text = "0.0",
+                                    color = Color.LightGray,
+                                    fontSize = 14.sp
+                                )
+                            }
+                            innerTextField()
+                        }
+                        Text(text = "$", color = Color.Black, fontSize = 14.sp)
+                    }
+                },
+                modifier = Modifier
+                    .width(IntrinsicSize.Max),
+                visualTransformation = CurrencyAmountTransformation
+            )
+        }
+    }
+
+    object CurrencyAmountTransformation : VisualTransformation {
+        override fun filter(text: AnnotatedString): TransformedText {
+
+            val digitsAndDots = text.text.filter { it.isDigit() || it == '.' }
+
+            val parts = digitsAndDots.split('.')
+            val integerPart = parts.getOrElse(0) { "" }
+            val decimalPart = parts.getOrElse(1) { "" }
+
+            val formattedIntegerPart = integerPart.reversed().chunked(3).joinToString(",")
+                .reversed()
+
+            val formattedText = if (decimalPart.isNotEmpty()) {
+                "$formattedIntegerPart.$decimalPart"
+            } else {
+                formattedIntegerPart
+            }
+
+            return TransformedText(
+                AnnotatedString(formattedText),
+                object : OffsetMapping {
+                    override fun originalToTransformed(offset: Int): Int {
+                        if (offset <= digitsAndDots.length) {
+                            return formattedText.length
+                        } else {
+                            return formattedText.length
+                        }
+                    }
+
+                    override fun transformedToOriginal(offset: Int): Int {
+                        if (offset <= formattedText.length) {
+                            return digitsAndDots.length
+                        } else {
+                            return digitsAndDots.length
+                        }
+                    }
+                })
+        }
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -630,6 +763,7 @@ private fun PreviewGradientTextFields() {
                     .padding(VolleyDimens.DIMEN_16.dp)
             )
 
+            VolleyTextFieldAttribute.MyTextField(modifier = Modifier.padding(16.dp))
            /* VolleyTextFieldAttribute.DecimalInputMask(30,75)
 
             Box(

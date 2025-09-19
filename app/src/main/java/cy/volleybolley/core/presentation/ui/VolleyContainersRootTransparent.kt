@@ -63,7 +63,6 @@ object VolleyContainersRootTransparent {
                     modifier = Modifier.fillMaxSize()
                 ) { paddingValues ->
                     content(paddingValues)
-
                 }
             }
         }
@@ -310,7 +309,6 @@ object VolleyContainersRootTransparent {
             modifier = modifier.background(Color.White.copy(alpha = 0.1f))
         )
     }
-
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -349,7 +347,6 @@ private fun PreviewContainers() {
                             .padding(VolleyDimens.DIMEN_16.dp)
                             .height(VolleyDimens.DIMEN_90.dp)
                             .fillMaxWidth()
-
                     )
                 }
 
