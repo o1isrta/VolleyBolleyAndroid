@@ -44,6 +44,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.AboutLevelsRoute
 import cy.volleybolley.core.presentation.ui.navigation.HomeRoute
 
+@Suppress("detekt.CognitiveComplexMethod")
 @Composable
 fun RegistrationScreen(
     navController: NavHostController,
