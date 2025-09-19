@@ -22,11 +22,17 @@ enum class NoBarsRoutes(val className: String, val noBottomBar: Boolean, val noT
     companion object {
         @JvmStatic
         fun showBottomBar(routeName: String): Boolean {
+            if (routeName.isEmpty()) {
+                return false
+            }
             return !NoBarsRoutes.entries.filter { it.noBottomBar }.map { it.className }.contains(routeName)
         }
 
         @JvmStatic
         fun showTopBar(routeName: String): Boolean {
+            if (routeName.isEmpty()) {
+                return false
+            }
             return !NoBarsRoutes.entries.filter { it.noTopBar }.map { it.className }.contains(routeName)
         }
     }

@@ -17,10 +17,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -73,13 +70,9 @@ fun RootContainer(
     content: @Composable (PaddingValues, NavHostController) -> Unit
 ) {
     val navController = rememberNavController()
-    var currentDestinationRoute: String by remember { mutableStateOf("") }
+    val currentDestinationRoute = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val showBottomNav = NoBarsRoutes.showBottomBar(currentDestinationRoute)
     val showTopBar = NoBarsRoutes.showTopBar(currentDestinationRoute)
-
-    navController.addOnDestinationChangedListener { _, destination, _ ->
-        currentDestinationRoute = destination.route.toString()
-    }
 
     Surface(
         modifier = Modifier
