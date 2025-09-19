@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -70,7 +71,8 @@ fun RootContainer(
     content: @Composable (PaddingValues, NavHostController) -> Unit
 ) {
     val navController = rememberNavController()
-    val currentDestinationRoute = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
+    val currentDestination = navController.currentBackStackEntryAsState().value?.destination
+    val currentDestinationRoute = currentDestination?.route ?: ""
     val showBottomNav = NoBarsRoutes.showBottomBar(currentDestinationRoute)
     val showTopBar = NoBarsRoutes.showTopBar(currentDestinationRoute)
 
@@ -94,7 +96,7 @@ fun RootContainer(
             },
             bottomBar = {
                 if (showBottomNav) {
-                    BottomNavComponent(navController)
+                    BottomNavComponent(navController, currentDestination)
                 }
             },
             content = { innerPadding ->
@@ -106,7 +108,8 @@ fun RootContainer(
 
 @Composable
 private fun BottomNavComponent(
-    navController: NavHostController
+    navController: NavHostController,
+    currentDestination: NavDestination?
 ) {
     val topLevelRoutes = listOf(
         TopLevelRoute(
@@ -146,8 +149,6 @@ private fun BottomNavComponent(
             .padding(top = VolleyDimens.DIMEN_10.dp)
             .clip(shape)
     ) {
-        val navBackStackEntry = navController.currentBackStackEntryAsState().value
-        val currentDestination = navBackStackEntry?.destination
         topLevelRoutes.forEach { topRoute ->
             val itemIsSelected = currentDestination?.hierarchy?.any { it.hasRoute(topRoute.route::class) } == true
             val labelStyle = if (itemIsSelected) BodyTinyBottomNavGradient else BodyTinyBottomNavWhite
