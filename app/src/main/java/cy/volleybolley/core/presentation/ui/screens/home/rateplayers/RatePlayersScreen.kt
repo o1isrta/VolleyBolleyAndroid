@@ -221,7 +221,7 @@ private fun RatePlayersPreview() {
                     )
                 )
             )
-            Box(modifier = Modifier.padding(top = VolleyDimens.DIMEN_116.dp)){
+            Box(modifier = Modifier.padding(top = VolleyDimens.DIMEN_116.dp)) {
                 RatePlayersScreen(
                     state = state,
                     effect = null,
