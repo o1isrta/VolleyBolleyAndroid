@@ -8,7 +8,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 import cy.volleybolley.core.presentation.ui.navigation.OnboardingRoute
 import kotlinx.coroutines.delay
 
@@ -26,8 +25,6 @@ fun LaunchScreen(navController: NavHostController) {
     // Через 3 сек переход дальше и удаление Launch из backstack
     LaunchedEffect(Unit) {
         delay(LAUNCH_DELAY_MILLIS)
-        navController.navigate(OnboardingRoute) {
-            popUpTo(LaunchRoute) { inclusive = true }
-        }
+        navController.navigate(OnboardingRoute)
     }
 }
