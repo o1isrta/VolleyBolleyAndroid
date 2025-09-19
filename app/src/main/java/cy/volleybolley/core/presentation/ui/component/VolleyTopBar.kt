@@ -2,7 +2,6 @@ package cy.volleybolley.core.presentation.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -62,7 +61,7 @@ object VolleyTopBar {
             shape = shape,
             shadowElevation = VolleyDimens.DIMEN_4.dp
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box {
                 // Name
                 if (!firstName.isNullOrEmpty()) {
                     VolleyText.TitleMedium(

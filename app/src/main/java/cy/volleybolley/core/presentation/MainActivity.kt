@@ -8,10 +8,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -21,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -139,25 +142,33 @@ private fun BottomNavComponent(
             topEnd = VolleyDimens.DIMEN_36.dp
         )
     }
-
-    BottomNavigation(
-        backgroundColor = VolleyColor.TurquoiseBottom,
+    BottomAppBar(
+        containerColor = VolleyColor.TurquoiseBottom,
         modifier = Modifier
             .background(
                 color = VolleyColor.TurquoiseBottom,
                 shape = shape
             )
-            .padding(bottom = VolleyDimens.DIMEN_40.dp)
+            .height(VolleyDimens.DIMEN_81.dp)
+            .padding(top = VolleyDimens.DIMEN_10.dp)
             .clip(shape)
     ) {
         val navBackStackEntry = navController.currentBackStackEntryAsState().value
         val currentDestination = navBackStackEntry?.destination
-
         topLevelRoutes.forEach { topRoute ->
             val itemIsSelected = currentDestination?.hierarchy?.any { it.hasRoute(topRoute.route::class) } == true
             val labelStyle = if (itemIsSelected) BodyTinyBottomNavGradient else BodyTinyBottomNavWhite
-
-            BottomNavigationItem(
+            NavigationBarItem(
+                selected = itemIsSelected,
+                onClick = {
+                    navController.navigate(topRoute.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
                 icon = {
                     Image(
                         painter = if (itemIsSelected) topRoute.iconSelected else topRoute.icon,
@@ -172,16 +183,7 @@ private fun BottomNavComponent(
                         style = labelStyle
                     )
                 },
-                selected = itemIsSelected,
-                onClick = {
-                    navController.navigate(topRoute.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
+                colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
             )
         }
     }
