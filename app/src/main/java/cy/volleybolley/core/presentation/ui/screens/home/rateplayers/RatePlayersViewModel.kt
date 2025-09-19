@@ -66,17 +66,17 @@ class RatePlayersViewModel(
     }
 
     private fun confirmRating() {
+        val ratingPlayers = uiStateMutable.value.players.map { player ->
+            RatePlayer(
+                playerId = player.playerId,
+                levelChanged = player.rating
+            )
+        }
         launchSafe(
             getErrorLogMessage = { throwable ->
                 "$tag confirmRating ${throwable.message}"
             }
         ) {
-            val ratingPlayers = uiStateMutable.value.players.map { player ->
-                RatePlayer(
-                    playerId = player.playerId,
-                    levelChanged = player.rating
-                )
-            }
             /*
             TODO(поменять скоуп в репозитории на AppScope!!!)
             ratePlayersUseCase.ratePlayers(ratingPlayers)
