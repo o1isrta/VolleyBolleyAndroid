@@ -6,4 +6,3 @@ sealed class SignUpEffect : UiEffect {
     object NavigateToRegistrationByPhone : SignUpEffect()
     object NavigateToRegistration : SignUpEffect()
 }
-

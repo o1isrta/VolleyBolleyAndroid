@@ -7,4 +7,3 @@ sealed class SignUpEvent : UiEvent {
     object ContinueWithGoogleClicked : SignUpEvent()
     object ContinueWithFacebookClicked : SignUpEvent()
 }
-

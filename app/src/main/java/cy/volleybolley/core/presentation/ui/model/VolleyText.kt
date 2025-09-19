@@ -8,7 +8,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 
+@UiLibraryMarker
 object VolleyText {
 
     @Stable

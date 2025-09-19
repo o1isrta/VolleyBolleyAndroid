@@ -43,6 +43,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.AboutLevelsRoute
 import cy.volleybolley.core.presentation.ui.navigation.HomeRoute
+import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 
 @Suppress("detekt.CognitiveComplexMethod")
 @Composable
@@ -55,7 +56,11 @@ fun RegistrationScreen(
         vm.uiEffect.collect { effect ->
             when (effect) {
                 is RegistrationEffect.NavigateToAboutLevels -> navController.navigate(AboutLevelsRoute)
-                is RegistrationEffect.NavigateToHome -> navController.navigate(HomeRoute)
+                is RegistrationEffect.NavigateToHome -> {
+                    navController.navigate(HomeRoute) {
+                        popUpTo(LaunchRoute) { inclusive = false }
+                    }
+                }
                 else -> {}
             }
         }

@@ -5,4 +5,3 @@ import cy.volleybolley.core.presentation.base.UiEffect
 sealed class OnboardingEffect : UiEffect {
     object NavigateToSignUp : OnboardingEffect()
 }
-

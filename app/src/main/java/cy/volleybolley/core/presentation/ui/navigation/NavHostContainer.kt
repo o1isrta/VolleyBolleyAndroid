@@ -6,10 +6,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.aboutlevels.AboutLevelsScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.registration.RegistrationScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.signup.SignUpScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen

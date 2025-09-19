@@ -5,4 +5,3 @@ import cy.volleybolley.core.presentation.base.UiEvent
 sealed class LaunchEvent : UiEvent {
     object Start : LaunchEvent()
 }
-

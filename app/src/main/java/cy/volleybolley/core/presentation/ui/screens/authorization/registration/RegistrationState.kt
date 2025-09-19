@@ -11,4 +11,3 @@ data class RegistrationState(
     val country: String = "",
     val city: String = ""
 ) : UiState
-
