@@ -87,10 +87,10 @@ fun SignUpScreen(
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
                 .background(
-                    color = VolleyColor.TurquoiseDark,
+                    color = VolleyColor.TurquoiseBottom,
                     shape = RoundedCornerShape(
-                        topStart = VolleyDimens.DIMEN_24.dp,
-                        topEnd = VolleyDimens.DIMEN_24.dp
+                        topStart = VolleyDimens.DIMEN_32.dp,
+                        topEnd = VolleyDimens.DIMEN_32.dp
                     )
                 )
                 .padding(
@@ -133,9 +133,8 @@ fun SignUpScreen(
                 Image(
                     painter = painterResource(id = R.drawable.ic_google_placeholder),
                     contentDescription = null,
-                    modifier = Modifier
+                    Modifier.padding(end = VolleyDimens.DIMEN_12.dp)
                         .size(VolleyDimens.DIMEN_24.dp)
-                        .padding(end = VolleyDimens.DIMEN_12.dp)
                 )
                 VolleyText.BodyBoldMedium(
                     text = stringResource(id = R.string.continue_with_google),
@@ -160,9 +159,9 @@ fun SignUpScreen(
                 Image(
                     painter = painterResource(id = R.drawable.ic_facebook_placeholder),
                     contentDescription = null,
-                    modifier = Modifier
+                    Modifier.padding(end = VolleyDimens.DIMEN_12.dp)
                         .size(VolleyDimens.DIMEN_24.dp)
-                        .padding(end = VolleyDimens.DIMEN_12.dp)
+
                 )
                 VolleyText.BodyBoldMedium(
                     text = stringResource(id = R.string.continue_with_facebook),

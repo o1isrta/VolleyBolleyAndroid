@@ -101,7 +101,7 @@
     <string name="welcome">Welcome!</string>
     <string name="app_description">This app helps you find beach volleyball games and match with players at your skill level.</string>
     <string name="get_started">GET STARTED</string>
-    <string name="sign_up">Sign up with\n a social media</string>
+    <string name="sign_up">Sign up with\na social media</string>
     <string name="continue_with_phone_number">Continue with phone number</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="continue_with_facebook">Continue with Facebook</string>

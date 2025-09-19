@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -81,6 +82,7 @@ fun RegistrationScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .fillMaxHeight()
                     .verticalScroll(scrollState)
                     .padding(VolleyDimens.DIMEN_20.dp),
                 horizontalAlignment = Alignment.Start
@@ -194,7 +196,7 @@ fun RegistrationScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.ic_minus),
+                            painter = painterResource(id = R.drawable.ic_info_placeholder),
                             contentDescription = null,
                             modifier = Modifier.size(VolleyDimens.DIMEN_20.dp)
                         )
