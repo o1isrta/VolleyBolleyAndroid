@@ -78,7 +78,9 @@ class RatePlayersViewModel(
             }
         ) {
             /*
-            TODO(поменять скоуп в репозитории на AppScope!!!)
+            поменять скоуп в репозитории на AppScope,
+            так как экран может закрыться раньше чем отправятся данные!!!
+
             ratePlayersUseCase.ratePlayers(ratingPlayers)
              */
             sendUiEffect(RatePlayersEffect.CloseScreen)
