@@ -63,20 +63,16 @@ private fun RatePlayersScreen(
     navigateAction: () -> Unit,
     eventCallback: (RatePlayersEvent) -> Unit,
 ) {
-    LaunchedEffect(Unit) {
+    LaunchedEffect(effect) {
         when (effect) {
-            RatePlayersEffect.CloseScreen -> navigateAction
+            RatePlayersEffect.CloseScreen -> navigateAction()
             null -> Unit
         }
     }
 
     Box(Modifier.fillMaxSize()) {
         TransparentContainer(
-            modifier = Modifier.padding(
-                start = VolleyDimens.DIMEN_8.dp,
-                end = VolleyDimens.DIMEN_8.dp,
-                top = VolleyDimens.DIMEN_116.dp
-            ),
+            modifier = Modifier.padding(VolleyDimens.DIMEN_8.dp),
             cornerRadius = VolleyDimens.DIMEN_16,
         ) {
             if (state.isLoading) {
@@ -88,20 +84,21 @@ private fun RatePlayersScreen(
                 }
             } else {
                 Column(
-                    modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp)
+                    modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp),
                 ) {
                     Header()
                     LazyColumn(
-                        modifier = Modifier,
+                        modifier = Modifier.padding(top = VolleyDimens.DIMEN_20.dp),
+                        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp),
                     ) {
                         itemsIndexed(state.players) { index, player ->
                             PlayerBox(
                                 player = player,
-                                onSelected = {
+                                onSelected = { position ->
                                     eventCallback(
                                         RatePlayersEvent.RatePlayer(
                                             player.playerId,
-                                            RatingType.entries[it - 1]
+                                            RatingType.entries[position - 1]
                                         )
                                     )
                                 }
@@ -144,9 +141,7 @@ private fun PlayerBox(
     onSelected: (Int) -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_12.dp)
-
     ) {
         PlayerInfo(player = player)
         GroupButtonsForChangeLevel(
@@ -163,10 +158,10 @@ private fun PlayerInfo(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        CircularAvatar(avatar = player.avatar, size = 32.dp)
+        CircularAvatar(avatar = player.avatar, size = VolleyDimens.DIMEN_32.dp)
         VolleyText.BodyRegular(text = player.name, color = VolleyColor.White)
         Spacer(Modifier.weight(1f))
         LevelPill(level = player.level.level.firstOrNull()?.toString() ?: "")

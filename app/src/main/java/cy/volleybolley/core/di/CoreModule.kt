@@ -1,7 +1,6 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
-import cy.volleybolley.core.presentation.App
 import cy.volleybolley.core.presentation.ui.screens.home.rateplayers.RatePlayersViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -12,9 +11,7 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -51,13 +48,10 @@ val coreModule = module {
         }
     }
 
-    single<CoroutineScope> { (androidContext() as App).applicationScope }
-
     viewModel { (eventId: Int, eventType: String) ->
         RatePlayersViewModel(
             eventId = eventId,
             eventType = eventType,
-            appScope = get()
         )
     }
 }

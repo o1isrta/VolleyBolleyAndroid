@@ -1,16 +1,11 @@
 package cy.volleybolley.core.presentation.ui.screens.home.rateplayers
 
-import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class RatePlayersViewModel(
     private val eventId: Int,
     private val eventType: String,
-    private val appScope: CoroutineScope,
 ) : BaseViewModel<RatePlayersState, RatePlayersEvent, RatePlayersEffect>(
     initialState = RatePlayersState()
 ) {
@@ -18,7 +13,11 @@ class RatePlayersViewModel(
     override val tag: String = TAG
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        launchSafe(
+            getErrorLogMessage = { throwable ->
+                "$tag init ${throwable.message}"
+            }
+        ) {
             /*
             getPlayersToRateUseCase.get(id, type)
             Получение и маппинг в ui модель, чтобы сразу ставить RatingType
@@ -67,7 +66,11 @@ class RatePlayersViewModel(
     }
 
     private fun confirmRating() {
-        appScope.launch(Dispatchers.IO) {
+        launchSafe(
+            getErrorLogMessage = { throwable ->
+                "$tag confirmRating ${throwable.message}"
+            }
+        ) {
             val ratingPlayers = uiStateMutable.value.players.map { player ->
                 RatePlayer(
                     playerId = player.playerId,
@@ -75,6 +78,7 @@ class RatePlayersViewModel(
                 )
             }
             /*
+            TODO(поменять скоуп в репозитории на AppScope!!!)
             ratePlayersUseCase.ratePlayers(ratingPlayers)
              */
             sendUiEffect(RatePlayersEffect.CloseScreen)
