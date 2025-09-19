@@ -221,12 +221,14 @@ private fun RatePlayersPreview() {
                     )
                 )
             )
-            RatePlayersScreen(
-                state = state,
-                effect = null,
-                navigateAction = {},
-                eventCallback = {}
-            )
+            Box(modifier = Modifier.padding(top = VolleyDimens.DIMEN_116.dp)){
+                RatePlayersScreen(
+                    state = state,
+                    effect = null,
+                    navigateAction = {},
+                    eventCallback = {}
+                )
+            }
         }
     }
 }
