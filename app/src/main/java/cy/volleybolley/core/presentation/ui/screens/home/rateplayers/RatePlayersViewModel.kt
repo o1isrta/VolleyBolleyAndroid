@@ -10,7 +10,7 @@ class RatePlayersViewModel(
     initialState = RatePlayersState()
 ) {
 
-    override val tag: String = TAG
+    override val tag: String = RatePlayersViewModel::class.simpleName ?: ""
 
     init {
         launchSafe(
@@ -99,9 +99,5 @@ class RatePlayersViewModel(
                 }
             )
         }
-    }
-
-    companion object {
-        val TAG = RatePlayersViewModel::class.simpleName ?: "RatePlayersViewModel"
     }
 }
