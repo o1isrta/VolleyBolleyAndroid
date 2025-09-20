@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -42,7 +43,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.ui.theme.VolleybolleyTheme
-
 @Composable
 fun ChangeTeamScreen(
     navController: NavHostController,
@@ -62,14 +62,14 @@ fun ChangeTeamScreen(
 
         GlassCard(
             modifier = Modifier.padding(horizontal = VolleyDimens.DIMEN_8.dp),
-            minHeight = 380.dp
+            minHeight = VolleyDimens.DIMEN_380.dp
         ) {
             CardHeader(
-                title = "Teams",
+                title = stringResource(R.string.teams_title),
                 onBack = { navController.popBackStack() }
             )
 
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)) {
                 state.teams.forEachIndexed { index, team ->
                     TeamBlock(
                         team = team,
@@ -83,21 +83,21 @@ fun ChangeTeamScreen(
             }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
         ActiveButton(
-            text = "CHOOSE TEAM",
+            text = stringResource(R.string.choose_team_cta),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = VolleyDimens.DIMEN_8.dp)
-                .height(44.dp),
+                .height(VolleyDimens.DIMEN_44.dp),
             onClick = {
                 viewModel.obtainEvent(ChangeTeamAction.ConfirmSelection)
                 navController.popBackStack()
             }
         )
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
     }
 }
 
@@ -109,14 +109,14 @@ private fun TeamBlock(
     onRemoveMember: (memberIndex: Int) -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            VolleyText.TitleMedium(team.name, color = VolleyColor.White)
+            VolleyText.TitleMedium(stringResource(team.nameRes), color = VolleyColor.White)
             Spacer(Modifier.weight(1f))
             SelectDot(
                 selected = isSelected,
@@ -145,10 +145,10 @@ private fun PlayerRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 23.dp)
+            .heightIn(min = VolleyDimens.DIMEN_23.dp)
     ) {
         VolleyText.BodyRegular(
-            text = member.name ?: "Free spot",
+            text = member.name ?: stringResource(R.string.free_spot),
             color = VolleyColor.White,
             modifier = Modifier.weight(1f)
         )
@@ -156,17 +156,17 @@ private fun PlayerRow(
         if (showActions) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
             ) {
                 IconButton(
                     onClick = onRemove,
-                    modifier = Modifier.size(21.dp)
+                    modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_remove),
                         contentDescription = null,
                         tint = Color.Unspecified,
-                        modifier = Modifier.size(21.dp)
+                        modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
                     )
                 }
                 member.level?.let { LevelBadge(it) }
@@ -180,7 +180,7 @@ private fun SelectDot(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    val size = 21.dp
+    val size = VolleyDimens.DIMEN_21.dp
     Box(
         modifier = Modifier
             .size(size)
@@ -189,11 +189,7 @@ private fun SelectDot(
     ) {
         Icon(
             painter = painterResource(
-                if (selected) {
-                    R.drawable.ic_selected_dot
-                } else {
-                    R.drawable.ic_unselected_dot
-                }
+                if (selected) R.drawable.ic_selected_dot else R.drawable.ic_unselected_dot
             ),
             contentDescription = null,
             tint = Color.Unspecified,
@@ -215,7 +211,7 @@ private fun CardHeader(
         Box(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .size(24.dp)
+                .size(VolleyDimens.DIMEN_24.dp)
                 .clickable(onClick = onBack),
             contentAlignment = Alignment.CenterStart
         ) {
@@ -223,7 +219,10 @@ private fun CardHeader(
                 painter = painterResource(R.drawable.ic_back_icon_white),
                 contentDescription = null,
                 tint = VolleyColor.White,
-                modifier = Modifier.size(width = 18.dp, height = 24.dp)
+                modifier = Modifier.size(
+                    width = VolleyDimens.DIMEN_18.dp,
+                    height = VolleyDimens.DIMEN_24.dp
+                )
             )
         }
 
@@ -238,10 +237,10 @@ private fun CardHeader(
 @Composable
 private fun GlassCard(
     modifier: Modifier = Modifier,
-    minHeight: Dp = 380.dp,
+    minHeight: Dp = VolleyDimens.DIMEN_380.dp,
     cornerRadiusDp: Int = VolleyDimens.DIMEN_32,
     innerPadding: Dp = VolleyDimens.DIMEN_20.dp,
-    gap: Dp = 16.dp,
+    gap: Dp = VolleyDimens.DIMEN_16.dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
@@ -272,20 +271,21 @@ private fun LevelBadge(level: String, modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(VolleyDimens.DIMEN_10.dp))
             .background(VolleyColor.GreyDark)
-            .padding(start = 10.dp, end = 10.dp, top = 2.dp, bottom = 2.dp)
-            .height(23.dp)
+            .padding(
+                start = VolleyDimens.DIMEN_10.dp,
+                end = VolleyDimens.DIMEN_10.dp,
+                top = VolleyDimens.DIMEN_2.dp,
+                bottom = VolleyDimens.DIMEN_2.dp
+            )
+            .height(VolleyDimens.DIMEN_23.dp)
     ) {
         VolleyText.BodyRegular(level, color = VolleyColor.White)
     }
 }
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
-    name = "ChangeTeamScreen Preview"
-)
+@Preview(showBackground = true, showSystemUi = true, name = "ChangeTeamScreen Preview")
 @Composable
 private fun ChangeTeamScreenPreview() {
     VolleybolleyTheme {

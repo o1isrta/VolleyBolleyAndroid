@@ -233,6 +233,12 @@
     <string name="per_person_amount">Per person: %1$s %2$s</string>
     <string name="remove_player_cd">Remove player</string>
     <string name="open_with">Open with</string>
+    <string name="teams_title">Teams</string>
+    <string name="choose_team_cta">CHOOSE TEAM</string>
+    <string name="team_one">Team 1</string>
+    <string name="team_two">Team 2</string>
+    <string name="team_three">Team 3</string>
+    <string name="team_four">Team 4</string>
 
     <!-- Демоданные для превью (удалить позже) -->
     <string name="player_demo_1">Anton Ivanov</string>
