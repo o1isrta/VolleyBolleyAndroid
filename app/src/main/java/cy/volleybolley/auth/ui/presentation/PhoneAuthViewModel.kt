@@ -56,7 +56,7 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
             verificationId,
             onIdTokenReceived = { idToken ->
                 updateState { copy(isLoading = false, isAuthorized = true) }
-                idToken?.let { sendUiEffect(PhoneAuthEffect.NavigateToHome(it)) }
+                idToken?.let { sendUiEffect(PhoneAuthEffect.NavigateToProfileScreen(it)) }
             },
             onError = { e ->
                 updateState { copy(isLoading = false) }
@@ -82,7 +82,7 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
 
     fun onIdTokenReceived(token: String?) {
         updateState { copy(isLoading = false, isAuthorized = true) }
-        token?.let { sendUiEffect(PhoneAuthEffect.NavigateToHome(it)) }
+        token?.let { sendUiEffect(PhoneAuthEffect.NavigateToProfileScreen(it)) }
     }
 
     fun onError(e: Throwable) {

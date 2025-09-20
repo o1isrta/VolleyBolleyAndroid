@@ -63,7 +63,7 @@ fun RegistrationByPhoneScreen(
                     }
                 }
 
-                is PhoneAuthEffect.NavigateToHome -> onAuthorized(effect.idToken)
+                is PhoneAuthEffect.NavigateToProfileScreen -> onAuthorized(effect.idToken)
                 is PhoneAuthEffect.ShowError -> onError(effect.message)
                 else -> {}
             }

@@ -19,8 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cy.volleybolley.R
+import cy.volleybolley.auth.ui.AuthScreen
 import cy.volleybolley.auth.ui.presentation.PhoneAuthDelegate
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
@@ -36,12 +39,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             VolleybolleyTheme {
-                RegistrationByPhoneScreen(
+                /*RegistrationByPhoneScreen(
                     onAuthorized = { token -> Log.d("ТелефонТокен", token)},
                     onError = {},
                     phoneAuthUiDelegate = getKoin().get(),
                     activityProvider = { this@MainActivity}
-                )
+                )*/
+                AuthScreen(stringResource(R.string.default_web_client_id)) { token ->
+                    Log.d("ГуглТокен", token )
+                }
             }
         }
     }

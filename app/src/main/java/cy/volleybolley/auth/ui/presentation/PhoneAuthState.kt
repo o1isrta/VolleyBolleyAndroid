@@ -29,6 +29,6 @@ sealed interface PhoneAuthEffect : UiEffect {
         val resendToken: PhoneAuthProvider.ForceResendingToken? = null
     ) : PhoneAuthEffect
 
-    data class NavigateToHome(val idToken: String) : PhoneAuthEffect
+    data class NavigateToProfileScreen(val idToken: String) : PhoneAuthEffect
     data class ShowError(val message: String) : PhoneAuthEffect
 }
