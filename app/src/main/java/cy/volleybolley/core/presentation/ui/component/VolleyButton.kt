@@ -1026,7 +1026,7 @@ object VolleyButton {
     }
 
     /**
-     *
+     * Группа кнопок для приглашения игроков (и поделить ссылкой для приглашения)
      */
 
     @Composable
@@ -1036,9 +1036,7 @@ object VolleyButton {
     ) {
         Row(
             Modifier.padding(
-                start = VolleyDimens.DIMEN_8.dp,
-                end = VolleyDimens.DIMEN_8.dp,
-                top = VolleyDimens.DIMEN_8.dp
+                VolleyDimens.DIMEN_8.dp
             ),
             horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
         ) {
@@ -1463,7 +1461,7 @@ fun PreviewSliderButtonsPlayers() {
 fun PreviewInvitesButtons() {
     Box(
         modifier = Modifier
-            .size(375.dp, 200.dp)
+            .size(375.dp, 196.dp)
             .background(color = VolleyColor.TurquoiseDark)
     ) {
         GroupInvitesButtons(
