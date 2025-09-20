@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization
+package cy.volleybolley.auth.ui
 
 import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement

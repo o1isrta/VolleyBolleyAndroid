@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationByPhoneScreen
+import cy.volleybolley.auth.ui.RegistrationByPhoneScreen
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.compose.getKoin
 
