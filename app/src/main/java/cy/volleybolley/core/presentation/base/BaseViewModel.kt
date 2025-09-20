@@ -24,16 +24,12 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
      */
     abstract fun obtainEvent(event: Event)
 
-    private val _uiState = MutableStateFlow(initialState)
+    protected val _uiState = MutableStateFlow(initialState)
 
     /**
      * Выходная точка MVI для единого состояния всего экрана
      */
     val uiState: StateFlow<State> = _uiState.asStateFlow()
-
-    protected fun updateState(reducer: State.() -> State) {
-        _uiState.value = _uiState.value.reducer()
-    }
 
     private val _effect = Channel<Effect?>(Channel.BUFFERED)
 

@@ -6,6 +6,7 @@ import cy.volleybolley.auth.ui.PhoneAuthHelper
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
@@ -29,7 +30,7 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
             sendUiEffect(PhoneAuthEffect.ShowError("Введите номер телефона"))
             return
         }
-        updateState { copy(phoneNumber = phone, isLoading = true) }
+        _uiState.update { it.copy(phoneNumber = phone, isLoading = true) }
         sendUiEffect(PhoneAuthEffect.RequestPhoneVerification(phone))
     }
 
@@ -40,7 +41,7 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
             sendUiEffect(PhoneAuthEffect.ShowError("Невозможно повторно отправить код"))
             return
         }
-        updateState { copy(isLoading = true) }
+        _uiState.update { it.copy(isLoading = true) }
         sendUiEffect(PhoneAuthEffect.RequestPhoneVerification(phone, token))
     }
 
@@ -50,16 +51,16 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
             sendUiEffect(PhoneAuthEffect.ShowError("Сначала получите код"))
             return
         }
-        updateState { copy(isLoading = true, code = code) }
+        _uiState.update { it.copy(isLoading = true, code = code) }
         phoneAuthHelper.verifyCode(
             code,
             verificationId,
             onIdTokenReceived = { idToken ->
-                updateState { copy(isLoading = false, isAuthorized = true) }
+                _uiState.update { it.copy(isLoading = false, isAuthorized = true) }
                 idToken?.let { sendUiEffect(PhoneAuthEffect.NavigateToProfileScreen(it)) }
             },
             onError = { e ->
-                updateState { copy(isLoading = false) }
+                _uiState.update { it.copy(isLoading = false) }
                 sendUiEffect(PhoneAuthEffect.ShowError(e.message ?: "Ошибка"))
             }
         )
@@ -69,8 +70,8 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
         verificationId: String,
         token: PhoneAuthProvider.ForceResendingToken
     ) {
-        updateState {
-            copy(
+        _uiState.update {
+            it.copy(
                 verificationId = verificationId,
                 resendToken = token,
                 isLoading = false,
@@ -81,31 +82,31 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
     }
 
     fun onIdTokenReceived(token: String?) {
-        updateState { copy(isLoading = false, isAuthorized = true) }
+        _uiState.update { it.copy(isLoading = false, isAuthorized = true) }
         token?.let { sendUiEffect(PhoneAuthEffect.NavigateToProfileScreen(it)) }
     }
 
     fun onError(e: Throwable) {
-        updateState { copy(isLoading = false) }
+        _uiState.update { it.copy(isLoading = false) }
         sendUiEffect(PhoneAuthEffect.ShowError(e.message ?: "Ошибка"))
     }
 
     fun onPhoneChanged(phone: String) {
-        updateState { copy(phoneNumber = phone) }
+        _uiState.update { it.copy(phoneNumber = phone) }
     }
 
     fun onCodeChanged(code: String) {
-        updateState { copy(code = code) }
+        _uiState.update { it.copy(code = code) }
     }
 
     private fun startResendTimer() {
         resendJob?.cancel()
         resendJob = viewModelScope.launch {
             for (seconds in 30 downTo 1) {
-                updateState { copy(resendTimeout = seconds) }
+                _uiState.update { it.copy(resendTimeout = seconds) }
                 delay(1000L)
             }
-            updateState { copy(resendTimeout = 0) }
+            _uiState.update { it.copy(resendTimeout = 0) }
         }
     }
 }
