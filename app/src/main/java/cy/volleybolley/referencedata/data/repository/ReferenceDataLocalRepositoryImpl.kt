@@ -17,14 +17,14 @@ class ReferenceDataLocalRepositoryImpl(private val cacheDir: File, private val j
     }
 
     override suspend fun saveCountries(data: List<CountryLocalDto>): Boolean {
-        val jsonString = json.encodeToString(data)
         runCatching {
+            val jsonString = json.encodeToString(data)
             getFile(COUNTRIES_CACHE).writeText(jsonString)
         }.onFailure { exception ->
             if (BuildConfig.DEBUG) {
                 Log.e(ERROR_TAG, "Save $COUNTRIES_CACHE error", exception)
-                return false
             }
+            return false
         }
         return true
     }
@@ -52,8 +52,8 @@ class ReferenceDataLocalRepositoryImpl(private val cacheDir: File, private val j
         }.onFailure { exception ->
             if (BuildConfig.DEBUG) {
                 Log.e(ERROR_TAG, "Save $CURRENCIES_CACHE error", exception)
-                return false
             }
+            return false
         }
         return true
     }
@@ -81,8 +81,8 @@ class ReferenceDataLocalRepositoryImpl(private val cacheDir: File, private val j
         }.onFailure { exception ->
             if (BuildConfig.DEBUG) {
                 Log.e(ERROR_TAG, "Save $FAQ_CACHE error", exception)
-                return false
             }
+            return false
         }
         return true
     }
@@ -103,10 +103,10 @@ class ReferenceDataLocalRepositoryImpl(private val cacheDir: File, private val j
         }.getOrNull()
     }
 
-    companion object {
-        private const val COUNTRIES_CACHE = "countries_cache"
-        private const val CURRENCIES_CACHE = "currencies_cache"
-        private const val FAQ_CACHE = "faq_cache"
-        private const val ERROR_TAG = "ReferenceDataCaching"
+    private companion object {
+        const val COUNTRIES_CACHE = "countries_cache"
+        const val CURRENCIES_CACHE = "currencies_cache"
+        const val FAQ_CACHE = "faq_cache"
+        const val ERROR_TAG = "ReferenceDataCaching"
     }
 }

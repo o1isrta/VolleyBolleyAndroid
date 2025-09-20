@@ -27,10 +27,14 @@ class ReferenceDataRemoteRepositoryImpl(
                     (response.body as? ReferenceDataResponse.CountriesResponse)?.countries?.mapToDomain()
 
                 result?.let {
-                    localRepository.saveCountries(it.mapToLocalDto())
-                    VolleyResult.Success(
-                        localRepository.loadCountries()?.mapToDomain().orEmpty()
-                    )
+                    if (localRepository.saveCountries(it.mapToLocalDto())) {
+                        VolleyResult.Success(
+                            localRepository.loadCountries()?.mapToDomain().orEmpty()
+                        )
+                    } else {
+                        VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+                    }
+
                 } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
             }
 
