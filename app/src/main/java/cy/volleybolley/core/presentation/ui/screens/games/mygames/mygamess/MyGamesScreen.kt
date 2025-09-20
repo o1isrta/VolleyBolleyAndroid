@@ -134,7 +134,7 @@ fun MyGamesScreen(
                 contentPadding = PaddingValues(
                     start = VolleyDimens.DIMEN_8.dp,
                     end = VolleyDimens.DIMEN_8.dp,
-                    top = VolleyDimens.DIMEN_116.dp,
+                    top = VolleyDimens.DIMEN_8.dp,
                     bottom = 24.dp
                 ),
                 verticalArrangement = Arrangement.spacedBy(16.dp)

@@ -41,7 +41,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite
 import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
-import cy.volleybolley.core.presentation.ui.navigation.MyGamesTopLevelRoute
+import cy.volleybolley.core.presentation.ui.navigation.GameHomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
 import cy.volleybolley.core.presentation.ui.navigation.ProfileTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.model.NoBarsRoutes
@@ -120,7 +120,7 @@ private fun BottomNavComponent(
         ),
         TopLevelRoute(
             stringResource(R.string.my_games),
-            MyGamesTopLevelRoute,
+            GameHomeTopLevelRoute,
             painterResource(R.drawable.ic_players),
             painterResource(R.drawable.ic_players_gradient)
         ),

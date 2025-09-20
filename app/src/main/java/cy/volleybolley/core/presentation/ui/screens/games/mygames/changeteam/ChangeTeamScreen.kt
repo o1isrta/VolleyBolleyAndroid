@@ -58,7 +58,7 @@ fun ChangeTeamScreen(
             .verticalScroll(scroll)
             .clickable(indication = null, interactionSource = interaction) { }
     ) {
-        Spacer(Modifier.height(VolleyDimens.DIMEN_116.dp))
+        Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
         GlassCard(
             modifier = Modifier.padding(horizontal = VolleyDimens.DIMEN_8.dp),

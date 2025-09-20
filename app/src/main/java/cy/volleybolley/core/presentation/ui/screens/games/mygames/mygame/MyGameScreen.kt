@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,9 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -59,6 +55,7 @@ import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField.MessageBubble
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButtonMap
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupInvitesButtons
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.OutlinedActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
@@ -129,7 +126,7 @@ private fun MyGameContent(
                 focusManager.clearFocus()
             }
     ) {
-        Spacer(Modifier.height(VolleyDimens.DIMEN_116.dp))
+        Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
         GlassCard(
             modifier = Modifier.padding(horizontal = VolleyDimens.DIMEN_8.dp),
@@ -229,26 +226,13 @@ private fun MyGameContent(
 
         Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
-        Row(
+        GroupInvitesButtons(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(VolleyDimens.DIMEN_192.dp)
                 .padding(horizontal = VolleyDimens.DIMEN_8.dp),
-            horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
-        ) {
-            SquareIconTile(
-                iconRes = R.drawable.ic_invite_players,
-                background = VolleyColor.YellowPro,
-                onClick = onInvite,
-                modifier = Modifier.weight(1f)
-            )
-            SquareIconTile(
-                iconRes = R.drawable.ic_share_link,
-                background = VolleyColor.White.copy(alpha = 0.10f),
-                onClick = onShare,
-                modifier = Modifier.weight(1f)
-            )
-        }
+            onInvitePlayersClick = onInvite,
+            onShareLinkClick = onShare
+        )
 
         Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
@@ -282,30 +266,6 @@ private fun formatDateTimeRange(
     val startTime = timeFmt.format(startDate ?: "").lowercase(locale)
     val endTime = timeFmt.format(endDate ?: "").lowercase(locale)
     return date to "$startTime–$endTime"
-}
-
-@Composable
-private fun SquareIconTile(
-    iconRes: Int,
-    background: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .fillMaxHeight()
-            .clip(RoundedCornerShape(VolleyDimens.DIMEN_32.dp))
-            .background(background)
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(iconRes),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-    }
 }
 
 @Composable

@@ -106,10 +106,11 @@ fun NavHostContainer(
             composable<JoinTeamRoute> { JoinTeamScreen(navController) }
         }
 
-        // My games nested graph
-        navigation<MyGamesTopLevelRoute>(startDestination = MyGamesRoute) {
-            composable<MyGamesRoute> {
-                MyGamesScreen(
+
+        // Game Home nested graph
+        navigation<GameHomeTopLevelRoute>(startDestination = GameHomeRoute) {
+            composable<GameHomeRoute> {
+                GameHomeScreen(
                     navController = navController,
                     finisher = activityFinisher,
                 )
@@ -127,7 +128,7 @@ fun NavHostContainer(
 
             // my games
             composable<ChangeTeamRoute> { ChangeTeamScreen(navController) }
-            composable<GameHomeRoute> { GameHomeScreen(navController) }
+            composable<MyGamesRoute> { MyGamesScreen(navController) }
             composable<ManagePlayersRoute> { ManagePlayersScreen(navController) }
             composable<MyGameRoute> { MyGameScreen(navController) }
             composable<MyTourneyRoute> { MyTourneyScreen(navController) }

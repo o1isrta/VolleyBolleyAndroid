@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.gamehome
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +43,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun GameHomeScreen(
     navController: NavHostController,
+    finisher: () -> Unit = {},
     viewModel: GameHomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -96,6 +98,7 @@ fun GameHomeScreen(
             )
         }
     }
+    BackHandler { finisher() }
 }
 
 @Composable
@@ -112,7 +115,7 @@ private fun GlassCard(
             .padding(
                 start = VolleyDimens.DIMEN_8.dp,
                 end = VolleyDimens.DIMEN_8.dp,
-                top = VolleyDimens.DIMEN_116.dp
+                top = VolleyDimens.DIMEN_8.dp
             ),
         cornerRadius = cornerRadiusDp,
         mainContainerAlignment = Alignment.TopStart,

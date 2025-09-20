@@ -10,7 +10,7 @@ sealed interface NavMap
 object HomeTopLevelRoute : NavMap
 
 @Serializable
-object MyGamesTopLevelRoute : NavMap
+object GameHomeTopLevelRoute : NavMap
 
 @Serializable
 object ProfileTopLevelRoute : NavMap
