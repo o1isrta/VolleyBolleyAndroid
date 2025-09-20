@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cy.volleybolley.core.presentation.ui.navigation.AboutLevelsRoute
 import cy.volleybolley.core.presentation.ui.navigation.HomeRoute
+import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 
 @Composable
 fun RegistrationScreen(navController: NavHostController) {
@@ -30,7 +31,9 @@ fun RegistrationScreen(navController: NavHostController) {
             Text("Go to About Levels Screen")
         }
         Button(onClick = {
-            navController.navigate(HomeRoute)
+            navController.navigate(HomeRoute) {
+                popUpTo(LaunchRoute) { inclusive = false }
+            }
         }) {
             Text("Go to Home Screen")
         }
