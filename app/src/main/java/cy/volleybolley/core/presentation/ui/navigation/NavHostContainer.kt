@@ -106,7 +106,6 @@ fun NavHostContainer(
             composable<JoinTeamRoute> { JoinTeamScreen(navController) }
         }
 
-
         // Game Home nested graph
         navigation<GameHomeTopLevelRoute>(startDestination = GameHomeRoute) {
             composable<GameHomeRoute> {
