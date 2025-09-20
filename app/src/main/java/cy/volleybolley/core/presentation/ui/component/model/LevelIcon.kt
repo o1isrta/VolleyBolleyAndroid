@@ -9,14 +9,14 @@ enum class LevelIcon(val resId: Int) {
     PRO(R.drawable.ic_level_pro);
 
     companion object {
-        // Функция по умолчанию для определения иконки по строке levelName
+        @JvmStatic
         fun fromLevelName(levelName: String): LevelIcon {
-            val name = levelName.orEmpty()
+            val name = levelName
             return when {
-                name.contains("light", ignoreCase = true) -> LIGHT
-                name.contains("medium", ignoreCase = true) -> MEDIUM
-                name.contains("hard", ignoreCase = true) -> HARD
-                name.contains("pro", ignoreCase = true) -> PRO
+                name.contains("LIGHT", ignoreCase = true) -> LIGHT
+                name.contains("MEDIUM", ignoreCase = true) -> MEDIUM
+                name.contains("HARD", ignoreCase = true) -> HARD
+                name.contains("PRO", ignoreCase = true) -> PRO
                 else -> LIGHT
             }
         }
