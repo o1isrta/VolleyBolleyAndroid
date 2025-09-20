@@ -30,8 +30,8 @@ object VolleyDimens {
     const val DIMEN_46: Int = 46
     const val DIMEN_48: Int = 48
     const val DIMEN_52: Int = 52
-    const val DIMEN_65: Int = 65
     const val DIMEN_63: Int = 63
+    const val DIMEN_65: Int = 65
     const val DIMEN_71: Int = 71
     const val DIMEN_81: Int = 81
     const val DIMEN_90: Int = 90
@@ -41,6 +41,9 @@ object VolleyDimens {
     const val DIMEN_122: Int = 122
     const val DIMEN_159: Int = 159
     const val DIMEN_160: Int = 160
+    const val DIMEN_180: Int = 180
     const val DIMEN_192: Int = 192
     const val DIMEN_380: Int = 380
+
+    const val ROTATION_8: Float = -8f
 }
