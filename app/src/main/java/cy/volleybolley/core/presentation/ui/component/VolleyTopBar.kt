@@ -2,7 +2,6 @@ package cy.volleybolley.core.presentation.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -28,14 +27,15 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBar
 import cy.volleybolley.core.presentation.ui.component.model.LevelIcon
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 
 object VolleyTopBar {
-    private val TopBarHeight = 106.dp
-    private val CornerRadius = 32.dp
+    private val TopBarHeight = VolleyDimens.DIMEN_106.dp
+    private val CornerRadius = VolleyDimens.DIMEN_32.dp
     private val BackgroundColor = VolleyColor.Turquoise
-    private val Diameter = 46.dp
-    private val MarginIcon = 8.dp
+    private val Diameter = VolleyDimens.DIMEN_46.dp
+    private val MarginIcon = VolleyDimens.DIMEN_8.dp
 
     @Composable
     @Stable
@@ -59,19 +59,19 @@ object VolleyTopBar {
                 .height(TopBarHeight),
             color = BackgroundColor,
             shape = shape,
-            shadowElevation = 4.dp
+            shadowElevation = VolleyDimens.DIMEN_4.dp
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                // Имя
+            Box {
+                // Name
                 if (!firstName.isNullOrEmpty()) {
                     VolleyText.TitleMedium(
                         text = firstName,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                start = 71.dp,
-                                end = 71.dp,
-                                top = 63.dp
+                                start = VolleyDimens.DIMEN_71.dp,
+                                end = VolleyDimens.DIMEN_71.dp,
+                                top = VolleyDimens.DIMEN_63.dp
                             ),
                         color = VolleyColor.White,
                         textAlign = TextAlign.Left,
@@ -79,7 +79,7 @@ object VolleyTopBar {
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                // Аватарка
+                // Avatar
                 Box(
                     modifier = Modifier
                         .size(Diameter)
@@ -92,7 +92,7 @@ object VolleyTopBar {
                     )
                 }
 
-                // Иконка уровня игрока
+                // Level icon
                 Image(
                     painter = painterResource(id = levelIcon.resId),
                     contentDescription = stringResource(id = R.string.top_bar_level_content_description),
