@@ -1447,7 +1447,7 @@ fun PreviewSliderButtonsMap() {
 fun PreviewSliderButtonsPlayers() {
     PreviewContainer(
         modifier = Modifier
-            .size(360.dp, 190.dp)
+            .width(350.dp)
     ) {
         SliderButtonsPlayers(
             modifier = Modifier,
