@@ -25,19 +25,23 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
+import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ACTIVE_BUTTON_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ADD_PAYMENT_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.GRADIENT_BUTTON_TEXT
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupInvitesButtons
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_FALSE_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.LEVEL_UP_TEXT
@@ -48,6 +52,8 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtons
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtonsPlayers
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.model.VolleyDimens
+import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonSText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonXSText
@@ -1018,6 +1024,104 @@ object VolleyButton {
             }
         }
     }
+
+    /**
+     * Группа кнопок для приглашения игроков (и поделить ссылкой для приглашения)
+     */
+
+    @Composable
+    fun GroupInvitesButtons(
+        modifier: Modifier = Modifier,
+        onInvitePlayersClick: () -> Unit,
+        onShareLinkClick: () -> Unit
+    ) {
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+        ) {
+            InvitePlayersButton(
+                modifier = Modifier.weight(1f),
+                onClick = onInvitePlayersClick
+            )
+            ShareButton(
+                modifier = Modifier.weight(1f),
+                onClick = onShareLinkClick
+            )
+        }
+    }
+
+    @Composable
+    private fun InvitePlayersButton(
+        modifier: Modifier,
+        onClick: () -> Unit
+    ) {
+        Button(
+            modifier = modifier.height(VolleyDimens.DIMEN_180.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = VolleyColor.YellowPro,
+            ),
+            contentPadding = PaddingValues(
+                top = VolleyDimens.DIMEN_20.dp,
+                start = VolleyDimens.DIMEN_20.dp
+            ),
+            shape = RoundedCornerShape(VolleyDimens.DIMEN_32.dp),
+            onClick = onClick
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Image(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd),
+                    painter = painterResource(R.drawable.image_invite_players),
+                    contentDescription = null
+                )
+                VolleyText.TitleLarge(
+                    modifier = Modifier.rotate(VolleyDimens.ROTATION_8),
+                    text = stringResource(R.string.invite_players),
+                    color = VolleyColor.TextDark
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun ShareButton(
+        modifier: Modifier,
+        onClick: () -> Unit
+    ) {
+        TransparentContainer(
+            modifier = modifier.height(VolleyDimens.DIMEN_180.dp),
+        ) {
+            Button(
+                modifier = Modifier.fillMaxSize(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                ),
+                contentPadding = PaddingValues(
+                    top = VolleyDimens.DIMEN_20.dp,
+                    start = VolleyDimens.DIMEN_20.dp
+                ),
+                shape = RoundedCornerShape(VolleyDimens.DIMEN_32.dp),
+                onClick = onClick
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    Image(
+                        modifier = Modifier.align(Alignment.Center),
+                        painter = painterResource(R.drawable.image_share_link),
+                        contentDescription = null
+                    )
+                    VolleyText.TitleLarge(
+                        modifier = Modifier.rotate(VolleyDimens.ROTATION_8),
+                        text = stringResource(R.string.share_link),
+                        color = VolleyColor.White
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -1346,6 +1450,21 @@ fun PreviewSliderButtonsPlayers() {
         SliderButtonsPlayers(
             modifier = Modifier,
             onClick = {}
+        )
+    }
+}
+
+@Preview()
+@Composable
+fun PreviewInvitesButtons() {
+    Box(
+        modifier = Modifier
+            .size(375.dp, 196.dp)
+            .background(color = VolleyColor.TurquoiseDark)
+    ) {
+        GroupInvitesButtons(
+            onInvitePlayersClick = {},
+            onShareLinkClick = {}
         )
     }
 }
