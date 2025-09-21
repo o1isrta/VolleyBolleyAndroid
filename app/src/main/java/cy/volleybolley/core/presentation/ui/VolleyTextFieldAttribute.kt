@@ -760,7 +760,7 @@ private fun PreviewGradientTextFields() {
             VolleyTextFieldAttribute.PaymentField(
                 inputPayment = 6.0,
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp)
+                       .padding(VolleyDimens.DIMEN_16.dp)
             )
 
             VolleyTextFieldAttribute.MyTextField(modifier = Modifier.padding(16.dp))
