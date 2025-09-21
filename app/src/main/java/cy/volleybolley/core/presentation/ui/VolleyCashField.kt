@@ -47,12 +47,14 @@ object VolleyCashField {
             cornerRadius = VolleyDimens.DIMEN_16,
             modifier = Modifier
                 .padding(paddingValues)
+               // .height(30.dp)
+               // .width(75.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_28.dp, VolleyDimens.DIMEN_6.dp)
+                     .padding(VolleyDimens.DIMEN_28.dp, VolleyDimens.DIMEN_6.dp)
             ) {
                 BasicTextField(
                     value = correctValue,
@@ -98,6 +100,20 @@ object VolleyCashField {
                 accumulator + stepValue
             }
         }
+      /*  val maxWidth = 90 // Максимальная ширина (в VolleyDimens единицах)
+
+        if (value.isEmpty()) {
+            return VolleyDimens.DIMEN_9.coerceAtMost(maxWidth) // Ensure the minimal value does not exceed maxWidth
+        }
+
+        val calculatedWidth = value.chunked(1).map { symbol ->
+            if (symbol.isDigitsOnly()) symbol.toInt() else 1
+        }.sumOf { digit -> // Use sumOf directly for cleaner accumulation
+            if (digit == 1) VolleyDimens.DIMEN_6 else VolleyDimens.DIMEN_10
+        }
+
+        return calculatedWidth.coerceAtMost(maxWidth) // Limit the width to maxWidth
+*/
     }
 }
 

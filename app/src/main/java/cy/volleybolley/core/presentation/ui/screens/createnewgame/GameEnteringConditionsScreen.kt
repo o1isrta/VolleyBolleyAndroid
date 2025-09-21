@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.ui.VolleyCashField
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
@@ -40,9 +42,15 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 
 @Composable
-fun GameEnteringConditionsScreen(navController: NavHostController) {
+fun GameEnteringConditionsScreen(navController: NavHostController, viewModel: GameEnteringConditionsScreenViewModel = viewModel(),
+                                 navigateToCreateAccount: () -> Unit, navigateToAccountDetails: (String) -> Unit) {
 
     val scrollState = rememberScrollState() //Состояние скролла
+    val screenState = viewModel.screenState.collectAsState().value
+    //  получаем все данные из screenState
+    var maximumPlayers = screenState.maximumPlayers
+    val selectedPrivacy = screenState.selectedPrivacy
+    val accountState = screenState.accountState
 
     VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = VolleyDimens.DIMEN_32,
@@ -119,7 +127,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier//.fillMaxWidth()
             ) {
                 VolleyText.BodyBold(
                     text = stringResource(R.string.per_person),
@@ -128,20 +136,32 @@ fun GameEnteringConditionsScreen(navController: NavHostController) {
 
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_9.dp))
 
-                VolleyTextFieldAttribute.DurationFieldWithArrows(
-                    inputTime = VolleyTimeStamp(
-                        14,
-                        0,
-                        true
-                    )
+                VolleyCashField.CashField(
+                    value = "0",
+                    currency = "$"
                 ) { }
             }
 
-            VolleyText.BodyRegular(
-                text = stringResource(R.string.current_account),
-                modifier = Modifier.fillMaxWidth(),
-                color = VolleyColor.White
-            )
+            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                VolleyText.BodyRegular(
+                    text = stringResource(R.string.current_account),
+                    modifier = Modifier,//.fillMaxWidth(),
+                    color = VolleyColor.White
+                )
+
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_9.dp))
+
+                VolleyCashField.CashField(
+                    value = "0",
+                    currency = "$"
+                ) { }
+            }
 
             Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
 

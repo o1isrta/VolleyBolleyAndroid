@@ -20,6 +20,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
@@ -50,6 +51,8 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite
+import cy.volleybolley.core.presentation.ui.navigation.BasicGameSetupRoute
+import cy.volleybolley.core.presentation.ui.navigation.GameEnteringConditionsRoute
 import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.MyGamesTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
@@ -177,6 +180,11 @@ fun RootContainer(
     val showBottomNav = NoBarsRoutes.showBottomBar(currentDestinationRoute)
     val showTopBar = NoBarsRoutes.showTopBar(currentDestinationRoute)
 
+    // ВРЕМЕННЫЙ ПЕРЕХОД ДЛЯ ОТЛАДКИ:
+    LaunchedEffect(Unit) {
+        navController.navigate(GameEnteringConditionsRoute) // Или "basic_game_setup_route"
+    }
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -227,7 +235,7 @@ fun RootContainer(
         * */
 }
 
-@Composable
+/*@Composable
 private fun BottomNavComponent(
     navController: NavHostController,
     currentDestination: NavDestination?
@@ -306,14 +314,90 @@ private fun BottomNavComponent(
             )
         }
     }
+}*/
+@Composable
+private fun BottomNavComponent(
+    navController: NavHostController,
+    currentDestination: NavDestination?
+) {
+    val topLevelRoutes = listOf(
+        TopLevelRoute(
+            stringResource(R.string.home),
+            HomeTopLevelRoute,
+            painterResource(R.drawable.ic_home),
+            painterResource(R.drawable.ic_home_gradient)
+        ),
+        TopLevelRoute(
+            stringResource(R.string.my_games),
+            MyGamesTopLevelRoute,
+            painterResource(R.drawable.ic_players),
+            painterResource(R.drawable.ic_players_gradient)
+        ),
+        TopLevelRoute(
+            stringResource(R.string.profile),
+            ProfileTopLevelRoute,
+            painterResource(R.drawable.ic_personal_data),
+            painterResource(R.drawable.ic_personal_data_gradient)
+        ),
+    )
+
+    val shape = remember {
+        RoundedCornerShape(
+            topStart = VolleyDimens.DIMEN_36.dp,
+            topEnd = VolleyDimens.DIMEN_36.dp
+        )
+    }
+    BottomAppBar(
+        containerColor = VolleyColor.TurquoiseBottom,
+        modifier = Modifier
+            .background(
+                color = VolleyColor.TurquoiseBottom,
+                shape = shape
+            )
+            .height(VolleyDimens.DIMEN_81.dp)
+            .padding(top = VolleyDimens.DIMEN_10.dp)
+            .clip(shape)
+    ) {
+        topLevelRoutes.forEach { topRoute ->
+            val itemIsSelected = currentDestination?.hierarchy?.any { it.hasRoute(topRoute.route::class) } == true
+            val labelStyle = if (itemIsSelected) BodyTinyBottomNavGradient else BodyTinyBottomNavWhite
+            NavigationBarItem(
+                selected = itemIsSelected,
+                onClick = {
+                    navController.navigate(topRoute.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                icon = {
+                    Image(
+                        painter = if (itemIsSelected) topRoute.iconSelected else topRoute.icon,
+                        contentDescription = topRoute.name,
+                    )
+                },
+                label = {
+                    VolleyText.BodyTinyBottomNav(
+                        text = topRoute.name,
+                        textAlign = TextAlign.Center,
+                        maxLines = 1,
+                        style = labelStyle
+                    )
+                },
+                colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun Preview() {
     VolleybolleyTheme {
-        RootContainer { padding, navController ->
-            NavHostContainer(modifier = Modifier.padding(padding), navController)
+        //RootContainer { padding, navController ->
+       //     NavHostContainer(modifier = Modifier.padding(padding), navController)
         RootContainer { padding, controller ->
             NavHostContainer(
                 navController = controller,

@@ -426,7 +426,7 @@ object VolleyTextFieldAttribute {
         }
     }
 
-    @Composable
+  /*  @Composable
     fun PaymentField(
         modifier: Modifier = Modifier,
         width: Int = VolleyDimens.DIMEN_75,
@@ -438,12 +438,12 @@ object VolleyTextFieldAttribute {
             cornerRadius = cornerRadius,
             modifier = modifier //modifier.height(height.dp).width(width.dp),
         ) {
-              DecimalInputMask(/*modifier,*/ width, height, inputPayment)
+              DecimalInputMask(*//*modifier,*//* width, height, inputPayment)
         }
     }
 
     @Composable
-    fun DecimalInputMask(/*modifier: Modifier, */width: Int, height: Int, inputPayment: Double) {
+    fun DecimalInputMask(*//*modifier: Modifier, *//*width: Int, height: Int, inputPayment: Double) {
         var text by remember { mutableStateOf(inputPayment.toString()) }
 
         Row(
@@ -451,52 +451,6 @@ object VolleyTextFieldAttribute {
             .height(height.dp)
             .width(width.dp))
         {
-            /*OutlinedTextField(
-                modifier = Modifier
-                     .fillMaxSize(), // Занимаем все доступное пространство Box
-               // modifier = Modifier,
-                   // .height(30.dp)
-                   // .width(75.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Transparent,      // Цвет обводки при фокусировке
-                    unfocusedBorderColor = Color.Transparent,    // Цвет обводки в обычном состоянии
-                    disabledBorderColor = Color.Transparent,     // Цвет обводки в отключенном состоянии
-                    unfocusedTextColor = VolleyColor.White,
-                    focusedTextColor = VolleyColor.White
-                ),
-                value = text,
-                suffix = {
-                    VolleyText.BodyRegular(
-                        text = stringResource(R.string.dollar),
-                        color = VolleyColor.White,
-                        maxLines = 1,
-                        modifier = Modifier
-                    )
-                },
-                onValueChange = { newText ->
-                    // 1. Удаляем все символы, кроме цифр и точки
-                    val filteredText = newText.replace(Regex("[^0-9.]"), "")
-
-                    // 2. Проверяем количество точек
-                    val dotCount = filteredText.count { it == '.' }
-                    if (dotCount > 1) {
-                        // Если больше одной точки, оставляем только первую
-                        text = text //не меняем значение
-                    } else {
-                        // 3. Если есть точка, проверяем количество знаков после неё
-                        val parts = filteredText.split(".")
-                        if (parts.size == 2 && parts[1].length > 2) {
-                            //Если больше 2 символов оставляем предыдущее значение
-                            text = text
-                        } else {
-                            // 4. Обновляем текст, если все проверки пройдены
-                            text = filteredText
-                        }
-                    }
-                },
-                //label = "",//{ Text("Введите число (до 2 знаков после запятой)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
-            )*/
             TextField(
                 value = text,
                 colors = TextFieldDefaults.colors(
@@ -539,7 +493,7 @@ object VolleyTextFieldAttribute {
                 modifier = Modifier.padding(0.dp)
             )
         }
-    }
+    }*/
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -608,7 +562,8 @@ object VolleyTextFieldAttribute {
             }
         )
     }
-    @Composable
+
+    /*@Composable
     fun MyTextField(modifier: Modifier = Modifier) {
         var text by remember { mutableStateOf("") }
 
@@ -654,7 +609,7 @@ object VolleyTextFieldAttribute {
                 visualTransformation = CurrencyAmountTransformation
             )
         }
-    }
+    }*/
 
     object CurrencyAmountTransformation : VisualTransformation {
         override fun filter(text: AnnotatedString): TransformedText {
@@ -757,30 +712,14 @@ private fun PreviewGradientTextFields() {
                     .padding(VolleyDimens.DIMEN_16.dp)
             ) { }
 
-            VolleyTextFieldAttribute.PaymentField(
+            /*VolleyTextFieldAttribute.PaymentField(
                 inputPayment = 6.0,
                 modifier = Modifier
                        .padding(VolleyDimens.DIMEN_16.dp)
             )
 
             VolleyTextFieldAttribute.MyTextField(modifier = Modifier.padding(16.dp))
-           /* VolleyTextFieldAttribute.DecimalInputMask(30,75)
-
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp)
-                    .height(30.dp)
-                    .width(75.dp)
-                    .background(color = Color.White, shape = RoundedCornerShape(16.dp))
-
-            ) {
-                Text(
-                    text = "fgh",
-                    color = VolleyColor.TextField,
-                    style = GradientFieldMedium,
-                )
-            }*/
+           */
         }
     }
 }
