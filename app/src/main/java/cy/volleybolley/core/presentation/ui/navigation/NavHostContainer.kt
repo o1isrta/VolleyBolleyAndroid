@@ -5,9 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import cy.volleybolley.core.presentation.ui.screens.authorization.AboutLevelsScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScreen

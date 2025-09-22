@@ -1,5 +1,6 @@
 package cy.volleybolley.profile.presentation.ui.screens.profile
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -61,6 +62,7 @@ import org.koin.androidx.compose.koinViewModel
 fun ProfileScreen(
     navController: NavHostController,
     viewModel: ProfileScreenViewModel = koinViewModel(),
+    finisher: () -> Unit,
 ) {
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
@@ -72,6 +74,8 @@ fun ProfileScreen(
     ) { event ->
         viewModel.obtainEvent(event)
     }
+
+    BackHandler { finisher() }
 }
 
 @Composable
