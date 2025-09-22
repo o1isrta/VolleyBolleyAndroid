@@ -91,8 +91,10 @@ fun ChangePhotoScreen(
 
     // Create Camera Request
     val cameraPhotoPicker = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
-        if (isSuccess) cameraPhotoFile?.let {
-            viewModel.obtainEvent(OnCameraPhotoCreate(it.absolutePath))
+        if (isSuccess) {
+            cameraPhotoFile?.let {
+                viewModel.obtainEvent(OnCameraPhotoCreate(it.absolutePath))
+            }
         }
     }
 
