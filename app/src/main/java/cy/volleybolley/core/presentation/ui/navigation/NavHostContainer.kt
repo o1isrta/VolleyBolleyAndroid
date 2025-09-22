@@ -2,6 +2,7 @@ package cy.volleybolley.core.presentation.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -88,7 +89,11 @@ fun NavHostContainer(
 
             // create game
             composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }
-            composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(navController) }
+            composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(
+                navController,
+                viewModel = ViewModel(),
+                navigateToPaymentsScreen = { navController.navigate("PaymentsScreen") },
+            ) }
             composable<PrivacyOptionsRoute> { PrivacyOptionsScreen(navController) }
 
             // create tourney

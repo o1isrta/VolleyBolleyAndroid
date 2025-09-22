@@ -1,10 +1,12 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame
 
-data class GameEnteringConditionsScreenState(
-    val maximumPlayers: Int = 4,
-    val selectedPrivacy: Privacy? = null,
-    val accountState: AccountState = AccountState.NotLinked
-)
+sealed class GameEnteringConditionsScreenState {
+    data class Content(
+        val maximumPlayers: Int = 4,
+        val selectedPrivacy: Privacy = Privacy.Public,
+        val accountState: AccountState = AccountState.NotLinked
+    ) : GameEnteringConditionsScreenState()
+}
 
 sealed class Privacy {
     object Public : Privacy()
@@ -15,9 +17,6 @@ sealed class AccountState {
     object NotLinked : AccountState()
     object Loading : AccountState()
     data class Linked(val accountNumber: String) : AccountState()
+    //data class Error(val message: String) : AccountState() // Optional: Add an Error state
 }
 
-sealed class Event {
-   // data class ShowToast(val message: String) : Event()
-    data class NavigateToPrivacyOptionsScreen(val accountNumber: String) : Event()
-}

@@ -17,9 +17,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -43,7 +45,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 
 @Composable
 fun GameEnteringConditionsScreen(navController: NavHostController, viewModel: GameEnteringConditionsScreenViewModel = viewModel(),
-                                 navigateToCreateAccount: () -> Unit, navigateToAccountDetails: (String) -> Unit) {
+                                 navigateToPaymentsScreen: () -> Unit) {
 
     val scrollState = rememberScrollState() //Состояние скролла
     val screenState = viewModel.screenState.collectAsState().value
@@ -51,6 +53,22 @@ fun GameEnteringConditionsScreen(navController: NavHostController, viewModel: Ga
     var maximumPlayers = screenState.maximumPlayers
     val selectedPrivacy = screenState.selectedPrivacy
     val accountState = screenState.accountState
+
+    val context = LocalContext.current
+
+    // Подписываемся на events из ViewModel
+    LaunchedEffect(key1 = viewModel.event) {
+        viewModel.event.collect { event ->
+            when (event) {
+               // is GameEnteringConditionsScreenViewModel.Event.ShowToast -> {
+               //     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+               // }
+                is GameEnteringConditionsScreenState.Event.NavigateToPrivacyOptionsScreen -> {
+                    navigateToPaymentsScreen(event.accountNumber)
+                }
+            }
+        }
+    }
 
     VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = VolleyDimens.DIMEN_32,
@@ -179,6 +197,10 @@ fun GameEnteringConditionsScreen(navController: NavHostController, viewModel: Ga
 //        Button(onClick = { navController.popBackStack() }) {
 //            Text("Назад")
 //        }
+}
+
+fun navigateToPrivacyOptionsScreen(accountNumber: Any) {
+
 }
 
 @Preview
