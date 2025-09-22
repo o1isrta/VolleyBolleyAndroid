@@ -1,5 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.findagame
 
+import android.R.attr.maxLength
+import android.R.attr.text
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -50,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
@@ -57,14 +60,18 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
+import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButtonMap
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.OutlinedActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.screens.games.mygames.MyGameScreen
 import cy.volleybolley.ui.theme.VolleybolleyTheme
+import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.TimeZone
 import kotlin.collections.map
 
 @Composable
@@ -83,7 +90,7 @@ private fun JoinTheGameScreen() {
 }
 
 @Composable
-private fun MyGameContent(
+fun MyGameContent(
     details: GameDetails,
     onBack: () -> Unit,
     onOpenMap: (Location) -> Unit,
@@ -187,14 +194,17 @@ private fun MyGameContent(
                     ),
                     color = VolleyColor.White
                 )
-                MessageBubble(
-                    text = stringResource(
-                        R.string.per_person,
-                        details.pricePerPerson,
-                        details.currencyType
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
+                val limited = remember(text) { VolleyUiUtil.getLimitedText(maxLength, "text") }
+
+                    VolleyText.BodyRegular(
+                        text = limited,
+                        color = VolleyColor.White,
+                        modifier = Modifier
+                            .padding(VolleyDimens.DIMEN_16.dp)
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Start
+                    )
+
 
                 DividerGlass()
 
@@ -209,26 +219,10 @@ private fun MyGameContent(
 
         Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(VolleyDimens.DIMEN_192.dp)
-                .padding(horizontal = VolleyDimens.DIMEN_8.dp),
-            horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
-        ) {
-            SquareIconTile(
-                iconRes = R.drawable.ic_invite_players,
-                background = VolleyColor.YellowPro,
-                onClick = onInvite,
-                modifier = Modifier.weight(1f)
-            )
-            SquareIconTile(
-                iconRes = R.drawable.ic_share_link,
-                background = VolleyColor.White.copy(alpha = 0.10f),
-                onClick = onShare,
-                modifier = Modifier.weight(1f)
-            )
-        }
+        VolleyButton.GroupInvitesButtons(
+            onInvitePlayersClick = {},
+            onShareLinkClick = {  }
+        )
 
         Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
@@ -251,41 +245,17 @@ private fun formatDateTimeRange(
     endIso: String
 ): Pair<String, String> {
     val locale = Locale.ENGLISH
-    val parser = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", locale).apply {
-        timeZone = java.util.TimeZone.getDefault()
+    val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", locale).apply {
+        timeZone = TimeZone.getDefault()
     }
     val startDate = parser.parse(startIso)
     val endDate = parser.parse(endIso)
-    val dateFmt = java.text.SimpleDateFormat("d MMMM", locale)
-    val timeFmt = java.text.SimpleDateFormat("h:mm a", locale)
+    val dateFmt = SimpleDateFormat("d MMMM", locale)
+    val timeFmt = SimpleDateFormat("h:mm a", locale)
     val date = dateFmt.format(startDate ?: "")
     val startTime = timeFmt.format(startDate ?: "").lowercase(locale)
     val endTime = timeFmt.format(endDate ?: "").lowercase(locale)
     return date to "$startTime–$endTime"
-}
-
-@Composable
-private fun SquareIconTile(
-    iconRes: Int,
-    background: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .fillMaxHeight()
-            .clip(RoundedCornerShape(VolleyDimens.DIMEN_32.dp))
-            .background(background)
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(iconRes),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-    }
 }
 
 @Composable
@@ -332,7 +302,7 @@ private fun GlassCard(
     gap: Dp = VolleyDimens.DIMEN_16.dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    VolleyContainersRootTransparent.TransparentContainer(
+    TransparentContainer(
         modifier = modifier,
         cornerRadius = cornerRadiusDp,
         mainContainerAlignment = Alignment.TopStart,
@@ -420,24 +390,6 @@ private fun DividerGlass() {
 }
 
 @Composable
-private fun DeletePlayerButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier.size(VolleyDimens.DIMEN_21.dp)
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_remove),
-            contentDescription = "removed",
-            modifier = Modifier.size(VolleyDimens.DIMEN_21.dp),
-            tint = Color.Unspecified
-        )
-    }
-}
-
-@Composable
 private fun PlayersList(
     players: List<PlayerShort>,
     capacity: Int,
@@ -474,7 +426,6 @@ private fun PlayersList(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_2.dp)
                     ) {
-                        DeletePlayerButton(onClick = { onDelete(index) })
                         level?.let { LevelBadge(it) }
                     }
                 }
@@ -496,59 +447,6 @@ private fun openMap(context: Context, location: Location) {
 @Preview(
     showBackground = true,
     showSystemUi = true,
-    device = "spec:width=411dp,height=1400dp,dpi=420"
-)
-@Composable
-private fun MyGameScreen_Preview() {
-    VolleybolleyTheme {
-        Box(Modifier.background(VolleyColor.TurquoiseDark)) {
-            MyGameScreen(
-                navController = rememberNavController()
-            )
-        }
-    }
-}
-
-/*
-// Обёртка для навигации
-@Composable
-fun MyGameScreen(navController: NavHostController) {
-    val viewModel: MyGameViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        viewModel.effects.collectLatest { effect ->
-            when (effect) {
-                MyGameEffect.NavigateBack -> navController.popBackStack()
-                is MyGameEffect.OpenMap -> openMap(context, effect.location)
-                MyGameEffect.InvitePlayers,
-                MyGameEffect.ShareLink,
-                MyGameEffect.CancelGame -> {
-                    // Заглушка
-                }
-            }
-        }
-    }
-
-    MyGameContent(
-        details = state.details,
-        onBack = { viewModel.dispatch(MyGameAction.ClickBack) },
-        onOpenMap = { location -> viewModel.dispatch(MyGameAction.ClickMap(location)) },
-        onInvite = { viewModel.dispatch(MyGameAction.ClickInvite) },
-        onShare = { viewModel.dispatch(MyGameAction.ClickShare) },
-        onCancel = { viewModel.dispatch(MyGameAction.ClickCancel) },
-        onDeletePlayer = { index -> viewModel.dispatch(MyGameAction.DeletePlayer(index)) }
-    )
-}
-
-
-
- */
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
     device = "spec:width=375dp,height=812dp"
 )
 @Composable
@@ -559,7 +457,41 @@ private fun JoinTheGameScreenPreview() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-            JoinTheGameScreen()
+            MyGameContent(
+                details = GameDetails(
+                    gameId = 1,
+                    gameType = "",
+                    host = Host(
+                        id = 1,
+                        name = "sss",
+                        avatar = null,
+                        level = "Le"
+                    ),
+                    message = "f",
+                    courtLocation = Location(
+                        longitude = 0.6,
+                        latitude = 0.7,
+                        courtName = "ff",
+                        locationName = "dddd"
+                    ),
+                    startTime = "22",
+                    endTime = "22",
+                    gender = "dd",
+                    levels = emptyList(),
+                    pricePerPerson = "5",
+                    maximumPlayers = 5,
+                    paymentType = "s",
+                    paymentAccount = "123",
+                    currencyType = "dd",
+                    players = emptyList()
+                ),
+                onBack = { },
+                onOpenMap = { },
+                onInvite = { },
+                onShare = { },
+                onCancel = { },
+                onDeletePlayer = { }
+            )
         }
     }
 }
