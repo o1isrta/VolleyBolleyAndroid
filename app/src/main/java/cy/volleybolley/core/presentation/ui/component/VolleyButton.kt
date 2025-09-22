@@ -1031,13 +1031,12 @@ object VolleyButton {
 
     @Composable
     fun GroupInvitesButtons(
+        modifier: Modifier = Modifier,
         onInvitePlayersClick: () -> Unit,
         onShareLinkClick: () -> Unit
     ) {
         Row(
-            Modifier.padding(
-                VolleyDimens.DIMEN_8.dp
-            ),
+            modifier = modifier,
             horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
         ) {
             InvitePlayersButton(
