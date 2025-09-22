@@ -2,7 +2,7 @@ package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.presentation.ui.screens.home.rateplayers.RatePlayersViewModel
-import cy.volleybolley.core.presentation.ui.screens.home.success.CreatedEvent
+import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
 import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -57,7 +57,7 @@ val coreModule = module {
         )
     }
 
-    viewModel { (event: CreatedEvent) ->
+    viewModel { (event: SucceedGame) ->
         SuccessViewModel(
             createdEvent = event
         )

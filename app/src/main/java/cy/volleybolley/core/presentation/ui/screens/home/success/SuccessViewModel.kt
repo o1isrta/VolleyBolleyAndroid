@@ -3,7 +3,7 @@ package cy.volleybolley.core.presentation.ui.screens.home.success
 import cy.volleybolley.core.presentation.base.BaseViewModel
 
 class SuccessViewModel(
-    createdEvent: CreatedEvent,
+    createdEvent: SucceedGame,
 ) :
     BaseViewModel<SuccessState, SuccessEvent, SuccessEffect>(SuccessState(event = createdEvent)) {
 

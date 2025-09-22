@@ -89,8 +89,12 @@ private fun SuccessScreen(
                 val deepLink = state.event.toDeepLink()
 
                 val shareText = when (state.event.type) {
-                    EventType.GAME -> context.getString(R.string.share_text_game, deepLink)
-                    EventType.TOURNAMENT -> context.getString(
+                    SucceedGameType.CreatedGame, SucceedGameType.JoinedGame -> context.getString(
+                        R.string.share_text_game,
+                        deepLink
+                    )
+
+                    SucceedGameType.CreatedTournament, SucceedGameType.JoinedTournament -> context.getString(
                         R.string.share_text_tournament,
                         deepLink
                     )
@@ -127,10 +131,18 @@ private fun SuccessScreen(
                         .fillMaxWidth()
                         .padding(VolleyDimens.DIMEN_20.dp)
                 ) {
+                    val paymentAccount = if (state.event.paymentAccount == null) {
+                        PaymentType.CASH.nameValue.lowercase().replaceFirstChar { it.uppercaseChar() }
+                    } else {
+                        "${
+                            state.event.paymentType.nameValue.lowercase().replaceFirstChar { it.uppercaseChar() }
+                        } · ${state.event.paymentAccount}"
+                    }
                     Header(
                         title = when (state.event.type) {
-                            EventType.GAME -> R.string.game_created
-                            EventType.TOURNAMENT -> R.string.tourney_created
+                            SucceedGameType.CreatedGame -> R.string.game_created
+                            SucceedGameType.CreatedTournament -> R.string.tourney_created
+                            SucceedGameType.JoinedGame, SucceedGameType.JoinedTournament -> R.string.you_are_in_the_game
                         }
                     )
                     RowIconText(
@@ -151,8 +163,7 @@ private fun SuccessScreen(
                     RowIconText(
                         painterResource = R.drawable.ic_payment_card,
                         title = state.event.pricePerPerson,
-                        text = state.event.paymentAccount ?: PaymentType.CASH.nameValue.lowercase()
-                            .replaceFirstChar { it.uppercaseChar() }
+                        text = paymentAccount
                     )
                     ActiveButton(
                         modifier = Modifier
@@ -172,6 +183,7 @@ private fun SuccessScreen(
                 horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
             ) {
                 VolleyButton.GroupInvitesButtons(
+                    modifier = Modifier.padding(VolleyDimens.DIMEN_8.dp),
                     onInvitePlayersClick = {
                         eventCallback(SuccessEvent.OnInvitePlayers)
                     },
@@ -234,9 +246,9 @@ private fun SuccessScreenPreview() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             val state = SuccessState(
-                CreatedEvent(
+                SucceedGame(
                     id = 1,
-                    type = EventType.TOURNAMENT,
+                    type = SucceedGameType.JoinedGame,
                     locationName = "Karon Beach Club",
                     locationPlace = "Patak Rd, Mueng Phuket",
                     date = "Starts today",
@@ -244,8 +256,8 @@ private fun SuccessScreenPreview() {
                     level = "Level: Light, Medium, Hard",
                     playersInfo = "Mix · 4 players · private game",
                     pricePerPerson = "5\$ per person",
-                    paymentType = PaymentType.CASH,
-                    paymentAccount = null
+                    paymentType = PaymentType.THAIBANK,
+                    paymentAccount = "999999"
                 )
             )
             SuccessScreen(

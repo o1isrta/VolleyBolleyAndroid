@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
-import cy.volleybolley.core.presentation.ui.screens.home.success.CreatedEvent
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -141,7 +140,7 @@ data class RatePlayersRoute(
 
 @Serializable
 data class SuccessRoute(
-    val createdEvent: CreatedEvent
+    val succeedGame: String
 ) : NavMap
 
 // --- profile flow ---

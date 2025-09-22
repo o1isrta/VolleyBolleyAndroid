@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
@@ -100,7 +99,7 @@ fun NavHostContainer(
                 )
             }
             composable<SuccessRoute> { backStackEntry ->
-                val event = backStackEntry.toRoute<SuccessRoute>().createdEvent
+                val event = backStackEntry.toRoute<SuccessRoute>().succeedGame
                 SuccessScreen(
                     navController = navController,
                     viewModel = koinViewModel {
@@ -177,6 +176,17 @@ fun NavHostContainer(
             composable<EnterPaymentDataRoute> { EnterPaymentDataScreen(navController) }
             composable<FaqRoute> { FaqScreen(navController) }
             composable<AboutRoute> { AboutScreen(navController) }
+        }
+
+        composable<ShareLinkRoute>(
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "volleybolley://invite/{type}/{id}" }
+            )
+        ) { backStackEntry ->
+            val route = backStackEntry.toRoute<ShareLinkRoute>()
+            JoinTheGameScreen(
+                navController = navController
+            )
         }
     }
 }
