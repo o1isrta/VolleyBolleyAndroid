@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.home.success
 
+import android.content.Context
 import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -81,41 +82,16 @@ private fun SuccessScreen(
     LaunchedEffect(Unit) {
         when (effect) {
             SuccessEffect.CloseScreen -> navigateAction(HomeRoute)
+
             SuccessEffect.NavigateToInvitePlayers -> navigateAction(
                 InvitePlayersRoute(id = state.event.id)
             )
 
-            SuccessEffect.ShareLink -> {
-                val deepLink = state.event.toDeepLink()
-
-                val shareText = when (state.event.type) {
-                    SucceedGameType.CreatedGame, SucceedGameType.JoinedGame -> context.getString(
-                        R.string.share_text_game,
-                        deepLink
-                    )
-
-                    SucceedGameType.CreatedTournament, SucceedGameType.JoinedTournament -> context.getString(
-                        R.string.share_text_tournament,
-                        deepLink
-                    )
-                }
-
-                val sendIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, shareText)
-                    type = "text/plain"
-                }
-
-                val shareIntent = Intent.createChooser(
-                    sendIntent,
-                    context.getString(R.string.share_link_chooser_title)
-                )
-                context.startActivity(shareIntent)
-            }
-
+            SuccessEffect.ShareLink -> shareEventLink(context, state)
             null -> Unit
         }
     }
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column {
             TransparentContainer(
@@ -132,10 +108,12 @@ private fun SuccessScreen(
                         .padding(VolleyDimens.DIMEN_20.dp)
                 ) {
                     val paymentAccount = if (state.event.paymentAccount == null) {
-                        PaymentType.CASH.nameValue.lowercase().replaceFirstChar { it.uppercaseChar() }
+                        PaymentType.CASH.nameValue.lowercase()
+                            .replaceFirstChar { it.uppercaseChar() }
                     } else {
                         "${
-                            state.event.paymentType.nameValue.lowercase().replaceFirstChar { it.uppercaseChar() }
+                            state.event.paymentType.nameValue.lowercase()
+                                .replaceFirstChar { it.uppercaseChar() }
                         } · ${state.event.paymentAccount}"
                     }
                     Header(
@@ -230,6 +208,24 @@ private fun RowIconText(
             VolleyText.BodyLight(text = text, color = VolleyColor.White)
         }
     }
+}
+
+private fun shareEventLink(context: Context, state: SuccessState) {
+    val deepLink = state.event.toDeepLink()
+    val shareText = when (state.event.type) {
+        SucceedGameType.CreatedGame, SucceedGameType.JoinedGame ->
+            context.getString(R.string.share_text_game, deepLink)
+
+        SucceedGameType.CreatedTournament, SucceedGameType.JoinedTournament ->
+            context.getString(R.string.share_text_tournament, deepLink)
+    }
+    val sendIntent = Intent(Intent.ACTION_SEND).apply {
+        putExtra(Intent.EXTRA_TEXT, shareText)
+        type = "text/plain"
+    }
+    context.startActivity(
+        Intent.createChooser(sendIntent, context.getString(R.string.share_link_chooser_title))
+    )
 }
 
 @Preview(
