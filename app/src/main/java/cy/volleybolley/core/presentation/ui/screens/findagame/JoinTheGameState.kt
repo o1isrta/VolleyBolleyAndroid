@@ -9,7 +9,7 @@ data class JoinTheGameState(
     val details: GameDetails
 ) : UiState
 
-data class GameDetails (
+data class GameDetails(
     val gameId: Int,
     val gameType: String,
     val host: Host,

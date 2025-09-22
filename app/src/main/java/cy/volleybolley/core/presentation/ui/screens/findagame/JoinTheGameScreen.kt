@@ -206,7 +206,9 @@ private fun JoinTheGameScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(VolleyDimens.DIMEN_16.dp),
-                        text = "${stringResource(R.string.per_person)} ${state.details.pricePerPerson}${state.details.currencyType.currencyValue}",
+                        text = "${stringResource(R.string.per_person)} " +
+                            state.details.pricePerPerson +
+                            state.details.currencyType.currencyValue,
                         color = VolleyColor.White
                     )
                 }
@@ -227,7 +229,7 @@ private fun JoinTheGameScreen(
                         ),
                     text = stringResource(R.string.join_the_game),
                 ) {
-
+                    eventCallback(JoinTheGameEvent.OnJoinGame)
                 }
             }
         }
@@ -350,7 +352,8 @@ private fun SectionTitle(text: String) {
 @Composable
 private fun LabeledInlineRow(label: String, value: String) {
     Row(
-        verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
     ) {
         VolleyText.BodyBold(text = label, color = VolleyColor.White)
         Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
@@ -410,7 +413,6 @@ private fun PlayersList(
     }
 }
 
-//Карты
 private fun openMap(context: Context, location: Location) {
     val uri = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}(${
         Uri.encode(location.courtName)

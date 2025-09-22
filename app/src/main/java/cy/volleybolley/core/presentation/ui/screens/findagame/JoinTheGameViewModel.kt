@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.referencedata.domain.model.CurrencyType
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -44,9 +43,10 @@ class JoinTheGameViewModel :
     override val tag: String = JoinTheGameViewModel::class.simpleName ?: ""
 
     init {
-        _uiState.update {
+        uiStateMutable.update {
             it.copy(
-                isRefreshing = false, details = GameDetails(
+                isRefreshing = false,
+                details = GameDetails(
                     gameId = 1,
                     gameType = "",
                     host = Host(
@@ -88,17 +88,17 @@ class JoinTheGameViewModel :
         when (event) {
             JoinTheGameEvent.OnBack -> sendUiEffect(JoinTheGameEffect.NavigateBack)
             JoinTheGameEvent.OnJoinGame -> {
-                //вызов из domain
+                // вызов из domain
+
                 sendUiEffect(JoinTheGameEffect.JoinGame)
             }
 
             is JoinTheGameEvent.OnMap -> sendUiEffect(JoinTheGameEffect.OpenMap(event.location))
             JoinTheGameEvent.OnRefresh -> {
-                //вызов из domain
-                _uiState.update { it.copy(isRefreshing = true) }
+                // вызов из domain
+                uiStateMutable.update { it.copy(isRefreshing = true) }
                 viewModelScope.launch {
-                    delay(3000L)
-                    _uiState.update { it.copy(isRefreshing = false) }
+                    uiStateMutable.update { it.copy(isRefreshing = false) }
                 }
             }
         }
