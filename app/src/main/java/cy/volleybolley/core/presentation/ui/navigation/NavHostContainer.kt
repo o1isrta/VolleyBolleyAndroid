@@ -2,10 +2,12 @@ package cy.volleybolley.core.presentation.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import androidx.navigation.navigation
 import cy.volleybolley.core.presentation.ui.screens.authorization.AboutLevelsScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScreen
@@ -66,9 +68,10 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun NavHostContainer(
     modifier: Modifier = Modifier,
-    startDestination: NavMap = LaunchRoute
+    navController: NavHostController,
+    startDestination: NavMap = LaunchRoute,
+    activityFinisher: () -> Unit,
 ) {
-    val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -82,102 +85,126 @@ fun NavHostContainer(
         composable<RegistrationByPhoneRoute> { RegistrationByPhoneScreen(navController) }
         composable<AboutLevelsRoute> { AboutLevelsScreen(navController) }
 
-        // create game
-        composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }
-        composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(navController) }
-        composable<PrivacyOptionsRoute> { PrivacyOptionsScreen(navController) }
+        // Home nested graph
+        navigation<HomeTopLevelRoute>(startDestination = HomeRoute) {
+            // home
+            composable<HomeRoute> {
+                HomeScreen(
+                    navController = navController,
+                    finisher = activityFinisher,
+                )
+            }
+            composable<SearchCourtRoute> { SearchCourtScreen(navController) }
+            composable<RatePlayersRoute> { RatePlayersScreen(navController) }
+            composable<SuccessRoute> { SuccessScreen(navController) }
 
-        // create tourney
-        composable<BasicTourneySetupRoute> { BasicTourneySetupScreen(navController) }
-        composable<TourneyEnteringConditionsRoute> { TourneyEnteringConditionsScreen(navController) }
+            // create game
+            composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }
+            composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(navController) }
+            composable<PrivacyOptionsRoute> { PrivacyOptionsScreen(navController) }
 
-        // find game
-        composable<JoinTheGameRoute> { JoinTheGameScreen(navController) }
+            // create tourney
+            composable<BasicTourneySetupRoute> { BasicTourneySetupScreen(navController) }
+            composable<TourneyEnteringConditionsRoute> { TourneyEnteringConditionsScreen(navController) }
 
-        // find tourney
-        composable<ChooseTeamRoute> { ChooseTeamScreen(navController) }
-        composable<IndividualPlayersRoute> { IndividualPlayersScreen(navController) }
-        composable<InvitePlayersRoute> { InvitePlayersScreen(navController) }
-        composable<JoinIndividualRoute> { JoinIndividualScreen(navController) }
-        composable<JoinTeamRoute> { JoinTeamScreen(navController) }
+            // find game
+            composable<JoinTheGameRoute> { JoinTheGameScreen(navController) }
 
-        // archive
-        composable<ArchiveRoute> { ArchiveScreen(navController) }
-        composable<PastGameRoute> { PastGameScreen(navController) }
-        composable<PastTourneyRoute> { PastTourneyScreen(navController) }
-        composable<TeamsRoute> { TeamsScreen(navController) }
-
-        // game invites
-        composable<GameInvitesRoute> { GameInvitesScreen(navController) }
-        composable<JoinTheTourneyRoute> { JoinTheTourneyScreen(navController) }
-
-        // my games
-        composable<ChangeTeamRoute> { ChangeTeamScreen(navController) }
-        composable<GameHomeRoute> { GameHomeScreen(navController) }
-        composable<ManagePlayersRoute> { ManagePlayersScreen(navController) }
-        composable<MyGameRoute> { MyGameScreen(navController) }
-        composable<MyGamesRoute> { MyGamesScreen(navController) }
-        composable<MyTourneyRoute> { MyTourneyScreen(navController) }
-
-        // upcoming games
-        composable<JoinedPlayersRoute> { JoinedPlayersScreen(navController) }
-        composable<UpcomingGameDetailsRoute> { UpcomingGameDetailsScreen(navController) }
-        composable<UpcomingGamesRoute> { UpcomingGamesScreen(navController) }
-        composable<UpcomingTourneyDetailsRoute> { UpcomingTourneyDetailsScreen(navController) }
-
-        // home
-        composable<HomeRoute> { HomeScreen(navController) }
-        composable<SearchCourtRoute> { SearchCourtScreen(navController) }
-        composable<RatePlayersRoute> { RatePlayersScreen(navController) }
-        composable<SuccessRoute> { SuccessScreen(navController) }
-
-        // profile
-        composable<AboutRoute> { AboutScreen(navController) }
-
-        composable<ChangePhotoRoute> { backStackEntry ->
-            val avatarString = backStackEntry.toRoute<ChangePhotoRoute>().avatarUrl
-            ChangePhotoScreen(navController = navController, avatarFromPersonalData = avatarString)
+            // find tourney
+            composable<ChooseTeamRoute> { ChooseTeamScreen(navController) }
+            composable<IndividualPlayersRoute> { IndividualPlayersScreen(navController) }
+            composable<InvitePlayersRoute> { InvitePlayersScreen(navController) }
+            composable<JoinIndividualRoute> { JoinIndividualScreen(navController) }
+            composable<JoinTeamRoute> { JoinTeamScreen(navController) }
         }
 
-        composable<FaqRoute> { FaqScreen(navController) }
-
-        composable<PaymentsRoute> { backStackEntry ->
-            val viewModel = koinViewModel<PaymentsScreenViewModel> {
-                parametersOf(BackPaymentsHolder(backStackEntry.savedStateHandle))
+        // My games nested graph
+        navigation<MyGamesTopLevelRoute>(startDestination = MyGamesRoute) {
+            composable<MyGamesRoute> {
+                MyGamesScreen(
+                    navController = navController,
+                    finisher = activityFinisher,
+                )
             }
-            PaymentsScreen(navController, viewModel)
+
+            // archive
+            composable<ArchiveRoute> { ArchiveScreen(navController) }
+            composable<PastGameRoute> { PastGameScreen(navController) }
+            composable<PastTourneyRoute> { PastTourneyScreen(navController) }
+            composable<TeamsRoute> { TeamsScreen(navController) }
+
+            // game invites
+            composable<GameInvitesRoute> { GameInvitesScreen(navController) }
+            composable<JoinTheTourneyRoute> { JoinTheTourneyScreen(navController) }
+
+            // my games
+            composable<ChangeTeamRoute> { ChangeTeamScreen(navController) }
+            composable<GameHomeRoute> { GameHomeScreen(navController) }
+            composable<ManagePlayersRoute> { ManagePlayersScreen(navController) }
+            composable<MyGameRoute> { MyGameScreen(navController) }
+            composable<MyTourneyRoute> { MyTourneyScreen(navController) }
+
+            // upcoming games
+            composable<JoinedPlayersRoute> { JoinedPlayersScreen(navController) }
+            composable<UpcomingGameDetailsRoute> { UpcomingGameDetailsScreen(navController) }
+            composable<UpcomingGamesRoute> { UpcomingGamesScreen(navController) }
+            composable<UpcomingTourneyDetailsRoute> { UpcomingTourneyDetailsScreen(navController) }
         }
 
-        composable<PersonalDataRoute> { backStackEntry ->
-            val viewModel = koinViewModel<PersonalDataScreenViewModel> {
-                parametersOf(BackAvatarHolder(backStackEntry.savedStateHandle))
+        // Profile nested graph
+        navigation<ProfileTopLevelRoute>(startDestination = ProfileRoute) {
+            composable<ProfileRoute> {
+                ProfileScreen(
+                    navController = navController,
+                    finisher = activityFinisher,
+                )
             }
-            PersonalDataScreen(navController, viewModel)
-        }
 
-        composable<PlayerProfileRoute> { backStackEntry ->
-            val playerId = backStackEntry.toRoute<PlayerProfileRoute>().playerId
-            val viewModel = koinViewModel<PlayerProfileScreenViewModel> {
-                parametersOf(playerId)
+            composable<AboutRoute> { AboutScreen(navController) }
+
+            composable<ChangePhotoRoute> { backStackEntry ->
+                val avatarString = backStackEntry.toRoute<ChangePhotoRoute>().avatarUrl
+                ChangePhotoScreen(navController = navController, avatarFromPersonalData = avatarString)
             }
-            PlayerProfileScreen(navController, viewModel)
-        }
 
-        composable<PlayersRoute> { backStackEntry ->
-            val viewModel = koinViewModel<PlayersScreenViewModel> {
-                parametersOf(BackPlayerIdHolder(backStackEntry.savedStateHandle))
+            composable<FaqRoute> { FaqScreen(navController) }
+
+            composable<PaymentsRoute> { backStackEntry ->
+                val viewModel = koinViewModel<PaymentsScreenViewModel> {
+                    parametersOf(BackPaymentsHolder(backStackEntry.savedStateHandle))
+                }
+                PaymentsScreen(navController, viewModel)
             }
-            PlayersScreen(navController, viewModel)
-        }
 
-        composable<ProfileRoute> { ProfileScreen(navController) }
-
-        composable<EnterPaymentDataRoute> { backStackEntry ->
-            val routeWithArgs = backStackEntry.toRoute<EnterPaymentDataRoute>()
-            val viewModel = koinViewModel<EnterPaymentDataScreenViewModel> {
-                parametersOf(routeWithArgs.paymentTypeName, routeWithArgs.paymentsJsonString)
+            composable<PersonalDataRoute> { backStackEntry ->
+                val viewModel = koinViewModel<PersonalDataScreenViewModel> {
+                    parametersOf(BackAvatarHolder(backStackEntry.savedStateHandle))
+                }
+                PersonalDataScreen(navController, viewModel)
             }
-            EnterPaymentDataScreen(navController, viewModel)
+
+            composable<PlayerProfileRoute> { backStackEntry ->
+                val playerId = backStackEntry.toRoute<PlayerProfileRoute>().playerId
+                val viewModel = koinViewModel<PlayerProfileScreenViewModel> {
+                    parametersOf(playerId)
+                }
+                PlayerProfileScreen(navController, viewModel)
+            }
+
+            composable<PlayersRoute> { backStackEntry ->
+                val viewModel = koinViewModel<PlayersScreenViewModel> {
+                    parametersOf(BackPlayerIdHolder(backStackEntry.savedStateHandle))
+                }
+                PlayersScreen(navController, viewModel)
+            }
+
+            composable<EnterPaymentDataRoute> { backStackEntry ->
+                val routeWithArgs = backStackEntry.toRoute<EnterPaymentDataRoute>()
+                val viewModel = koinViewModel<EnterPaymentDataScreenViewModel> {
+                    parametersOf(routeWithArgs.paymentTypeName, routeWithArgs.paymentsJsonString)
+                }
+                EnterPaymentDataScreen(navController, viewModel)
+            }
         }
     }
 }

@@ -127,6 +127,29 @@ object VolleyTypography {
         letterSpacing = 0.sp
     )
 
+    val BodyTinyBottomNavWhite = TextStyle(
+        fontFamily = HeroFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp,
+        lineHeight = 10.sp,
+        letterSpacing = 0.sp,
+        color = VolleyColor.White
+    )
+
+    val BodyTinyBottomNavGradient = TextStyle(
+        fontFamily = HeroFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp,
+        lineHeight = 10.sp,
+        letterSpacing = 0.sp,
+        brush = Brush.verticalGradient(
+            colors = listOf(
+                VolleyColor.YellowForGradient,
+                VolleyColor.GreenForGradient
+            )
+        )
+    )
+
     // --- Кнопки ---
     val ButtonText = TextStyle(
         fontFamily = ActayFamily,
