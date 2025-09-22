@@ -1,7 +1,7 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -55,23 +55,45 @@ import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
 
 @Composable
 fun NavHostContainer(
-    modifier: Modifier = Modifier,
+    paddingFromSystemUi: PaddingValues,
     navController: NavHostController,
     startDestination: NavMap = LaunchRoute,
     activityFinisher: () -> Unit,
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination,
-        modifier = modifier
+        startDestination = startDestination
     ) {
         // authorization
         composable<LaunchRoute> { LaunchScreen(navController) }
-        composable<OnboardingRoute> { OnboardingScreen(navController) }
-        composable<SignUpRoute> { SignUpScreen(navController) }
-        composable<RegistrationRoute> { RegistrationScreen(navController) }
+        composable<OnboardingRoute> {
+            OnboardingScreen(
+                onNextScreenRequested = { navController.navigate(SignUpRoute) },
+                paddingFromSystemUi = paddingFromSystemUi
+            )
+        }
+        composable<SignUpRoute> {
+            SignUpScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onNavigateToRegisterByPhoneRequested = { navController.navigate(RegistrationByPhoneRoute) },
+                onSuccessRegisteredAction = { navController.navigate(RegistrationRoute) }
+            )
+        }
+        composable<RegistrationRoute> {
+            RegistrationScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onRegistrationSuccessEvent = {
+                    navController.navigate(HomeRoute) {
+                        popUpTo(LaunchRoute) { inclusive = false }
+                    }
+                },
+                onShowAboutLevelsFaqRequested = { navController.navigate(AboutLevelsRoute) }
+            )
+        }
         composable<RegistrationByPhoneRoute> { RegistrationByPhoneScreen(navController) }
-        composable<AboutLevelsRoute> { AboutLevelsScreen(navController) }
+        composable<AboutLevelsRoute> {
+            AboutLevelsScreen(onBackNavigationRequested = { navController.popBackStack() })
+        }
 
         // Home nested graph
         navigation<HomeTopLevelRoute>(startDestination = HomeRoute) {

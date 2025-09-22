@@ -4,17 +4,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -22,31 +19,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.SignUpRoute
+import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LogoWithAppName
 
 @Composable
 fun OnboardingScreen(
-    navController: NavHostController,
-    vm: OnboardingViewModel = viewModel()
+    onNextScreenRequested: () -> Unit,
+    paddingFromSystemUi: PaddingValues
 ) {
-    val state by vm.uiState.collectAsState()
-    LaunchedEffect(Unit) {
-        vm.uiEffect.collect { effect ->
-            when (effect) {
-                is OnboardingEffect.NavigateToSignUp -> navController.navigate(SignUpRoute)
-                else -> {}
-            }
-        }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -60,49 +45,28 @@ fun OnboardingScreen(
         )
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = VolleyDimens.DIMEN_28.dp),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.Start
         ) {
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_40.dp))
-
             VolleyText.TitleXL(
+                modifier = Modifier.padding(
+                    top = paddingFromSystemUi.calculateTopPadding() + 40.dp,
+                    start = 26.dp
+                ),
                 text = stringResource(id = R.string.welcome),
                 color = VolleyColor.White
             )
-
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
-
             VolleyText.HeroBody(
+                modifier = Modifier.padding(top = 16.dp, start = 26.dp, end = 32.dp),
                 text = stringResource(id = R.string.app_description),
                 color = VolleyColor.White
             )
-
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_80.dp))
-
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_logo),
-                    contentDescription = null,
-                    modifier = Modifier.size(VolleyDimens.DIMEN_200.dp)
-                )
-                Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
-                VolleyText.LogoDisplay(
-                    text = stringResource(id = R.string.volleybolley),
-                    color = VolleyColor.White
-                )
-            }
-
+            LogoWithAppName(modifier = Modifier.padding(top = 80.dp).fillMaxWidth())
             Spacer(modifier = Modifier.weight(1f))
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = VolleyDimens.DIMEN_64.dp),
+                    .padding(bottom = paddingFromSystemUi.calculateBottomPadding() + 50.dp),
                 contentAlignment = Alignment.Center
             ) {
                 VolleyButton.ActiveButton(
@@ -110,7 +74,7 @@ fun OnboardingScreen(
                     modifier = Modifier
                         .width(VolleyDimens.DIMEN_335.dp)
                         .height(VolleyDimens.DIMEN_44.dp),
-                    onClick = { vm.obtainEvent(OnboardingEvent.GetStartedClicked) }
+                    onClick = onNextScreenRequested
                 )
             }
         }
@@ -120,5 +84,10 @@ fun OnboardingScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun OnboardingScreenPreview() {
-    OnboardingScreen(navController = rememberNavController())
+    RootContainer { paddingFromSystemUi, navController ->
+        OnboardingScreen(
+            onNextScreenRequested = {},
+            paddingFromSystemUi = paddingFromSystemUi
+        )
+    }
 }

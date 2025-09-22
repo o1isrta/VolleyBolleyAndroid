@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -1122,11 +1123,42 @@ object VolleyButton {
             }
         }
     }
+
+    @Composable
+    @Stable
+    fun ActiveButtonWithLeadingIcon(
+        modifier: Modifier = Modifier,
+        backgroundColor: Color,
+        icon: Painter,
+        text: String,
+        textColor: Color,
+        onClick: () -> Unit
+    ) {
+        Button(
+            onClick = onClick,
+            modifier = modifier.height(VolleyDimens.DIMEN_56.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+            shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp),
+            contentPadding = PaddingValues(all = 16.dp)
+        ) {
+            Image(
+                painter = icon,
+                contentDescription = null,
+                modifier = Modifier.size(VolleyDimens.DIMEN_24.dp)
+            )
+            VolleyText.BodyBoldMedium(
+                modifier = Modifier.padding(start = 12.dp),
+                text = text,
+                color = textColor,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
 }
 
 @Composable
 @Stable
-private fun PreviewContainer(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+fun PreviewContainer(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Box(
         modifier = modifier
             .background(color = VolleyColor.TurquoiseDark)
@@ -1466,6 +1498,21 @@ fun PreviewInvitesButtons() {
         GroupInvitesButtons(
             onInvitePlayersClick = {},
             onShareLinkClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewButtonWithLeadingIcon() {
+    PreviewContainer(modifier = Modifier.width(300.dp)) {
+        VolleyButton.ActiveButtonWithLeadingIcon(
+            modifier = Modifier.fillMaxWidth(),
+            backgroundColor = VolleyColor.White,
+            icon = painterResource(id = R.drawable.ic_google_placeholder),
+            text = stringResource(id = R.string.continue_with_google),
+            textColor = VolleyColor.TextDark,
+            onClick = {}
         )
     }
 }

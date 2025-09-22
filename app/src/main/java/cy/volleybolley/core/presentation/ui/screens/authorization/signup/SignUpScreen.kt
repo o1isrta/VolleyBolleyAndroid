@@ -10,13 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,36 +24,47 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.domain.VolleyFeature
+import cy.volleybolley.core.presentation.RootContainer
+import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.RegistrationByPhoneRoute
-import cy.volleybolley.core.presentation.ui.navigation.RegistrationRoute
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SignUpScreen(
-    navController: NavHostController,
-    vm: SignUpViewModel = viewModel()
+    onNavigateToRegisterByPhoneRequested: () -> Unit,
+    onSuccessRegisteredAction: () -> Unit,
+    paddingFromSystemUi: PaddingValues,
+    viewModel: SignUpViewModel = koinViewModel()
 ) {
-    val state by vm.uiState.collectAsState()
-    LaunchedEffect(Unit) {
-        vm.uiEffect.collect { effect ->
-            when (effect) {
-                is SignUpEffect.NavigateToRegistrationByPhone -> navController.navigate(RegistrationByPhoneRoute)
-                is SignUpEffect.NavigateToRegistration -> navController.navigate(RegistrationRoute)
-                else -> {}
-            }
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
+    LaunchedEffect(effect) {
+        when (effect) {
+            is SignUpEffect.NavigateToRegistration -> onSuccessRegisteredAction()
+            else -> {}
         }
     }
+    SignUpScreen(
+        onNavigateToRegisterByPhoneRequested = onNavigateToRegisterByPhoneRequested,
+        paddingFromSystemUi = paddingFromSystemUi,
+        state = state,
+        eventCallback = { viewModel.obtainEvent(it) }
+    )
+}
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+@Composable
+fun SignUpScreen(
+    paddingFromSystemUi: PaddingValues,
+    state: SignUpState,
+    onNavigateToRegisterByPhoneRequested: () -> Unit,
+    eventCallback: (SignUpEvent) -> Unit
+) {
+    Box {
         Image(
             painter = painterResource(id = R.drawable.bg2_launch),
             contentDescription = null,
@@ -64,110 +74,90 @@ fun SignUpScreen(
 
         Column(
             modifier = Modifier
+                .padding(top = paddingFromSystemUi.calculateTopPadding() + 28.dp)
                 .fillMaxSize()
-                .padding(horizontal = VolleyDimens.DIMEN_20.dp),
-            horizontalAlignment = Alignment.Start
         ) {
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_28.dp))
-
             VolleyText.TitleXLAlt(
                 text = stringResource(id = R.string.sign_up),
                 color = VolleyColor.White,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = VolleyDimens.DIMEN_112.dp),
+                    .padding(
+                        start = 21.dp,
+                        end = VolleyDimens.DIMEN_112.dp
+                    ),
                 maxLines = 4
             )
-
             Spacer(modifier = Modifier.weight(1f))
+            if (state.isLoading.not()) {
+                BottomSheetWithSignButtons(
+                    modifier = Modifier.fillMaxWidth(),
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToRegisterByPhoneRequested = onNavigateToRegisterByPhoneRequested,
+                    eventCallback = eventCallback
+                )
+            }
         }
+    }
+}
 
-        Column(
+@Stable
+@Composable
+private fun BottomSheetWithSignButtons(
+    modifier: Modifier = Modifier,
+    paddingFromSystemUi: PaddingValues,
+    onNavigateToRegisterByPhoneRequested: () -> Unit,
+    eventCallback: (SignUpEvent) -> Unit
+) {
+    Column(
+        modifier = modifier
+            .background(
+                color = VolleyColor.TurquoiseBottom,
+                shape = RoundedCornerShape(
+                    topStart = VolleyDimens.DIMEN_32.dp,
+                    topEnd = VolleyDimens.DIMEN_32.dp
+                )
+            )
+            .padding(
+                start = VolleyDimens.DIMEN_16.dp,
+                end = VolleyDimens.DIMEN_16.dp,
+                top = VolleyDimens.DIMEN_20.dp,
+                bottom = VolleyDimens.DIMEN_20.dp + paddingFromSystemUi.calculateBottomPadding()
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(
+            onClick = onNavigateToRegisterByPhoneRequested,
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .background(
-                    color = VolleyColor.TurquoiseBottom,
-                    shape = RoundedCornerShape(
-                        topStart = VolleyDimens.DIMEN_32.dp,
-                        topEnd = VolleyDimens.DIMEN_32.dp
-                    )
-                )
-                .padding(
-                    start = VolleyDimens.DIMEN_16.dp,
-                    end = VolleyDimens.DIMEN_16.dp,
-                    top = VolleyDimens.DIMEN_20.dp,
-                    bottom = VolleyDimens.DIMEN_20.dp
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .height(VolleyDimens.DIMEN_56.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = VolleyColor.YellowPro),
+            shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp),
+            contentPadding = PaddingValues(horizontal = VolleyDimens.DIMEN_16.dp)
         ) {
-            Button(
-                onClick = { vm.obtainEvent(SignUpEvent.ContinueWithPhoneClicked) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = VolleyColor.YellowPro),
-                shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp),
-                contentPadding = PaddingValues(horizontal = VolleyDimens.DIMEN_16.dp)
-            ) {
-                VolleyText.BodyBoldMedium(
-                    text = stringResource(id = R.string.continue_with_phone_number),
-                    color = VolleyColor.TextDark
-                )
-            }
-
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_12.dp))
-
-            Button(
-                onClick = { vm.obtainEvent(SignUpEvent.ContinueWithGoogleClicked) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = VolleyColor.White),
-                shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp),
-                contentPadding = PaddingValues(
-                    start = VolleyDimens.DIMEN_16.dp,
-                    end = VolleyDimens.DIMEN_16.dp
-                )
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_google_placeholder),
-                    contentDescription = null,
-                    Modifier.padding(end = VolleyDimens.DIMEN_12.dp)
-                        .size(VolleyDimens.DIMEN_24.dp)
-                )
-                VolleyText.BodyBoldMedium(
-                    text = stringResource(id = R.string.continue_with_google),
-                    color = VolleyColor.TextDark
-                )
-            }
-
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_12.dp))
-
-            Button(
-                onClick = { vm.obtainEvent(SignUpEvent.ContinueWithFacebookClicked) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = VolleyColor.BlueLight),
-                shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp),
-                contentPadding = PaddingValues(
-                    start = VolleyDimens.DIMEN_16.dp,
-                    end = VolleyDimens.DIMEN_16.dp
-                )
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_facebook_placeholder),
-                    contentDescription = null,
-                    Modifier.padding(end = VolleyDimens.DIMEN_12.dp)
-                        .size(VolleyDimens.DIMEN_24.dp)
-
-                )
-                VolleyText.BodyBoldMedium(
-                    text = stringResource(id = R.string.continue_with_facebook),
-                    color = VolleyColor.White
-                )
-            }
+            VolleyText.BodyBoldMedium(
+                text = stringResource(id = R.string.continue_with_phone_number),
+                color = VolleyColor.TextDark
+            )
+        }
+        VolleyButton.ActiveButtonWithLeadingIcon(
+            modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+            backgroundColor = VolleyColor.White,
+            icon = painterResource(R.drawable.ic_google_placeholder),
+            text = stringResource(R.string.continue_with_google),
+            textColor = VolleyColor.TextDark,
+            onClick = { eventCallback(SignUpEvent.ContinueWithGoogleClicked) }
+        )
+        @Suppress("KotlinConstantConditions")
+        if (VolleyFeature.IS_AUTH_BY_FACEBOOK_AVAILABLE) {
+            VolleyButton.ActiveButtonWithLeadingIcon(
+                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                backgroundColor = VolleyColor.BlueLight,
+                icon = painterResource(R.drawable.ic_facebook_placeholder),
+                text = stringResource(R.string.continue_with_facebook),
+                textColor = VolleyColor.White,
+                onClick = { eventCallback(SignUpEvent.ContinueWithFacebookClicked) }
+            )
         }
     }
 }
@@ -175,5 +165,12 @@ fun SignUpScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun SignUpScreenPreview() {
-    SignUpScreen(navController = rememberNavController())
+    RootContainer { paddingFromSystemUi, navController ->
+        SignUpScreen(
+            onNavigateToRegisterByPhoneRequested = {},
+            paddingFromSystemUi = paddingFromSystemUi,
+            state = SignUpState(),
+            eventCallback = {}
+        )
+    }
 }

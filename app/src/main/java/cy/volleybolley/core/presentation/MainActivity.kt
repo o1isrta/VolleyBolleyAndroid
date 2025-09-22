@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
                 RootContainer { innerPadding, navController ->
                     NavHostContainer(
                         navController = navController,
-                        modifier = Modifier.padding(innerPadding),
+                        paddingFromSystemUi = innerPadding,
                         activityFinisher = { finish() }
                     )
                 }
@@ -191,7 +191,7 @@ fun Preview() {
             NavHostContainer(
                 navController = controller,
                 activityFinisher = {},
-                modifier = Modifier.padding(padding)
+                paddingFromSystemUi = padding
             )
         }
     }
