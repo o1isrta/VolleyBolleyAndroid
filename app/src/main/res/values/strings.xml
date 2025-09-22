@@ -190,7 +190,7 @@
     <string name="team_number">Team %1$d</string>
     <string name="free_spot">Free spot</string>
     <string name="choose_team_big">CHOOSE TEAM</string>
-    <string name="joined_players">Joined players %1$d/%2$d</string>
+    <string name="joined_players">Joined players:</string>
     <string name="you_are_in_the_game">You are in the game</string>
     <string name="game_host">Game host</string>
     <string name="choose_this_game">CHOOSE THIS GAME</string>

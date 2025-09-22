@@ -1,12 +1,9 @@
 package cy.volleybolley.core.presentation.ui.screens.findagame
 
-import android.R.attr.maxLength
-import android.R.attr.text
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -18,7 +15,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,19 +28,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -52,27 +40,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
-import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
-import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButtonMap
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.OutlinedActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
-import cy.volleybolley.core.presentation.ui.screens.games.mygames.MyGameScreen
+import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
-import kotlin.collections.map
 
 @Composable
 fun JoinTheGameScreen(navController: NavHostController) {
@@ -81,16 +62,10 @@ fun JoinTheGameScreen(navController: NavHostController) {
     }
 }
 
-@Composable
-private fun JoinTheGameScreen() {
-    TransparentContainer() {
 
-    }
-
-}
 
 @Composable
-fun MyGameContent(
+private fun JoinTheGameScreen(
     details: GameDetails,
     onBack: () -> Unit,
     onOpenMap: (Location) -> Unit,
@@ -100,8 +75,6 @@ fun MyGameContent(
     onDeletePlayer: (index: Int) -> Unit
 ) {
     val scroll = rememberScrollState()
-    val focusManager = LocalFocusManager.current
-    var message by remember { mutableStateOf(details.message) }
     val interactionSource = remember { MutableInteractionSource() }
 
     val (dateText, timeRangeText) = remember(details.startTime, details.endTime) {
@@ -112,12 +85,7 @@ fun MyGameContent(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scroll)
-            .clickable(indication = null, interactionSource = interactionSource) {
-                focusManager.clearFocus()
-            }
     ) {
-        Spacer(Modifier.height(VolleyDimens.DIMEN_116.dp))
-
         GlassCard(
             modifier = Modifier.padding(horizontal = VolleyDimens.DIMEN_8.dp),
             minHeight = VolleyDimens.DIMEN_380.dp
@@ -144,12 +112,17 @@ fun MyGameContent(
                     LevelBadge(level = details.host.level)
                 }
 
-                VolleyMessageTextField.MessageField(
-                    modifier = Modifier.fillMaxWidth(),
-                    textInput = message,
-                    maxLength = VolleyDimens.DIMEN_160,
-                    hint = stringResource(R.string.your_message)
-                ) { newText -> message = newText }
+                TransparentContainer(
+                    cornerRadius = VolleyDimens.DIMEN_16
+                ) {
+                    VolleyText.BodyRegular(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(VolleyDimens.DIMEN_16.dp),
+                        text = details.message,
+                        color = VolleyColor.White
+                    )
+                }
 
                 DividerGlass()
 
@@ -179,32 +152,40 @@ fun MyGameContent(
                 LabeledInlineRow(stringResource(R.string.`when`), "$dateText, $timeRangeText")
 
                 val levelText = details.levels.joinToString(", ")
-                LabeledInlineRow(stringResource(R.string.level), levelText.ifBlank { "-" })
+                LabeledInlineRow(stringResource(R.string.level) + ":", levelText.ifBlank { "-" })
 
-                LabeledInlineRow(stringResource(R.string.gender), details.gender)
+                LabeledInlineRow(stringResource(R.string.gender) + ":", details.gender)
 
                 DividerGlass()
 
                 SectionTitle(stringResource(R.string.payment))
+
+                val paymentAccount = if (details.paymentAccount == null) {
+                    PaymentType.CASH.nameValue.lowercase()
+                        .replaceFirstChar { it.uppercaseChar() }
+                } else {
+                    "${
+                        details.paymentType.nameValue.lowercase()
+                            .replaceFirstChar { it.uppercaseChar() }
+                    } · ${details.paymentAccount}"
+                }
+
                 VolleyText.BodyRegular(
-                    text = stringResource(
-                        R.string.payment,
-                        details.paymentType,
-                        details.paymentAccount
-                    ),
+                    text = paymentAccount,
                     color = VolleyColor.White
                 )
-                val limited = remember(text) { VolleyUiUtil.getLimitedText(maxLength, "text") }
 
+                TransparentContainer(
+                    cornerRadius = VolleyDimens.DIMEN_16
+                ) {
                     VolleyText.BodyRegular(
-                        text = limited,
-                        color = VolleyColor.White,
                         modifier = Modifier
-                            .padding(VolleyDimens.DIMEN_16.dp)
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Start
+                            .fillMaxWidth()
+                            .padding(VolleyDimens.DIMEN_16.dp),
+                        text = "${stringResource(R.string.per_person)} ${details.pricePerPerson}${details.currencyType}",
+                        color = VolleyColor.White
                     )
-
+                }
 
                 DividerGlass()
 
@@ -214,28 +195,19 @@ fun MyGameContent(
                     capacity = details.maximumPlayers,
                     onDelete = onDeletePlayer
                 )
+
+                ActiveButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            top = VolleyDimens.DIMEN_16.dp,
+                        ),
+                    text = stringResource(R.string.join_the_game),
+                ) {
+
+                }
             }
         }
-
-        Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-        VolleyButton.GroupInvitesButtons(
-            onInvitePlayersClick = {},
-            onShareLinkClick = {  }
-        )
-
-        Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-        OutlinedActiveButton(
-            text = stringResource(R.string.cancel_game),
-            onClick = onCancel,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = VolleyDimens.DIMEN_8.dp),
-            paddingValues = PaddingValues(vertical = VolleyDimens.DIMEN_12.dp)
-        )
-
-        Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
     }
 }
 
@@ -447,7 +419,7 @@ private fun openMap(context: Context, location: Location) {
 @Preview(
     showBackground = true,
     showSystemUi = true,
-    device = "spec:width=375dp,height=812dp"
+    device = "spec:width=375dp,height=1300dp"
 )
 @Composable
 private fun JoinTheGameScreenPreview() {
@@ -456,34 +428,42 @@ private fun JoinTheGameScreenPreview() {
             Modifier
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
+                .padding(top = 116.dp)
         ) {
-            MyGameContent(
+            JoinTheGameScreen(
                 details = GameDetails(
                     gameId = 1,
                     gameType = "",
                     host = Host(
                         id = 1,
-                        name = "sss",
+                        name = "Artem Ivanov",
                         avatar = null,
-                        level = "Le"
+                        level = "L"
                     ),
-                    message = "f",
+                    message = "Hi! Just old friends meet at the court.",
                     courtLocation = Location(
                         longitude = 0.6,
                         latitude = 0.7,
-                        courtName = "ff",
-                        locationName = "dddd"
+                        courtName = "Karon Beach Club",
+                        locationName = "Ratak Rd, Mueng Phuket"
                     ),
-                    startTime = "22",
-                    endTime = "22",
-                    gender = "dd",
-                    levels = emptyList(),
+                    startTime = "2025-08-22T00:00:00Z",
+                    endTime = "2025-08-22T00:00:00Z",
+                    gender = "Mix",
+                    levels = listOf("Light"),
                     pricePerPerson = "5",
                     maximumPlayers = 5,
-                    paymentType = "s",
-                    paymentAccount = "123",
-                    currencyType = "dd",
-                    players = emptyList()
+                    paymentType = PaymentType.THAIBANK,
+                    paymentAccount = "988 016 7890",
+                    currencyType = "$",
+                    players = listOf(
+                        PlayerShort(
+                            playerId = 1,
+                            name = "Artem Ivanov",
+                            level = "L",
+                            avatar = null
+                        )
+                    )
                 ),
                 onBack = { },
                 onOpenMap = { },
