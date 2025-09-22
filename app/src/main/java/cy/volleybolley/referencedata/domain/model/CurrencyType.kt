@@ -1,8 +1,11 @@
 package cy.volleybolley.referencedata.domain.model
 
+/**
+ * Необходимо поправить под правильную логику справочников
+ */
 enum class CurrencyType(val currencyValue: String) {
-    EUR("EUR"),
-    THB("THB"),
+    EUR("€"),
+    THB("฿"),
     UNKNOWN("UNKNOWN");
 
     companion object {

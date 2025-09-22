@@ -2,9 +2,11 @@ package cy.volleybolley.core.presentation.ui.screens.findagame
 
 import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.profile.domain.model.PaymentType
+import cy.volleybolley.referencedata.domain.model.CurrencyType
 
 data class JoinTheGameState(
-    val content: String
+    val isRefreshing: Boolean = false,
+    val details: GameDetails
 ) : UiState
 
 data class GameDetails (
@@ -13,15 +15,14 @@ data class GameDetails (
     val host: Host,
     val message: String,
     val courtLocation: Location,
-    val startTime: String,
-    val endTime: String,
+    val time: String,
     val gender: String,
     val levels: List<String>,
     val pricePerPerson: String,
     val maximumPlayers: Int,
     val paymentType: PaymentType,
     val paymentAccount: String?,
-    val currencyType: String,
+    val currencyType: CurrencyType,
     val players: List<PlayerShort>,
 )
 

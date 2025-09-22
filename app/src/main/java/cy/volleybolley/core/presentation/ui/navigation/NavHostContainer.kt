@@ -18,6 +18,7 @@ import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptions
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.findagame.JoinTheGameScreen
+import cy.volleybolley.core.presentation.ui.screens.findagame.JoinTheGameViewModel
 import cy.volleybolley.core.presentation.ui.screens.findatourney.ChooseTeamScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.IndividualPlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.InvitePlayersScreen
@@ -52,6 +53,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.PersonalDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NavHostContainer(
@@ -96,7 +98,12 @@ fun NavHostContainer(
             composable<TourneyEnteringConditionsRoute> { TourneyEnteringConditionsScreen(navController) }
 
             // find game
-            composable<JoinTheGameRoute> { JoinTheGameScreen(navController) }
+            composable<JoinTheGameRoute> {
+                JoinTheGameScreen(
+                    navController = navController,
+                    viewModel = koinViewModel<JoinTheGameViewModel>()
+                )
+            }
 
             // find tourney
             composable<ChooseTeamRoute> { ChooseTeamScreen(navController) }
