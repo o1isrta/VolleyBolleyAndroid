@@ -81,7 +81,7 @@ private fun PersonalDataScreen(
         cornerRadius = VolleyDimens.DIMEN_32,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp, 0.dp)
+            .padding(VolleyDimens.DIMEN_8.dp)
             .verticalScroll(scrollState)
     ) {
         Column(
