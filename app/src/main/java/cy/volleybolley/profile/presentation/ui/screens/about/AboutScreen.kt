@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -140,6 +141,8 @@ private fun AboutTextLine(
             modifier = Modifier.weight(VolleyUiUtil.ABOUT_SCREEN_TITLES_WEIGHT)
         )
 
+        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+
         VolleyText.BodyRegular(
             text = value,
             textAlign = TextAlign.Start,
@@ -155,7 +158,10 @@ private fun AboutScreenDivider() {
     VolleySimpleComponent.DividerLine(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, VolleyDimens.DIMEN_16.dp)
+            .padding(
+                horizontal = VolleyDimens.DIMEN_0.dp,
+                vertical = VolleyDimens.DIMEN_16.dp
+            )
     )
 }
 

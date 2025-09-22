@@ -172,10 +172,10 @@ private fun PaymentsComponent(
             modifier = Modifier
                 .weight(1f)
                 .padding(
-                    start = 0.dp,
-                    top = 0.dp,
+                    start = VolleyDimens.DIMEN_0.dp,
+                    top = VolleyDimens.DIMEN_0.dp,
                     end = VolleyDimens.DIMEN_8.dp,
-                    bottom = 0.dp
+                    bottom = VolleyDimens.DIMEN_0.dp
                 )
                 .clickable(
                     interactionSource = null,
@@ -204,7 +204,7 @@ private fun PaymentsDivider() {
     VolleySimpleComponent.DividerLine(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, VolleyDimens.DIMEN_14.dp)
+            .padding(VolleyDimens.DIMEN_0.dp, VolleyDimens.DIMEN_14.dp)
     )
 }
 

@@ -234,8 +234,8 @@ private fun AvatarBlock(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(
-                        0.dp,
-                        0.dp,
+                        VolleyDimens.DIMEN_0.dp,
+                        VolleyDimens.DIMEN_0.dp,
                         VolleyDimens.DIMEN_10.dp,
                         VolleyDimens.DIMEN_6.dp
                     )

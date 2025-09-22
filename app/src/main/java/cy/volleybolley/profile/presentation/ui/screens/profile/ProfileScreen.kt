@@ -303,7 +303,7 @@ private fun ProfileDialog(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = false)
 @Composable
 private fun PreviewProfileScreen() {
     VolleyContainersRootTransparent.Root {

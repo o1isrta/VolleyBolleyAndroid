@@ -263,7 +263,7 @@ private fun PreviewEnterPaymentDataScreen() {
                     eventCallback = {},
                     navigateAction = {}
                 )
-                Spacer(Modifier.height(30.dp))
+                Spacer(Modifier.height(VolleyDimens.DIMEN_30.dp))
                 EnterPaymentDataScreen(
                     screenPaymentType = PaymentType.REVOLUT,
                     state = stateRevolut,
@@ -297,7 +297,7 @@ private fun PreviewEnterPaymentDataScreen2() {
                     eventCallback = {},
                     navigateAction = {}
                 )
-                Spacer(Modifier.height(30.dp))
+                Spacer(Modifier.height(VolleyDimens.DIMEN_30.dp))
                 EnterPaymentDataScreen(
                     screenPaymentType = PaymentType.THAIBANK,
                     state = stateThai,

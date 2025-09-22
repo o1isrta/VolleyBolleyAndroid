@@ -50,7 +50,10 @@ object VolleyUiUtil {
 
     // Weight ratio for About Screen
     const val ABOUT_SCREEN_TITLES_WEIGHT = 0.37f
-    const val ABOUT_SCREEN_CONTENT_WEIGHT = 0.37f
+    const val ABOUT_SCREEN_CONTENT_WEIGHT = 0.63f
+
+    // ChangePhotoScreen log tag
+    const val PHOTO_FILE_TAG = "photo_tag"
 
     // temp mock value
     const val MOCK_FAQ = "# Registration\n" +

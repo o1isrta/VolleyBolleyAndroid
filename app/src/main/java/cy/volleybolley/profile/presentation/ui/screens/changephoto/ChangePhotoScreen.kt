@@ -1,7 +1,10 @@
 package cy.volleybolley.profile.presentation.ui.screens.changephoto
 
 import android.content.Context
+import android.net.Uri
 import android.os.Environment
+import android.util.Log
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cy.volleybolley.BuildConfig
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
@@ -46,6 +50,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEffect.NavigateFromChangePhotoScreen
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.GetAvatarFromPersonalData
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.OnBackFromChangePhotoClick
@@ -63,11 +68,39 @@ fun ChangePhotoScreen(
     navController: NavHostController,
     viewModel: ChangePhotoScreenViewModel = koinViewModel(),
 ) {
+    val context = LocalContext.current
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    // Create PhotoPicker request
+    val galleryPhotoPicker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        uri?.let {
+            viewModel.obtainEvent(OnGalleryPhotoSelect(it.toString()))
+        }
+    }
+
+    // Create template file and define it`s uri
+    val cameraPhotoFile = createTemplatePhotoFile(context)
+    val cameraPhotoUri = cameraPhotoFile?.let {
+        FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.fileprovider",
+            it
+        )
+    }
+
+    // Create Camera Request
+    val cameraPhotoPicker = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+        if (isSuccess) cameraPhotoFile?.let {
+            viewModel.obtainEvent(OnCameraPhotoCreate(it.absolutePath))
+        }
+    }
+
     ChangePhotoScreen(
         inputAvatar = avatarFromPersonalData,
+        galleryPhotoPicker = galleryPhotoPicker,
+        cameraPhotoPicker = cameraPhotoPicker,
+        cameraPhotoUri = cameraPhotoUri,
         state = state,
         effect = effect,
         navigateAction = { newAvatar ->
@@ -83,6 +116,9 @@ fun ChangePhotoScreen(
 @Composable
 private fun ChangePhotoScreen(
     inputAvatar: String? = null,
+    galleryPhotoPicker: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>? = null,
+    cameraPhotoPicker: ManagedActivityResultLauncher<Uri, Boolean>? = null,
+    cameraPhotoUri: Uri? = null,
     state: ChangePhotoScreenState,
     effect: ChangePhotoScreenEffect?,
     navigateAction: (String?) -> Unit,
@@ -92,37 +128,7 @@ private fun ChangePhotoScreen(
         eventCallback(GetAvatarFromPersonalData(inputAvatar))
     }
 
-    val context = LocalContext.current
     val scrollState = rememberScrollState()
-    val gradientBrush = remember {
-        Brush.verticalGradient(
-            colors = listOf(
-                VolleyColor.YellowForGradient,
-                VolleyColor.GreenForGradient
-            )
-        )
-    }
-    val menuShape = remember { RoundedCornerShape(VolleyDimens.DIMEN_32.dp) }
-
-    // Create PhotoPicker request
-    val galleryPhotoPicker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        uri?.let {
-            eventCallback(OnGalleryPhotoSelect(it.toString()))
-        }
-    }
-
-    // Create template file and define it`s uri
-    val cameraPhotoFile = createPhotoFile(context)
-    val cameraPhotoUri = FileProvider.getUriForFile(
-        context,
-        "${context.packageName}.fileprovider",
-        cameraPhotoFile
-    )
-
-    // Create Camera Request
-    val cameraPhotoPicker = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
-        if (isSuccess) eventCallback(OnCameraPhotoCreate(cameraPhotoFile.absolutePath))
-    }
 
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
@@ -144,45 +150,16 @@ private fun ChangePhotoScreen(
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
             Avatar(
                 modifier = Modifier.fillMaxWidth(),
-                avatarString = state.avatarUrl,
+                avatarUrl = state.avatarUrl,
             )
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
-            Column(
-                modifier = Modifier
-                    .background(VolleyColor.White, menuShape)
-                    .border(
-                        width = 1.dp,
-                        brush = gradientBrush,
-                        shape = menuShape
-                    )
-                    .padding(VolleyDimens.DIMEN_20.dp)
-            ) {
-                MenuComponent(
-                    painter = painterResource(R.drawable.ic_photo_gallery),
-                    title = stringResource(R.string.choose_from_gallery)
-                ) {
-                    galleryPhotoPicker.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                }
-
-                ChangePhotoScreenDivider()
-
-                MenuComponent(
-                    painter = painterResource(R.drawable.ic_photo_camera),
-                    title = stringResource(R.string.take_photo)
-                ) {
-                    cameraPhotoPicker.launch(cameraPhotoUri)
-                }
-
-                ChangePhotoScreenDivider()
-
-                MenuComponent(
-                    painter = painterResource(R.drawable.ic_photo_delete),
-                    title = stringResource(R.string.delete_photo)
-                ) { eventCallback(OnDeletePhotoClick) }
-            }
+            Menu(
+                galleryPhotoPicker = galleryPhotoPicker,
+                cameraPhotoPicker = cameraPhotoPicker,
+                cameraPhotoUri = cameraPhotoUri,
+                eventCallback = eventCallback
+            )
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
@@ -204,21 +181,10 @@ private fun ChangePhotoScreen(
     }
 }
 
-private fun createPhotoFile(context: Context): File {
-    // Create an image file name
-    val fileName = "volleyPhoto_${System.currentTimeMillis()}"
-    val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-    return File.createTempFile(
-        fileName,
-        ".jpg",
-        storageDir
-    )
-}
-
 @Composable
 private fun Avatar(
     modifier: Modifier = Modifier,
-    avatarString: String? = null,
+    avatarUrl: String? = null,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -226,7 +192,7 @@ private fun Avatar(
     ) {
         Box {
             VolleyAvatar.CircularAvatar(
-                avatar = avatarString,
+                avatar = avatarUrl,
                 size = VolleyDimens.DIMEN_122.dp
             )
             Image(
@@ -236,13 +202,68 @@ private fun Avatar(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(
-                        0.dp,
-                        0.dp,
+                        VolleyDimens.DIMEN_0.dp,
+                        VolleyDimens.DIMEN_0.dp,
                         VolleyDimens.DIMEN_10.dp,
                         VolleyDimens.DIMEN_6.dp
                     )
             )
         }
+    }
+}
+
+@Stable
+@Composable
+private fun Menu(
+    galleryPhotoPicker: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>? = null,
+    cameraPhotoPicker: ManagedActivityResultLauncher<Uri, Boolean>? = null,
+    cameraPhotoUri: Uri? = null,
+    eventCallback: (ChangePhotoScreenEvent) -> Unit,
+) {
+    val gradientBrush = remember {
+        Brush.verticalGradient(
+            colors = listOf(
+                VolleyColor.YellowForGradient,
+                VolleyColor.GreenForGradient
+            )
+        )
+    }
+    val menuShape = remember { RoundedCornerShape(VolleyDimens.DIMEN_32.dp) }
+
+    Column(
+        modifier = Modifier
+            .background(VolleyColor.White, menuShape)
+            .border(
+                width = VolleyDimens.DIMEN_1.dp,
+                brush = gradientBrush,
+                shape = menuShape
+            )
+            .padding(VolleyDimens.DIMEN_20.dp)
+    ) {
+        MenuComponent(
+            painter = painterResource(R.drawable.ic_photo_gallery),
+            title = stringResource(R.string.choose_from_gallery)
+        ) {
+            galleryPhotoPicker?.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+        }
+
+        ChangePhotoScreenDivider()
+
+        MenuComponent(
+            painter = painterResource(R.drawable.ic_photo_camera),
+            title = stringResource(R.string.take_photo)
+        ) {
+            cameraPhotoUri?.let { cameraPhotoPicker?.launch(it) }
+        }
+
+        ChangePhotoScreenDivider()
+
+        MenuComponent(
+            painter = painterResource(R.drawable.ic_photo_delete),
+            title = stringResource(R.string.delete_photo)
+        ) { eventCallback(OnDeletePhotoClick) }
     }
 }
 
@@ -277,7 +298,7 @@ private fun MenuComponent(
                 .weight(1f)
                 .padding(
                     horizontal = VolleyDimens.DIMEN_8.dp,
-                    vertical = 0.dp
+                    vertical = VolleyDimens.DIMEN_0.dp
                 )
         )
     }
@@ -288,11 +309,28 @@ private fun ChangePhotoScreenDivider() {
     VolleySimpleComponent.DividerLine(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, VolleyDimens.DIMEN_16.dp)
+            .padding(VolleyDimens.DIMEN_0.dp, VolleyDimens.DIMEN_16.dp)
     )
 }
 
-@Preview
+private fun createTemplatePhotoFile(context: Context): File? {
+    // Create an image file name
+    return runCatching {
+        val fileName = "volleyPhoto_${System.currentTimeMillis()}"
+        val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        File.createTempFile(
+            fileName,
+            ".jpg",
+            storageDir
+        )
+    }.onFailure { error ->
+        if (BuildConfig.DEBUG) {
+            Log.e(VolleyUiUtil.PHOTO_FILE_TAG, "ChangePhotoScreen >> createPhotoFile >> ${error.message}")
+        }
+    }.getOrNull()
+}
+
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewChangePhotoScreen() {
     VolleyContainersRootTransparent.Root {
@@ -305,8 +343,9 @@ private fun PreviewChangePhotoScreen() {
             ChangePhotoScreen(
                 state = ChangePhotoScreenState(),
                 effect = null,
-                navigateAction = {}
-            ) { }
+                navigateAction = {},
+                eventCallback = {}
+            )
         }
     }
 }

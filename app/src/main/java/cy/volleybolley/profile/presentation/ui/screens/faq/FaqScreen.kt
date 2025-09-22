@@ -161,7 +161,10 @@ private fun FaqScreenDivider() {
     VolleySimpleComponent.DividerLine(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, VolleyDimens.DIMEN_16.dp)
+            .padding(
+                horizontal = VolleyDimens.DIMEN_0.dp,
+                vertical = VolleyDimens.DIMEN_16.dp
+            )
     )
 }
 

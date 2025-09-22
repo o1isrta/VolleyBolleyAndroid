@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -163,6 +164,7 @@ private fun PlayersListItem(
             text = "${player.firstName} ${player.lastName}",
             color = VolleyColor.White,
             maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier
                 .weight(1f)
         )
