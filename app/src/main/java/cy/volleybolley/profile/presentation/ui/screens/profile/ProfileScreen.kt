@@ -101,7 +101,7 @@ private fun ProfileScreen(
                     .padding(VolleyDimens.DIMEN_20.dp)
             ) {
                 ProfileComponent(
-                    painter = painterResource(R.drawable.ic_players),
+                    painter = painterResource(R.drawable.ic_ball),
                     title = stringResource(R.string.profile_players_component),
                 ) { eventCallback(OnPlayersClick) }
 

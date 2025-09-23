@@ -268,7 +268,7 @@ private fun PreviewAvatarBlock() {
     }
 }
 
-@Preview
+@Preview(showSystemUi = false, heightDp = 1000)
 @Composable
 private fun PreviewPersonalDataScreen() {
     VolleyContainersRootTransparent.Root {

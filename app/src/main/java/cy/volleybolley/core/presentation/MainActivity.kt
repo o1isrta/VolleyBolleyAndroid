@@ -121,8 +121,8 @@ private fun BottomNavComponent(
         TopLevelRoute(
             stringResource(R.string.my_games),
             MyGamesTopLevelRoute,
-            painterResource(R.drawable.ic_players),
-            painterResource(R.drawable.ic_players_gradient)
+            painterResource(R.drawable.ic_ball),
+            painterResource(R.drawable.ic_ball_gradient)
         ),
         TopLevelRoute(
             stringResource(R.string.profile),

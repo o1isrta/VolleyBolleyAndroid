@@ -98,7 +98,9 @@ private fun AboutScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            AboutScreenDivider()
+            AboutScreenDivider(
+                bottomPadding = VolleyDimens.DIMEN_22
+            )
 
             AboutTextLine(
                 title = stringResource(R.string.designed_by),
@@ -106,7 +108,9 @@ private fun AboutScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            AboutScreenDivider()
+            AboutScreenDivider(
+                bottomPadding = VolleyDimens.DIMEN_12
+            )
 
             AboutTextLine(
                 title = stringResource(R.string.developed_by),
@@ -154,13 +158,18 @@ private fun AboutTextLine(
 }
 
 @Composable
-private fun AboutScreenDivider() {
+private fun AboutScreenDivider(
+    topPadding: Int = VolleyDimens.DIMEN_16,
+    bottomPadding: Int = VolleyDimens.DIMEN_16,
+) {
     VolleySimpleComponent.DividerLine(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = VolleyDimens.DIMEN_0.dp,
-                vertical = VolleyDimens.DIMEN_16.dp
+                start = VolleyDimens.DIMEN_0.dp,
+                end = VolleyDimens.DIMEN_0.dp,
+                top = topPadding.dp,
+                bottom = bottomPadding.dp,
             )
     )
 }

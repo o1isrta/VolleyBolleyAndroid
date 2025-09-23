@@ -168,7 +168,7 @@ private fun FaqScreenDivider() {
     )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = false, heightDp = 1200)
 @Composable
 private fun PreviewAboutScreen() {
     VolleyContainersRootTransparent.Root {
