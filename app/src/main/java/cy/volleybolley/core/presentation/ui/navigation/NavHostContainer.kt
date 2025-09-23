@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import cy.volleybolley.core.presentation.ui.screens.authorization.AboutLevelsScreen
@@ -42,8 +43,8 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.Upcoming
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
-import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
 import cy.volleybolley.core.presentation.ui.screens.home.rateplayers.RatePlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.AboutScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
@@ -97,8 +98,15 @@ fun NavHostContainer(
                     }
                 )
             }
-            composable<SuccessRoute> { SuccessScreen(navController) }
-
+            composable<SuccessRoute> { backStackEntry ->
+                val event = backStackEntry.toRoute<SuccessRoute>().succeedGame
+                SuccessScreen(
+                    navController = navController,
+                    viewModel = koinViewModel {
+                        parametersOf(event)
+                    }
+                )
+            }
             // create game
             composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }
             composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(navController) }
@@ -168,6 +176,17 @@ fun NavHostContainer(
             composable<EnterPaymentDataRoute> { EnterPaymentDataScreen(navController) }
             composable<FaqRoute> { FaqScreen(navController) }
             composable<AboutRoute> { AboutScreen(navController) }
+        }
+
+        composable<ShareLinkRoute>(
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "volleybolley://invite/{type}/{id}" }
+            )
+        ) { backStackEntry ->
+            val route = backStackEntry.toRoute<ShareLinkRoute>()
+            JoinTheGameScreen(
+                navController = navController
+            )
         }
     }
 }

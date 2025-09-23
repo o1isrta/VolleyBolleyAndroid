@@ -63,7 +63,9 @@ object ChooseTeamRoute : NavMap
 object IndividualPlayersRoute : NavMap
 
 @Serializable
-object InvitePlayersRoute : NavMap
+data class InvitePlayersRoute(
+    val id: Int
+) : NavMap
 
 @Serializable
 object JoinIndividualRoute : NavMap
@@ -137,7 +139,9 @@ data class RatePlayersRoute(
 ) : NavMap
 
 @Serializable
-object SuccessRoute : NavMap
+data class SuccessRoute(
+    val succeedGame: String
+) : NavMap
 
 // --- profile flow ---
 @Serializable
@@ -166,3 +170,6 @@ object ProfileRoute : NavMap
 
 @Serializable
 object EnterPaymentDataRoute : NavMap
+
+@Serializable
+data class ShareLinkRoute(val id: String, val type: String) : NavMap
