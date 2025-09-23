@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -138,6 +139,16 @@ private fun BottomNavComponent(
             topEnd = VolleyDimens.DIMEN_36.dp
         )
     }
+
+    // To fix icons top-crop on old Androids
+    val bottomNavBarHeight = remember {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+            VolleyDimens.DIMEN_100
+        } else {
+            VolleyDimens.DIMEN_81
+        }
+    }
+
     BottomAppBar(
         containerColor = VolleyColor.TurquoiseBottom,
         modifier = Modifier
@@ -145,7 +156,7 @@ private fun BottomNavComponent(
                 color = VolleyColor.TurquoiseBottom,
                 shape = shape
             )
-            .height(VolleyDimens.DIMEN_81.dp)
+            .height(bottomNavBarHeight.dp)
             .padding(top = VolleyDimens.DIMEN_10.dp)
             .clip(shape)
     ) {
