@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import cy.volleybolley.core.presentation.ui.navigation.OnboardingRoute
 import kotlinx.coroutines.delay
 
-private const val LAUNCH_DELAY_MILLIS = 3_000L
+private const val LAUNCH_DELAY_MILLIS = 1_500L
 
 @Composable
 fun LaunchScreen(navController: NavHostController) {
@@ -22,7 +22,6 @@ fun LaunchScreen(navController: NavHostController) {
         CircularProgressIndicator()
     }
 
-    // Через 3 сек переход дальше и удаление Launch из backstack
     LaunchedEffect(Unit) {
         delay(LAUNCH_DELAY_MILLIS)
         navController.navigate(OnboardingRoute)

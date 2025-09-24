@@ -64,6 +64,8 @@ import java.io.File
 
 @Composable
 fun ChangePhotoScreen(
+    topBarPadding: Int,
+    navBarPadding: Int,
     avatarFromPersonalData: String? = null,
     navController: NavHostController,
     viewModel: ChangePhotoScreenViewModel = koinViewModel(),
@@ -99,6 +101,8 @@ fun ChangePhotoScreen(
     }
 
     ChangePhotoScreen(
+        topBarPadding = topBarPadding,
+        navBarPadding = navBarPadding,
         inputAvatar = avatarFromPersonalData,
         galleryPhotoPicker = galleryPhotoPicker,
         cameraPhotoPicker = cameraPhotoPicker,
@@ -117,6 +121,8 @@ fun ChangePhotoScreen(
 
 @Composable
 private fun ChangePhotoScreen(
+    topBarPadding: Int = 0,
+    navBarPadding: Int = 0,
     inputAvatar: String? = null,
     galleryPhotoPicker: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>? = null,
     cameraPhotoPicker: ManagedActivityResultLauncher<Uri, Boolean>? = null,
@@ -132,47 +138,52 @@ private fun ChangePhotoScreen(
 
     val scrollState = rememberScrollState()
 
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
-            .verticalScroll(scrollState)
-    ) {
-        Column(
+    Column(Modifier.verticalScroll(scrollState)) {
+        Spacer(Modifier.height(topBarPadding.dp))
+
+        VolleyContainersRootTransparent.TransparentContainer(
+            cornerRadius = VolleyDimens.DIMEN_32,
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .fillMaxWidth()
+                .padding(VolleyDimens.DIMEN_8.dp)
         ) {
-            VolleySimpleComponent.TitleWithBackArrow(
-                title = stringResource(R.string.change_photo),
-                modifier = Modifier.fillMaxWidth(),
-                onBackClick = { eventCallback(OnBackFromChangePhotoClick) }
-            )
-
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-            Avatar(
-                modifier = Modifier.fillMaxWidth(),
-                avatarUrl = state.avatarUrl,
-            )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-            Menu(
-                galleryPhotoPicker = galleryPhotoPicker,
-                cameraPhotoPicker = cameraPhotoPicker,
-                cameraPhotoUri = cameraPhotoUri,
-                eventCallback = eventCallback
-            )
-
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-            VolleyButton.ActiveButton(
-                enabled = state.buttonEnabled,
-                text = stringResource(R.string.save),
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_44.dp)
-            ) { eventCallback(OnSaveButtonClick) }
+                    .padding(VolleyDimens.DIMEN_20.dp)
+            ) {
+                VolleySimpleComponent.TitleWithBackArrow(
+                    title = stringResource(R.string.change_photo),
+                    modifier = Modifier.fillMaxWidth(),
+                    onBackClick = { eventCallback(OnBackFromChangePhotoClick) }
+                )
+
+                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Avatar(
+                    modifier = Modifier.fillMaxWidth(),
+                    avatarUrl = state.avatarUrl,
+                )
+                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+                Menu(
+                    galleryPhotoPicker = galleryPhotoPicker,
+                    cameraPhotoPicker = cameraPhotoPicker,
+                    cameraPhotoUri = cameraPhotoUri,
+                    eventCallback = eventCallback
+                )
+
+                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+                VolleyButton.ActiveButton(
+                    enabled = state.buttonEnabled,
+                    text = stringResource(R.string.save),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(VolleyDimens.DIMEN_44.dp)
+                ) { eventCallback(OnSaveButtonClick) }
+            }
         }
+
+        Spacer(Modifier.height(navBarPadding.dp))
     }
 
     LaunchedEffect(effect) {

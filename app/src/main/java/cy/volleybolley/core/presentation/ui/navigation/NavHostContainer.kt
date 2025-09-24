@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.screens.authorization.AboutLevelsScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScreen
@@ -69,6 +70,8 @@ fun NavHostContainer(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: NavMap = LaunchRoute,
+    topBarPadding: Int,
+    navBarPadding: Int,
     activityFinisher: () -> Unit,
 ) {
     NavHost(
@@ -154,32 +157,61 @@ fun NavHostContainer(
         navigation<ProfileTopLevelRoute>(startDestination = ProfileRoute) {
             composable<ProfileRoute> {
                 ProfileScreen(
+                    topBarPadding = topBarPadding,
+                    navBarPadding = navBarPadding,
                     navController = navController,
                     finisher = activityFinisher,
                 )
             }
 
-            composable<AboutRoute> { AboutScreen(navController) }
+            composable<AboutRoute> {
+                AboutScreen(
+                    navController = navController,
+                    topBarPadding = topBarPadding,
+                    navBarPadding = navBarPadding,
+                )
+            }
 
             composable<ChangePhotoRoute> { backStackEntry ->
                 val avatarString = backStackEntry.toRoute<ChangePhotoRoute>().avatarUrl
-                ChangePhotoScreen(navController = navController, avatarFromPersonalData = avatarString)
+                ChangePhotoScreen(
+                    topBarPadding = VolleyDimens.DIMEN_40,
+                    navBarPadding = navBarPadding,
+                    navController = navController,
+                    avatarFromPersonalData = avatarString
+                )
             }
 
-            composable<FaqRoute> { FaqScreen(navController) }
+            composable<FaqRoute> {
+                FaqScreen(
+                    navController = navController,
+                    topBarPadding = topBarPadding,
+                    navBarPadding = navBarPadding,
+                )
+            }
 
             composable<PaymentsRoute> { backStackEntry ->
                 val viewModel = koinViewModel<PaymentsScreenViewModel> {
                     parametersOf(BackPaymentsHolder(backStackEntry.savedStateHandle))
                 }
-                PaymentsScreen(navController, viewModel)
+                PaymentsScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    topBarPadding = topBarPadding,
+                    navBarPadding = navBarPadding,
+                )
             }
 
             composable<PersonalDataRoute> { backStackEntry ->
                 val viewModel = koinViewModel<PersonalDataScreenViewModel> {
                     parametersOf(BackAvatarHolder(backStackEntry.savedStateHandle))
                 }
-                PersonalDataScreen(navController, viewModel)
+                PersonalDataScreen(
+                    topBarPadding = VolleyDimens.DIMEN_40,
+                    navBarPadding = navBarPadding,
+                    navController = navController,
+                    viewModel = viewModel,
+                )
             }
 
             composable<PlayerProfileRoute> { backStackEntry ->
@@ -187,14 +219,24 @@ fun NavHostContainer(
                 val viewModel = koinViewModel<PlayerProfileScreenViewModel> {
                     parametersOf(playerId)
                 }
-                PlayerProfileScreen(navController, viewModel)
+                PlayerProfileScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    topBarPadding = topBarPadding,
+                    navBarPadding = navBarPadding,
+                )
             }
 
             composable<PlayersRoute> { backStackEntry ->
                 val viewModel = koinViewModel<PlayersScreenViewModel> {
                     parametersOf(BackPlayerIdHolder(backStackEntry.savedStateHandle))
                 }
-                PlayersScreen(navController, viewModel)
+                PlayersScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    topBarPadding = topBarPadding,
+                    navBarPadding = navBarPadding,
+                )
             }
 
             composable<EnterPaymentDataRoute> { backStackEntry ->
@@ -202,7 +244,12 @@ fun NavHostContainer(
                 val viewModel = koinViewModel<EnterPaymentDataScreenViewModel> {
                     parametersOf(routeWithArgs.paymentTypeName, routeWithArgs.paymentsJsonString)
                 }
-                EnterPaymentDataScreen(navController, viewModel)
+                EnterPaymentDataScreen(
+                    topBarPadding = topBarPadding,
+                    navBarPadding = navBarPadding,
+                    navController = navController,
+                    viewModel = viewModel,
+                )
             }
         }
     }

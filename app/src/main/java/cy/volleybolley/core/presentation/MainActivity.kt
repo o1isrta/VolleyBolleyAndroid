@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -55,11 +56,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             VolleybolleyTheme {
-                RootContainer { innerPadding, navController ->
+                RootContainer { topBarPadding, navBarPadding, _, navController ->
                     NavHostContainer(
                         navController = navController,
-                        modifier = Modifier.padding(innerPadding),
-                        activityFinisher = { finish() }
+                        activityFinisher = { finish() },
+                        topBarPadding = topBarPadding,
+                        navBarPadding = navBarPadding,
                     )
                 }
             }
@@ -69,7 +71,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun RootContainer(
-    content: @Composable (PaddingValues, NavHostController) -> Unit
+    // First Int - TopBar padding, second Int - BottomNav padding
+    content: @Composable (Int, Int, PaddingValues, NavHostController) -> Unit
 ) {
     val navController = rememberNavController()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
@@ -82,6 +85,17 @@ fun RootContainer(
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark),
     ) {
+        // To fix icons top-crop on old Androids
+        val bottomNavBarHeight = remember {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+                VolleyDimens.DIMEN_106
+            } else {
+                VolleyDimens.DIMEN_81
+            }
+        }
+
+        val topBarHeight = remember { VolleyDimens.DIMEN_106 }
+
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = VolleyColor.TurquoiseDark,
@@ -97,12 +111,13 @@ fun RootContainer(
             },
             bottomBar = {
                 if (showBottomNav) {
-                    BottomNavComponent(navController, currentDestination)
+                    BottomNavComponent(navController, currentDestination, bottomNavBarHeight)
                 }
             },
-            content = { innerPadding ->
-                content(innerPadding, navController)
+            content = { scaffoldPadding ->
+                content(topBarHeight, bottomNavBarHeight, scaffoldPadding, navController)
             },
+            contentWindowInsets = WindowInsets(0, 0, 0, 0)
         )
     }
 }
@@ -110,7 +125,8 @@ fun RootContainer(
 @Composable
 private fun BottomNavComponent(
     navController: NavHostController,
-    currentDestination: NavDestination?
+    currentDestination: NavDestination?,
+    bottomNavBarHeight: Int,
 ) {
     val topLevelRoutes = listOf(
         TopLevelRoute(
@@ -138,15 +154,6 @@ private fun BottomNavComponent(
             topStart = VolleyDimens.DIMEN_36.dp,
             topEnd = VolleyDimens.DIMEN_36.dp
         )
-    }
-
-    // To fix icons top-crop on old Androids
-    val bottomNavBarHeight = remember {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
-            VolleyDimens.DIMEN_100
-        } else {
-            VolleyDimens.DIMEN_81
-        }
     }
 
     BottomAppBar(
@@ -198,11 +205,12 @@ private fun BottomNavComponent(
 @Composable
 fun Preview() {
     VolleybolleyTheme {
-        RootContainer { padding, controller ->
+        RootContainer { topPadding, bottomPadding, scaffoldPadding, controller ->
             NavHostContainer(
                 navController = controller,
                 activityFinisher = {},
-                modifier = Modifier.padding(padding)
+                topBarPadding = topPadding,
+                navBarPadding = bottomPadding,
             )
         }
     }

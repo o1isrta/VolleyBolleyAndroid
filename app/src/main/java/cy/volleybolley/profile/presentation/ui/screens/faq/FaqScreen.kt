@@ -37,6 +37,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FaqScreen(
+    topBarPadding: Int,
+    navBarPadding: Int,
     navController: NavHostController,
     viewModel: FaqScreenViewModel = koinViewModel()
 ) {
@@ -44,6 +46,8 @@ fun FaqScreen(
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     FaqScreen(
+        topBarPadding = topBarPadding,
+        navBarPadding = navBarPadding,
         state = state,
         effect = effect,
         navigateAction = { route ->
@@ -57,6 +61,8 @@ fun FaqScreen(
 
 @Composable
 private fun FaqScreen(
+    topBarPadding: Int = 0,
+    navBarPadding: Int = 0,
     state: FaqScreenState,
     effect: FaqScreenEffect?,
     navigateAction: (NavMap?) -> Unit,
@@ -64,31 +70,37 @@ private fun FaqScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
-            .verticalScroll(scrollState)
-    ) {
-        Column(
+    Column(Modifier.verticalScroll(scrollState)) {
+        Spacer(Modifier.height(topBarPadding.dp))
+
+        VolleyContainersRootTransparent.TransparentContainer(
+            cornerRadius = VolleyDimens.DIMEN_32,
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .fillMaxWidth()
+                .padding(VolleyDimens.DIMEN_8.dp)
+
         ) {
-            VolleySimpleComponent.TitleWithBackArrow(
-                title = stringResource(R.string.faq),
-                modifier = Modifier.fillMaxWidth(),
-                onBackClick = { eventCallback(OnBackFromFaqClick) }
-            )
+            Column(
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_20.dp)
+            ) {
+                VolleySimpleComponent.TitleWithBackArrow(
+                    title = stringResource(R.string.faq),
+                    modifier = Modifier.fillMaxWidth(),
+                    onBackClick = { eventCallback(OnBackFromFaqClick) }
+                )
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
-            Faq(
-                strings = state.faqText,
-                modifier = Modifier.fillMaxWidth()
-            )
+                Faq(
+                    strings = state.faqText,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
+            }
         }
+
+        Spacer(Modifier.height(navBarPadding.dp))
     }
 
     LaunchedEffect(effect) {

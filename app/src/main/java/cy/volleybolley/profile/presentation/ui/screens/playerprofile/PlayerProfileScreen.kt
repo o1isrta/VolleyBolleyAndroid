@@ -50,6 +50,8 @@ import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerI
 
 @Composable
 fun PlayerProfileScreen(
+    topBarPadding: Int,
+    navBarPadding: Int,
     navController: NavHostController,
     viewModel: PlayerProfileScreenViewModel,
 ) {
@@ -57,6 +59,8 @@ fun PlayerProfileScreen(
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     PlayerProfileScreen(
+        topBarPadding = topBarPadding,
+        navBarPadding = navBarPadding,
         state = state,
         effect = effect,
         userHoursOffset = 3, // пока нет ручек для хранения профиля пользователя
@@ -72,6 +76,8 @@ fun PlayerProfileScreen(
 
 @Composable
 private fun PlayerProfileScreen(
+    topBarPadding: Int = 0,
+    navBarPadding: Int = 0,
     state: PlayerProfileScreenState,
     effect: PlayerProfileScreenEffect?,
     userHoursOffset: Int,
@@ -80,83 +86,88 @@ private fun PlayerProfileScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
-            .verticalScroll(scrollState)
-    ) {
-        Column(
+    Column(Modifier.verticalScroll(scrollState)) {
+        Spacer(Modifier.height(topBarPadding.dp))
+
+        VolleyContainersRootTransparent.TransparentContainer(
+            cornerRadius = VolleyDimens.DIMEN_32,
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .fillMaxWidth()
+                .padding(VolleyDimens.DIMEN_8.dp)
         ) {
-            VolleySimpleComponent.TitleWithBackArrow(
-                title = "${state.playerDetail.firstName} ${state.playerDetail.lastName}",
-                modifier = Modifier.fillMaxWidth(),
-                onBackClick = { eventCallback(ClickOnBackFromPlayerDetails) }
-            )
-
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_20.dp)
             ) {
-                VolleyAvatar.CircularAvatar(
-                    avatar = state.playerDetail.avatarUrl,
-                    size = VolleyDimens.DIMEN_100.dp
+                VolleySimpleComponent.TitleWithBackArrow(
+                    title = "${state.playerDetail.firstName} ${state.playerDetail.lastName}",
+                    modifier = Modifier.fillMaxWidth(),
+                    onBackClick = { eventCallback(ClickOnBackFromPlayerDetails) }
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_4.dp))
-
-                VolleyText.BodyBoldGradient(
-                    text = state.playerDetail.level,
-                    textAlign = TextAlign.Center,
-                    maxLines = 1,
-                )
-            }
-
-            Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
-
-            if (state.playerDetail.latestActivity.isNotEmpty()) {
-                VolleyText.BodyBold(
-                    text = stringResource(R.string.latest_activity),
-                    color = VolleyColor.White,
-                    maxLines = 1
-                )
                 Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-                Column {
-                    val countOfActivities = state.playerDetail.latestActivity.size
-                    state.playerDetail.latestActivity.forEachIndexed { index, activity ->
-                        PlayerActivityItem(
-                            locationName = activity.courtLocation.locationName,
-                            courtName = activity.courtLocation.courtName,
-                            dateStamp = activity.eventTimestamp,
-                            userHoursOffset = userHoursOffset,
-                            onMapClick = { eventCallback(ClickOnActivityMapButton) }
-                        )
 
-                        if (index < countOfActivities - 1) {
-                            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    VolleyAvatar.CircularAvatar(
+                        avatar = state.playerDetail.avatarUrl,
+                        size = VolleyDimens.DIMEN_100.dp
+                    )
+
+                    Spacer(Modifier.height(VolleyDimens.DIMEN_4.dp))
+
+                    VolleyText.BodyBoldGradient(
+                        text = state.playerDetail.level,
+                        textAlign = TextAlign.Center,
+                        maxLines = 1,
+                    )
+                }
+
+                Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
+
+                if (state.playerDetail.latestActivity.isNotEmpty()) {
+                    VolleyText.BodyBold(
+                        text = stringResource(R.string.latest_activity),
+                        color = VolleyColor.White,
+                        maxLines = 1
+                    )
+                    Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                    Column {
+                        val countOfActivities = state.playerDetail.latestActivity.size
+                        state.playerDetail.latestActivity.forEachIndexed { index, activity ->
+                            PlayerActivityItem(
+                                locationName = activity.courtLocation.locationName,
+                                courtName = activity.courtLocation.courtName,
+                                dateStamp = activity.eventTimestamp,
+                                userHoursOffset = userHoursOffset,
+                                onMapClick = { eventCallback(ClickOnActivityMapButton) }
+                            )
+
+                            if (index < countOfActivities - 1) {
+                                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                            }
                         }
                     }
+                } else {
+                    VolleyText.BodyBold(
+                        text = stringResource(R.string.player_profile_no_activity),
+                        color = VolleyColor.White,
+                        maxLines = 1
+                    )
                 }
-            } else {
-                VolleyText.BodyBold(
-                    text = stringResource(R.string.player_profile_no_activity),
-                    color = VolleyColor.White,
-                    maxLines = 1
+
+                Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
+
+                FavoriteManagementButton(
+                    isFavorite = state.playerDetail.isFavorite,
+                    onClick = { eventCallback(ClickOnFavoriteManagementButton(!state.playerDetail.isFavorite)) }
                 )
             }
-
-            Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
-
-            FavoriteManagementButton(
-                isFavorite = state.playerDetail.isFavorite,
-                onClick = { eventCallback(ClickOnFavoriteManagementButton(!state.playerDetail.isFavorite)) }
-            )
         }
+
+        Spacer(Modifier.height(navBarPadding.dp))
     }
 
     LaunchedEffect(effect) {

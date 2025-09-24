@@ -53,6 +53,8 @@ import cy.volleybolley.profile.presentation.ui.screens.players.model.PlayerTemp
 
 @Composable
 fun PlayersScreen(
+    topBarPadding: Int,
+    navBarPadding: Int,
     navController: NavHostController,
     viewModel: PlayersScreenViewModel,
 ) {
@@ -61,6 +63,8 @@ fun PlayersScreen(
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     PlayersScreen(
+        topBarPadding = topBarPadding,
+        navBarPadding = navBarPadding,
         state = state,
         effect = effect,
         eventCallback = { event -> viewModel.obtainEvent(event) },
@@ -74,6 +78,8 @@ fun PlayersScreen(
 
 @Composable
 private fun PlayersScreen(
+    topBarPadding: Int = 0,
+    navBarPadding: Int = 0,
     state: PlayersScreenState,
     effect: PlayersScreenEffect?,
     navigateAction: (NavMap?) -> Unit,
@@ -81,58 +87,63 @@ private fun PlayersScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
-            .verticalScroll(scrollState)
-    ) {
-        Column(
+    Column(Modifier.verticalScroll(scrollState)) {
+        Spacer(Modifier.height(topBarPadding.dp))
+
+        VolleyContainersRootTransparent.TransparentContainer(
+            cornerRadius = VolleyDimens.DIMEN_32,
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .fillMaxWidth()
+                .padding(VolleyDimens.DIMEN_8.dp)
         ) {
-            VolleySimpleComponent.TitleWithBackArrow(
-                title = stringResource(R.string.players),
-                modifier = Modifier.fillMaxWidth(),
-                onBackClick = { eventCallback(ClickOnBackFromPlayers) }
-            )
-
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-            VolleyTextFieldGradient.SearchField(
-                text = state.searchText,
-                actionToTransferContent = { fieldText -> eventCallback(SearchTextChanged(fieldText)) },
-                actionOnInputComplete = { playerName -> eventCallback(ClickOnSearchButton(playerName.trim())) }
-            )
-
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-            PlayersListModeSwitch(
-                showAllPlayers = state.showAllPlayers,
-                onAllClick = { eventCallback(ClickOnAllPlayers) },
-                onFavoriteClick = { eventCallback(ClickOnFavoritePlayers) },
-            )
-
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-            if (state.players.isEmpty()) {
-                VolleyText.BodyRegular(
-                    text = stringResource(R.string.no_players_found),
-                    color = VolleyColor.White,
-                    maxLines = 1,
+            Column(
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_20.dp)
+            ) {
+                VolleySimpleComponent.TitleWithBackArrow(
+                    title = stringResource(R.string.players),
+                    modifier = Modifier.fillMaxWidth(),
+                    onBackClick = { eventCallback(ClickOnBackFromPlayers) }
                 )
-            } else {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    state.players.forEachIndexed { index, player ->
-                        PlayersListItem(player) { playerId -> eventCallback(ClickOnListItem(playerId)) }
-                        if (index < state.players.size - 1) Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+                VolleyTextFieldGradient.SearchField(
+                    text = state.searchText,
+                    actionToTransferContent = { fieldText -> eventCallback(SearchTextChanged(fieldText)) },
+                    actionOnInputComplete = { playerName -> eventCallback(ClickOnSearchButton(playerName.trim())) }
+                )
+
+                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+                PlayersListModeSwitch(
+                    showAllPlayers = state.showAllPlayers,
+                    onAllClick = { eventCallback(ClickOnAllPlayers) },
+                    onFavoriteClick = { eventCallback(ClickOnFavoritePlayers) },
+                )
+
+                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+                if (state.players.isEmpty()) {
+                    VolleyText.BodyRegular(
+                        text = stringResource(R.string.no_players_found),
+                        color = VolleyColor.White,
+                        maxLines = 1,
+                    )
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        state.players.forEachIndexed { index, player ->
+                            PlayersListItem(player) { playerId -> eventCallback(ClickOnListItem(playerId)) }
+                            if (index < state.players.size - 1) Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                        }
                     }
                 }
             }
         }
+
+        Spacer(Modifier.height(navBarPadding.dp))
     }
 
     LaunchedEffect(effect) {
