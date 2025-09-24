@@ -10,8 +10,12 @@ import cy.volleybolley.auth.ui.presentation.PhoneAuthViewModel
 import java.util.concurrent.TimeUnit
 
 class PhoneAuthHelper(
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
 ) {
+    companion object {
+        private const val TIMEOUT = 30L
+    }
+
     fun startPhoneNumberVerification(
         activity: Activity,
         phoneNumber: String,
@@ -21,7 +25,7 @@ class PhoneAuthHelper(
     ) {
         val options = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber(phoneNumber)
-            .setTimeout(30L, TimeUnit.SECONDS)
+            .setTimeout(TIMEOUT, TimeUnit.SECONDS)
             .setActivity(activity)
             .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(credential: PhoneAuthCredential) {
@@ -51,7 +55,7 @@ class PhoneAuthHelper(
     ) {
         val options = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber(phoneNumber)
-            .setTimeout(30L, TimeUnit.SECONDS)
+            .setTimeout(TIMEOUT, TimeUnit.SECONDS)
             .setActivity(activity)
             .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(credential: PhoneAuthCredential) {

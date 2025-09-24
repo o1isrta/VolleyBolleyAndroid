@@ -15,6 +15,9 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
 
     companion object {
         private const val TAG = "PhoneAuthViewModel"
+        private const val START_TIME = 30
+        private const val END_TIME = 1
+        private const val ONE_SECOND = 1000L
     }
 
     override val tag: String
@@ -107,9 +110,9 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
     private fun startResendTimer() {
         resendJob?.cancel()
         resendJob = viewModelScope.launch {
-            for (seconds in 30 downTo 1) {
+            for (seconds in START_TIME downTo END_TIME) {
                 _uiState.update { it.copy(resendTimeout = seconds) }
-                delay(1000L)
+                delay(ONE_SECOND)
             }
             _uiState.update { it.copy(resendTimeout = 0) }
         }
