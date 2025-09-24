@@ -1,5 +1,6 @@
 package cy.volleybolley.auth.ui.presentation
 
+import androidx.annotation.StringRes
 import com.google.firebase.auth.PhoneAuthProvider
 import cy.volleybolley.core.presentation.base.UiEffect
 import cy.volleybolley.core.presentation.base.UiEvent
@@ -29,6 +30,6 @@ sealed interface PhoneAuthEffect : UiEffect {
         val resendToken: PhoneAuthProvider.ForceResendingToken? = null
     ) : PhoneAuthEffect
 
-    data class NavigateToProfileScreen(val idToken: String) : PhoneAuthEffect
-    data class ShowError(val message: String) : PhoneAuthEffect
+    data class PhoneAuth(val idToken: String) : PhoneAuthEffect
+    data class ShowError(@StringRes val messageRes: Int) : PhoneAuthEffect
 }

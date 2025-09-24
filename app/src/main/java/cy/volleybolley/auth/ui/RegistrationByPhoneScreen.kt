@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cy.volleybolley.auth.ui.presentation.PhoneAuthDelegate
 import cy.volleybolley.auth.ui.presentation.PhoneAuthEffect
 import cy.volleybolley.auth.ui.presentation.PhoneAuthEvent
 import cy.volleybolley.auth.ui.presentation.PhoneAuthViewModel
@@ -33,7 +32,7 @@ fun RegistrationByPhoneScreen(
     viewModel: PhoneAuthViewModel = koinViewModel(),
     onAuthorized: (String) -> Unit,
     onError: (String) -> Unit,
-    phoneAuthUiDelegate: PhoneAuthDelegate,
+    phoneAuthHelper: PhoneAuthHelper,
     activityProvider: () -> Activity
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -44,7 +43,7 @@ fun RegistrationByPhoneScreen(
                 is PhoneAuthEffect.RequestPhoneVerification -> {
                     val activity = activityProvider()
                     if (effect.resendToken == null) {
-                        phoneAuthUiDelegate.startVerification(
+                        phoneAuthHelper.startPhoneNumberVerification(
                             activity = activity,
                             phoneNumber = effect.phone,
                             viewModel = viewModel,
@@ -52,7 +51,7 @@ fun RegistrationByPhoneScreen(
                             onError = { viewModel.onError(it) }
                         )
                     } else {
-                        phoneAuthUiDelegate.resendCode(
+                        phoneAuthHelper.resendCode(
                             activity = activity,
                             phoneNumber = effect.phone,
                             token = effect.resendToken,
@@ -63,8 +62,8 @@ fun RegistrationByPhoneScreen(
                     }
                 }
 
-                is PhoneAuthEffect.NavigateToProfileScreen -> onAuthorized(effect.idToken)
-                is PhoneAuthEffect.ShowError -> onError(effect.message)
+                is PhoneAuthEffect.PhoneAuth -> onAuthorized(effect.idToken)
+                is PhoneAuthEffect.ShowError -> onError(activityProvider().getString(effect.messageRes))
                 else -> {}
             }
         }
@@ -78,7 +77,7 @@ fun RegistrationByPhoneScreen(
                 .padding(16.dp)
         ) {
             if (!state.isCodeSent) {
-                // Шаг 1: ввод номера
+
                 PhoneStep(
                     phone = state.phoneNumber,
                     onPhoneChange = { viewModel.onPhoneChanged(it) },
@@ -86,7 +85,7 @@ fun RegistrationByPhoneScreen(
                     isLoading = state.isLoading
                 )
             } else {
-                // Шаг 2: ввод кода
+
                 CodeStep(
                     code = state.code,
                     onCodeChange = { viewModel.onCodeChanged(it) },

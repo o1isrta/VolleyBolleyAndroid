@@ -17,13 +17,10 @@ class MainActivity : ComponentActivity() {
             VolleybolleyTheme {
                 RegistrationByPhoneScreen(
                     onAuthorized = { token -> Log.d("ТелефонТокен", token) },
-                    onError = {},
-                    phoneAuthUiDelegate = getKoin().get(),
+                    onError = { message -> Log.d("Ошибка авторизации", message) },
+                    phoneAuthHelper = getKoin().get(),
                     activityProvider = { this@MainActivity }
                 )
-                /*AuthScreen(stringResource(R.string.default_web_client_id)) { token ->
-                    Log.d("ГуглТокен", token)
-                }*/
             }
         }
     }
