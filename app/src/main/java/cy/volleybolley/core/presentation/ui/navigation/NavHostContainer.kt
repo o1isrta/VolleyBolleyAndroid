@@ -69,7 +69,9 @@ fun NavHostContainer(
         composable<OnboardingRoute> { OnboardingScreen(navController) }
         composable<SignUpRoute> { SignUpScreen(navController) }
         composable<RegistrationRoute> { RegistrationScreen(navController) }
-        //composable<RegistrationByPhoneRoute> { RegistrationByPhoneScreen(navController) }
+        composable<RegistrationByPhoneRoute> {
+
+        }
         composable<AboutLevelsRoute> { AboutLevelsScreen(navController) }
 
         // Home nested graph

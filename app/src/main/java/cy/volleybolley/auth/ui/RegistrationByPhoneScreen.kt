@@ -18,9 +18,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import cy.volleybolley.auth.ui.presentation.PhoneAuthEffect
 import cy.volleybolley.auth.ui.presentation.PhoneAuthEvent
 import cy.volleybolley.auth.ui.presentation.PhoneAuthViewModel
@@ -28,7 +30,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RegistrationByPhoneScreen(
-    //navController: NavHostController,
     viewModel: PhoneAuthViewModel = koinViewModel(),
     onAuthorized: (String) -> Unit,
     onError: (String) -> Unit,
