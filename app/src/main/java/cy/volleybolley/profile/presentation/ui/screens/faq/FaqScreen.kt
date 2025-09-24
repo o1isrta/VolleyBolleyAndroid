@@ -69,7 +69,6 @@ private fun FaqScreen(
         modifier = Modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
-            .verticalScroll(scrollState)
     ) {
         Column(
             modifier = Modifier
@@ -80,14 +79,16 @@ private fun FaqScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onBackClick = { eventCallback(OnBackFromFaqClick) }
             )
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Column(Modifier.verticalScroll(scrollState)) {
+                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            Faq(
-                strings = state.faqText,
-                modifier = Modifier.fillMaxWidth()
-            )
-
+                Faq(
+                    strings = state.faqText,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 

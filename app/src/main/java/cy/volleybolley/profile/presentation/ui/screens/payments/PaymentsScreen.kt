@@ -73,7 +73,6 @@ private fun PaymentsScreen(
         modifier = Modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
-            .verticalScroll(scrollState)
     ) {
         Column(
             modifier = Modifier
@@ -85,32 +84,36 @@ private fun PaymentsScreen(
                 onBackClick = { eventCallback(ClickOnBackFromPayments) }
             )
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            GetPaymentItemByType(
-                payments = state.payments,
-                itemType = PaymentType.THAIBANK,
-                onTitleClick = { eventCallback(ClickOnPaymentsItem(it)) },
-                onCheckBoxClick = { eventCallback(ClickOnPaymentsItemCheckBox(it)) }
-            )
+            Column(Modifier.verticalScroll(scrollState)) {
+                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            PaymentsDivider()
+                GetPaymentItemByType(
+                    payments = state.payments,
+                    itemType = PaymentType.THAIBANK,
+                    onTitleClick = { eventCallback(ClickOnPaymentsItem(it)) },
+                    onCheckBoxClick = { eventCallback(ClickOnPaymentsItemCheckBox(it)) }
+                )
 
-            GetPaymentItemByType(
-                payments = state.payments,
-                itemType = PaymentType.CASH,
-                onTitleClick = { eventCallback(ClickOnPaymentsItem(it)) },
-                onCheckBoxClick = { eventCallback(ClickOnPaymentsItemCheckBox(it)) }
-            )
+                PaymentsDivider()
 
-            PaymentsDivider()
+                GetPaymentItemByType(
+                    payments = state.payments,
+                    itemType = PaymentType.CASH,
+                    onTitleClick = { eventCallback(ClickOnPaymentsItem(it)) },
+                    onCheckBoxClick = { eventCallback(ClickOnPaymentsItemCheckBox(it)) }
+                )
 
-            GetPaymentItemByType(
-                payments = state.payments,
-                itemType = PaymentType.REVOLUT,
-                onTitleClick = { eventCallback(ClickOnPaymentsItem(it)) },
-                onCheckBoxClick = { eventCallback(ClickOnPaymentsItemCheckBox(it)) }
-            )
+                PaymentsDivider()
+
+                GetPaymentItemByType(
+                    payments = state.payments,
+                    itemType = PaymentType.REVOLUT,
+                    onTitleClick = { eventCallback(ClickOnPaymentsItem(it)) },
+                    onCheckBoxClick = { eventCallback(ClickOnPaymentsItemCheckBox(it)) }
+                )
+            }
         }
     }
 

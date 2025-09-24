@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -79,14 +79,11 @@ private fun PlayersScreen(
     navigateAction: (NavMap?) -> Unit,
     eventCallback: (PlayersScreenEvent) -> Unit,
 ) {
-    val scrollState = rememberScrollState()
-
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
         modifier = Modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
-            .verticalScroll(scrollState)
     ) {
         Column(
             modifier = Modifier
@@ -123,10 +120,8 @@ private fun PlayersScreen(
                     maxLines = 1,
                 )
             } else {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    state.players.forEachIndexed { index, player ->
+                LazyColumn {
+                    itemsIndexed(state.players) { index, player ->
                         PlayersListItem(player) { playerId -> eventCallback(ClickOnListItem(playerId)) }
                         if (index < state.players.size - 1) Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
                     }

@@ -78,7 +78,6 @@ private fun AboutScreen(
         modifier = Modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
-            .verticalScroll(scrollState)
     ) {
         Column(
             modifier = Modifier
@@ -89,34 +88,37 @@ private fun AboutScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onBackClick = { eventCallback(OnBackFromAboutClick) }
             )
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Column(Modifier.verticalScroll(scrollState)) {
+                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            AboutTextLine(
-                title = stringResource(R.string.founder),
-                value = state.founder,
-                modifier = Modifier.fillMaxWidth()
-            )
+                AboutTextLine(
+                    title = stringResource(R.string.founder),
+                    value = state.founder,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            AboutScreenDivider(
-                bottomPadding = VolleyDimens.DIMEN_22
-            )
+                AboutScreenDivider(
+                    bottomPadding = VolleyDimens.DIMEN_22
+                )
 
-            AboutTextLine(
-                title = stringResource(R.string.designed_by),
-                value = state.designedBy,
-                modifier = Modifier.fillMaxWidth()
-            )
+                AboutTextLine(
+                    title = stringResource(R.string.designed_by),
+                    value = state.designedBy,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            AboutScreenDivider(
-                bottomPadding = VolleyDimens.DIMEN_12
-            )
+                AboutScreenDivider(
+                    bottomPadding = VolleyDimens.DIMEN_12
+                )
 
-            AboutTextLine(
-                title = stringResource(R.string.developed_by),
-                value = state.developedBy,
-                modifier = Modifier.fillMaxWidth()
-            )
+                AboutTextLine(
+                    title = stringResource(R.string.developed_by),
+                    value = state.developedBy,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 

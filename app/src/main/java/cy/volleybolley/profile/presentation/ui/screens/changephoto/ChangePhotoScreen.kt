@@ -137,7 +137,6 @@ private fun ChangePhotoScreen(
         modifier = Modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
-            .verticalScroll(scrollState)
     ) {
         Column(
             modifier = Modifier
@@ -148,30 +147,33 @@ private fun ChangePhotoScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onBackClick = { eventCallback(OnBackFromChangePhotoClick) }
             )
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-            Avatar(
-                modifier = Modifier.fillMaxWidth(),
-                avatarUrl = state.avatarUrl,
-            )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Column(Modifier.verticalScroll(scrollState)) {
+                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Avatar(
+                    modifier = Modifier.fillMaxWidth(),
+                    avatarUrl = state.avatarUrl,
+                )
+                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
-            Menu(
-                galleryPhotoPicker = galleryPhotoPicker,
-                cameraPhotoPicker = cameraPhotoPicker,
-                cameraPhotoUri = cameraPhotoUri,
-                eventCallback = eventCallback
-            )
+                Menu(
+                    galleryPhotoPicker = galleryPhotoPicker,
+                    cameraPhotoPicker = cameraPhotoPicker,
+                    cameraPhotoUri = cameraPhotoUri,
+                    eventCallback = eventCallback
+                )
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
-            VolleyButton.ActiveButton(
-                enabled = state.buttonEnabled,
-                text = stringResource(R.string.save),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_44.dp)
-            ) { eventCallback(OnSaveButtonClick) }
+                VolleyButton.ActiveButton(
+                    enabled = state.buttonEnabled,
+                    text = stringResource(R.string.save),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(VolleyDimens.DIMEN_44.dp)
+                ) { eventCallback(OnSaveButtonClick) }
+            }
         }
     }
 

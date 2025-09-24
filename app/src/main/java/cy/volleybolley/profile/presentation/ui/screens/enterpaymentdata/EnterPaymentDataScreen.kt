@@ -87,7 +87,6 @@ private fun EnterPaymentDataScreen(
         modifier = Modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
-            .verticalScroll(scrollState)
     ) {
         Column(
             modifier = Modifier
@@ -98,28 +97,31 @@ private fun EnterPaymentDataScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onBackClick = { eventCallback(ClickOnBackFromEnterPaymentData) }
             )
-
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-            OutsideHint(screenPaymentType)
-
             Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            PaymentAccField(
-                text = state.accountValue,
-                paymentType = screenPaymentType,
-                actionToTransferContent = { newText -> eventCallback(AccountTextChanged(newText)) }
-            )
+            Column(Modifier.verticalScroll(scrollState)) {
+                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                OutsideHint(screenPaymentType)
 
-            VolleyButton.ActiveButton(
-                enabled = state.buttonEnabled,
-                text = stringResource(R.string.save),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_44.dp)
-            ) { eventCallback(OnSaveButtonClick) }
+                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+
+                PaymentAccField(
+                    text = state.accountValue,
+                    paymentType = screenPaymentType,
+                    actionToTransferContent = { newText -> eventCallback(AccountTextChanged(newText)) }
+                )
+
+                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+                VolleyButton.ActiveButton(
+                    enabled = state.buttonEnabled,
+                    text = stringResource(R.string.save),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(VolleyDimens.DIMEN_44.dp)
+                ) { eventCallback(OnSaveButtonClick) }
+            }
         }
     }
 
