@@ -1,6 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.registration
 
 import cy.volleybolley.core.presentation.base.UiState
+import cy.volleybolley.referencedata.domain.model.City
+import cy.volleybolley.referencedata.domain.model.Country
 
 data class RegistrationState(
     val name: String = "",
@@ -9,5 +11,8 @@ data class RegistrationState(
     val level: Int = 1,
     val dateOfBirthMillis: Long? = null,
     val country: String = "",
-    val city: String = ""
+    val selectedCountry: Country? = null,
+    val countryList: List<Country> = emptyList(),
+    val selectedCity: City? = null,
+    val cityList: List<City> = emptyList()
 ) : UiState

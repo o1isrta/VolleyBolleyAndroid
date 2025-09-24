@@ -231,5 +231,5 @@
     <string name="level_hard_description">Skilled, play often, tournaments experience</string>
     <string name="level_pro_prefix">Pro:</string>
     <string name="level_pro_description">Elite level, official championships experience</string>
-
+    <string name="registration_about_levels_navigation_hint">Navigate to more about levels</string>
 </resources>

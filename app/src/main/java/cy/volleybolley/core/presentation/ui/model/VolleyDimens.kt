@@ -47,6 +47,7 @@ object VolleyDimens {
     const val DIMEN_160: Int = 160
     const val DIMEN_180: Int = 180
     const val LAUNCH_LOGO_SIZE: Int = 200
+    const val REGISTRATION_DIVIDER_THICKNESS = 1
     const val DIMEN_335: Int = 335
 
     const val ROTATION_8: Float = -8f

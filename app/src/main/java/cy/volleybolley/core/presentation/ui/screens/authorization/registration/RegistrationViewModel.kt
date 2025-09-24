@@ -2,18 +2,36 @@ package cy.volleybolley.core.presentation.ui.screens.authorization.registration
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.referencedata.domain.model.City
+import cy.volleybolley.referencedata.domain.model.Country
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class RegistrationViewModel :
-    BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(
-        RegistrationState()
-    ) {
+class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(
+    initialState = RegistrationState()
+) {
+    override val tag = RegistrationViewModel::class.simpleName ?: ""
 
-    override val tag: String = "RegistrationViewModel"
+    init {
+        uiStateMutable.update {
+            val countyList = listOf(Country(
+                id = 0,
+                name = "Thailand",
+                cities = listOf(
+                    City(id = 0, name = "Koh Phangan"),
+                    City(id = 1, name = "Koh Samui")
+                )
+            ))
+            it.copy(
+                countryList = countyList,
+                selectedCountry = countyList.first(),
+                cityList = countyList.first().cities
+            )
+        }
+    }
 
     override fun obtainEvent(event: RegistrationEvent) {
         when (event) {
-            RegistrationEvent.AboutLevelsClicked,
             RegistrationEvent.GetStartedClicked -> handleNavigationEvent(event)
 
             is RegistrationEvent.NameChanged,
@@ -21,17 +39,13 @@ class RegistrationViewModel :
             is RegistrationEvent.GenderSelected,
             is RegistrationEvent.LevelSelected,
             is RegistrationEvent.DateOfBirthChanged,
-            is RegistrationEvent.CountryChanged,
-            is RegistrationEvent.CityChanged -> handleStateEvent(event)
+            is RegistrationEvent.CountrySelected,
+            is RegistrationEvent.CitySelected -> handleStateEvent(event)
         }
     }
 
     private fun handleNavigationEvent(event: RegistrationEvent) {
         when (event) {
-            RegistrationEvent.AboutLevelsClicked -> viewModelScope.launch {
-                sendUiEffect(RegistrationEffect.NavigateToAboutLevels)
-            }
-
             RegistrationEvent.GetStartedClicked -> viewModelScope.launch {
                 sendUiEffect(RegistrationEffect.NavigateToHome)
             }
@@ -43,29 +57,41 @@ class RegistrationViewModel :
 
     private fun handleStateEvent(event: RegistrationEvent) {
         when (event) {
-            is RegistrationEvent.NameChanged ->
-                uiStateMutable.value = uiStateMutable.value.copy(name = event.value)
+            is RegistrationEvent.NameChanged -> {
+                uiStateMutable.update { it.copy(name = event.value) }
+            }
 
-            is RegistrationEvent.SurnameChanged ->
-                uiStateMutable.value = uiStateMutable.value.copy(surname = event.value)
+            is RegistrationEvent.SurnameChanged -> {
+                uiStateMutable.update { it.copy(surname = event.value) }
+            }
 
-            is RegistrationEvent.GenderSelected ->
-                uiStateMutable.value = uiStateMutable.value.copy(gender = event.id)
+            is RegistrationEvent.GenderSelected -> {
+                uiStateMutable.update { it.copy(gender = event.id) }
+            }
 
-            is RegistrationEvent.LevelSelected ->
-                uiStateMutable.value = uiStateMutable.value.copy(level = event.id)
+            is RegistrationEvent.LevelSelected -> {
+                uiStateMutable.update { it.copy(level = event.id) }
+            }
 
-            is RegistrationEvent.DateOfBirthChanged ->
-                uiStateMutable.value =
-                    uiStateMutable.value.copy(dateOfBirthMillis = event.millis)
+            is RegistrationEvent.DateOfBirthChanged -> {
+                uiStateMutable.update { it.copy(dateOfBirthMillis = event.millis) }
+            }
 
-            is RegistrationEvent.CountryChanged ->
-                uiStateMutable.value = uiStateMutable.value.copy(country = event.value)
+            is RegistrationEvent.CountrySelected -> {
+                uiStateMutable.update {
+                    it.copy(
+                        selectedCountry = event.value,
+                        cityList = event.value.cities
+                    )
+                }
+            }
 
-            is RegistrationEvent.CityChanged ->
-                uiStateMutable.value = uiStateMutable.value.copy(city = event.value)
+            is RegistrationEvent.CitySelected -> {
+                uiStateMutable.update { it.copy(selectedCity = event.value) }
+            }
 
-            else -> {
+            is RegistrationEvent.GetStartedClicked -> {
+                // empty
             }
         }
     }

@@ -87,7 +87,7 @@ fun NavHostContainer(
                         popUpTo(LaunchRoute) { inclusive = false }
                     }
                 },
-                onShowAboutLevelsFaqRequested = { navController.navigate(AboutLevelsRoute) }
+                onRequestNavigateToAboutLevels = { navController.navigate(AboutLevelsRoute) }
             )
         }
         composable<RegistrationByPhoneRoute> { RegistrationByPhoneScreen(navController) }
