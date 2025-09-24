@@ -76,7 +76,6 @@ fun RegistrationByPhoneScreen(
                 .padding(16.dp)
         ) {
             if (!state.isCodeSent) {
-
                 PhoneStep(
                     phone = state.phoneNumber,
                     onPhoneChange = { viewModel.onPhoneChanged(it) },
@@ -84,7 +83,6 @@ fun RegistrationByPhoneScreen(
                     isLoading = state.isLoading
                 )
             } else {
-
                 CodeStep(
                     code = state.code,
                     onCodeChange = { viewModel.onCodeChanged(it) },

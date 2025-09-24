@@ -67,7 +67,7 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
                 _uiState.update { it.copy(isLoading = false, isAuthorized = true) }
                 idToken?.let { sendUiEffect(PhoneAuthEffect.PhoneAuth(it)) }
             },
-            onError = { e ->
+            onError = {
                 _uiState.update { it.copy(isLoading = false) }
                 sendUiEffect(PhoneAuthEffect.ShowError(R.string.default_error))
             }
