@@ -49,8 +49,6 @@ import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalData
 
 @Composable
 fun PersonalDataScreen(
-    topBarPadding: Int,
-    navBarPadding: Int,
     navController: NavHostController,
     viewModel: PersonalDataScreenViewModel,
 ) {
@@ -59,8 +57,6 @@ fun PersonalDataScreen(
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     PersonalDataScreen(
-        topBarPadding = topBarPadding,
-        navBarPadding = navBarPadding,
         state = state,
         effect = effect,
         navigateAction = { route ->
@@ -74,8 +70,6 @@ fun PersonalDataScreen(
 
 @Composable
 private fun PersonalDataScreen(
-    topBarPadding: Int = 0,
-    navBarPadding: Int = 0,
     state: PersonalDataScreenState,
     effect: PersonalDataScreenEffect?,
     navigateAction: (NavMap?) -> Unit,
@@ -83,113 +77,108 @@ private fun PersonalDataScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    Column(Modifier.verticalScroll(scrollState)) {
-        Spacer(Modifier.height(topBarPadding.dp))
-
-        VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = VolleyDimens.DIMEN_32,
+    VolleyContainersRootTransparent.TransparentContainer(
+        cornerRadius = VolleyDimens.DIMEN_32,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(VolleyDimens.DIMEN_8.dp)
+            .verticalScroll(scrollState)
+    ) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_8.dp)
+                .padding(VolleyDimens.DIMEN_20.dp)
         ) {
-            Column(
+            VolleySimpleComponent.TitleWithBackArrow(
+                title = stringResource(R.string.personal_data),
+                modifier = Modifier.fillMaxWidth(),
+                onBackClick = { eventCallback(OnBackFromPersonalDataClick) }
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            AvatarBlock(
+                modifier = Modifier.fillMaxWidth(),
+                avatarString = state.avatar,
+                onIconClick = { eventCallback(OnAvatarEditClick) }
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+            PersonalDataTextMark(stringResource(R.string.name))
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+
+            VolleyTextFieldGradient.SimpleGradientTextField(
+                hint = stringResource(R.string.name),
+                text = state.name,
+                actionToTransferContent = { eventCallback(NameChanged(it)) }
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_14.dp))
+            PersonalDataTextMark(stringResource(R.string.surname))
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+
+            VolleyTextFieldGradient.SimpleGradientTextField(
+                hint = stringResource(R.string.surname),
+                text = state.surname,
+                actionToTransferContent = { eventCallback(SurnameChanged(it)) }
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_14.dp))
+            PersonalDataDivider()
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            PersonalDataTextMark(stringResource(R.string.gender))
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+
+            VolleyButton.GroupButtonsForGender2(
+                modifier = Modifier,
+                checkId = state.genderId,
+                onSelected = { eventCallback(GenderSelect(it)) },
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            PersonalDataDivider()
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            PersonalDataTextMark(stringResource(R.string.date_of_bith))
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+
+            VolleyTextFieldAttribute.DatePickerField(
+                inputDate = state.dateOfBirth,
+                actionForSaveDate = { eventCallback(DateSelect(it)) }
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            PersonalDataDivider()
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            PersonalDataTextMark(stringResource(R.string.your_country))
+            Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
+
+            VolleyDropDownField.DropDownGradientField(
+                inputText = state.country,
+                valuesList = state.countriesList,
+                onValueClick = { eventCallback(CountrySelect(it)) }
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            PersonalDataDivider()
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            PersonalDataTextMark(stringResource(R.string.your_city))
+            Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
+
+            VolleyDropDownField.DropDownGradientField(
+                inputText = state.city,
+                valuesList = state.citiesList,
+                onValueClick = { eventCallback(CitySelect(it)) }
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+            VolleyButton.ActiveButton(
+                enabled = state.buttonEnabled,
+                text = stringResource(R.string.update),
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_20.dp)
-            ) {
-                VolleySimpleComponent.TitleWithBackArrow(
-                    title = stringResource(R.string.personal_data),
-                    modifier = Modifier.fillMaxWidth(),
-                    onBackClick = { eventCallback(OnBackFromPersonalDataClick) }
-                )
+                    .fillMaxWidth()
+                    .height(VolleyDimens.DIMEN_44.dp)
+            ) { eventCallback(OnUpdateButtonClick) }
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-                AvatarBlock(
-                    modifier = Modifier.fillMaxWidth(),
-                    avatarString = state.avatar,
-                    onIconClick = { eventCallback(OnAvatarEditClick) }
-                )
-
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
-                PersonalDataTextMark(stringResource(R.string.name))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
-
-                VolleyTextFieldGradient.SimpleGradientTextField(
-                    hint = stringResource(R.string.name),
-                    text = state.name,
-                    actionToTransferContent = { eventCallback(NameChanged(it)) }
-                )
-
-                Spacer(Modifier.height(VolleyDimens.DIMEN_14.dp))
-                PersonalDataTextMark(stringResource(R.string.surname))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
-
-                VolleyTextFieldGradient.SimpleGradientTextField(
-                    hint = stringResource(R.string.surname),
-                    text = state.surname,
-                    actionToTransferContent = { eventCallback(SurnameChanged(it)) }
-                )
-
-                Spacer(Modifier.height(VolleyDimens.DIMEN_14.dp))
-                PersonalDataDivider()
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-                PersonalDataTextMark(stringResource(R.string.gender))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
-
-                VolleyButton.GroupButtonsForGender2(
-                    modifier = Modifier,
-                    checkId = state.genderId,
-                    onSelected = { eventCallback(GenderSelect(it)) },
-                )
-
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-                PersonalDataDivider()
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-                PersonalDataTextMark(stringResource(R.string.date_of_bith))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
-
-                VolleyTextFieldAttribute.DatePickerField(
-                    inputDate = state.dateOfBirth,
-                    actionForSaveDate = { eventCallback(DateSelect(it)) }
-                )
-
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-                PersonalDataDivider()
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-                PersonalDataTextMark(stringResource(R.string.your_country))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
-
-                VolleyDropDownField.DropDownGradientField(
-                    inputText = state.country,
-                    valuesList = state.countriesList,
-                    onValueClick = { eventCallback(CountrySelect(it)) }
-                )
-
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-                PersonalDataDivider()
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-                PersonalDataTextMark(stringResource(R.string.your_city))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
-
-                VolleyDropDownField.DropDownGradientField(
-                    inputText = state.city,
-                    valuesList = state.citiesList,
-                    onValueClick = { eventCallback(CitySelect(it)) }
-                )
-
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-                VolleyButton.ActiveButton(
-                    enabled = state.buttonEnabled,
-                    text = stringResource(R.string.update),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(VolleyDimens.DIMEN_44.dp)
-                ) { eventCallback(OnUpdateButtonClick) }
-
-            }
         }
-
-        Spacer(Modifier.height(navBarPadding.dp))
     }
 
     LaunchedEffect(effect) {

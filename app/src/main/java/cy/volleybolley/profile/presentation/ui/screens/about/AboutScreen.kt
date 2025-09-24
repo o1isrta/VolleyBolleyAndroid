@@ -37,8 +37,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AboutScreen(
-    topBarPadding: Int,
-    navBarPadding: Int,
     navController: NavHostController,
     viewModel: AboutScreenViewModel = koinViewModel(),
 ) {
@@ -46,8 +44,6 @@ fun AboutScreen(
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     AboutScreen(
-        topBarPadding = topBarPadding,
-        navBarPadding = navBarPadding,
         state = state,
         effect = effect,
         navigateAction = { route ->
@@ -61,8 +57,6 @@ fun AboutScreen(
 
 @Composable
 private fun AboutScreen(
-    topBarPadding: Int = 0,
-    navBarPadding: Int = 0,
     state: AboutScreenState,
     effect: AboutScreenEffect?,
     navigateAction: (NavMap?) -> Unit,
@@ -79,56 +73,51 @@ private fun AboutScreen(
         )
     }
 
-    Column(Modifier.verticalScroll(scrollState)) {
-        Spacer(Modifier.height(topBarPadding.dp))
-
-        VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = VolleyDimens.DIMEN_32,
+    VolleyContainersRootTransparent.TransparentContainer(
+        cornerRadius = VolleyDimens.DIMEN_32,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(VolleyDimens.DIMEN_8.dp)
+            .verticalScroll(scrollState)
+    ) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_8.dp)
+                .padding(VolleyDimens.DIMEN_20.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_20.dp)
-            ) {
-                VolleySimpleComponent.TitleWithBackArrow(
-                    title = stringResource(R.string.about),
-                    modifier = Modifier.fillMaxWidth(),
-                    onBackClick = { eventCallback(OnBackFromAboutClick) }
-                )
+            VolleySimpleComponent.TitleWithBackArrow(
+                title = stringResource(R.string.about),
+                modifier = Modifier.fillMaxWidth(),
+                onBackClick = { eventCallback(OnBackFromAboutClick) }
+            )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
-                AboutTextLine(
-                    title = stringResource(R.string.founder),
-                    value = state.founder,
-                    modifier = Modifier.fillMaxWidth()
-                )
+            AboutTextLine(
+                title = stringResource(R.string.founder),
+                value = state.founder,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-                AboutScreenDivider(
-                    bottomPadding = VolleyDimens.DIMEN_22
-                )
+            AboutScreenDivider(
+                bottomPadding = VolleyDimens.DIMEN_22
+            )
 
-                AboutTextLine(
-                    title = stringResource(R.string.designed_by),
-                    value = state.designedBy,
-                    modifier = Modifier.fillMaxWidth()
-                )
+            AboutTextLine(
+                title = stringResource(R.string.designed_by),
+                value = state.designedBy,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-                AboutScreenDivider(
-                    bottomPadding = VolleyDimens.DIMEN_12
-                )
+            AboutScreenDivider(
+                bottomPadding = VolleyDimens.DIMEN_12
+            )
 
-                AboutTextLine(
-                    title = stringResource(R.string.developed_by),
-                    value = state.developedBy,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+            AboutTextLine(
+                title = stringResource(R.string.developed_by),
+                value = state.developedBy,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
-
-        Spacer(Modifier.height(navBarPadding.dp))
     }
 
     LaunchedEffect(effect) {

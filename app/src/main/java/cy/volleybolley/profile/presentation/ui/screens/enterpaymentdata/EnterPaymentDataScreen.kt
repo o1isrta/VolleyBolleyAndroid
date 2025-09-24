@@ -50,8 +50,6 @@ import cy.volleybolley.profile.presentation.ui.screens.payments.model.BackPaymen
 
 @Composable
 fun EnterPaymentDataScreen(
-    topBarPadding: Int,
-    navBarPadding: Int,
     navController: NavHostController,
     viewModel: EnterPaymentDataScreenViewModel,
 ) {
@@ -59,8 +57,6 @@ fun EnterPaymentDataScreen(
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     EnterPaymentDataScreen(
-        topBarPadding = topBarPadding,
-        navBarPadding = navBarPadding,
         screenPaymentType = viewModel.originPaymentType,
         state = state,
         effect = effect,
@@ -76,8 +72,6 @@ fun EnterPaymentDataScreen(
 
 @Composable
 private fun EnterPaymentDataScreen(
-    topBarPadding: Int = 0,
-    navBarPadding: Int = 0,
     screenPaymentType: PaymentType,
     state: EnterPaymentDataScreenState,
     effect: EnterPaymentDataScreenEffect?,
@@ -88,51 +82,45 @@ private fun EnterPaymentDataScreen(
     var dialogType: EnterPaymentDialogType? by remember { mutableStateOf(null) }
     val headerValue = screenPaymentType.getSimpleName()
 
-    Column(Modifier.verticalScroll(scrollState)) {
-        Spacer(Modifier.height(topBarPadding.dp))
-
-        VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = VolleyDimens.DIMEN_32,
+    VolleyContainersRootTransparent.TransparentContainer(
+        cornerRadius = VolleyDimens.DIMEN_32,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(VolleyDimens.DIMEN_8.dp)
+            .verticalScroll(scrollState)
+    ) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_8.dp)
-
+                .padding(VolleyDimens.DIMEN_20.dp)
         ) {
-            Column(
+            VolleySimpleComponent.TitleWithBackArrow(
+                title = headerValue,
+                modifier = Modifier.fillMaxWidth(),
+                onBackClick = { eventCallback(ClickOnBackFromEnterPaymentData) }
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+            OutsideHint(screenPaymentType)
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+
+            PaymentAccField(
+                text = state.accountValue,
+                paymentType = screenPaymentType,
+                actionToTransferContent = { newText -> eventCallback(AccountTextChanged(newText)) }
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+            VolleyButton.ActiveButton(
+                enabled = state.buttonEnabled,
+                text = stringResource(R.string.save),
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_20.dp)
-            ) {
-                VolleySimpleComponent.TitleWithBackArrow(
-                    title = headerValue,
-                    modifier = Modifier.fillMaxWidth(),
-                    onBackClick = { eventCallback(ClickOnBackFromEnterPaymentData) }
-                )
-
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-                OutsideHint(screenPaymentType)
-
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
-
-                PaymentAccField(
-                    text = state.accountValue,
-                    paymentType = screenPaymentType,
-                    actionToTransferContent = { newText -> eventCallback(AccountTextChanged(newText)) }
-                )
-
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-                VolleyButton.ActiveButton(
-                    enabled = state.buttonEnabled,
-                    text = stringResource(R.string.save),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(VolleyDimens.DIMEN_44.dp)
-                ) { eventCallback(OnSaveButtonClick) }
-            }
+                    .fillMaxWidth()
+                    .height(VolleyDimens.DIMEN_44.dp)
+            ) { eventCallback(OnSaveButtonClick) }
         }
-
-        Spacer(Modifier.height(navBarPadding.dp))
     }
 
     LaunchedEffect(effect) {

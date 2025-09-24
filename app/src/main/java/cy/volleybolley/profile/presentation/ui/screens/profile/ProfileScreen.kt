@@ -60,8 +60,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProfileScreen(
-    topBarPadding: Int,
-    navBarPadding: Int,
     navController: NavHostController,
     viewModel: ProfileScreenViewModel = koinViewModel(),
     finisher: () -> Unit,
@@ -69,8 +67,6 @@ fun ProfileScreen(
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     ProfileScreen(
-        topBarPadding = topBarPadding,
-        navBarPadding = navBarPadding,
         effect = effect,
         navigateAction = { route ->
             navController.navigate(route)
@@ -84,25 +80,21 @@ fun ProfileScreen(
 
 @Composable
 private fun ProfileScreen(
-    topBarPadding: Int = 0,
-    navBarPadding: Int = 0,
+    modifier: Modifier = Modifier,
     effect: ProfileScreenEffect?,
     navigateAction: (NavMap) -> Unit,
     eventCallback: (ProfileScreenEvent) -> Unit,
 ) {
     var typeOfDialog: ProfileDialogType? by remember { mutableStateOf(null) }
 
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = VolleyDimens.DIMEN_32,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    start = VolleyDimens.DIMEN_8.dp,
-                    end = VolleyDimens.DIMEN_8.dp,
-                    top = (VolleyDimens.DIMEN_8 + topBarPadding).dp,
-                    bottom = VolleyDimens.DIMEN_8.dp
-                )
+                .padding(VolleyDimens.DIMEN_8.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -160,10 +152,7 @@ private fun ProfileScreen(
         Box(
             contentAlignment = Alignment.BottomStart,
             modifier = Modifier
-                .padding(
-                    horizontal = VolleyDimens.DIMEN_28.dp,
-                    vertical = (VolleyDimens.DIMEN_20 + navBarPadding).dp
-                )
+                .padding(VolleyDimens.DIMEN_28.dp, VolleyDimens.DIMEN_20.dp)
                 .weight(1f)
         ) {
             VolleyText.BodyLight(
