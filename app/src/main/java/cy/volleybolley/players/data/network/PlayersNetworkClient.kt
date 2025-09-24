@@ -10,40 +10,38 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 
-class PlayersNetworkClient(
-    private val accessTokenProvider: suspend () -> String? = { null }
-) : KtorNetworkClient<PlayerRequest, PlayerResponse>() {
+class PlayersNetworkClient : KtorNetworkClient<PlayerRequest, PlayerResponse>() {
 
     override suspend fun sendRequestByType(request: PlayerRequest): HttpResponse {
         return when (request) {
             is PlayerRequest.GetAllPlayers -> {
                 httpClient.get(BuildConfig.BASE_URL) {
-                    requestConfigure(path = request.path, accessToken = accessTokenProvider())
+                    requestConfigure(path = request.path, accessToken = request.authToken)
                 }
             }
 
             is PlayerRequest.SearchPlayers -> {
                 httpClient.get(BuildConfig.BASE_URL) {
-                    requestConfigure(path = request.path, accessToken = accessTokenProvider())
+                    requestConfigure(path = request.path, accessToken = request.authToken)
                     parameter("search", request.name)
                 }
             }
 
             is PlayerRequest.GetPlayerDetail -> {
                 httpClient.get(BuildConfig.BASE_URL) {
-                    requestConfigure(path = request.path, accessToken = accessTokenProvider())
+                    requestConfigure(path = request.path, accessToken = request.authToken)
                 }
             }
 
             is PlayerRequest.AddToFavorites -> {
                 httpClient.post(BuildConfig.BASE_URL) {
-                    requestConfigure(path = request.path, accessToken = accessTokenProvider())
+                    requestConfigure(path = request.path, accessToken = request.authToken)
                 }
             }
 
             is PlayerRequest.RemoveFromFavorites -> {
                 httpClient.delete(BuildConfig.BASE_URL) {
-                    requestConfigure(path = request.path, accessToken = accessTokenProvider())
+                    requestConfigure(path = request.path, accessToken = request.authToken)
                 }
             }
         }

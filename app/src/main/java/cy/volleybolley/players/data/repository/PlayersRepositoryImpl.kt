@@ -18,6 +18,8 @@ class PlayersRepositoryImpl(
 
     override suspend fun getAllPlayers(): VolleyResult<List<Player>, ErrorType> {
         val token = tokenProvider()
+        if (token == null) return VolleyResult.Failure(ErrorType.UNAUTHORIZED)
+
         val response = networkClient.getResponse(PlayerRequest.GetAllPlayers(token))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
         val body = response.body as? PlayerResponse.GetAllPlayers
@@ -31,6 +33,8 @@ class PlayersRepositoryImpl(
 
     override suspend fun searchPlayers(query: String): VolleyResult<List<Player>, ErrorType> {
         val token = tokenProvider()
+        if (token == null) return VolleyResult.Failure(ErrorType.UNAUTHORIZED)
+
         val response = networkClient.getResponse(PlayerRequest.SearchPlayers(name = query, authToken = token))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
         val body = response.body as? PlayerResponse.SearchPlayers
@@ -44,6 +48,8 @@ class PlayersRepositoryImpl(
 
     override suspend fun getPlayerDetail(playerId: Int): VolleyResult<PlayerDetail, ErrorType> {
         val token = tokenProvider()
+        if (token == null) return VolleyResult.Failure(ErrorType.UNAUTHORIZED)
+
         val response = networkClient.getResponse(PlayerRequest.GetPlayerDetail(playerId = playerId, authToken = token))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
         val body = response.body as? PlayerResponse.GetPlayerDetail
@@ -57,6 +63,8 @@ class PlayersRepositoryImpl(
 
     override suspend fun addToFavorites(playerId: Int): VolleyResult<Player, ErrorType> {
         val token = tokenProvider()
+        if (token == null) return VolleyResult.Failure(ErrorType.UNAUTHORIZED)
+
         val response = networkClient.getResponse(PlayerRequest.AddToFavorites(playerId = playerId, authToken = token))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
         val body = response.body as? PlayerResponse.AddToFavorites
@@ -70,6 +78,8 @@ class PlayersRepositoryImpl(
 
     override suspend fun removeFromFavorites(playerId: Int): VolleyResult<Unit, ErrorType> {
         val token = tokenProvider()
+        if (token == null) return VolleyResult.Failure(ErrorType.UNAUTHORIZED)
+
         val response =
             networkClient.getResponse(PlayerRequest.RemoveFromFavorites(playerId = playerId, authToken = token))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
