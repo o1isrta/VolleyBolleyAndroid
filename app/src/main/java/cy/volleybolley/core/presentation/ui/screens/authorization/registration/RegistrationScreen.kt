@@ -47,7 +47,7 @@ fun RegistrationScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
-    LaunchedEffect(Unit) {
+    LaunchedEffect(effect) {
         when (effect) {
             is RegistrationEffect.NavigateToHome -> onRegistrationSuccessEvent()
             else -> {}

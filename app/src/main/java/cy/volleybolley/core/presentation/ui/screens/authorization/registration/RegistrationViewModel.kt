@@ -89,7 +89,7 @@ class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent
             block = {
                 uiStateMutable.update { it.copy(isLoading = true) }
                 delay(timeMillis = 1000L)
-                sendUiEffect(RegistrationEffect.NavigateToHome)
+                uiEffectMutable.send(RegistrationEffect.NavigateToHome)
                 uiStateMutable.update { it.copy(isLoading = false) }
             },
             onError = {
