@@ -83,84 +83,102 @@ fun RegistrationScreen(
                 )
                 .fillMaxSize()
         ) {
-            LazyColumn(modifier = Modifier.fillMaxWidth().padding(VolleyDimens.DIMEN_20.dp)) {
-                item {
-                    VolleyText.TitleLarge(
-                        text = stringResource(id = R.string.registration),
-                        color = VolleyColor.White
-                    )
-                }
-
-                item {
-                    FillNameAndSurname(
-                        modifier = Modifier.padding(top = 16.dp),
-                        name = state.name,
-                        surname = state.surname,
-                        onTypeName = { eventCallback(RegistrationEvent.NameChanged(it)) },
-                        onTypeSurname = { eventCallback(RegistrationEvent.SurnameChanged(it)) }
-                    )
-                }
-
-                item {
-                    GenderChooser(
-                        modifier = Modifier.padding(top = 16.dp),
-                        selectedGenderIndex = state.gender,
-                        onGenderClick = { eventCallback(RegistrationEvent.GenderSelected(it)) }
-                    )
-                }
-
-                item {
-                    FillDateOfBirth(
-                        modifier = Modifier.padding(top = 16.dp),
-                        dateOfBirthMillis = state.dateOfBirthMillis,
-                        onSelectDateOfBirth = { eventCallback(RegistrationEvent.DateOfBirthChanged(it)) }
-                    )
-                }
-
-                item {
-                    LevelChooser(
-                        modifier = Modifier.padding(top = 16.dp),
-                        selectedLevelIndex = state.level,
-                        onLevelClick = { eventCallback(RegistrationEvent.LevelSelected(it)) },
-                        onRequestNavigateToAboutLevels = onRequestNavigateToAboutLevels
-                    )
-                }
-
-                item {
-                    VolleyTextFieldGradient.GradientSpinner(
-                        modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
-                        selectedItem = state.selectedCountry,
-                        itemList = state.countryList,
-                        getTextByItem = { it?.name ?: "" },
-                        hint = stringResource(id = R.string.your_county),
-                        onItemSelect = { item, _ -> eventCallback(RegistrationEvent.CountrySelected(item!!)) }
-                    )
-                    HorizontalDivider(
-                        modifier = Modifier.padding(top = 16.dp),
-                        thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
-                        color = VolleyColor.TextCalendarLightGrey
-                    )
-                }
-
-                item {
-                    VolleyTextFieldGradient.GradientSpinner(
-                        modifier = Modifier.padding(top = 16.dp, bottom = 188.dp).fillMaxWidth(),
-                        selectedItem = state.selectedCity,
-                        itemList = state.cityList,
-                        getTextByItem = { it?.name ?: "" },
-                        hint = stringResource(id = R.string.your_city),
-                        onItemSelect = { item, _ -> eventCallback(RegistrationEvent.CitySelected(item!!)) }
-                    )
-                }
+            Column {
+                VolleyText.TitleLarge(
+                    modifier = Modifier.padding(top = 20.dp, start = 20.dp),
+                    text = stringResource(id = R.string.registration),
+                    color = VolleyColor.White
+                )
+                FillRegistrationData(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(top = 16.dp, bottom = 20.dp, start = 20.dp, end = 20.dp),
+                    state = state,
+                    onRequestNavigateToAboutLevels = onRequestNavigateToAboutLevels,
+                    eventCallback = eventCallback
+                )
             }
+
             VolleyButton.ActiveButton(
                 text = stringResource(id = R.string.get_started),
+                enabled = state.isBtnRegistrationEnabled,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(bottom = 20.dp, start = 20.dp, end = 20.dp)
                     .fillMaxWidth()
                     .height(VolleyDimens.DIMEN_56.dp),
                 onClick = { eventCallback(RegistrationEvent.GetStartedClicked) }
+            )
+        }
+    }
+}
+
+@Stable
+@Composable
+private fun FillRegistrationData(
+    modifier: Modifier = Modifier,
+    state: RegistrationState,
+    onRequestNavigateToAboutLevels: () -> Unit,
+    eventCallback: (RegistrationEvent) -> Unit
+) {
+    LazyColumn(modifier = modifier) {
+        item {
+            FillNameAndSurname(
+                name = state.name,
+                surname = state.surname,
+                onTypeName = { eventCallback(RegistrationEvent.NameChanged(it)) },
+                onTypeSurname = { eventCallback(RegistrationEvent.SurnameChanged(it)) }
+            )
+        }
+
+        item {
+            GenderChooser(
+                modifier = Modifier.padding(top = 16.dp),
+                selectedGenderIndex = state.gender,
+                onGenderClick = { eventCallback(RegistrationEvent.GenderSelected(it)) }
+            )
+        }
+
+        item {
+            FillDateOfBirth(
+                modifier = Modifier.padding(top = 16.dp),
+                dateOfBirthMillis = state.dateOfBirthMillis,
+                onSelectDateOfBirth = { eventCallback(RegistrationEvent.DateOfBirthChanged(it)) }
+            )
+        }
+
+        item {
+            LevelChooser(
+                modifier = Modifier.padding(top = 16.dp),
+                selectedLevelIndex = state.level,
+                onLevelClick = { eventCallback(RegistrationEvent.LevelSelected(it)) },
+                onRequestNavigateToAboutLevels = onRequestNavigateToAboutLevels
+            )
+        }
+
+        item {
+            VolleyTextFieldGradient.GradientSpinner(
+                modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                selectedItem = state.selectedCountry,
+                itemList = state.countryList,
+                getTextByItem = { it?.name ?: "" },
+                hint = stringResource(id = R.string.your_county),
+                onItemSelect = { item, _ -> eventCallback(RegistrationEvent.CountrySelected(item!!)) }
+            )
+            HorizontalDivider(
+                modifier = Modifier.padding(top = 16.dp),
+                thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+                color = VolleyColor.TextCalendarLightGrey
+            )
+        }
+
+        item {
+            VolleyTextFieldGradient.GradientSpinner(
+                modifier = Modifier.padding(top = 16.dp, bottom = 188.dp).fillMaxWidth(),
+                selectedItem = state.selectedCity,
+                itemList = state.cityList,
+                getTextByItem = { it?.name ?: "" },
+                hint = stringResource(id = R.string.your_city),
+                onItemSelect = { item, _ -> eventCallback(RegistrationEvent.CitySelected(item!!)) }
             )
         }
     }

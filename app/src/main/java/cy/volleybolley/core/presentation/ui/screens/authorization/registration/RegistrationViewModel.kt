@@ -1,11 +1,10 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.registration
 
-import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.referencedata.domain.model.City
 import cy.volleybolley.referencedata.domain.model.Country
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(
     initialState = RegistrationState()
@@ -32,37 +31,18 @@ class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent
 
     override fun obtainEvent(event: RegistrationEvent) {
         when (event) {
-            RegistrationEvent.GetStartedClicked -> handleNavigationEvent(event)
-
-            is RegistrationEvent.NameChanged,
-            is RegistrationEvent.SurnameChanged,
-            is RegistrationEvent.GenderSelected,
-            is RegistrationEvent.LevelSelected,
-            is RegistrationEvent.DateOfBirthChanged,
-            is RegistrationEvent.CountrySelected,
-            is RegistrationEvent.CitySelected -> handleStateEvent(event)
-        }
-    }
-
-    private fun handleNavigationEvent(event: RegistrationEvent) {
-        when (event) {
-            RegistrationEvent.GetStartedClicked -> viewModelScope.launch {
-                sendUiEffect(RegistrationEffect.NavigateToHome)
-            }
-
-            else -> {
-            }
-        }
-    }
-
-    private fun handleStateEvent(event: RegistrationEvent) {
-        when (event) {
             is RegistrationEvent.NameChanged -> {
-                uiStateMutable.update { it.copy(name = event.value) }
+                uiStateMutable.update {
+                    val newState = it.copy(name = event.value)
+                    newState.copy(isBtnRegistrationEnabled = isRegistrationButtonEnabled(newState))
+                }
             }
 
             is RegistrationEvent.SurnameChanged -> {
-                uiStateMutable.update { it.copy(surname = event.value) }
+                uiStateMutable.update {
+                    val newState = it.copy(surname = event.value)
+                    newState.copy(isBtnRegistrationEnabled = isRegistrationButtonEnabled(newState))
+                }
             }
 
             is RegistrationEvent.GenderSelected -> {
@@ -74,25 +54,54 @@ class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent
             }
 
             is RegistrationEvent.DateOfBirthChanged -> {
-                uiStateMutable.update { it.copy(dateOfBirthMillis = event.millis) }
-            }
-
-            is RegistrationEvent.CountrySelected -> {
                 uiStateMutable.update {
-                    it.copy(
-                        selectedCountry = event.value,
-                        cityList = event.value.cities
-                    )
+                    val newState = it.copy(dateOfBirthMillis = event.millis)
+                    newState.copy(isBtnRegistrationEnabled = isRegistrationButtonEnabled(newState))
                 }
             }
 
+            is RegistrationEvent.CountrySelected -> onCountrySelected(event.value)
+
             is RegistrationEvent.CitySelected -> {
-                uiStateMutable.update { it.copy(selectedCity = event.value) }
+                uiStateMutable.update {
+                    val newState = it.copy(selectedCity = event.value)
+                    newState.copy(isBtnRegistrationEnabled = isRegistrationButtonEnabled(newState))
+                }
             }
 
-            is RegistrationEvent.GetStartedClicked -> {
-                // empty
-            }
+            is RegistrationEvent.GetStartedClicked -> sendRegistrationRequest()
         }
+    }
+
+    private fun onCountrySelected(country: Country) {
+        uiStateMutable.update {
+            val newState = it.copy(
+                selectedCountry = country,
+                selectedCity = null,
+                cityList = country.cities
+            )
+            newState.copy(isBtnRegistrationEnabled = isRegistrationButtonEnabled(newState))
+        }
+    }
+
+    private fun sendRegistrationRequest() {
+        launchSafe(
+            block = {
+                uiStateMutable.update { it.copy(isLoading = true) }
+                delay(timeMillis = 1000L)
+                sendUiEffect(RegistrationEffect.NavigateToHome)
+                uiStateMutable.update { it.copy(isLoading = false) }
+            },
+            onError = {
+                uiStateMutable.update { it.copy(isLoading = false) }
+            },
+            getErrorLogMessage = { "error in registration -> $it" }
+        )
+    }
+
+    private fun isRegistrationButtonEnabled(newState: RegistrationState): Boolean {
+        return newState.name.isNotBlank() && newState.surname.isNotBlank() &&
+            newState.selectedCountry != null && newState.selectedCity != null &&
+            newState.dateOfBirthMillis != null
     }
 }

@@ -6,12 +6,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.aboutlevels.AboutLevelsScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.registration.RegistrationScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.signup.SignUpScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.sendCode.presentation.RegistrationByPhoneScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.verifyCode.presentation.VerifyPhoneNumberScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
@@ -90,7 +91,24 @@ fun NavHostContainer(
                 onRequestNavigateToAboutLevels = { navController.navigate(AboutLevelsRoute) }
             )
         }
-        composable<RegistrationByPhoneRoute> { RegistrationByPhoneScreen(navController) }
+        composable<RegistrationByPhoneRoute> {
+            RegistrationByPhoneScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onBackNavigationRequested = { navController.popBackStack() },
+                requestNavigateToVerifyPhoneScreen = {
+                    navController.navigate(VerifyPhoneNumberRoute)
+                }
+            )
+        }
+        composable<VerifyPhoneNumberRoute> {
+            VerifyPhoneNumberScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onBackNavigationRequested = { navController.popBackStack() },
+                onNavigateToRegistrationScreenRequested = {
+                    navController.navigate(RegistrationRoute)
+                }
+            )
+        }
         composable<AboutLevelsRoute> {
             AboutLevelsScreen(onBackNavigationRequested = { navController.popBackStack() })
         }

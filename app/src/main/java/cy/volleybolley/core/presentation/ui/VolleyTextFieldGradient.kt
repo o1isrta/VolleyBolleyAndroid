@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -101,6 +102,7 @@ object VolleyTextFieldGradient {
         trailingComposable: (@Composable () -> Unit)? = null,
         actionToTransferContent: (String) -> Unit,
     ) {
+        val keyboardController = LocalSoftwareKeyboardController.current
         TextFieldBaseGradient(
             modifier = modifier,
             textInputValue = text,
@@ -109,7 +111,8 @@ object VolleyTextFieldGradient {
             fieldTextStyle = GradientFieldMedium,
             isReadOnly = isReadOnly,
             trailingComposable = trailingComposable,
-            actionToTransferContent = actionToTransferContent
+            actionToTransferContent = actionToTransferContent,
+            actionOnInputCompleteButton = { keyboardController?.hide() }
         )
     }
 
@@ -217,29 +220,36 @@ object VolleyTextFieldGradient {
     fun PhoneTextField(
         modifier: Modifier = Modifier,
         text: String = "",
+        label: String = stringResource(R.string.your_phone_number),
         hint: String = stringResource(R.string.registration_phone_field_hint),
         alertMessage: String,
         actionToTransferContent: (String) -> Unit,
     ) {
-        TextFieldBaseGradient(
-            textInputValue = text,
-            fieldTextStyle = GradientFieldMedium,
-            hint = hint,
-            hintTextStyle = GradientFieldLight,
-            alertMessage = alertMessage,
-            keyboardType = KeyboardType.Number,
-            actionToTransferContent = actionToTransferContent,
-            composablePrefix = {
-                Text(
-                    text = stringResource(R.string.registration_phone_field_code_symbol),
-                    style = GradientFieldMedium,
-                    color = if (alertMessage.isNotEmpty()) VolleyColor.Alert else Color.Unspecified
-                )
+        Column(modifier = modifier) {
+            VolleyText.BodyBold(
+                text = label,
+                color = VolleyColor.White
+            )
+            TextFieldBaseGradient(
+                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                textInputValue = text,
+                fieldTextStyle = GradientFieldMedium,
+                hint = hint,
+                hintTextStyle = GradientFieldLight,
+                alertMessage = alertMessage,
+                keyboardType = KeyboardType.Number,
+                actionToTransferContent = actionToTransferContent,
+                composablePrefix = {
+                    Text(
+                        text = stringResource(R.string.registration_phone_field_code_symbol),
+                        style = GradientFieldMedium,
+                        color = if (alertMessage.isNotEmpty()) VolleyColor.Alert else Color.Unspecified
+                    )
 
-                Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_4.dp))
-            },
-            modifier = modifier,
-        )
+                    Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_4.dp))
+                }
+            )
+        }
     }
 
     @Stable
@@ -247,23 +257,30 @@ object VolleyTextFieldGradient {
     fun PhoneCodeTextField(
         modifier: Modifier = Modifier,
         text: String = "",
+        label: String = stringResource(R.string.enter_the_6_digit_code),
         hint: String = stringResource(R.string.registration_code_field_hint),
         alertMessage: String,
         actionToTransferContent: (String) -> Unit,
     ) {
-        TextFieldBaseGradient(
-            textInputValue = text,
-            maxTextLength = VolleyDimens.DIMEN_6,
-            fieldTextStyle = CodeField,
-            hint = hint,
-            hintTextStyle = CodeField,
-            alertMessage = alertMessage,
-            messageHorizontalAlignment = Alignment.CenterHorizontally,
-            contentAlignmentInsideField = Alignment.Center,
-            keyboardType = KeyboardType.Number,
-            actionToTransferContent = actionToTransferContent,
-            modifier = modifier,
-        )
+        Column(modifier = modifier) {
+            VolleyText.BodyBold(
+                text = label,
+                color = VolleyColor.White
+            )
+            TextFieldBaseGradient(
+                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                textInputValue = text,
+                maxTextLength = 6,
+                fieldTextStyle = CodeField,
+                hint = hint,
+                hintTextStyle = CodeField,
+                alertMessage = alertMessage,
+                messageHorizontalAlignment = Alignment.CenterHorizontally,
+                contentAlignmentInsideField = Alignment.Center,
+                keyboardType = KeyboardType.Number,
+                actionToTransferContent = actionToTransferContent
+            )
+        }
     }
 
     @Stable
@@ -343,7 +360,7 @@ object VolleyTextFieldGradient {
                             BasicTextField(
                                 value = inputText,
                                 onValueChange = { text ->
-                                    actionToTransferContent(text)
+                                    checkedTransferContent(text, maxTextLength, actionToTransferContent)
                                 },
                                 singleLine = true,
                                 textStyle = realFieldTextStyle,
@@ -373,6 +390,20 @@ object VolleyTextFieldGradient {
                     )
                 }
             }
+        }
+    }
+
+    private inline fun checkedTransferContent(
+        text: String,
+        maxTextLength: Int? = null,
+        actionToTransferContent: (String) -> Unit,
+    ) {
+        if (maxTextLength != null) {
+            if (text.length <= maxTextLength) {
+                actionToTransferContent(text)
+            }
+        } else {
+            actionToTransferContent(text)
         }
     }
 

@@ -32,6 +32,9 @@ object RegistrationRoute : NavMap
 object RegistrationByPhoneRoute : NavMap
 
 @Serializable
+object VerifyPhoneNumberRoute : NavMap
+
+@Serializable
 object AboutLevelsRoute : NavMap
 
 // --- create new game flow ---

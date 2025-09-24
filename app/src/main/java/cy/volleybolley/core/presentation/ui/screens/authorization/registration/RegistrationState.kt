@@ -14,5 +14,7 @@ data class RegistrationState(
     val selectedCountry: Country? = null,
     val countryList: List<Country> = emptyList(),
     val selectedCity: City? = null,
-    val cityList: List<City> = emptyList()
+    val cityList: List<City> = emptyList(),
+    val isBtnRegistrationEnabled: Boolean = false,
+    val isLoading: Boolean = false
 ) : UiState
