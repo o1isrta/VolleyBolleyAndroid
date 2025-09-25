@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 
 sealed class GameEnteringConditionsScreenState {
     data class Content(
@@ -6,6 +6,7 @@ sealed class GameEnteringConditionsScreenState {
         val selectedPrivacy: Privacy = Privacy.Public,
         val accountState: AccountState = AccountState.NotLinked
     ) : GameEnteringConditionsScreenState()
+    object Loading : GameEnteringConditionsScreenState()    // Для общей загрузки (если необходимо)
 }
 
 sealed class Privacy {

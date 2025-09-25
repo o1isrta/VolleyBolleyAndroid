@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 
 import cy.volleybolley.courts.domain.model.Court
 import java.util.Date

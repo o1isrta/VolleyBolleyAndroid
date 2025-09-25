@@ -1,6 +1,5 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,18 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -33,7 +28,6 @@ import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyCashField
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
-import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
@@ -41,22 +35,23 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun GameEnteringConditionsScreen(navController: NavHostController, viewModel: GameEnteringConditionsScreenViewModel = viewModel(),
                                  navigateToPaymentsScreen: () -> Unit) {
 
     val scrollState = rememberScrollState() //Состояние скролла
-    val screenState = viewModel.screenState.collectAsState().value
-    //  получаем все данные из screenState
+    val screenState by viewModel.screenState.collectAsState()
+
+    /*//  получаем все данные из screenState
     var maximumPlayers = screenState.maximumPlayers
     val selectedPrivacy = screenState.selectedPrivacy
     val accountState = screenState.accountState
 
     val context = LocalContext.current
-
-    // Подписываемся на events из ViewModel
+*/
+    /*// Подписываемся на events из ViewModel
     LaunchedEffect(key1 = viewModel.event) {
         viewModel.event.collect { event ->
             when (event) {
@@ -68,8 +63,10 @@ fun GameEnteringConditionsScreen(navController: NavHostController, viewModel: Ga
                 }
             }
         }
-    }
+    }*/
 
+    if (screenState is GameEnteringConditionsScreenState.Content) {
+        val contentState = screenState as GameEnteringConditionsScreenState.Content
     VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = VolleyDimens.DIMEN_32,
             modifier = Modifier
@@ -97,7 +94,10 @@ fun GameEnteringConditionsScreen(navController: NavHostController, viewModel: Ga
 
             Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
-            VolleyTextFieldAttribute.CountField(inputCount = 8) { }
+            VolleyTextFieldAttribute.CountField(
+                inputCount = 8,
+                actionToTransferCount = {}
+            )
 
             Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
 
@@ -194,6 +194,10 @@ fun GameEnteringConditionsScreen(navController: NavHostController, viewModel: Ga
             )
         }
     }
+    } else {
+        CircularProgressIndicator()
+    }
+
 //        Button(onClick = { navController.popBackStack() }) {
 //            Text("Назад")
 //        }

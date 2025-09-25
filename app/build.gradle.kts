@@ -97,4 +97,7 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.firebase.auth)
     implementation(platform(libs.firebase.bom))
+
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
 }

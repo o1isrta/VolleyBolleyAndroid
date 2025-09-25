@@ -3,6 +3,7 @@
 firebaseAuth = "23.2.1"
 firebaseBom = "33.16.0"
 koinAndroid = "4.1.0"
+lifecycleViewmodelCompose = "2.9.4"
 minSdk = "24"
 compileSdk = "35"
 playServicesAuth = "21.3.0"
@@ -35,6 +36,7 @@ detektTwitterComposeRules = "0.0.26"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 google-firebase-auth = { module = "com.google.firebase:firebase-auth" }

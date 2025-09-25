@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text

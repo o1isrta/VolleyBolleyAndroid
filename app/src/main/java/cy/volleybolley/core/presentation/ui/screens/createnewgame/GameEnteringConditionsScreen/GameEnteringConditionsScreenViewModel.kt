@@ -1,18 +1,27 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
+import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
-class GameEnteringConditionsScreenViewModel : ViewModel() {
+class GameEnteringConditionsScreenViewModel :
+    BaseViewModel<GameEnteringConditionsScreenState, GameEnteringConditionsScreenEvent, GameEnteringConditionsScreenEffect>(
+        GameEnteringConditionsScreenState()
+    ) {
 
-    private val _screenState = MutableStateFlow<GameEnteringConditionsScreenState>(GameEnteringConditionsScreenState.Content())
+        override val tag: String = "AboutLevelsViewModel"
+
+        override fun obtainEvent(event: GameEnteringConditionsScreenEvent) {
+            when (event) {
+                GameEnteringConditionsScreenEvent.OnBackClicked -> {
+                    viewModelScope.launch {
+                        sendUiEffect(GameEnteringConditionsScreenEffect.NavigateBack)
+                    }
+                }
+            }
+        }
+
+    /*private val _screenState = MutableStateFlow<GameEnteringConditionsScreenState>(GameEnteringConditionsScreenState.Content())
     val screenState: StateFlow<GameEnteringConditionsScreenState> = _screenState
 
     //private val _eventChannel = Channel<Event>()
@@ -37,23 +46,23 @@ class GameEnteringConditionsScreenViewModel : ViewModel() {
             }
         }
 
-       /* _screenState.value = _screenState.value.copy(accountState = AccountState.Loading)
+       *//* _screenState.value = _screenState.value.copy(accountState = AccountState.Loading)
 
         viewModelScope.launch {
             delay(2000)
 
             _screenState.value = _screenState.value.copy(accountState = AccountState.Linked("New Account Number"))
             _eventChannel.send(Event.NavigateToPaymentsScreen("New Account Number"))
-        }*/
+        }*//*
     }
 
     // имитация создания аккаунта
     private fun generateAccountNumber():String {
         return Random.nextInt(100000,  999999).toString()
-    }
+    }*/
 
-    sealed class Event {
+/*    sealed class Event {
         // data class ShowToast(val message: String) : Event()
         data class NavigateToPaymentsScreen(val accountNumber: String) : Event()
-    }
+    }*/
 }

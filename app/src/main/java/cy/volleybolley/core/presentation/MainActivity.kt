@@ -39,11 +39,8 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
@@ -51,7 +48,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite
-import cy.volleybolley.core.presentation.ui.navigation.BasicGameSetupRoute
 import cy.volleybolley.core.presentation.ui.navigation.GameEnteringConditionsRoute
 import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.MyGamesTopLevelRoute
@@ -59,7 +55,6 @@ import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
 import cy.volleybolley.core.presentation.ui.navigation.ProfileTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.model.NoBarsRoutes
 import cy.volleybolley.core.presentation.ui.navigation.model.TopLevelRoute
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 class MainActivity : ComponentActivity() {
