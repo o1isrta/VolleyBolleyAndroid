@@ -28,7 +28,7 @@ class PaymentsScreenViewModel(
         uiStateMutable.update { it.copy(payments = VolleyUiUtil.mockPayments) }
     }
 
-    override val tag: String = TAG
+    override val tag: String = PaymentsScreenViewModel::class.simpleName ?: "PaymentsScreenViewModel"
 
     override fun obtainEvent(event: PaymentsScreenEvent) {
         when (event) {
@@ -71,9 +71,5 @@ class PaymentsScreenViewModel(
         return oldPayments.map { payment ->
             payment.copy(isPreferred = payment.type == chosenType)
         }
-    }
-
-    companion object {
-        val TAG = PaymentsScreenViewModel::class.simpleName ?: "PaymentsScreenViewModel"
     }
 }

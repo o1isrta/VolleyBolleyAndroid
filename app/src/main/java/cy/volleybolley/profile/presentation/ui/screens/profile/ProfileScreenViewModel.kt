@@ -25,7 +25,7 @@ class ProfileScreenViewModel(
 ) : BaseViewModel<ProfileScreenState, ProfileScreenEvent, ProfileScreenEffect>(
     initialState = ProfileScreenState
 ) {
-    override val tag: String = TAG
+    override val tag: String = ProfileScreenViewModel::class.simpleName ?: "ProfileScreenViewModel"
 
     override fun obtainEvent(event: ProfileScreenEvent) {
         when (event) {
@@ -99,9 +99,5 @@ class ProfileScreenViewModel(
                 },
             )
         )
-    }
-
-    companion object {
-        val TAG = ProfileScreenViewModel::class.simpleName ?: "ProfileScreenViewModel"
     }
 }

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.update
 class AboutScreenViewModel : BaseViewModel<AboutScreenState, AboutScreenEvent, AboutScreenEffect>(
     initialState = AboutScreenState(),
 ) {
-    override val tag: String = TAG
+    override val tag: String = AboutScreenViewModel::class.simpleName ?: "AboutScreenViewModel"
 
     override fun obtainEvent(event: AboutScreenEvent) {
         when (event) {
@@ -26,8 +26,4 @@ class AboutScreenViewModel : BaseViewModel<AboutScreenState, AboutScreenEvent, A
     }
 
     private fun adaptStringFromResources(resourceString: String): String = resourceString.replace(",", "\n", true)
-
-    companion object {
-        val TAG: String = AboutScreenViewModel::class.simpleName ?: "AboutScreenViewModel"
-    }
 }

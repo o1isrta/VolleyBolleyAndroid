@@ -20,7 +20,7 @@ class ChangePhotoScreenViewModel(
 ) {
     private var originAvatar: String? = uiState.value.avatarUrl
 
-    override val tag: String = TAG
+    override val tag: String = ChangePhotoScreenViewModel::class.simpleName ?: "ChangePhotoScreenViewModel"
 
     override fun obtainEvent(event: ChangePhotoScreenEvent) {
         when (event) {
@@ -57,9 +57,5 @@ class ChangePhotoScreenViewModel(
             avatarUrl = newAvatar,
             buttonEnabled = newAvatar != originAvatar
         )
-    }
-
-    companion object {
-        val TAG = ChangePhotoScreenViewModel::class.simpleName ?: "ChangePhotoScreenViewModel"
     }
 }

@@ -49,7 +49,7 @@ class PersonalDataScreenViewModel(
         }
     }
 
-    override val tag: String = TAG
+    override val tag: String = PersonalDataScreenViewModel::class.simpleName ?: "PersonalDataScreenViewModel"
 
     override fun obtainEvent(event: PersonalDataScreenEvent) {
         when (event) {
@@ -143,9 +143,5 @@ class PersonalDataScreenViewModel(
     private fun checkStateForButtonEnabled(newState: PersonalDataScreenState): PersonalDataScreenState {
         val checkState = if (newState.buttonEnabled) newState.copy(buttonEnabled = false) else newState
         return if (checkState == originState) originState else newState.copy(buttonEnabled = true)
-    }
-
-    companion object {
-        val TAG: String = PersonalDataScreenViewModel::class.simpleName ?: "PersonalDataScreenViewModel"
     }
 }

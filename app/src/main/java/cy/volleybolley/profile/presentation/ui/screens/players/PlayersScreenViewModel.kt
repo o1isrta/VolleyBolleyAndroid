@@ -29,7 +29,7 @@ class PlayersScreenViewModel(
         uiStateMutable.update { it.copy(players = originAllPlayers) }
     }
 
-    override val tag = TAG
+    override val tag = PlayersScreenViewModel::class.simpleName ?: "PlayersScreenViewModel"
 
     override fun obtainEvent(event: PlayersScreenEvent) {
         when (event) {
@@ -139,9 +139,5 @@ class PlayersScreenViewModel(
             }
             backPlayerIdHolder.clearBackPlayerId()
         }
-    }
-
-    companion object {
-        val TAG = PlayersScreenViewModel::class.simpleName ?: "PlayersScreenViewModel"
     }
 }

@@ -26,7 +26,7 @@ class PlayerProfileScreenViewModel(
 ) {
     private val originFavoriteStatus: Boolean
 
-    override val tag: String = TAG
+    override val tag: String = PlayerProfileScreenViewModel::class.simpleName ?: "PlayerDetailScreenViewModel"
 
     init {
         // getPlayerDetails(playerId)
@@ -55,9 +55,5 @@ class PlayerProfileScreenViewModel(
                 )
             }
         }
-    }
-
-    companion object {
-        val TAG = PlayerProfileScreenViewModel::class.simpleName ?: "PlayerDetailScreenViewModel"
     }
 }

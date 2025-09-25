@@ -27,7 +27,7 @@ class EnterPaymentDataScreenViewModel(
     )
 
     private var savedPaymentsJsonString: String? = null
-    override val tag: String = TAG
+    override val tag: String = EnterPaymentDataScreenViewModel::class.simpleName ?: "EnterPaymentDataScreenViewModel"
 
     init {
         uiStateMutable.update {
@@ -99,9 +99,5 @@ class EnterPaymentDataScreenViewModel(
 
     private fun setCorrectAccountValue(value: String, paymentType: PaymentType): String {
         return if (paymentType == PaymentType.REVOLUT) "@$value" else value
-    }
-
-    companion object {
-        val TAG = EnterPaymentDataScreenViewModel::class.simpleName ?: "EnterPaymentDataScreenViewModel"
     }
 }
