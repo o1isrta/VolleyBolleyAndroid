@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.home
+package cy.volleybolley.core.presentation.ui.screens.home.home
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
