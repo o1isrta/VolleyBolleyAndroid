@@ -2,8 +2,8 @@ package cy.volleybolley.auth.di
 
 import com.google.firebase.auth.FirebaseAuth
 import cy.volleybolley.auth.ui.phone.PhoneAuthHelper
-import cy.volleybolley.auth.ui.presentation.AuthViewModel
 import cy.volleybolley.auth.ui.phone.PhoneAuthViewModel
+import cy.volleybolley.auth.ui.presentation.AuthViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

@@ -1,6 +1,5 @@
 package cy.volleybolley.auth.ui.phone
 
-import android.app.Activity
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
