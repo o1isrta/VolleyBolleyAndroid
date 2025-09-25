@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.ui
+package cy.volleybolley.auth.ui.phone
 
 import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
@@ -21,9 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cy.volleybolley.auth.ui.presentation.PhoneAuthEffect
-import cy.volleybolley.auth.ui.presentation.PhoneAuthEvent
-import cy.volleybolley.auth.ui.presentation.PhoneAuthViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -47,7 +44,7 @@ fun RegistrationByPhoneScreen(
                             phoneNumber = effect.phone,
                             viewModel = viewModel,
                             onIdTokenReceived = { viewModel.onIdTokenReceived(it) },
-                            onError = { viewModel.onError(it) }
+                            onError = { viewModel.onError() }
                         )
                     } else {
                         phoneAuthHelper.resendCode(
@@ -56,7 +53,7 @@ fun RegistrationByPhoneScreen(
                             token = effect.resendToken,
                             viewModel = viewModel,
                             onIdTokenReceived = { viewModel.onIdTokenReceived(it) },
-                            onError = { viewModel.onError(it) }
+                            onError = { viewModel.onError() }
                         )
                     }
                 }

@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.ui.presentation
+package cy.volleybolley.auth.ui.phone
 
 import androidx.annotation.StringRes
 import com.google.firebase.auth.PhoneAuthProvider

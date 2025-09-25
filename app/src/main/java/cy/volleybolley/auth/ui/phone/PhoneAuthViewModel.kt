@@ -1,9 +1,9 @@
-package cy.volleybolley.auth.ui.presentation
+package cy.volleybolley.auth.ui.phone
 
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.PhoneAuthProvider
 import cy.volleybolley.R
-import cy.volleybolley.auth.ui.PhoneAuthHelper
+import cy.volleybolley.auth.ui.phone.PhoneAuthHelper
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -38,7 +38,7 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
             sendUiEffect(PhoneAuthEffect.ShowError(R.string.your_phone_number))
             return
         }
-        _uiState.update { it.copy(phoneNumber = phone, isLoading = true) }
+        uiStateMutable.update { it.copy(phoneNumber = phone, isLoading = true) }
         sendUiEffect(PhoneAuthEffect.RequestPhoneVerification(phone))
     }
 
@@ -49,7 +49,7 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
             sendUiEffect(PhoneAuthEffect.ShowError(R.string.cant_resend))
             return
         }
-        _uiState.update { it.copy(isLoading = true) }
+        uiStateMutable.update { it.copy(isLoading = true) }
         sendUiEffect(PhoneAuthEffect.RequestPhoneVerification(phone, token))
     }
 
@@ -59,16 +59,16 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
             sendUiEffect(PhoneAuthEffect.ShowError(R.string.invalid_code))
             return
         }
-        _uiState.update { it.copy(isLoading = true, code = code) }
+        uiStateMutable.update { it.copy(isLoading = true, code = code) }
         phoneAuthHelper.verifyCode(
             code,
             verificationId,
             onIdTokenReceived = { idToken ->
-                _uiState.update { it.copy(isLoading = false, isAuthorized = true) }
+                uiStateMutable.update { it.copy(isLoading = false, isAuthorized = true) }
                 idToken?.let { sendUiEffect(PhoneAuthEffect.PhoneAuth(it)) }
             },
             onError = {
-                _uiState.update { it.copy(isLoading = false) }
+                uiStateMutable.update { it.copy(isLoading = false) }
                 sendUiEffect(PhoneAuthEffect.ShowError(R.string.default_error))
             }
         )
@@ -78,7 +78,7 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
         verificationId: String,
         token: PhoneAuthProvider.ForceResendingToken
     ) {
-        _uiState.update {
+        uiStateMutable.update {
             it.copy(
                 verificationId = verificationId,
                 resendToken = token,
@@ -90,31 +90,31 @@ class PhoneAuthViewModel(private val phoneAuthHelper: PhoneAuthHelper) :
     }
 
     fun onIdTokenReceived(token: String?) {
-        _uiState.update { it.copy(isLoading = false, isAuthorized = true) }
+        uiStateMutable.update { it.copy(isLoading = false, isAuthorized = true) }
         token?.let { sendUiEffect(PhoneAuthEffect.PhoneAuth(it)) }
     }
 
-    fun onError(e: Throwable) {
-        _uiState.update { it.copy(isLoading = false) }
+    fun onError() {
+        uiStateMutable.update { it.copy(isLoading = false) }
         sendUiEffect(PhoneAuthEffect.ShowError(R.string.default_error))
     }
 
     fun onPhoneChanged(phone: String) {
-        _uiState.update { it.copy(phoneNumber = phone) }
+        uiStateMutable.update { it.copy(phoneNumber = phone) }
     }
 
     fun onCodeChanged(code: String) {
-        _uiState.update { it.copy(code = code) }
+        uiStateMutable.update { it.copy(code = code) }
     }
 
     private fun startResendTimer() {
         resendJob?.cancel()
         resendJob = viewModelScope.launch {
             for (seconds in START_TIME downTo END_TIME) {
-                _uiState.update { it.copy(resendTimeout = seconds) }
+                uiStateMutable.update { it.copy(resendTimeout = seconds) }
                 delay(ONE_SECOND)
             }
-            _uiState.update { it.copy(resendTimeout = 0) }
+            uiStateMutable.update { it.copy(resendTimeout = 0) }
         }
     }
 }
