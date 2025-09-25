@@ -16,12 +16,13 @@ class PhoneAuthHelper(
     }
 
     fun startPhoneNumberVerification(
-        activity: Activity,
+        contextProvider: ContextProvider,
         phoneNumber: String,
-        viewModel: PhoneAuthViewModel,
         onIdTokenReceived: (String?) -> Unit,
         onError: (Throwable) -> Unit
     ) {
+        val activity = contextProvider.activity
+        val viewModel = contextProvider.viewModel
         val options = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(TIMEOUT, TimeUnit.SECONDS)
@@ -45,13 +46,14 @@ class PhoneAuthHelper(
     }
 
     fun resendCode(
-        activity: Activity,
+        contextProvider: ContextProvider,
         phoneNumber: String,
         token: PhoneAuthProvider.ForceResendingToken,
-        viewModel: PhoneAuthViewModel,
         onIdTokenReceived: (String?) -> Unit,
         onError: (Throwable) -> Unit
     ) {
+        val activity = contextProvider.activity
+        val viewModel = contextProvider.viewModel
         val options = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(TIMEOUT, TimeUnit.SECONDS)

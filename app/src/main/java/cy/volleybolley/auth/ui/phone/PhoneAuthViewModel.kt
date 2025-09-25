@@ -3,7 +3,6 @@ package cy.volleybolley.auth.ui.phone
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.PhoneAuthProvider
 import cy.volleybolley.R
-import cy.volleybolley.auth.ui.phone.PhoneAuthHelper
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

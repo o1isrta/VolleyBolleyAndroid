@@ -32,26 +32,24 @@ fun RegistrationByPhoneScreen(
     activityProvider: () -> Activity
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
+    val contextProvider = ContextProvider(activityProvider(), viewModel)
 
     LaunchedEffect(Unit) {
         viewModel.uiEffect.collect { effect ->
             when (effect) {
                 is PhoneAuthEffect.RequestPhoneVerification -> {
-                    val activity = activityProvider()
                     if (effect.resendToken == null) {
                         phoneAuthHelper.startPhoneNumberVerification(
-                            activity = activity,
+                            contextProvider,
                             phoneNumber = effect.phone,
-                            viewModel = viewModel,
                             onIdTokenReceived = { viewModel.onIdTokenReceived(it) },
                             onError = { viewModel.onError() }
                         )
                     } else {
                         phoneAuthHelper.resendCode(
-                            activity = activity,
+                            contextProvider,
                             phoneNumber = effect.phone,
                             token = effect.resendToken,
-                            viewModel = viewModel,
                             onIdTokenReceived = { viewModel.onIdTokenReceived(it) },
                             onError = { viewModel.onError() }
                         )
