@@ -18,6 +18,9 @@ object VolleyUiUtil {
     const val DATE_FIELD_HINT = "__ /__ /____"
     const val DATE_OF_BIRTH_FIELD_PATTERN = "MM/dd/yyyy"
 
+    const val HOME_FIND_GAME_TEXT_WEIGHT = 0.56f
+    const val HOME_FIND_GAME_COUNT_WEIGHT = 0.44f
+
     @JvmStatic
     fun getLimitedText(symbolLimit: Int?, text: String): String {
         return if (symbolLimit == null) {
