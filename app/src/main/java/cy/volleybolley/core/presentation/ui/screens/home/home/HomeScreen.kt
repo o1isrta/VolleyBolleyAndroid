@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -40,6 +42,10 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.navigation.model.DigitIcon
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateNewGameClick
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateTourneyClick
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnDonateClick
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnFindGameClick
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -92,17 +98,116 @@ private fun HomeScreen(
                 )
                 .align(Alignment.BottomCenter)
         ) {
+            CreateNewGameButton(
+                locationName = state.location.locationName,
+                courtName = state.location.courtName,
+                onClick = { eventCallback(OnCreateNewGameClick) }
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+
+            FindGameButton(
+                gamesCount = state.nearGamesCount,
+                onClick = { eventCallback(OnFindGameClick) }
+            )
+
+            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+
             SquareButtonsLine(
-                onCreateTourneyButtonClick = {},
-                onDonateButtonClick = {}
+                onCreateTourneyButtonClick = { eventCallback(OnCreateTourneyClick) },
+                onDonateButtonClick = { eventCallback(OnDonateClick) }
             )
         }
     }
 
     LaunchedEffect(effect) {
-        when(effect){
+        when (effect) {
             is HomeScreenEffect.NavigateFromHomeScreen -> navigateAction(effect.route)
             null -> Unit
+        }
+    }
+}
+
+@Composable
+private fun CreateNewGameButton(
+    modifier: Modifier = Modifier,
+    locationName: String,
+    courtName: String,
+    onClick: () -> Unit,
+) {
+    VolleyContainersRootTransparent.GlassContainer(
+        modifier = modifier
+            .height(VolleyDimens.DIMEN_116.dp)
+            .clickable(
+                indication = null,
+                interactionSource = null,
+                onClick = onClick
+            )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(VolleyDimens.DIMEN_20.dp)
+        ) {
+            VolleyText.TitleLarge(
+                text = stringResource(R.string.create_a_new_game),
+                color = VolleyColor.White,
+                textAlign = TextAlign.Start,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            LocationDescription(
+                locationName = locationName,
+                courtName = courtName,
+                weatherComponent = {},
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun LocationDescription(
+    modifier: Modifier = Modifier,
+    locationName: String,
+    courtName: String,
+    weatherComponent: @Composable BoxScope.() -> Unit
+) {
+    Box(
+        contentAlignment = Alignment.BottomCenter,
+        modifier = modifier
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_pointer_map),
+                contentDescription = null,
+                tint = VolleyColor.OrangeHard
+            )
+
+            Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+
+            Column(Modifier.weight(1f)) {
+                VolleyText.BodyBold(
+                    text = courtName,
+                    color = VolleyColor.White,
+                    textAlign = TextAlign.Start,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+                VolleyText.BodyLight(
+                    text = locationName,
+                    color = VolleyColor.White,
+                    textAlign = TextAlign.Start,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2
+                )
+            }
+
+            Box(content = weatherComponent)
         }
     }
 }
@@ -165,7 +270,6 @@ private fun FindGameButton(
                 }
             }
 
-            // GameAvailableBlock here
             GamesAvailableBlock(
                 gamesCount = gamesCount,
                 modifier = Modifier.weight(VolleyUiUtil.HOME_FIND_GAME_COUNT_WEIGHT)
@@ -180,7 +284,7 @@ private fun GamesAvailableBlock(
     gamesCount: Int = 0,
 ) {
     val digitsStringValuesList = gamesCount.toString().chunked(1)
-    val topGapForDigits = when(digitsStringValuesList.size) {
+    val topGapForDigits = when (digitsStringValuesList.size) {
         3 -> VolleyDimens.DIMEN_6
         4 -> VolleyDimens.DIMEN_12
         else -> 0
@@ -194,9 +298,9 @@ private fun GamesAvailableBlock(
                 shape = RoundedCornerShape(VolleyDimens.DIMEN_28.dp)
             )
             .padding(
-            horizontal = VolleyDimens.DIMEN_20.dp,
-            vertical = VolleyDimens.DIMEN_8.dp
-        )
+                horizontal = VolleyDimens.DIMEN_20.dp,
+                vertical = VolleyDimens.DIMEN_8.dp
+            )
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -204,7 +308,9 @@ private fun GamesAvailableBlock(
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth().weight(1f)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
                     .padding(
                         top = topGapForDigits.dp,
                         bottom = (VolleyDimens.DIMEN_12 + topGapForDigits).dp
@@ -332,10 +438,31 @@ private fun DonateButton(
 
 @Preview
 @Composable
+private fun PreviewHomeScreen() {
+    VolleyContainersRootTransparent.Root {
+        Box(
+            contentAlignment = Alignment.TopStart,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.TurquoiseDark)
+        ) {
+            HomeScreen(
+                state = HomeScreenState(),
+                effect = null,
+                navigateAction = {},
+                eventCallback = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
 private fun PreviewFindGameButton() {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .background(VolleyColor.TurquoiseDark)
     ) {
         Column {
@@ -357,26 +484,6 @@ private fun PreviewFindGameButton() {
             FindGameButton(
                 gamesCount = 2222,
                 onClick = {}
-            )
-        }
-    }
-}
-
-//@Preview
-@Composable
-private fun PreviewHomeScreen() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            contentAlignment = Alignment.TopStart,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            HomeScreen(
-                state = HomeScreenState(),
-                effect = null,
-                navigateAction = {},
-                eventCallback = {}
             )
         }
     }
