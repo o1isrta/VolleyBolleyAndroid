@@ -68,4 +68,9 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
             }
         }
     }
+
+    // функция для обновления состояния
+    protected fun setState(update: (State) -> State) {
+        _uiState.value = update(_uiState.value)
+    }
 }

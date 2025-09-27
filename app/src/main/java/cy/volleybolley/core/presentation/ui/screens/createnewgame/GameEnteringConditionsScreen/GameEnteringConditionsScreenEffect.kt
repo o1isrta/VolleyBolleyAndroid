@@ -7,4 +7,5 @@ sealed class GameEnteringConditionsScreenEffect : UiEffect{
     data class ShowError(val message: String) : GameEnteringConditionsScreenEffect()
     data class AccountExists(val accountNumber: String) : GameEnteringConditionsScreenEffect()
     object AccountNotExists : GameEnteringConditionsScreenEffect()
+    object NavigateBack :  GameEnteringConditionsScreenEffect()
 }

@@ -1,5 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 
+import cy.volleybolley.core.presentation.base.UiState
+
 data class GameEnteringConditionsScreenState (
     val maximumPlayers: Int = 4,
     val selectedPrivacy: Privacy = Privacy.Public,
@@ -8,7 +10,7 @@ data class GameEnteringConditionsScreenState (
     val accountNumber: String? = null,  // номер аккаунта, если есть
     val errorMessage: String? = null,
     val isLoading : Boolean = false     // Для загрузки (если необходимо)
-)
+) : UiState
 
 enum class Privacy {
     Public,

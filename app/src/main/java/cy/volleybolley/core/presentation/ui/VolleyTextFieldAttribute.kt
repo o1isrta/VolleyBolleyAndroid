@@ -228,8 +228,9 @@ object VolleyTextFieldAttribute {
                         tint = VolleyColor.White,
                         modifier = Modifier
                             .clickable(null, null) {
-                                val newCount = inputCount - 1
-                                actionToTransferCount(newCount)
+                                actionToTransferCount(inputCount - 1)
+                               // val newCount = inputCount - 1
+                               // actionToTransferCount(newCount)
                             }
                     )
                     Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
@@ -245,8 +246,9 @@ object VolleyTextFieldAttribute {
                         tint = VolleyColor.White,
                         modifier = Modifier
                             .clickable(null, null) {
-                                val newCount = inputCount + 1
-                                actionToTransferCount(newCount)
+                                actionToTransferCount(inputCount + 1)
+                               // val newCount = inputCount + 1
+                               // actionToTransferCount(newCount)
                             }
                     )
                 }

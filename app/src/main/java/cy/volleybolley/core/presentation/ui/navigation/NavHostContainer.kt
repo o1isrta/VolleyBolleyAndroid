@@ -15,6 +15,7 @@ import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationSc
 import cy.volleybolley.core.presentation.ui.screens.authorization.SignUpScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen.PrivacyOptionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
@@ -91,8 +92,8 @@ fun NavHostContainer(
             composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }
             composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(
                 navController,
-                viewModel = ViewModel(),
-                navigateToPaymentsScreen = { navController.navigate("PaymentsScreen") },
+                viewModel = GameEnteringConditionsScreenViewModel()//,
+                //navigateToPaymentsScreen = { navController.navigate("PaymentsScreen") },
             ) }
             composable<PrivacyOptionsRoute> { PrivacyOptionsScreen(navController) }
 

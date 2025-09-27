@@ -1,5 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,10 +17,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,38 +40,50 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun GameEnteringConditionsScreen(navController: NavHostController, viewModel: GameEnteringConditionsScreenViewModel = viewModel(),
-                                 navigateToPaymentsScreen: () -> Unit) {
+fun GameEnteringConditionsScreen(navController: NavHostController,
+                                 viewModel: GameEnteringConditionsScreenViewModel = GameEnteringConditionsScreenViewModel()) {
 
     val scrollState = rememberScrollState() //Состояние скролла
-    val screenState by viewModel.screenState.collectAsState()
-
-    /*//  получаем все данные из screenState
-    var maximumPlayers = screenState.maximumPlayers
-    val selectedPrivacy = screenState.selectedPrivacy
-    val accountState = screenState.accountState
-
+    val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-*/
-    /*// Подписываемся на events из ViewModel
-    LaunchedEffect(key1 = viewModel.event) {
-        viewModel.event.collect { event ->
-            when (event) {
-               // is GameEnteringConditionsScreenViewModel.Event.ShowToast -> {
-               //     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
-               // }
-                is GameEnteringConditionsScreenState.Event.NavigateToPrivacyOptionsScreen -> {
-                    navigateToPaymentsScreen(event.accountNumber)
+
+    LaunchedEffect(viewModel.uiEffect) { // подписываемся на Effect
+        viewModel.uiEffect.collectLatest { effect ->
+            when (effect) {
+                is GameEnteringConditionsScreenEffect.ShowError -> {
+                    Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_SHORT).show()
+                }
+                is GameEnteringConditionsScreenEffect.AccountExists -> {
+                    Toast.makeText(context, "Account exists with number: ${effect.accountNumber}", Toast.LENGTH_SHORT).show()
+                }
+                GameEnteringConditionsScreenEffect.AccountNotExists -> {
+                    Toast.makeText(context, "Account does not exist. Please create one.", Toast.LENGTH_SHORT).show()
+                }
+                GameEnteringConditionsScreenEffect.NavigateToPayments -> {
+                    navController.navigate("PaymentsScreen")
+                }
+                GameEnteringConditionsScreenEffect.NavigateBack  -> {
+                    navController.popBackStack()
+                }
+                //Обработка всех возможных случаев
+                else -> {
+                    // Handle unexpected effect or do nothing.  Log it!
+                    Log.w("GameEnteringConditionsScreen", "Unhandled effect: $effect")
                 }
             }
         }
-    }*/
+    }
 
-    if (screenState is GameEnteringConditionsScreenState.Content) {
-        val contentState = screenState as GameEnteringConditionsScreenState.Content
-    VolleyContainersRootTransparent.TransparentContainer(
+    // Overlay для отображения индикатора загрузки
+    if (state.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator() // Или другой индикатор загрузки
+        }
+    } else {  // Отображаем основной контент, только если не загружается
+        VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = VolleyDimens.DIMEN_32,
             modifier = Modifier
                 .padding(VolleyDimens.DIMEN_8.dp)
