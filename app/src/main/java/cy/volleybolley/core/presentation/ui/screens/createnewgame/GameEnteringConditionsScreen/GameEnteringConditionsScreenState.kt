@@ -1,23 +1,19 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 
-sealed class GameEnteringConditionsScreenState {
-    data class Content(
-        val maximumPlayers: Int = 4,
-        val selectedPrivacy: Privacy = Privacy.Public,
-        val accountState: AccountState = AccountState.NotLinked
-    ) : GameEnteringConditionsScreenState()
-    object Loading : GameEnteringConditionsScreenState()    // Для общей загрузки (если необходимо)
+data class GameEnteringConditionsScreenState (
+    val maximumPlayers: Int = 4,
+    val selectedPrivacy: Privacy = Privacy.Public,
+    val perPerson: Double = 5.0,
+    val hasAccount: Boolean = false,    // есть ли аккаунт
+    val accountNumber: String? = null,  // номер аккаунта, если есть
+    val errorMessage: String? = null,
+    val isLoading : Boolean = false     // Для загрузки (если необходимо)
+)
+
+enum class Privacy {
+    Public,
+    Private
 }
 
-sealed class Privacy {
-    object Public : Privacy()
-    object Private : Privacy()
-}
 
-sealed class AccountState {
-    object NotLinked : AccountState()
-    object Loading : AccountState()
-    data class Linked(val accountNumber: String) : AccountState()
-    //data class Error(val message: String) : AccountState() // Optional: Add an Error state
-}
 
