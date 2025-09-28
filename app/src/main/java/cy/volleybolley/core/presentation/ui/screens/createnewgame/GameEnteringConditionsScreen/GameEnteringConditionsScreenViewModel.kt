@@ -19,22 +19,25 @@ class GameEnteringConditionsScreenViewModel :
         when (event) {
             is GameEnteringConditionsScreenEvent.PrivacySelected -> {
                 // Используем setState для обновления uiState
-                setState { currentState ->
+               /* setState { currentState ->
                     currentState.copy(selectedPrivacy = event.privacy)
-                }
+                }*/
+                uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = event.privacy)
             }
             is GameEnteringConditionsScreenEvent.PerPersonChanged -> {
-                setState { currentState ->
+               /* setState { currentState ->
                     currentState.copy(perPerson = event.perPerson)
-                }
+                }*/
+                uiStateMutable.value = uiStateMutable.value.copy(perPerson = event.perPerson)
             }
             GameEnteringConditionsScreenEvent.CheckIfAccountExists -> {
                 checkIfAccountExists()
             }
             is GameEnteringConditionsScreenEvent.MaximumPlayersChanged -> {
-                setState { currentState ->
+                /*setState { currentState ->
                     currentState.copy(maximumPlayers = event.maximumPersons)
-                }
+                }*/
+                uiStateMutable.value = uiStateMutable.value.copy(maximumPlayers = event.maximumPersons)
             }
             GameEnteringConditionsScreenEvent.OnBackClicked -> {
                 sendUiEffect(GameEnteringConditionsScreenEffect.NavigateBack)
@@ -63,7 +66,8 @@ class GameEnteringConditionsScreenViewModel :
             }
         ){
             val accountNumber = getAccountNumber() // Получение номера счета (аккаунта), если он есть
-            setState { currentState ->  currentState.copy( accountNumber = accountNumber ) }
+            /*setState { currentState ->  currentState.copy( accountNumber = accountNumber ) }*/
+            uiStateMutable.value = uiStateMutable.value.copy( accountNumber = accountNumber )
         }
     }
 

@@ -41,7 +41,11 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.PaymentsRoute
 import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
+import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
+import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGameType
+import cy.volleybolley.profile.domain.model.PaymentType
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.serialization.json.Json
 
 @Composable
 fun GameEnteringConditionsScreen(navController: NavHostController,
@@ -64,7 +68,22 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                     navController.popBackStack()
                 }
                 GameEnteringConditionsScreenEffect.NavigateToSuccess -> {
-                    navController.navigate(SuccessRoute)
+                    // моковые данные
+                    val succeed = SucceedGame(
+                        id = 1213,
+                        type = SucceedGameType.CreatedGame,
+                        locationName = "Patak Rd, Mueang Phuket",
+                        locationPlace = "Karon Beach Club",
+                        date = "today",
+                        time = "2:00-3:00 pm",
+                        level = "Level: Light, Medium, Hard",
+                        playersInfo = "Mix · 4 players · private game",
+                        pricePerPerson = "5$",
+                        paymentType = PaymentType.CASH,
+                        paymentAccount = "123 45 6789"
+                    )
+                    val succeedJson = Json.encodeToString(succeed)
+                    navController.navigate(SuccessRoute(succeedGame = succeedJson))
                 }
                 //Обработка всех возможных случаев
                 else -> {
@@ -230,7 +249,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                             .height(44.dp)
                             .align(Alignment.CenterHorizontally)
                             .fillMaxWidth(),
-                        text = stringResource(R.string.next_game),
+                        text = stringResource(R.string.save_game),
                         onClick = {viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnSaveGameClick)}
                     )
                 }

@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import cy.volleybolley.core.presentation.ui.screens.authorization.AboutLevelsScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScreen
@@ -42,9 +43,9 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.Upcoming
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.home.HomeScreen
-import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
-import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
+import cy.volleybolley.core.presentation.ui.screens.home.rateplayers.RatePlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.AboutScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
@@ -54,6 +55,8 @@ import cy.volleybolley.core.presentation.ui.screens.profile.PersonalDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun NavHostContainer(
@@ -85,8 +88,26 @@ fun NavHostContainer(
                 )
             }
             composable<SearchCourtRoute> { SearchCourtScreen(navController) }
-            composable<RatePlayersRoute> { RatePlayersScreen(navController) }
-            composable<SuccessRoute> { SuccessScreen(navController) }
+            composable<RatePlayersRoute> { backStackEntry ->
+                val args = backStackEntry.toRoute<RatePlayersRoute>()
+                val eventId = args.eventId
+                val eventType = args.eventType
+                RatePlayersScreen(
+                    navController = navController,
+                    viewModel = koinViewModel {
+                        parametersOf(eventId, eventType)
+                    }
+                )
+            }
+            composable<SuccessRoute> { backStackEntry ->
+                val event = backStackEntry.toRoute<SuccessRoute>().succeedGame
+                SuccessScreen(
+                    navController = navController,
+                    viewModel = koinViewModel {
+                        parametersOf(event)
+                    }
+                )
+            }
 
             // create game
             composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }

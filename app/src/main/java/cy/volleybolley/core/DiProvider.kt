@@ -2,6 +2,7 @@ package cy.volleybolley.core
 
 import cy.volleybolley.auth.di.authViewModelModule
 import cy.volleybolley.core.di.coreModule
+import cy.volleybolley.core.presentation.ui.screens.di.screensModule
 import cy.volleybolley.courts.di.courtsModule
 import cy.volleybolley.players.di.playersModule
 import cy.volleybolley.profile.di.profileModule
@@ -15,6 +16,7 @@ object DiProvider {
         playersModule,
         authViewModelModule,
         referenceDataModule,
-        profileModule
+        profileModule,
+        screensModule
     )
 }
