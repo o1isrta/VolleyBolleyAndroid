@@ -80,7 +80,7 @@ private fun HomeScreen(
         Image(
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
-            painter = painterResource(R.drawable.home_wallpaper),
+            painter = painterResource(R.drawable.home_wallpaper2),
             modifier = Modifier
                 .fillMaxWidth(0.85f)
                 .aspectRatio(1f)
@@ -135,6 +135,56 @@ private fun CreateNewGameButton(
     courtName: String,
     onClick: () -> Unit,
 ) {
+    val shapeOfButton = remember { RoundedCornerShape(VolleyDimens.DIMEN_32.dp) }
+    Box(
+        modifier = Modifier
+            .background(
+                color = VolleyColor.TurquoiseDark.copy(alpha = 0.86f),
+                shape = shapeOfButton
+            )
+    ) {
+        VolleyContainersRootTransparent.TransparentContainer(
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable(
+                    indication = null,
+                    interactionSource = null,
+                    onClick = onClick
+                )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(VolleyDimens.DIMEN_20.dp)
+            ) {
+                VolleyText.TitleLarge(
+                    text = stringResource(R.string.create_a_new_game),
+                    color = VolleyColor.White,
+                    textAlign = TextAlign.Start,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
+                LocationDescription(
+                    locationName = locationName,
+                    courtName = courtName,
+                    weatherComponent = {},
+                )
+            }
+        }
+    }
+}
+
+// Not working variant
+@Composable
+private fun CreateNewGameGlassButton(
+    modifier: Modifier = Modifier,
+    locationName: String,
+    courtName: String,
+    onClick: () -> Unit,
+) {
     VolleyContainersRootTransparent.GlassContainer(
         modifier = modifier
             .height(VolleyDimens.DIMEN_116.dp)
@@ -146,7 +196,7 @@ private fun CreateNewGameButton(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(VolleyDimens.DIMEN_20.dp)
         ) {
             VolleyText.TitleLarge(
@@ -157,11 +207,12 @@ private fun CreateNewGameButton(
                 overflow = TextOverflow.Ellipsis
             )
 
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+
             LocationDescription(
                 locationName = locationName,
                 courtName = courtName,
                 weatherComponent = {},
-                modifier = Modifier.weight(1f)
             )
         }
     }
@@ -285,8 +336,8 @@ private fun GamesAvailableBlock(
 ) {
     val digitsStringValuesList = gamesCount.toString().chunked(1)
     val topGapForDigits = when (digitsStringValuesList.size) {
-        3 -> VolleyDimens.DIMEN_6
-        4 -> VolleyDimens.DIMEN_12
+        3 -> VolleyDimens.DIMEN_10
+        4 -> VolleyDimens.DIMEN_16
         else -> 0
     }
 
@@ -298,7 +349,7 @@ private fun GamesAvailableBlock(
                 shape = RoundedCornerShape(VolleyDimens.DIMEN_28.dp)
             )
             .padding(
-                horizontal = VolleyDimens.DIMEN_20.dp,
+                horizontal = VolleyDimens.DIMEN_12.dp,
                 vertical = VolleyDimens.DIMEN_8.dp
             )
     ) {
@@ -313,7 +364,7 @@ private fun GamesAvailableBlock(
                     .weight(1f)
                     .padding(
                         top = topGapForDigits.dp,
-                        bottom = (VolleyDimens.DIMEN_12 + topGapForDigits).dp
+                        bottom = (VolleyDimens.DIMEN_10 + topGapForDigits).dp
                     )
             ) {
                 digitsStringValuesList.forEach { digitString ->
@@ -456,7 +507,7 @@ private fun PreviewHomeScreen() {
     }
 }
 
-@Preview
+//@Preview
 @Composable
 private fun PreviewFindGameButton() {
     Box(
