@@ -9,4 +9,5 @@ sealed class GameEnteringConditionsScreenEvent : UiEvent{
     class MaximumPlayersChanged(val maximumPersons: Int) : GameEnteringConditionsScreenEvent() // Увеличение или уменьшение maximumPlayers
     object OnBackClicked : GameEnteringConditionsScreenEvent()     // нажатие на стрелку "Назад"
     object OnAddPaymentClick : GameEnteringConditionsScreenEvent() // Нажатие на кнопку "Add Payment"
+    object OnSaveGameClick : GameEnteringConditionsScreenEvent() // Нажатие на кнопку "Save game"
 }

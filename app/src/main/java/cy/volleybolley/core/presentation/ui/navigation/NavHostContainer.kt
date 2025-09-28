@@ -92,8 +92,7 @@ fun NavHostContainer(
             composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }
             composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(
                 navController,
-                viewModel = GameEnteringConditionsScreenViewModel()//,
-                //navigateToPaymentsScreen = { navController.navigate("PaymentsScreen") },
+                viewModel = GameEnteringConditionsScreenViewModel()
             ) }
             composable<PrivacyOptionsRoute> { PrivacyOptionsScreen(navController) }
 

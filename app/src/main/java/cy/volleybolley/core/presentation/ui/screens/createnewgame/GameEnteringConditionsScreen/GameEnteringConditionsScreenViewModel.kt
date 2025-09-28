@@ -42,7 +42,17 @@ class GameEnteringConditionsScreenViewModel :
             GameEnteringConditionsScreenEvent.OnAddPaymentClick -> {
                 sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPayments)
             }
+            GameEnteringConditionsScreenEvent.OnSaveGameClick -> {
+                saveGame()
+            }
         }
+    }
+
+    private fun saveGame() {
+        // какая-то логика по сохранению настроек ?
+
+        // и переход на экран Success
+        sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToSuccess)
     }
 
     private fun checkIfAccountExists() { // если accountNumber != Null, аккааунт существует

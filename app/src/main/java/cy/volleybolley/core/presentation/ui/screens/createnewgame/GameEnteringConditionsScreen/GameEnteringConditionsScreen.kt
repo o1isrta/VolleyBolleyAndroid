@@ -39,6 +39,8 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.navigation.PaymentsRoute
+import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -56,10 +58,13 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                     Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_SHORT).show()
                 }
                 GameEnteringConditionsScreenEffect.NavigateToPayments -> {
-                    navController.navigate("PaymentsScreen")
+                    navController.navigate(PaymentsRoute)
                 }
                 GameEnteringConditionsScreenEffect.NavigateBack -> {
                     navController.popBackStack()
+                }
+                GameEnteringConditionsScreenEffect.NavigateToSuccess -> {
+                    navController.navigate(SuccessRoute)
                 }
                 //Обработка всех возможных случаев
                 else -> {
@@ -226,7 +231,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                             .align(Alignment.CenterHorizontally)
                             .fillMaxWidth(),
                         text = stringResource(R.string.next_game),
-                        onClick = {}
+                        onClick = {viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnSaveGameClick)}
                     )
                 }
             }
