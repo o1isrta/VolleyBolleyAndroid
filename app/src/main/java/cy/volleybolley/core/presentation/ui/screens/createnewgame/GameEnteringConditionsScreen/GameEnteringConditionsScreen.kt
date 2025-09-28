@@ -39,7 +39,6 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -56,16 +55,10 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                 is GameEnteringConditionsScreenEffect.ShowError -> {
                     Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_SHORT).show()
                 }
-                is GameEnteringConditionsScreenEffect.AccountExists -> {
-                    Toast.makeText(context, "Account exists with number: ${effect.accountNumber}", Toast.LENGTH_SHORT).show()
-                }
-                GameEnteringConditionsScreenEffect.AccountNotExists -> {
-                    Toast.makeText(context, "Account does not exist. Please create one.", Toast.LENGTH_SHORT).show()
-                }
                 GameEnteringConditionsScreenEffect.NavigateToPayments -> {
                     navController.navigate("PaymentsScreen")
                 }
-                GameEnteringConditionsScreenEffect.NavigateBack  -> {
+                GameEnteringConditionsScreenEffect.NavigateBack -> {
                     navController.popBackStack()
                 }
                 //Обработка всех возможных случаев
@@ -88,140 +81,159 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
             modifier = Modifier
                 .padding(VolleyDimens.DIMEN_8.dp)
         ) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = VolleyDimens.DIMEN_20.dp)
-                .verticalScroll(scrollState)
-        ) {
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-
-            TitleWithBackArrow(
-                title = stringResource(R.string.create_a_game),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-
-            VolleyText.TitleMedium(
-                text = stringResource(R.string.maximum_players),
-                modifier = Modifier.fillMaxWidth(),
-                color = VolleyColor.White
-            )
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-            VolleyTextFieldAttribute.CountField(
-                inputCount = 8,
-                actionToTransferCount = {}
-            )
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-
-            VolleyText.TitleMedium(
-                text = stringResource(R.string.privacy),
-                modifier = Modifier.fillMaxWidth(),
-                color = VolleyColor.White
-            )
-
-            VolleyText.BodyLight(
-                text = stringResource(R.string.set_privacy_if_you_want_to_play_with_particular_players),
-                modifier = Modifier.fillMaxWidth(),
-                color = VolleyColor.White,
-                textAlign = TextAlign.Left
-            )
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-            VolleyButton.GroupButtonsForPrivacy(
-                modifier = Modifier.padding(vertical = 12.dp),
-                onSelected = {}
-            )
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-
-            VolleySimpleComponent.DividerLine()
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-
-            VolleyText.TitleMedium(
-                text = stringResource(R.string.payment),
-                modifier = Modifier.fillMaxWidth(),
-                color = VolleyColor.White
-            )
-
-            VolleyText.BodyLight(
-                text = stringResource(R.string.enter_the_participation_fee_per_person),
-                modifier = Modifier.fillMaxWidth(),
-                color = VolleyColor.White,
-                textAlign = TextAlign.Left
-            )
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start,
-                modifier = Modifier//.fillMaxWidth()
-            ) {
-                VolleyText.BodyBold(
-                    text = stringResource(R.string.per_person),
-                    color = VolleyColor.White
-                )
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_9.dp))
-
-                VolleyCashField.CashField(
-                    value = "0",
-                    currency = "$"
-                ) { }
-            }
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                VolleyText.BodyRegular(
-                    text = stringResource(R.string.current_account),
-                    modifier = Modifier,//.fillMaxWidth(),
-                    color = VolleyColor.White
-                )
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_9.dp))
-
-                VolleyCashField.CashField(
-                    value = "0",
-                    currency = "$"
-                ) { }
-            }
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-
-            VolleyButton.ActiveButton(
+            Column(
                 modifier = Modifier
-                    .padding(0.dp, VolleyDimens.DIMEN_8.dp, 0.dp, VolleyDimens.DIMEN_16.dp)
-                    .height(44.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth(),
-                text = stringResource(R.string.next_game),
-                onClick = {}
-            )
+                    .padding(horizontal = VolleyDimens.DIMEN_20.dp)
+            ) {
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+
+                TitleWithBackArrow(
+                    title = stringResource(R.string.create_a_game),
+                    modifier = Modifier.fillMaxWidth(),
+                    onBackClick = { viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnBackClicked)}
+                )
+
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(scrollState)
+                ) {
+                    VolleyText.TitleMedium(
+                        text = stringResource(R.string.maximum_players),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = VolleyColor.White
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
+                    VolleyTextFieldAttribute.CountField(
+                        inputCount = state.maximumPlayers,
+                        actionToTransferCount = { newCount ->
+                            viewModel.obtainEvent(GameEnteringConditionsScreenEvent.MaximumPlayersChanged(newCount))
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+
+                    VolleyText.TitleMedium(
+                        text = stringResource(R.string.privacy),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = VolleyColor.White
+                    )
+
+                    VolleyText.BodyLight(
+                        text = stringResource(R.string.set_privacy_if_you_want_to_play_with_particular_players),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = VolleyColor.White,
+                        textAlign = TextAlign.Left
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
+                    VolleyButton.GroupButtonsForPrivacy(
+                        modifier = Modifier.padding(vertical = 12.dp),
+                        onSelected = { position ->
+                            val selectedPrivacy = when (position) {
+                                1 -> Privacy.Public
+                                2 -> Privacy.Private
+                                else -> null // Обработка некорректной позиции
+                            }
+                            selectedPrivacy?.let {
+                                viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PrivacySelected(it))
+                            } ?: run {
+                                // Обработка нераспознанной позиции
+                                Log.e("GameEnteringConditionsScreen", "Нераспознанная позиция: $position")
+                              }
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+
+                    VolleySimpleComponent.DividerLine()
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+
+                    VolleyText.TitleMedium(
+                        text = stringResource(R.string.payment),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = VolleyColor.White
+                    )
+
+                    VolleyText.BodyLight(
+                        text = stringResource(R.string.enter_the_participation_fee_per_person),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = VolleyColor.White,
+                        textAlign = TextAlign.Left
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                        modifier = Modifier//.fillMaxWidth()
+                    ) {
+                        VolleyText.BodyBold(
+                            text = stringResource(R.string.per_person),
+                            color = VolleyColor.White
+                        )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_9.dp))
+
+                        VolleyCashField.CashField(
+                            value = state.perPerson,
+                            currency = "$"
+                        ) { newValue -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PerPersonChanged(newValue)) }
+                    }
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        VolleyText.BodyRegular(
+                            text = stringResource(R.string.current_account),
+                            modifier = Modifier,
+                            color = VolleyColor.White
+                        )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_9.dp))
+
+                        state.accountNumber?.let {
+                            VolleyText.BodyRegular(
+                                text = it,
+                                modifier = Modifier,
+                                color = VolleyColor.White
+                            )
+                        } ?: run {
+                            VolleyButton.OutlinedActiveButtonSmallText(
+                                modifier = Modifier.height(35.dp),
+                                text = stringResource(R.string.add_payment),
+                                onClick = { viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnAddPaymentClick) }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+
+                    VolleyButton.ActiveButton(
+                        modifier = Modifier
+                            .padding(0.dp, VolleyDimens.DIMEN_8.dp, 0.dp, VolleyDimens.DIMEN_16.dp)
+                            .height(44.dp)
+                            .align(Alignment.CenterHorizontally)
+                            .fillMaxWidth(),
+                        text = stringResource(R.string.next_game),
+                        onClick = {}
+                    )
+                }
+            }
         }
     }
-    } else {
-        CircularProgressIndicator()
-    }
-
-//        Button(onClick = { navController.popBackStack() }) {
-//            Text("Назад")
-//        }
 }
 
-fun navigateToPrivacyOptionsScreen(accountNumber: Any) {
-
-}
 
 @Preview
 @Composable

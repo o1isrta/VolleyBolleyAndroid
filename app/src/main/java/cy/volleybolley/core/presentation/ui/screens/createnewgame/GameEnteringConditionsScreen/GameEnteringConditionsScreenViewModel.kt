@@ -31,18 +31,21 @@ class GameEnteringConditionsScreenViewModel :
             GameEnteringConditionsScreenEvent.CheckIfAccountExists -> {
                 checkIfAccountExists()
             }
-            GameEnteringConditionsScreenEvent.OnBackClicked -> {
-                sendUiEffect(GameEnteringConditionsScreenEffect.NavigateBack)
-            }
             is GameEnteringConditionsScreenEvent.MaximumPlayersChanged -> {
                 setState { currentState ->
                     currentState.copy(maximumPlayers = event.maximumPersons)
                 }
             }
+            GameEnteringConditionsScreenEvent.OnBackClicked -> {
+                sendUiEffect(GameEnteringConditionsScreenEffect.NavigateBack)
+            }
+            GameEnteringConditionsScreenEvent.OnAddPaymentClick -> {
+                sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPayments)
+            }
         }
     }
 
-    private fun checkIfAccountExists() {
+    private fun checkIfAccountExists() { // если accountNumber != Null, аккааунт существует
         launchSafe(
             dispatcher = Dispatchers.IO,
             getErrorLogMessage = { "Error checking account existence: ${it.message ?: "Unknown error"}" },
@@ -50,18 +53,7 @@ class GameEnteringConditionsScreenViewModel :
             }
         ){
             val accountNumber = getAccountNumber() // Получение номера счета (аккаунта), если он есть
-            if (accountNumber != null){ // если аккаунт существует
-                sendUiEffect(GameEnteringConditionsScreenEffect.AccountExists(accountNumber))
-                setState { currentState ->
-                    currentState.copy(
-                        hasAccount = true,
-                        accountNumber = accountNumber
-                    )
-                }
-            } else { // аккаунта не существует
-                sendUiEffect(GameEnteringConditionsScreenEffect.AccountNotExists)
-                setState { currentState -> currentState.copy(hasAccount = false)}
-            }
+            setState { currentState ->  currentState.copy( accountNumber = accountNumber ) }
         }
     }
 
