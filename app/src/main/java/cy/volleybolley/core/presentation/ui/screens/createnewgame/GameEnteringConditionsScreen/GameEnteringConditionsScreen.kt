@@ -157,11 +157,15 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
                     VolleyButton.GroupButtonsForPrivacy(
+                        checkId = when (state.selectedPrivacy) {
+                            Privacy.Public -> 1
+                            Privacy.Private -> 2
+                                                               },
                         modifier = Modifier.padding(vertical = 12.dp),
                         onSelected = { position ->
                             val selectedPrivacy = when (position) {
-                                0 -> Privacy.Public
-                                1 -> Privacy.Private
+                                1 -> Privacy.Public
+                                2 -> Privacy.Private
                                 else -> null // Обработка некорректной позиции
                             }
                             selectedPrivacy?.let {
