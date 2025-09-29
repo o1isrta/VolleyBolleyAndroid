@@ -39,7 +39,6 @@ val profileModule = module {
     single<ProfileRepository> {
         ProfileRepositoryImpl(
             networkClient = get(named(HttpClientQualifier.PROFILE.value)),
-            context = get()
         )
     }
 

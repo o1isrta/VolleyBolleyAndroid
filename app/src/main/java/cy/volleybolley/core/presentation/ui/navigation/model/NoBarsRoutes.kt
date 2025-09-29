@@ -22,26 +22,18 @@ enum class NoBarsRoutes(val className: String, val noBottomBar: Boolean, val noT
     companion object {
         @JvmStatic
         fun showBottomBar(routeName: String): Boolean {
-            var isRouteInBlackList: Boolean = false
             if (routeName.isEmpty()) {
                 return false
             }
-            entries.filter { it.noBottomBar }.map { it.className }.forEach {
-                if (routeName.contains(it)) isRouteInBlackList = true
-            }
-            return !isRouteInBlackList
+            return entries.filter { it.noBottomBar }.find { routeName.contains(it.className) } == null
         }
 
         @JvmStatic
         fun showTopBar(routeName: String): Boolean {
-            var isRouteInBlackList: Boolean = false
             if (routeName.isEmpty()) {
                 return false
             }
-            entries.filter { it.noTopBar }.map { it.className }.forEach {
-                if (routeName.contains(it)) isRouteInBlackList = true
-            }
-            return !isRouteInBlackList
+            return entries.filter { it.noTopBar }.find { routeName.contains(it.className) } == null
         }
     }
 }

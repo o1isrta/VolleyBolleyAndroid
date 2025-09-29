@@ -227,7 +227,7 @@
     <string name="profile_logout_component">Log out</string>
     <string name="about_founder">Log out</string>
     <string name="about_founder_value">Dmitrii Zverev</string>
-    <string name="about_designers_value">Malika Rozieva,Yulia Zemlyanskaya</string>
+    <string name="about_designers_value">Malika Rozieva\nYulia Zemlyanskaya</string>
     <string name="about_developers_value">Unknown peoples</string>
     <string name="enter_payment_revolut_acc_prefix">\@</string>
     <string name="enter_payment_revolut_hint">AccountName</string>

@@ -16,14 +16,12 @@ class AboutScreenViewModel : BaseViewModel<AboutScreenState, AboutScreenEvent, A
                 uiStateMutable.update { currentState ->
                     currentState.copy(
                         founder = event.founderName,
-                        designedBy = adaptStringFromResources(event.designersNames),
-                        developedBy = adaptStringFromResources(event.developersNames),
+                        designedBy = event.designersNames,
+                        developedBy = event.developersNames,
                         isInitializedState = true
                     )
                 }
             }
         }
     }
-
-    private fun adaptStringFromResources(resourceString: String): String = resourceString.replace(",", "\n", true)
 }

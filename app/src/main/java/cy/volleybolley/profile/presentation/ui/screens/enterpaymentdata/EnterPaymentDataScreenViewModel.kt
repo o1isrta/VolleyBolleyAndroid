@@ -72,6 +72,9 @@ class EnterPaymentDataScreenViewModel(
                                         savedPaymentsJsonString
                                     )
                                 )
+                            },
+                            onDismissClick = {
+                                sendUiEffect(null)
                             }
                         )
                     )

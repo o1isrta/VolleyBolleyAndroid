@@ -7,5 +7,6 @@ sealed interface EnterPaymentDataScreenEffect : UiEffect {
 
     data class ShowInfoDialog(
         val onDoneButtonClick: () -> Unit,
+        val onDismissClick: () -> Unit,
     ) : EnterPaymentDataScreenEffect
 }

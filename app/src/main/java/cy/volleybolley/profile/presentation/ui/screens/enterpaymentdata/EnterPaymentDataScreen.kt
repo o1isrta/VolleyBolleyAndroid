@@ -17,10 +17,6 @@ import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -45,7 +41,6 @@ import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPay
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEvent.AccountTextChanged
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEvent.ClickOnBackFromEnterPaymentData
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEvent.OnSaveButtonClick
-import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.model.EnterPaymentDialogType
 import cy.volleybolley.profile.presentation.ui.screens.payments.model.BackPaymentsHolder
 
 @Composable
@@ -78,7 +73,6 @@ private fun EnterPaymentDataScreen(
     navigateAction: (String?) -> Unit,
     eventCallback: (EnterPaymentDataScreenEvent) -> Unit,
 ) {
-    var dialogType: EnterPaymentDialogType? by remember { mutableStateOf(null) }
     val headerValue = stringResource(screenPaymentType.getSimpleName())
 
     VolleyContainersRootTransparent.TransparentContainer(
@@ -127,23 +121,16 @@ private fun EnterPaymentDataScreen(
     LaunchedEffect(effect) {
         when (effect) {
             is NavigateFromEnterPaymentDataScreen -> navigateAction(effect.updatedPaymentsJsonString)
-
-            is ShowInfoDialog -> {
-                val definedDialog = EnterPaymentDialogType.SUCCESS.apply {
-                    setDoneAction(effect.onDoneButtonClick)
-                }
-                dialogType = definedDialog
-            }
-
+            is ShowInfoDialog -> {}
             null -> {}
         }
     }
 
-    dialogType?.let { type ->
+    if (effect is ShowInfoDialog) {
         EnterPaymentDataDialog(
-            text = type.dialogText,
-            onDismiss = { dialogType = null },
-            onDone = type.action
+            text = stringResource(R.string.payment_changes_done),
+            onDone = effect.onDoneButtonClick,
+            onDismiss = effect.onDismissClick
         )
     }
 }
