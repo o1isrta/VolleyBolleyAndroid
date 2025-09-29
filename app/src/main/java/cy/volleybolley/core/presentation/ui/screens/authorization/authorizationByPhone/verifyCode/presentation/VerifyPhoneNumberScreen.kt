@@ -38,7 +38,7 @@ fun VerifyPhoneNumberScreen(
     LaunchedEffect(effect) {
         when (effect) {
             is VerifyPhoneNumberEffect.NavigateToRegistrationScreen -> onNavigateToRegistrationScreenRequested()
-            else -> {}
+            null -> {}
         }
     }
     VerifyPhoneNumberScreen(
@@ -78,9 +78,11 @@ fun VerifyPhoneNumberScreen(
                 },
                 actionToTransferContent = { eventCallback(VerifyPhoneNumberEvent.TypeCode(it)) }
             )
-            AnimatedVisibility(state.isBtnNewCodeVisible) {
+            AnimatedVisibility(
+                modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally),
+                visible = state.isBtnNewCodeVisible
+            ) {
                 VolleyButton.GradientTextButton(
-                    modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally),
                     text = if (state.isBtnNewCodeEnabled) {
                         stringResource(R.string.get_new_code)
                     } else {

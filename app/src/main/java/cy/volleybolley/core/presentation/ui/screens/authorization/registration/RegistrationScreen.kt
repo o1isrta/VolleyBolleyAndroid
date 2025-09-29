@@ -50,7 +50,7 @@ fun RegistrationScreen(
     LaunchedEffect(effect) {
         when (effect) {
             is RegistrationEffect.NavigateToHome -> onRegistrationSuccessEvent()
-            else -> {}
+            null -> {}
         }
     }
     RegistrationScreen(

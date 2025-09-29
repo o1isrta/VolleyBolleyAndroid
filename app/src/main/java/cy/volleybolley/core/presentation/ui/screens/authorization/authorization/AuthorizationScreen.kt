@@ -46,7 +46,7 @@ fun AuthorizationScreen(
     LaunchedEffect(effect) {
         when (effect) {
             is AuthorizationEffect.NavigateToRegistration -> onSuccessRegisteredAction()
-            else -> {}
+            null -> {}
         }
     }
     AuthorizationScreen(

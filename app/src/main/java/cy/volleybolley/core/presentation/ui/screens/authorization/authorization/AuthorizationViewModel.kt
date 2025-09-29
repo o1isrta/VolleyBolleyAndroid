@@ -13,12 +13,6 @@ class AuthorizationViewModel :
 
     override fun obtainEvent(event: AuthorizationEvent) {
         when (event) {
-            AuthorizationEvent.ContinueWithPhoneClicked -> {
-                viewModelScope.launch {
-                    sendUiEffect(AuthorizationEffect.NavigateToRegistrationByPhone)
-                }
-            }
-
             AuthorizationEvent.ContinueWithGoogleClicked -> {
                 viewModelScope.launch {
                     sendUiEffect(AuthorizationEffect.NavigateToRegistration)

@@ -4,7 +4,7 @@ import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val AuthorizationModule = module {
+val authorizationModule = module {
     viewModel {
         AuthorizationViewModel()
     }
