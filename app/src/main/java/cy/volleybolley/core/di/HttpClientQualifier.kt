@@ -6,7 +6,9 @@ enum class HttpClientQualifier(val value: String) {
     COURTS("courts"),
     GAMES("games"),
     TOURNAMENTS("tournaments"),
-    PROFILE("profile");
+    PROFILE("profile"),
+    PLAYERS("players"),
+    REFERENCE_DATA("reference_data");
 
     val qualifier get() = named(value)
 }
