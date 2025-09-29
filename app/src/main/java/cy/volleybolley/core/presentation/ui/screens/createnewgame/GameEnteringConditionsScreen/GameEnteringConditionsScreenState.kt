@@ -4,7 +4,7 @@ import cy.volleybolley.core.presentation.base.UiState
 
 data class GameEnteringConditionsScreenState (
     val maximumPlayers: Int = 8,
-    val selectedPrivacy: Privacy = Privacy.Public,
+    val selectedPrivacy: Privacy = Privacy.Private,
     val perPerson: String = "5.0",
     val accountNumber: String? = null,  // номер аккаунта, если есть
     val errorMessage: String? = null,

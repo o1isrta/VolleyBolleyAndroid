@@ -36,6 +36,7 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyButton.OUTLINED_GRADIENT_BUTTON_TEXT
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -159,8 +160,8 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                         modifier = Modifier.padding(vertical = 12.dp),
                         onSelected = { position ->
                             val selectedPrivacy = when (position) {
-                                1 -> Privacy.Public
-                                2 -> Privacy.Private
+                                0 -> Privacy.Public
+                                1 -> Privacy.Private
                                 else -> null // Обработка некорректной позиции
                             }
                             selectedPrivacy?.let {
@@ -171,6 +172,15 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                               }
                         }
                     )
+                    // список выбранных игроков и кнопка Manage players
+                    if (state.selectedPrivacy == Privacy.Private){
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+                        VolleyButton.OutlinedGradientButton(
+                            modifier = Modifier.height(44.dp),
+                            text = stringResource(R.string.manage_players),
+                            onClick = {}
+                        )
+                    }
 
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
 
