@@ -123,7 +123,7 @@ private fun PlayersScreen(
                 LazyColumn {
                     itemsIndexed(state.players) { index, player ->
                         PlayersListItem(player) { playerId -> eventCallback(ClickOnListItem(playerId)) }
-                        if (index < state.players.size - 1) Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                        if (index < state.players.lastIndex) Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
                     }
                 }
             }

@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +16,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -96,8 +98,12 @@ fun RootContainer(
                 }
             },
             bottomBar = {
+                val paddingFromSystemUi = ScaffoldDefaults.contentWindowInsets.asPaddingValues()
+                val bottomBarHeight = remember {
+                    VolleyDimens.DIMEN_60.dp + paddingFromSystemUi.calculateBottomPadding()
+                }
                 if (showBottomNav) {
-                    BottomNavComponent(navController, currentDestination)
+                    BottomNavComponent(bottomBarHeight, navController, currentDestination)
                 }
             },
             content = { innerPadding ->
@@ -109,6 +115,7 @@ fun RootContainer(
 
 @Composable
 private fun BottomNavComponent(
+    bottomNavBarHeight: Dp,
     navController: NavHostController,
     currentDestination: NavDestination?
 ) {
@@ -140,24 +147,16 @@ private fun BottomNavComponent(
         )
     }
 
-    // To fix icons top-crop on old Androids
-    val bottomNavBarHeight = remember {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
-            VolleyDimens.DIMEN_100
-        } else {
-            VolleyDimens.DIMEN_81
-        }
-    }
-
     BottomAppBar(
+        contentPadding = PaddingValues(0.dp),
         containerColor = VolleyColor.TurquoiseBottom,
         modifier = Modifier
             .background(
                 color = VolleyColor.TurquoiseBottom,
                 shape = shape
             )
-            .height(bottomNavBarHeight.dp)
             .padding(top = VolleyDimens.DIMEN_10.dp)
+            .height(bottomNavBarHeight)
             .clip(shape)
     ) {
         topLevelRoutes.forEach { topRoute ->

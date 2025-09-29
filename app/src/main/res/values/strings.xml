@@ -233,4 +233,9 @@
     <string name="enter_payment_revolut_hint">AccountName</string>
     <string name="enter_payment_thaibank_hint">000 000 0000</string>
     <string name="player_profile_no_activity">No activity</string>
+    <string name="payment_type_thai_bank">Thai bank</string>
+    <string name="payment_type_cash">Cash</string>
+    <string name="payment_type_revolut">Revolut</string>
+    <string name="payment_type_unknown">Unknown</string>
+    <string name="back_arrow_button">Back from screen button</string>
 </resources>

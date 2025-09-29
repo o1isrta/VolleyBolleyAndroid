@@ -1,17 +1,19 @@
 package cy.volleybolley.profile.domain.model
 
+import cy.volleybolley.R
+
 enum class PaymentType(val nameValue: String) {
     REVOLUT("REVOLUT"),
     CASH("CASH"),
     THAIBANK("THAIBANK"),
     UNKNOWN("UNKNOWN");
 
-    fun getSimpleName(): String =
+    fun getSimpleName(): Int =
         when (this) {
-            THAIBANK -> "Thai bank"
-            CASH -> "Cash"
-            REVOLUT -> "Revolut"
-            UNKNOWN -> "Unknown"
+            THAIBANK -> R.string.payment_type_thai_bank
+            CASH -> R.string.payment_type_cash
+            REVOLUT -> R.string.payment_type_revolut
+            UNKNOWN -> R.string.payment_type_unknown
         }
 
     companion object {

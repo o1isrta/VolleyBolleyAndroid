@@ -7,7 +7,7 @@ import cy.volleybolley.profile.domain.api.ProfileRepository
 class UpdateAvatarUseCase(
     private val repository: ProfileRepository,
 ) {
-    suspend fun execute(uriString: String?): VolleyResult<String, ErrorType> {
-        return repository.updateAvatar(uriString)
+    suspend fun execute(photoBytes: ByteArray?): VolleyResult<String, ErrorType> {
+        return repository.updateAvatar(photoBytes)
     }
 }

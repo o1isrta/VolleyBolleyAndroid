@@ -66,8 +66,6 @@ private fun PaymentsScreen(
     navigateAction: (NavMap?) -> Unit,
     eventCallback: (PaymentsScreenEvent) -> Unit,
 ) {
-    val scrollState = rememberScrollState()
-
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
         modifier = Modifier
@@ -86,7 +84,7 @@ private fun PaymentsScreen(
 
             Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            Column(Modifier.verticalScroll(scrollState)) {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
                 GetPaymentItemByType(
@@ -136,7 +134,7 @@ private fun GetPaymentItemByType(
         PaymentsComponent(
             checkBoxEnabled = if (itemType == PaymentType.CASH) true else payment.account.isNotEmpty(),
             checkBoxIsChecked = payment.isPreferred,
-            title = itemType.getSimpleName(),
+            title = stringResource(itemType.getSimpleName()),
             onTitleClick = { onTitleClick(itemType) },
             onCheckBoxClick = { onCheckBoxClick(itemType) }
 
@@ -144,7 +142,7 @@ private fun GetPaymentItemByType(
     } ?: PaymentsComponent(
         checkBoxEnabled = false,
         checkBoxIsChecked = false,
-        title = itemType.getSimpleName(),
+        title = stringResource(itemType.getSimpleName()),
         onTitleClick = { onTitleClick(itemType) },
         onCheckBoxClick = {}
     )

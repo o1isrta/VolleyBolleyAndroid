@@ -78,9 +78,8 @@ private fun EnterPaymentDataScreen(
     navigateAction: (String?) -> Unit,
     eventCallback: (EnterPaymentDataScreenEvent) -> Unit,
 ) {
-    val scrollState = rememberScrollState()
     var dialogType: EnterPaymentDialogType? by remember { mutableStateOf(null) }
-    val headerValue = screenPaymentType.getSimpleName()
+    val headerValue = stringResource(screenPaymentType.getSimpleName())
 
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
@@ -99,7 +98,7 @@ private fun EnterPaymentDataScreen(
             )
             Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            Column(Modifier.verticalScroll(scrollState)) {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
                 OutsideHint(screenPaymentType)

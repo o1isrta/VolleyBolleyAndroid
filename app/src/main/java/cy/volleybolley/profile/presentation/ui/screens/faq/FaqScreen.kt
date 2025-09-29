@@ -3,14 +3,15 @@ package cy.volleybolley.profile.presentation.ui.screens.faq
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -62,8 +63,6 @@ private fun FaqScreen(
     navigateAction: (NavMap?) -> Unit,
     eventCallback: (FaqScreenEvent) -> Unit,
 ) {
-    val scrollState = rememberScrollState()
-
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
         modifier = Modifier
@@ -79,15 +78,15 @@ private fun FaqScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onBackClick = { eventCallback(OnBackFromFaqClick) }
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
-            Column(Modifier.verticalScroll(scrollState)) {
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
-
-                Faq(
-                    strings = state.faqText,
-                    modifier = Modifier.fillMaxWidth()
-                )
+            LazyColumn(
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(state.faqText) { faqString ->
+                    FaqBlock(faqString)
+                }
             }
         }
     }
@@ -101,24 +100,16 @@ private fun FaqScreen(
 }
 
 @Composable
-private fun Faq(
-    modifier: Modifier = Modifier,
-    strings: List<FaqString>
-) {
-    Column(
-        horizontalAlignment = Alignment.Start,
-        modifier = modifier
-    ) {
-        strings.forEach { FaqBlock(it) }
-    }
-}
-
-@Composable
 private fun FaqBlock(faqString: FaqString) {
     when (faqString.type) {
         FaqStringType.HEADER -> {
             if (faqString.index != 0) {
-                FaqScreenDivider()
+                FaqScreenDivider(
+                    paddingValues = PaddingValues(
+                        horizontal = VolleyDimens.DIMEN_0.dp,
+                        vertical = VolleyDimens.DIMEN_16.dp,
+                    )
+                )
             }
 
             VolleyText.TitleMedium(
@@ -158,14 +149,13 @@ private fun FaqBlock(faqString: FaqString) {
 }
 
 @Composable
-private fun FaqScreenDivider() {
+private fun FaqScreenDivider(
+    paddingValues: PaddingValues,
+) {
     VolleySimpleComponent.DividerLine(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = VolleyDimens.DIMEN_0.dp,
-                vertical = VolleyDimens.DIMEN_16.dp
-            )
+            .padding(paddingValues)
     )
 }
 

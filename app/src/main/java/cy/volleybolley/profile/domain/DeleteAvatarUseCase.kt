@@ -8,6 +8,6 @@ class DeleteAvatarUseCase(
     private val repository: ProfileRepository,
 ) {
     suspend fun execute(): VolleyResult<String, ErrorType> {
-        return repository.updateAvatar(uriString = null)
+        return repository.updateAvatar(photoBytes = null)
     }
 }

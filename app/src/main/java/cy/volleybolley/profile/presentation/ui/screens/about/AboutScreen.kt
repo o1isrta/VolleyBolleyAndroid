@@ -62,7 +62,6 @@ private fun AboutScreen(
     navigateAction: (NavMap?) -> Unit,
     eventCallback: (AboutScreenEvent) -> Unit,
 ) {
-    val scrollState = rememberScrollState()
     if (!state.isInitializedState) {
         eventCallback(
             OnStateInitialiseByResources(
@@ -90,7 +89,7 @@ private fun AboutScreen(
             )
             Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            Column(Modifier.verticalScroll(scrollState)) {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
                 AboutTextLine(

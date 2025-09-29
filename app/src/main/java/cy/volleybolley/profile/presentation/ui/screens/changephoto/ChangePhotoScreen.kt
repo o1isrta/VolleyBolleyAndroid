@@ -27,7 +27,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -59,6 +62,8 @@ import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoSc
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.OnGalleryPhotoSelect
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.OnSaveButtonClick
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.BackAvatarHolder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
 import java.io.File
 
@@ -72,11 +77,12 @@ fun ChangePhotoScreen(
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    var galleryPictureUri: Uri? by remember { mutableStateOf(null) }
+    var cameraPictureUri: Uri? by remember { mutableStateOf(null) }
+
     // Create PhotoPicker request
     val galleryPhotoPicker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        uri?.let {
-            viewModel.obtainEvent(OnGalleryPhotoSelect(it.toString()))
-        }
+        uri?.let { galleryPictureUri = it }
     }
 
     // Create template file and define it`s uri
@@ -92,9 +98,30 @@ fun ChangePhotoScreen(
     // Create Camera Request
     val cameraPhotoPicker = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
         if (isSuccess) {
-            cameraPhotoFile?.let {
-                viewModel.obtainEvent(OnCameraPhotoCreate(it.absolutePath))
-            }
+            cameraPictureUri = cameraPhotoUri
+        }
+    }
+
+    LaunchedEffect(galleryPictureUri) {
+        galleryPictureUri?.let {
+            viewModel.obtainEvent(
+                OnGalleryPhotoSelect(
+                    pictureUri = it,
+                    pictureBytes = convertUriToByteArray(context, it)
+
+                )
+            )
+        }
+    }
+
+    LaunchedEffect(cameraPictureUri) {
+        cameraPictureUri?.let {
+            viewModel.obtainEvent(
+                OnCameraPhotoCreate(
+                    photoUri = it,
+                    photoBytes = convertUriToByteArray(context, it)
+                )
+            )
         }
     }
 
@@ -108,8 +135,8 @@ fun ChangePhotoScreen(
         navigateAction = { newAvatar ->
             newAvatar?.let {
                 navController.previousBackStackEntry?.savedStateHandle?.set(BackAvatarHolder.AVATAR_KEY, it)
-                navController.popBackStack()
-            } ?: navController.popBackStack()
+            }
+            navController.popBackStack()
         },
         eventCallback = { event -> viewModel.obtainEvent(event) }
     )
@@ -130,8 +157,6 @@ private fun ChangePhotoScreen(
         eventCallback(GetAvatarFromPersonalData(inputAvatar))
     }
 
-    val scrollState = rememberScrollState()
-
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
         modifier = Modifier
@@ -149,7 +174,7 @@ private fun ChangePhotoScreen(
             )
             Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            Column(Modifier.verticalScroll(scrollState)) {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
                 Avatar(
                     modifier = Modifier.fillMaxWidth(),
@@ -201,7 +226,7 @@ private fun Avatar(
             )
             Image(
                 painter = painterResource(R.drawable.ic_edit_avatar),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.avatar_content_description),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -332,6 +357,12 @@ private fun createTemplatePhotoFile(context: Context): File? {
             Log.e(VolleyUiUtil.PHOTO_FILE_TAG, "ChangePhotoScreen >> createPhotoFile >> ${error.message}")
         }
     }.getOrNull()
+}
+
+private suspend fun convertUriToByteArray(context: Context, uri: Uri): ByteArray? {
+    return withContext(Dispatchers.IO) {
+        context.contentResolver.openInputStream(uri)?.use { stream -> stream.readBytes() }
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)

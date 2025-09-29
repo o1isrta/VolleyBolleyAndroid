@@ -75,8 +75,6 @@ private fun PersonalDataScreen(
     navigateAction: (NavMap?) -> Unit,
     eventCallback: (PersonalDataScreenEvent) -> Unit,
 ) {
-    val scrollState = rememberScrollState()
-
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
         modifier = Modifier
@@ -94,7 +92,7 @@ private fun PersonalDataScreen(
             )
             Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
-            Column(Modifier.verticalScroll(scrollState)) {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
                 AvatarBlock(
                     modifier = Modifier.fillMaxWidth(),

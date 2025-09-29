@@ -1,5 +1,6 @@
 package cy.volleybolley.profile.presentation.ui.screens.changephoto
 
+import android.net.Uri
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.profile.domain.DeleteAvatarUseCase
 import cy.volleybolley.profile.domain.UpdateAvatarUseCase
@@ -18,15 +19,15 @@ class ChangePhotoScreenViewModel(
 ) : BaseViewModel<ChangePhotoScreenState, ChangePhotoScreenEvent, ChangePhotoScreenEffect>(
     initialState = ChangePhotoScreenState()
 ) {
-    private var originAvatar: String? = uiState.value.avatarUrl
+    private var originAvatarString: String? = uiState.value.avatarUrl
 
     override val tag: String = ChangePhotoScreenViewModel::class.simpleName ?: "ChangePhotoScreenViewModel"
 
     override fun obtainEvent(event: ChangePhotoScreenEvent) {
         when (event) {
             is GetAvatarFromPersonalData -> {
-                originAvatar = event.avatar
-                uiStateMutable.update { it.copy(avatarUrl = event.avatar) }
+                originAvatarString = event.avatarUrl
+                uiStateMutable.update { it.copy(avatarUrl = event.avatarUrl) }
             }
 
             OnBackFromChangePhotoClick -> sendUiEffect(
@@ -34,15 +35,15 @@ class ChangePhotoScreenViewModel(
             )
 
             is OnGalleryPhotoSelect -> {
-                uiStateMutable.update { checkStateForButtonEnabled(event.uriString) }
+                uiStateMutable.update { checkStateForButtonEnabled(event.pictureUri, event.pictureBytes) }
             }
 
             is OnCameraPhotoCreate -> {
-                uiStateMutable.update { checkStateForButtonEnabled(event.photoUri) }
+                uiStateMutable.update { checkStateForButtonEnabled(event.photoUri, event.photoBytes) }
             }
 
             OnDeletePhotoClick -> {
-                uiStateMutable.update { checkStateForButtonEnabled(null) }
+                uiStateMutable.update { checkStateForButtonEnabled(null, null) }
             }
 
             OnSaveButtonClick -> {
@@ -52,10 +53,12 @@ class ChangePhotoScreenViewModel(
         }
     }
 
-    private fun checkStateForButtonEnabled(newAvatar: String?): ChangePhotoScreenState {
+    private fun checkStateForButtonEnabled(newAvatarUri: Uri?, newBytes: ByteArray?): ChangePhotoScreenState {
+        val newAvatarString = newAvatarUri?.toString()
         return ChangePhotoScreenState(
-            avatarUrl = newAvatar,
-            buttonEnabled = newAvatar != originAvatar
+            avatarUrl = newAvatarString,
+            avatarBytes = newBytes,
+            buttonEnabled = newAvatarString != originAvatarString
         )
     }
 }
