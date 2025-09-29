@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.verifyCode.presentation
+package cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
@@ -21,9 +21,9 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
-import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.verifyCode.presentation.model.VerifyPhoneNumberEffect
-import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.verifyCode.presentation.model.VerifyPhoneNumberEvent
-import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.verifyCode.presentation.model.VerifyPhoneNumberState
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.model.VerifyPhoneNumberEffect
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.model.VerifyPhoneNumberEvent
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.model.VerifyPhoneNumberState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -82,7 +82,7 @@ fun VerifyPhoneNumberScreen(
                 VolleyButton.GradientTextButton(
                     modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally),
                     text = if (state.isBtnNewCodeEnabled) {
-                        stringResource(R.string.send_code)
+                        stringResource(R.string.get_new_code)
                     } else {
                         stringResource(R.string.resend_in, state.remainingSendNewCodeTime)
                     },

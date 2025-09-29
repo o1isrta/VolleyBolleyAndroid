@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.verifyCode.presentation.model
+package cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.model
 
 import cy.volleybolley.core.presentation.base.UiEffect
 

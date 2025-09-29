@@ -1,8 +1,8 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.sendCode.presentation.model
+package cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.model
 
 import cy.volleybolley.core.presentation.base.UiState
 
-data class SignupByPhoneState(
+data class AuthorizationByPhoneState(
     val isLoading: Boolean = false,
     val phoneNumber: String = "",
     val isPhoneNumberInputError: Boolean = false,

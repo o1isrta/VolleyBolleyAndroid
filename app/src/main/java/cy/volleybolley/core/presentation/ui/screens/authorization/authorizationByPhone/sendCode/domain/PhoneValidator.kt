@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.sendCode.domain
+package cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.domain
 
 object PhoneValidator {
     private const val RUS = "7"

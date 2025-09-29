@@ -1172,7 +1172,8 @@ object VolleyButton {
         TextButton(
             modifier = modifier.height(18.dp),
             enabled = isEnable,
-            onClick = onClick
+            onClick = onClick,
+            contentPadding = PaddingValues(0.dp)
         ) {
             Text(
                 text = buildAnnotatedString {
@@ -1575,7 +1576,6 @@ fun PreviewGradientTextButton() {
                 onClick = {}
             )
         }
-
     }
 }
 

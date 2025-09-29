@@ -1,9 +1,9 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.verifyCode.presentation
+package cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.verifyCode.presentation.model.VerifyPhoneNumberEffect
-import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.verifyCode.presentation.model.VerifyPhoneNumberEvent
-import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.verifyCode.presentation.model.VerifyPhoneNumberState
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.model.VerifyPhoneNumberEffect
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.model.VerifyPhoneNumberEvent
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.model.VerifyPhoneNumberState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 

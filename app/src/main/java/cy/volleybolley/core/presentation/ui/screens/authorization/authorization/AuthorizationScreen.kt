@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.signup
+package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,21 +35,21 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SignUpScreen(
+fun AuthorizationScreen(
     onNavigateToRegisterByPhoneRequested: () -> Unit,
     onSuccessRegisteredAction: () -> Unit,
     paddingFromSystemUi: PaddingValues,
-    viewModel: SignUpViewModel = koinViewModel()
+    viewModel: AuthorizationViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     LaunchedEffect(effect) {
         when (effect) {
-            is SignUpEffect.NavigateToRegistration -> onSuccessRegisteredAction()
+            is AuthorizationEffect.NavigateToRegistration -> onSuccessRegisteredAction()
             else -> {}
         }
     }
-    SignUpScreen(
+    AuthorizationScreen(
         onNavigateToRegisterByPhoneRequested = onNavigateToRegisterByPhoneRequested,
         paddingFromSystemUi = paddingFromSystemUi,
         state = state,
@@ -58,11 +58,11 @@ fun SignUpScreen(
 }
 
 @Composable
-fun SignUpScreen(
+fun AuthorizationScreen(
     paddingFromSystemUi: PaddingValues,
-    state: SignUpState,
+    state: AuthorizationState,
     onNavigateToRegisterByPhoneRequested: () -> Unit,
-    eventCallback: (SignUpEvent) -> Unit
+    eventCallback: (AuthorizationEvent) -> Unit
 ) {
     Box {
         Image(
@@ -107,7 +107,7 @@ private fun BottomSheetWithSignButtons(
     modifier: Modifier = Modifier,
     paddingFromSystemUi: PaddingValues,
     onNavigateToRegisterByPhoneRequested: () -> Unit,
-    eventCallback: (SignUpEvent) -> Unit
+    eventCallback: (AuthorizationEvent) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -126,28 +126,34 @@ private fun BottomSheetWithSignButtons(
             ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
-            onClick = onNavigateToRegisterByPhoneRequested,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(VolleyDimens.DIMEN_56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = VolleyColor.YellowPro),
-            shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp),
-            contentPadding = PaddingValues(horizontal = VolleyDimens.DIMEN_16.dp)
-        ) {
-            VolleyText.BodyBoldMedium(
-                text = stringResource(id = R.string.continue_with_phone_number),
-                color = VolleyColor.TextDark
+        @Suppress("KotlinConstantConditions")
+        if (VolleyFeature.IS_AUTH_BY_PHONE_AVAILABLE) {
+            Button(
+                onClick = onNavigateToRegisterByPhoneRequested,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(VolleyDimens.DIMEN_56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = VolleyColor.YellowPro),
+                shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp),
+                contentPadding = PaddingValues(horizontal = VolleyDimens.DIMEN_16.dp)
+            ) {
+                VolleyText.BodyBoldMedium(
+                    text = stringResource(id = R.string.continue_with_phone_number),
+                    color = VolleyColor.TextDark
+                )
+            }
+        }
+        @Suppress("KotlinConstantConditions")
+        if (VolleyFeature.IS_AUTH_BY_GOOGLE_AVAILABLE) {
+            VolleyButton.ActiveButtonWithLeadingIcon(
+                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                backgroundColor = VolleyColor.White,
+                icon = painterResource(R.drawable.ic_google_placeholder),
+                text = stringResource(R.string.continue_with_google),
+                textColor = VolleyColor.TextDark,
+                onClick = { eventCallback(AuthorizationEvent.ContinueWithGoogleClicked) }
             )
         }
-        VolleyButton.ActiveButtonWithLeadingIcon(
-            modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
-            backgroundColor = VolleyColor.White,
-            icon = painterResource(R.drawable.ic_google_placeholder),
-            text = stringResource(R.string.continue_with_google),
-            textColor = VolleyColor.TextDark,
-            onClick = { eventCallback(SignUpEvent.ContinueWithGoogleClicked) }
-        )
         @Suppress("KotlinConstantConditions")
         if (VolleyFeature.IS_AUTH_BY_FACEBOOK_AVAILABLE) {
             VolleyButton.ActiveButtonWithLeadingIcon(
@@ -156,7 +162,7 @@ private fun BottomSheetWithSignButtons(
                 icon = painterResource(R.drawable.ic_facebook_placeholder),
                 text = stringResource(R.string.continue_with_facebook),
                 textColor = VolleyColor.White,
-                onClick = { eventCallback(SignUpEvent.ContinueWithFacebookClicked) }
+                onClick = { eventCallback(AuthorizationEvent.ContinueWithFacebookClicked) }
             )
         }
     }
@@ -164,12 +170,12 @@ private fun BottomSheetWithSignButtons(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun SignUpScreenPreview() {
+private fun PreviewAuthorizationScreen() {
     RootContainer { paddingFromSystemUi, navController ->
-        SignUpScreen(
+        AuthorizationScreen(
             onNavigateToRegisterByPhoneRequested = {},
             paddingFromSystemUi = paddingFromSystemUi,
-            state = SignUpState(),
+            state = AuthorizationState(),
             eventCallback = {}
         )
     }

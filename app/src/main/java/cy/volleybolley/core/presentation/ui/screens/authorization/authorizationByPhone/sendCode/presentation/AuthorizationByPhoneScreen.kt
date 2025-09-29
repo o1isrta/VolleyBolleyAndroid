@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.sendCode.presentation
+package cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,14 +19,14 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
-import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.sendCode.presentation.model.SignupByPhoneEffect
-import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.sendCode.presentation.model.SignupByPhoneEvent
-import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.sendCode.presentation.model.SignupByPhoneState
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.model.AuthorizationByPhoneEffect
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.model.AuthorizationByPhoneEvent
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.model.AuthorizationByPhoneState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RegistrationByPhoneScreen(
-    viewModel: RegistrationByPhoneViewModel = koinViewModel(),
+fun AuthorizationByPhoneScreen(
+    viewModel: AuthorizationByPhoneViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues,
     onBackNavigationRequested: () -> Unit,
     requestNavigateToVerifyPhoneScreen: () -> Unit
@@ -35,14 +35,14 @@ fun RegistrationByPhoneScreen(
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     LaunchedEffect(effect) {
         when (effect) {
-            is SignupByPhoneEffect.NavigateToVerifyPhoneScreen -> {
+            is AuthorizationByPhoneEffect.NavigateToVerifyPhoneScreen -> {
                 requestNavigateToVerifyPhoneScreen()
             }
 
             null -> {}
         }
     }
-    RegistrationByPhoneScreen(
+    AuthorizationByPhoneScreen(
         state = state,
         paddingFromSystemUi = paddingFromSystemUi,
         onBackNavigationRequested = onBackNavigationRequested,
@@ -52,11 +52,11 @@ fun RegistrationByPhoneScreen(
 
 @Stable
 @Composable
-fun RegistrationByPhoneScreen(
-    state: SignupByPhoneState,
+fun AuthorizationByPhoneScreen(
+    state: AuthorizationByPhoneState,
     paddingFromSystemUi: PaddingValues,
     onBackNavigationRequested: () -> Unit,
-    eventCallback: (SignupByPhoneEvent) -> Unit
+    eventCallback: (AuthorizationByPhoneEvent) -> Unit
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         modifier = Modifier
@@ -77,13 +77,13 @@ fun RegistrationByPhoneScreen(
                 } else {
                     ""
                 },
-                actionToTransferContent = { eventCallback(SignupByPhoneEvent.TypePhoneNumber(it)) }
+                actionToTransferContent = { eventCallback(AuthorizationByPhoneEvent.TypePhoneNumber(it)) }
             )
             VolleyButton.ActiveButton(
                 modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
                 enabled = state.isBtnSendCodeEnabled && !state.isLoading,
                 text = stringResource(R.string.send_code),
-                onClick = { eventCallback(SignupByPhoneEvent.SendCodeButtonClicked) }
+                onClick = { eventCallback(AuthorizationByPhoneEvent.SendCodeButtonClicked) }
             )
         }
     }
@@ -91,10 +91,10 @@ fun RegistrationByPhoneScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun PreviewRegistrationByPhoneScreen() {
+private fun PreviewAuthorizationByPhoneScreen() {
     RootContainer { paddingFromSystemUi, _ ->
-        RegistrationByPhoneScreen(
-            state = SignupByPhoneState(
+        AuthorizationByPhoneScreen(
+            state = AuthorizationByPhoneState(
                 phoneNumber = "66123",
                 isPhoneNumberInputError = true
             ),

@@ -44,7 +44,7 @@ fun LaunchScreen(
                 }
             }
 
-            else -> {}
+            null -> {}
         }
     }
     LaunchScreen(state = state)

@@ -2,10 +2,10 @@ package cy.volleybolley.core
 
 import cy.volleybolley.auth.di.authViewModelModule
 import cy.volleybolley.core.di.coreModule
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.di.AuthorizationModule
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.di.authorizationByPhoneModule
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.di.launchModule
 import cy.volleybolley.core.presentation.ui.screens.authorization.registration.di.registrationModule
-import cy.volleybolley.core.presentation.ui.screens.authorization.signup.di.signUpModule
-import cy.volleybolley.core.presentation.ui.screens.authorization.signupByPhone.di.signupByPhoneModule
 import cy.volleybolley.courts.di.courtsModule
 import cy.volleybolley.players.di.playersModule
 import cy.volleybolley.profile.di.profileModule
@@ -20,8 +20,8 @@ object DiProvider {
         referenceDataModule,
         profileModule,
         launchModule,
-        signUpModule,
+        AuthorizationModule,
         registrationModule,
-        signupByPhoneModule
+        authorizationByPhoneModule
     )
 }
