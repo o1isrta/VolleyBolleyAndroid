@@ -10,7 +10,6 @@ import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -28,25 +27,11 @@ object VolleyUiUtil {
     const val DATE_OF_BIRTH_FIELD_PATTERN = "dd/MM/yyyy"
     const val DATE_OF_BIRTH_PATTERN_FOR_SERVER = "yyyy-MM-dd"
     const val TIME_PATTERN_FOR_PARSE = "yyyy-MM-dd'T'HH:mm:ss"
+    const val DATE_OF_ACTIVITY_PATTERN = "dd MMMM"
     const val MILLIS_IN_HOUR = 3_600_000L
 
     const val FAQ_BULLET_OUT_PREFIX = " • "
-    const val NEXT_LINE = "\n"
-
-    // Months indexes for enum
-    const val INDEX_JANUARY: Int = 0
-    const val INDEX_FEBRUARY = 1
-    const val INDEX_MARCH = 2
-    const val INDEX_APRIL = 3
-    const val INDEX_MAY = 4
-    const val INDEX_JUNE = 5
-    const val INDEX_JULY = 6
-    const val INDEX_AUGUST = 7
-    const val INDEX_SEPTEMBER = 8
-    const val INDEX_OCTOBER = 9
-    const val INDEX_NOVEMBER = 10
-    const val INDEX_DECEMBER = 11
-    const val INDEX_UNKNOWN = -1
+//    const val NEXT_LINE = "\n"
 
     // Weight ratio for About Screen
     const val ABOUT_SCREEN_TITLES_WEIGHT = 0.37f
@@ -168,7 +153,7 @@ object VolleyUiUtil {
                     )
                 ),
                 PlayerActivityTemp(
-                    eventTimestamp = "2025-08-14T14:23:45Z",
+                    eventTimestamp = "2025-08-14T23:23:45Z",
                     courtLocation = Location(
                         longitude = 37.6194,
                         latitude = 55.7523,
@@ -250,24 +235,23 @@ object VolleyUiUtil {
         val localDate = formatter.parse(utcString)
         return localDate?.let {
             it.time += hoursOffset * MILLIS_IN_HOUR
-            val calendar = Calendar.getInstance().apply { time = localDate }
-            "${calendar.get(Calendar.DAY_OF_MONTH)} ${VolleyMonths.getNameByIndex(calendar.get(Calendar.MONTH))}"
+            val activityDateFormatter = SimpleDateFormat(DATE_OF_ACTIVITY_PATTERN, Locale.ENGLISH)
+            activityDateFormatter.format(localDate).lowercase()
         } ?: ""
     }
 
     @JvmStatic
     fun parseMarkdown(faqMarkdown: String): List<FaqString> {
-        return faqMarkdown.split(NEXT_LINE).mapIndexed { index, string ->
-            getFaqStringByPrefix(index, string)
+        return faqMarkdown.lines().map { string ->
+            getFaqStringByPrefix(string)
         }
     }
 
     @JvmStatic
-    private fun getFaqStringByPrefix(index: Int, string: String): FaqString {
+    private fun getFaqStringByPrefix(string: String): FaqString {
         return when {
             string.startsWith(FaqStringType.HEADER.prefix) -> {
                 FaqString(
-                    index = index,
                     type = FaqStringType.HEADER,
                     value = string.drop(FaqStringType.HEADER.prefix.length),
                 )
@@ -275,7 +259,6 @@ object VolleyUiUtil {
 
             string.startsWith(FaqStringType.BULLET.prefix) -> {
                 FaqString(
-                    index = index,
                     type = FaqStringType.BULLET,
                     value = string.drop(FaqStringType.BULLET.prefix.length),
                 )
@@ -283,7 +266,6 @@ object VolleyUiUtil {
 
             else -> {
                 FaqString(
-                    index = index,
                     type = FaqStringType.REGULAR,
                     value = string,
                 )

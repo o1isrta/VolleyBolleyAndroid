@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -84,8 +84,8 @@ private fun FaqScreen(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(state.faqText) { faqString ->
-                    FaqBlock(faqString)
+                itemsIndexed(state.faqText) { index, faqString ->
+                    FaqBlock(faqString, index)
                 }
             }
         }
@@ -100,10 +100,10 @@ private fun FaqScreen(
 }
 
 @Composable
-private fun FaqBlock(faqString: FaqString) {
+private fun FaqBlock(faqString: FaqString, index: Int) {
     when (faqString.type) {
         FaqStringType.HEADER -> {
-            if (faqString.index != 0) {
+            if (index != 0) {
                 FaqScreenDivider(
                     paddingValues = PaddingValues(
                         horizontal = VolleyDimens.DIMEN_0.dp,
