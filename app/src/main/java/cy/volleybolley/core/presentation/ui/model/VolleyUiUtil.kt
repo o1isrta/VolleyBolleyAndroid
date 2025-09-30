@@ -20,6 +20,7 @@ object VolleyUiUtil {
 
     const val HOME_FIND_GAME_TEXT_WEIGHT = 0.6f
     const val HOME_FIND_GAME_COUNT_WEIGHT = 0.4f
+    const val HOME_CREATE_GAME_BUTTON_ALPHA = 0.85f
 
     @JvmStatic
     fun getLimitedText(symbolLimit: Int?, text: String): String {

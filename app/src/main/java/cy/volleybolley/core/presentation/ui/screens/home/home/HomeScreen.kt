@@ -86,7 +86,7 @@ private fun HomeScreen(
             contentScale = ContentScale.FillBounds,
             painter = painterResource(R.drawable.home_wallpaper2),
             modifier = Modifier
-                .fillMaxWidth(0.85f)
+                .fillMaxWidth(VolleyUiUtil.HOME_CREATE_GAME_BUTTON_ALPHA)
                 .aspectRatio(1f)
         )
 
@@ -299,8 +299,8 @@ private fun GamesAvailableBlock(
 ) {
     val digitsStringValuesList = gamesCount.toString().chunked(1)
     val topGapForDigits = when (digitsStringValuesList.size) {
-        3 -> VolleyDimens.DIMEN_10
-        4 -> VolleyDimens.DIMEN_16
+        1 + 1 + 1 -> VolleyDimens.DIMEN_10
+        1 + 1 + 1 + 1 -> VolleyDimens.DIMEN_16
         else -> 0
     }
 
@@ -385,7 +385,6 @@ private fun CreateTourneyButton(
 
     Box(
         modifier = modifier
-            .fillMaxWidth(0.5f)
             .aspectRatio(1f)
             .background(color = VolleyColor.YellowPro, shape = shape)
             .clickable(

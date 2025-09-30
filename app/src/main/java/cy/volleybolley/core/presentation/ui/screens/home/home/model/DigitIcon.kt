@@ -18,7 +18,7 @@ enum class DigitIcon(@DrawableRes val resId: Int) {
     companion object {
         @JvmStatic
         fun getIconResByString(digitStringValue: String): Int {
-            return when(digitStringValue) {
+            return when (digitStringValue) {
                 "1" -> ONE.resId
                 "2" -> TWO.resId
                 "3" -> THREE.resId

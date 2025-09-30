@@ -6,13 +6,13 @@ import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.On
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnDonateClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnFindGameClick
 
-class HomeScreenViewModel(): BaseViewModel<HomeScreenState, HomeScreenEvent, HomeScreenEffect>(
+class HomeScreenViewModel : BaseViewModel<HomeScreenState, HomeScreenEvent, HomeScreenEffect>(
     initialState = HomeScreenState()
 ) {
     override val tag: String = HomeScreenViewModel::class.simpleName ?: "HomeScreenViewModel"
 
     override fun obtainEvent(event: HomeScreenEvent) {
-        when(event) {
+        when (event) {
             OnCreateNewGameClick -> {}
             OnCreateTourneyClick -> {}
             OnDonateClick -> {}
