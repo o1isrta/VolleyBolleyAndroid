@@ -46,6 +46,7 @@ import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.On
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateTourneyClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnDonateClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnFindGameClick
+import cy.volleybolley.courts.domain.model.Location
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -173,47 +174,6 @@ private fun CreateNewGameButton(
                     weatherComponent = {},
                 )
             }
-        }
-    }
-}
-
-// Not working variant
-@Composable
-private fun CreateNewGameGlassButton(
-    modifier: Modifier = Modifier,
-    locationName: String,
-    courtName: String,
-    onClick: () -> Unit,
-) {
-    VolleyContainersRootTransparent.GlassContainer(
-        modifier = modifier
-            .height(VolleyDimens.DIMEN_116.dp)
-            .clickable(
-                indication = null,
-                interactionSource = null,
-                onClick = onClick
-            )
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp)
-        ) {
-            VolleyText.TitleLarge(
-                text = stringResource(R.string.create_a_new_game),
-                color = VolleyColor.White,
-                textAlign = TextAlign.Start,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-
-            LocationDescription(
-                locationName = locationName,
-                courtName = courtName,
-                weatherComponent = {},
-            )
         }
     }
 }
@@ -497,8 +457,17 @@ private fun PreviewHomeScreen() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
+            val state = HomeScreenState(
+                nearGamesCount = 13,
+                location = Location(
+                    longitude = 7.866269,
+                    latitude = 98.396756,
+                    courtName = "Phuket Municipal Stadium",
+                    locationName = "Mueang Phuket District"
+                )
+            )
             HomeScreen(
-                state = HomeScreenState(),
+                state = state,
                 effect = null,
                 navigateAction = {},
                 eventCallback = {}
@@ -507,7 +476,7 @@ private fun PreviewHomeScreen() {
     }
 }
 
-//@Preview
+@Preview
 @Composable
 private fun PreviewFindGameButton() {
     Box(

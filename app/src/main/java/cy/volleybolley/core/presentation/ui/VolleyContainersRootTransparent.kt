@@ -1,13 +1,6 @@
 package cy.volleybolley.core.presentation.ui
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.os.Build
-import android.renderscript.Allocation
-import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicBlur
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -22,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,20 +26,11 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.layout.positionInWindow
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.graphics.createBitmap
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -207,110 +190,6 @@ object VolleyContainersRootTransparent {
             content = content
         )
     }
-
-    @Composable
-    fun GlassContainer(
-        modifier: Modifier = Modifier,
-        blurRadius: Int = VolleyDimens.DIMEN_24,
-        cornerRadius: Int = VolleyDimens.DIMEN_32,
-        contentAlignmentOnContainer: Alignment = Alignment.Center,
-        content: @Composable BoxScope.() -> Unit
-    ) {
-        val localVew = LocalView.current
-        var capturedImage by remember { mutableStateOf<Bitmap?>(null) }
-        val correctBlurRadius =
-            if (blurRadius > 0 && blurRadius <= VolleyDimens.DIMEN_25) blurRadius else VolleyDimens.DIMEN_24
-        val shape = RoundedCornerShape(cornerRadius.dp)
-
-        Box(
-            modifier = modifier
-                .clip(shape)
-                .border(1.dp, Color.White.copy(alpha = 0.1f), shape)
-                .onGloballyPositioned { coordinates ->
-                    val containerPositionInWindow = coordinates.positionInWindow()
-                    val containerSize = coordinates.size
-
-                    val rootView = localVew.rootView
-                    val screenShot = createBitmap(rootView.width, rootView.height)
-                    val canvas = Canvas(screenShot)
-                    rootView.draw(canvas)
-
-                    try {
-                        val cropped = Bitmap.createBitmap(
-                            screenShot,
-                            containerPositionInWindow.x.toInt(),
-                            containerPositionInWindow.y.toInt(),
-                            containerSize.width,
-                            containerSize.height
-                        )
-                        capturedImage = cropped
-                    } catch (e: IllegalArgumentException) {
-                        Log.e("UI_LOG", "Error cropping bitmap: ${e.message}")
-                    }
-                }
-
-        ) {
-            capturedImage?.let { backgroundImage ->
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                    LegacyBlurImage(
-                        bitmap = backgroundImage,
-                        blurRadius = correctBlurRadius,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                } else {
-                    BlurImage(
-                        backgroundImage,
-                        Modifier
-                            .fillMaxSize()
-                            .blur(correctBlurRadius.dp)
-                    )
-                }
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(shape),
-                contentAlignment = contentAlignmentOnContainer,
-                content = content
-            )
-        }
-    }
-
-    @Composable
-    private fun LegacyBlurImage(
-        bitmap: Bitmap,
-        blurRadius: Int,
-        modifier: Modifier
-    ) {
-        val renderScript = RenderScript.create(LocalContext.current)
-        val bitmapAlloc = Allocation.createFromBitmap(renderScript, bitmap)
-        ScriptIntrinsicBlur.create(renderScript, bitmapAlloc.element).apply {
-            setRadius(blurRadius.toFloat())
-            setInput(bitmapAlloc)
-            forEach(bitmapAlloc)
-        }
-        bitmapAlloc.copyTo(bitmap)
-        renderScript.destroy()
-        BlurImage(bitmap, modifier)
-    }
-
-    @Composable
-    private fun BlurImage(
-        bitmap: Bitmap,
-        modifier: Modifier,
-    ) {
-        Image(
-            bitmap = bitmap.asImageBitmap(),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = modifier
-        )
-        Box(
-            modifier = modifier.background(Color.White.copy(alpha = 0.1f))
-        )
-    }
-
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -383,19 +262,6 @@ private fun PreviewContainers() {
                             )
                         }
                     }
-                }
-
-                VolleyContainersRootTransparent.GlassContainer(
-                    modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_20.dp)
-                        .fillMaxWidth()
-                        .height(VolleyDimens.DIMEN_116.dp)
-                ) {
-                    Text(
-                        text = "Some glass container",
-                        color = VolleyColor.White,
-                        fontSize = VolleyDimens.DIMEN_16.sp
-                    )
                 }
             }
         }
