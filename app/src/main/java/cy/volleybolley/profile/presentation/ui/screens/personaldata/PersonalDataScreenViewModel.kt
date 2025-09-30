@@ -78,22 +78,7 @@ class PersonalDataScreenViewModel(
                 )
             )
 
-            OnUpdateButtonClick -> {
-                launchSafe(
-                    getErrorLogMessage = { "PersonalDataScreen >> Update button: ${it.message}" },
-                    block = {
-                        val newPersonalData = uiState.value.toPersonalData()
-                        updatePersonalDataUseCase.execute(newPersonalData)
-                            .onSuccess {
-                                getPersonalDataUseCase.execute()
-                                    .onSuccess { personalData ->
-                                        originState = personalData.addToState()
-                                        uiStateMutable.update { originState }
-                                    }
-                            }
-                    }
-                )
-            }
+            OnUpdateButtonClick -> onUpdateClick()
 
             is NameChanged -> {
                 uiStateMutable.update { checkStateForButtonEnabled(it.copy(name = event.newName)) }
@@ -126,6 +111,23 @@ class PersonalDataScreenViewModel(
             uiStateMutable.update { it.copy(avatar = newAvatar) }
             backAvatarHolder.clearBackAvatar()
         }
+    }
+
+    private fun onUpdateClick() {
+        launchSafe(
+            getErrorLogMessage = { "PersonalDataScreen >> Update button: ${it.message}" },
+            block = {
+                val newPersonalData = uiState.value.toPersonalData()
+                updatePersonalDataUseCase.execute(newPersonalData)
+                    .onSuccess {
+                        getPersonalDataUseCase.execute()
+                            .onSuccess { personalData ->
+                                originState = personalData.addToState()
+                                uiStateMutable.update { originState }
+                            }
+                    }
+            }
+        )
     }
 
     private fun onCountrySelected(country: Country) {
