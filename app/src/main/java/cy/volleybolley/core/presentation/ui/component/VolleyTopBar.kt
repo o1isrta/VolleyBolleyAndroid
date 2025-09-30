@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -28,14 +31,15 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBar
 import cy.volleybolley.core.presentation.ui.component.model.LevelIcon
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 
 object VolleyTopBar {
-    private val TopBarHeight = 106.dp
-    private val CornerRadius = 32.dp
+    private val TopBarHeight = VolleyDimens.DIMEN_106.dp
+    private val CornerRadius = VolleyDimens.DIMEN_32.dp
     private val BackgroundColor = VolleyColor.Turquoise
-    private val Diameter = 46.dp
-    private val MarginIcon = 8.dp
+    private val Diameter = VolleyDimens.DIMEN_46.dp
+    private val MarginIcon = VolleyDimens.DIMEN_8.dp
 
     @Composable
     @Stable
@@ -59,19 +63,19 @@ object VolleyTopBar {
                 .height(TopBarHeight),
             color = BackgroundColor,
             shape = shape,
-            shadowElevation = 4.dp
+            shadowElevation = VolleyDimens.DIMEN_4.dp
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                // Имя
+            Box {
+                // Name
                 if (!firstName.isNullOrEmpty()) {
                     VolleyText.TitleMedium(
                         text = firstName,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                start = 71.dp,
-                                end = 71.dp,
-                                top = 63.dp
+                                start = VolleyDimens.DIMEN_71.dp,
+                                end = VolleyDimens.DIMEN_71.dp,
+                                top = VolleyDimens.DIMEN_63.dp
                             ),
                         color = VolleyColor.White,
                         textAlign = TextAlign.Left,
@@ -79,7 +83,7 @@ object VolleyTopBar {
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                // Аватарка
+                // Avatar
                 Box(
                     modifier = Modifier
                         .size(Diameter)
@@ -92,7 +96,7 @@ object VolleyTopBar {
                     )
                 }
 
-                // Иконка уровня игрока
+                // Level icon
                 Image(
                     painter = painterResource(id = levelIcon.resId),
                     contentDescription = stringResource(id = R.string.top_bar_level_content_description),
@@ -106,6 +110,36 @@ object VolleyTopBar {
             }
         }
     }
+
+    @Stable
+    @Composable
+    fun TopBarWithBackButton(
+        modifier: Modifier = Modifier,
+        title: String,
+        onBackNavigationRequested: () -> Unit
+    ) {
+        Box(modifier = modifier) {
+            IconButton(
+                onClick = onBackNavigationRequested,
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .size(VolleyDimens.DIMEN_24.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_back),
+                    contentDescription = stringResource(id = R.string.back),
+                    tint = VolleyColor.White,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            VolleyText.TitleLarge(
+                text = title,
+                color = VolleyColor.White,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
 }
 
 @Preview
@@ -116,6 +150,18 @@ private fun MyScreen() {
             "Artem",
             "https://avatars.mds.yandex.net/get-yapic/15298/aPbyeCWI9oijiql2AFh3GaX3xyg-1/orig",
             "pro",
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewTopBarWithBackButton() {
+    PreviewContainer(modifier = Modifier.width(300.dp)) {
+        VolleyTopBar.TopBarWithBackButton(
+            modifier = Modifier.fillMaxWidth(),
+            title = stringResource(R.string.registration),
+            onBackNavigationRequested = {}
         )
     }
 }

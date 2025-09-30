@@ -1,16 +1,18 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import cy.volleybolley.core.presentation.ui.screens.authorization.AboutLevelsScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.LaunchScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationByPhoneScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.SignUpScreen
+import androidx.navigation.navigation
+import cy.volleybolley.core.presentation.ui.screens.authorization.aboutlevels.AboutLevelsScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.AuthorizationByPhoneScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.VerifyPhoneNumberScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.registration.RegistrationScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
@@ -55,84 +57,148 @@ import cy.volleybolley.notification.presentation.ui.NotificationsScreen
 
 @Composable
 fun NavHostContainer(
-    modifier: Modifier = Modifier,
-    startDestination: NavMap = LaunchRoute
+    paddingFromSystemUi: PaddingValues,
+    navController: NavHostController,
+    startDestination: NavMap = LaunchRoute,
+    activityFinisher: () -> Unit,
 ) {
-    val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = startDestination,
-        modifier = modifier
+        startDestination = startDestination
     ) {
         // authorization
         composable<LaunchRoute> { LaunchScreen(navController) }
-        composable<OnboardingRoute> { OnboardingScreen(navController) }
-        composable<SignUpRoute> { SignUpScreen(navController) }
-        composable<RegistrationRoute> { RegistrationScreen(navController) }
-        composable<RegistrationByPhoneRoute> { RegistrationByPhoneScreen(navController) }
-        composable<AboutLevelsRoute> { AboutLevelsScreen(navController) }
-
-        // create game
-        composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }
-        composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(navController) }
-        composable<PrivacyOptionsRoute> { PrivacyOptionsScreen(navController) }
-
-        // create tourney
-        composable<BasicTourneySetupRoute> { BasicTourneySetupScreen(navController) }
-        composable<TourneyEnteringConditionsRoute> { TourneyEnteringConditionsScreen(navController) }
-
-        // find game
-        composable<JoinTheGameRoute> { JoinTheGameScreen(navController) }
-
-        // find tourney
-        composable<ChooseTeamRoute> { ChooseTeamScreen(navController) }
-        composable<IndividualPlayersRoute> { IndividualPlayersScreen(navController) }
-        composable<InvitePlayersRoute> { InvitePlayersScreen(navController) }
-        composable<JoinIndividualRoute> { JoinIndividualScreen(navController) }
-        composable<JoinTeamRoute> { JoinTeamScreen(navController) }
-
-        // archive
-        composable<ArchiveRoute> { ArchiveScreen(navController) }
-        composable<PastGameRoute> { PastGameScreen(navController) }
-        composable<PastTourneyRoute> { PastTourneyScreen(navController) }
-        composable<TeamsRoute> { TeamsScreen(navController) }
-
-        // game invites
-        composable<GameInvitesRoute> { GameInvitesScreen(navController) }
-        composable<JoinTheTourneyRoute> { JoinTheTourneyScreen(navController) }
-
-        // my games
-        composable<ChangeTeamRoute> { ChangeTeamScreen(navController) }
-        composable<GameHomeRoute> { GameHomeScreen(navController) }
-        composable<ManagePlayersRoute> { ManagePlayersScreen(navController) }
-        composable<MyGameRoute> { MyGameScreen(navController) }
-        composable<MyGamesRoute> { MyGamesScreen(navController) }
-        composable<MyTourneyRoute> { MyTourneyScreen(navController) }
-
-        // upcoming games
-        composable<JoinedPlayersRoute> { JoinedPlayersScreen(navController) }
-        composable<UpcomingGameDetailsRoute> { UpcomingGameDetailsScreen(navController) }
-        composable<UpcomingGamesRoute> { UpcomingGamesScreen(navController) }
-        composable<UpcomingTourneyDetailsRoute> { UpcomingTourneyDetailsScreen(navController) }
-
-        // home
-        composable<HomeRoute> { HomeScreen(navController) }
-        composable<SearchCourtRoute> { SearchCourtScreen(navController) }
-        composable<RatePlayersRoute> { RatePlayersScreen(navController) }
-        composable<SuccessRoute> { SuccessScreen(navController) }
-
-        // profile
-        composable<AboutRoute> { AboutScreen(navController) }
-        composable<ChangePhotoRoute> { ChangePhotoScreen(navController) }
-        composable<FaqRoute> { FaqScreen(navController) }
-        composable<PaymentsRoute> { PaymentsScreen(navController) }
-        composable<PersonalDataRoute> { PersonalDataScreen(navController) }
-        composable<PlayerProfileRoute> { PlayerProfileScreen(navController) }
-        composable<PlayersRoute> { PlayersScreen(navController) }
-        composable<ProfileRoute> { ProfileScreen(navController) }
-        composable<EnterPaymentDataRoute> { EnterPaymentDataScreen(navController) }
+        composable<OnboardingRoute> {
+            OnboardingScreen(
+                onNextScreenRequested = { navController.navigate(AuthorizationRoute) },
+                paddingFromSystemUi = paddingFromSystemUi
+            )
+        }
+        composable<AuthorizationRoute> {
+            AuthorizationScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onNavigateToRegisterByPhoneRequested = { navController.navigate(AuthorizationByPhoneRoute) },
+                onSuccessRegisteredAction = { navController.navigate(RegistrationRoute) }
+            )
+        }
+        composable<RegistrationRoute> {
+            RegistrationScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onRegistrationSuccessEvent = {
+                    navController.navigate(HomeRoute) {
+                        popUpTo(LaunchRoute) { inclusive = false }
+                    }
+                },
+                onRequestNavigateToAboutLevels = { navController.navigate(AboutLevelsRoute) }
+            )
+        }
+        composable<AuthorizationByPhoneRoute> {
+            AuthorizationByPhoneScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onBackNavigationRequested = { navController.popBackStack() },
+                requestNavigateToVerifyPhoneScreen = {
+                    navController.navigate(VerifyPhoneNumberRoute)
+                }
+            )
+        }
+        composable<VerifyPhoneNumberRoute> {
+            VerifyPhoneNumberScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onBackNavigationRequested = { navController.popBackStack() },
+                onNavigateToRegistrationScreenRequested = {
+                    navController.navigate(RegistrationRoute)
+                }
+            )
+        }
+        composable<AboutLevelsRoute> {
+            AboutLevelsScreen(onBackNavigationRequested = { navController.popBackStack() })
+        }
 
         // notifications
         composable<NotificationsRoute> { NotificationsScreen(navController) }
+
+        // Home nested graph
+        navigation<HomeTopLevelRoute>(startDestination = HomeRoute) {
+            // home
+            composable<HomeRoute> {
+                HomeScreen(
+                    navController = navController,
+                    finisher = activityFinisher,
+                )
+            }
+            composable<SearchCourtRoute> { SearchCourtScreen(navController) }
+            composable<RatePlayersRoute> { RatePlayersScreen(navController) }
+            composable<SuccessRoute> { SuccessScreen(navController) }
+
+            // create game
+            composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }
+            composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(navController) }
+            composable<PrivacyOptionsRoute> { PrivacyOptionsScreen(navController) }
+
+            // create tourney
+            composable<BasicTourneySetupRoute> { BasicTourneySetupScreen(navController) }
+            composable<TourneyEnteringConditionsRoute> { TourneyEnteringConditionsScreen(navController) }
+
+            // find game
+            composable<JoinTheGameRoute> { JoinTheGameScreen(navController) }
+
+            // find tourney
+            composable<ChooseTeamRoute> { ChooseTeamScreen(navController) }
+            composable<IndividualPlayersRoute> { IndividualPlayersScreen(navController) }
+            composable<InvitePlayersRoute> { InvitePlayersScreen(navController) }
+            composable<JoinIndividualRoute> { JoinIndividualScreen(navController) }
+            composable<JoinTeamRoute> { JoinTeamScreen(navController) }
+        }
+
+        // My games nested graph
+        navigation<MyGamesTopLevelRoute>(startDestination = MyGamesRoute) {
+            composable<MyGamesRoute> {
+                MyGamesScreen(
+                    navController = navController,
+                    finisher = activityFinisher,
+                )
+            }
+
+            // archive
+            composable<ArchiveRoute> { ArchiveScreen(navController) }
+            composable<PastGameRoute> { PastGameScreen(navController) }
+            composable<PastTourneyRoute> { PastTourneyScreen(navController) }
+            composable<TeamsRoute> { TeamsScreen(navController) }
+
+            // game invites
+            composable<GameInvitesRoute> { GameInvitesScreen(navController) }
+            composable<JoinTheTourneyRoute> { JoinTheTourneyScreen(navController) }
+
+            // my games
+            composable<ChangeTeamRoute> { ChangeTeamScreen(navController) }
+            composable<GameHomeRoute> { GameHomeScreen(navController) }
+            composable<ManagePlayersRoute> { ManagePlayersScreen(navController) }
+            composable<MyGameRoute> { MyGameScreen(navController) }
+            composable<MyTourneyRoute> { MyTourneyScreen(navController) }
+
+            // upcoming games
+            composable<JoinedPlayersRoute> { JoinedPlayersScreen(navController) }
+            composable<UpcomingGameDetailsRoute> { UpcomingGameDetailsScreen(navController) }
+            composable<UpcomingGamesRoute> { UpcomingGamesScreen(navController) }
+            composable<UpcomingTourneyDetailsRoute> { UpcomingTourneyDetailsScreen(navController) }
+        }
+
+        // Profile nested graph
+        navigation<ProfileTopLevelRoute>(startDestination = ProfileRoute) {
+            composable<ProfileRoute> {
+                ProfileScreen(
+                    navController = navController,
+                    finisher = activityFinisher,
+                )
+            }
+            composable<PlayersRoute> { PlayersScreen(navController) }
+            composable<PlayerProfileRoute> { PlayerProfileScreen(navController) }
+            composable<PersonalDataRoute> { PersonalDataScreen(navController) }
+            composable<ChangePhotoRoute> { ChangePhotoScreen(navController) }
+            composable<PaymentsRoute> { PaymentsScreen(navController) }
+            composable<EnterPaymentDataRoute> { EnterPaymentDataScreen(navController) }
+            composable<FaqRoute> { FaqScreen(navController) }
+            composable<AboutRoute> { AboutScreen(navController) }
+        }
     }
 }

@@ -5,6 +5,16 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface NavMap
 
+// --- top level routes ---
+@Serializable
+object HomeTopLevelRoute : NavMap
+
+@Serializable
+object MyGamesTopLevelRoute : NavMap
+
+@Serializable
+object ProfileTopLevelRoute : NavMap
+
 // --- authorization flow ---
 @Serializable
 object LaunchRoute : NavMap
@@ -13,13 +23,16 @@ object LaunchRoute : NavMap
 object OnboardingRoute : NavMap
 
 @Serializable
-object SignUpRoute : NavMap
+object AuthorizationRoute : NavMap
 
 @Serializable
 object RegistrationRoute : NavMap
 
 @Serializable
-object RegistrationByPhoneRoute : NavMap
+object AuthorizationByPhoneRoute : NavMap
+
+@Serializable
+object VerifyPhoneNumberRoute : NavMap
 
 @Serializable
 object AboutLevelsRoute : NavMap

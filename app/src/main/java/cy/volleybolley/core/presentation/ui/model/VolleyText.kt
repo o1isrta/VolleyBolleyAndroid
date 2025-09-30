@@ -5,9 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 
+@UiLibraryMarker
 object VolleyText {
 
     @Stable
@@ -243,6 +246,26 @@ object VolleyText {
 
     @Stable
     @Composable
+    fun BodyTinyBottomNav(
+        text: String,
+        modifier: Modifier = Modifier,
+        style: TextStyle,
+        textAlign: TextAlign? = null,
+        maxLines: Int = Int.MAX_VALUE,
+        overflow: TextOverflow = TextOverflow.Clip
+    ) {
+        Text(
+            text = text,
+            style = style,
+            modifier = modifier,
+            textAlign = textAlign,
+            maxLines = maxLines,
+            overflow = overflow
+        )
+    }
+
+    @Stable
+    @Composable
     fun ButtonText(
         text: String,
         modifier: Modifier = Modifier,
@@ -282,4 +305,26 @@ object VolleyText {
             overflow = overflow
         )
     }
+
+    @Stable
+    @Composable
+    fun HeroBody(
+        text: String,
+        modifier: Modifier = Modifier,
+        color: Color = Color.Unspecified,
+        textAlign: TextAlign? = null,
+        maxLines: Int = Int.MAX_VALUE,
+        overflow: TextOverflow = TextOverflow.Clip
+    ) {
+        Text(
+            text = text,
+            style = VolleyTypography.HeroBody,
+            modifier = modifier,
+            color = color,
+            textAlign = textAlign,
+            maxLines = maxLines,
+            overflow = overflow
+        )
+    }
+
 }
