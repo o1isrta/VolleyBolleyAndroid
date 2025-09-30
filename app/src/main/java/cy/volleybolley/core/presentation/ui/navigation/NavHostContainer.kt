@@ -119,6 +119,7 @@ fun NavHostContainer(
             composable<HomeRoute> {
                 HomeScreen(
                     navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi,
                     finisher = activityFinisher,
                 )
             }

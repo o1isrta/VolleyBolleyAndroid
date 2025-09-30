@@ -41,11 +41,11 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
-import cy.volleybolley.core.presentation.ui.navigation.model.DigitIcon
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateNewGameClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateTourneyClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnDonateClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnFindGameClick
+import cy.volleybolley.core.presentation.ui.screens.home.home.model.DigitIcon
 import cy.volleybolley.courts.domain.model.Location
 import org.koin.androidx.compose.koinViewModel
 
@@ -53,6 +53,7 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeScreen(
     navController: NavHostController,
     viewModel: HomeScreenViewModel = koinViewModel(),
+    paddingFromSystemUi: PaddingValues,
     finisher: () -> Unit,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -62,7 +63,8 @@ fun HomeScreen(
         state = state,
         effect = effect,
         navigateAction = { route -> navController.navigate(route) },
-        eventCallback = { event -> viewModel.obtainEvent(event) }
+        eventCallback = { event -> viewModel.obtainEvent(event) },
+        modifier = Modifier.padding(paddingFromSystemUi)
     )
 
     BackHandler { finisher() }
@@ -70,13 +72,14 @@ fun HomeScreen(
 
 @Composable
 private fun HomeScreen(
+    modifier: Modifier = Modifier,
     state: HomeScreenState,
     effect: HomeScreenEffect?,
     navigateAction: (NavMap) -> Unit,
     eventCallback: (HomeScreenEvent) -> Unit,
 ) {
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Image(
             contentDescription = null,

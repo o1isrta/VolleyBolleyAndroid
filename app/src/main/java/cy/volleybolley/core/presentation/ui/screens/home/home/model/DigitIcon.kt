@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.navigation.model
+package cy.volleybolley.core.presentation.ui.screens.home.home.model
 
 import androidx.annotation.DrawableRes
 import cy.volleybolley.R
