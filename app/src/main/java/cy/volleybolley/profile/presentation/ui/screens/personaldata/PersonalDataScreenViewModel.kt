@@ -111,17 +111,7 @@ class PersonalDataScreenViewModel(
                 uiStateMutable.update { checkStateForButtonEnabled(it.copy(dateOfBirthMillis = event.date)) }
             }
 
-            is CountrySelect -> {
-                uiStateMutable.update {
-                    checkStateForButtonEnabled(
-                        it.copy(
-                            selectedCountry = event.country,
-                            selectedCity = null,
-                            cityList = event.country.cities
-                        )
-                    )
-                }
-            }
+            is CountrySelect -> onCountrySelected(event.country)
 
             is CitySelect -> {
                 uiStateMutable.update { checkStateForButtonEnabled(it.copy(selectedCity = event.city)) }
@@ -135,6 +125,18 @@ class PersonalDataScreenViewModel(
             originState = originState.copy(avatar = newAvatar)
             uiStateMutable.update { it.copy(avatar = newAvatar) }
             backAvatarHolder.clearBackAvatar()
+        }
+    }
+
+    private fun onCountrySelected(country: Country) {
+        uiStateMutable.update {
+            checkStateForButtonEnabled(
+                it.copy(
+                    selectedCountry = country,
+                    selectedCity = null,
+                    cityList = country.cities
+                )
+            )
         }
     }
 

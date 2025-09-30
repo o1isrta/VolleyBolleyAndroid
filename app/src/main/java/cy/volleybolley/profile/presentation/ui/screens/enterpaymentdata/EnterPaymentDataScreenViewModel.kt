@@ -45,41 +45,43 @@ class EnterPaymentDataScreenViewModel(
                 uiStateMutable.update { checkStateForButtonEnabled(event.text) }
             }
 
-            OnSaveButtonClick -> {
-                launchSafe(getErrorLogMessage = { "EnterPaymentDataScreen >> Save button: ${it.message}" }) {
-                    val newPayment = Payment(
-                        type = originPaymentType,
-                        account = setCorrectAccountValue(uiState.value.accountValue.trim(), originPaymentType),
-                        isPreferred = false
-                    )
+            OnSaveButtonClick -> onSaveClick()
+        }
+    }
 
-                    val sameTypePaymentInOrigins = originPayments.find { it.type == newPayment.type }
-                    val updatedPayments = sameTypePaymentInOrigins?.let {
-                        originPayments.map {
-                            if (it.type == newPayment.type) newPayment.copy(isPreferred = it.isPreferred) else it
-                        }
-                    } ?: originPaymentsWithNewOne(newPayment)
-                    savedPaymentsJsonString = json.encodeToString(updatedPayments)
-                    // here we must do updatePaymentsUseCase.execute(updatedPayments) >> on success actions below:
+    private fun onSaveClick() {
+        launchSafe(getErrorLogMessage = { "EnterPaymentDataScreen >> Save button: ${it.message}" }) {
+            val newPayment = Payment(
+                type = originPaymentType,
+                account = setCorrectAccountValue(uiState.value.accountValue.trim(), originPaymentType),
+                isPreferred = false
+            )
 
-                    savedAccountValue = uiState.value.accountValue.trim()
-                    uiStateMutable.update { checkStateForButtonEnabled(savedAccountValue) }
-                    sendUiEffect(
-                        EnterPaymentDataScreenEffect.ShowInfoDialog(
-                            onDoneButtonClick = {
-                                sendUiEffect(
-                                    EnterPaymentDataScreenEffect.NavigateFromEnterPaymentDataScreen(
-                                        savedPaymentsJsonString
-                                    )
-                                )
-                            },
-                            onDismissClick = {
-                                sendUiEffect(null)
-                            }
-                        )
-                    )
+            val sameTypePaymentInOrigins = originPayments.find { it.type == newPayment.type }
+            val updatedPayments = sameTypePaymentInOrigins?.let {
+                originPayments.map {
+                    if (it.type == newPayment.type) newPayment.copy(isPreferred = it.isPreferred) else it
                 }
-            }
+            } ?: originPaymentsWithNewOne(newPayment)
+            savedPaymentsJsonString = json.encodeToString(updatedPayments)
+            // here we must do updatePaymentsUseCase.execute(updatedPayments) >> on success actions below:
+
+            savedAccountValue = uiState.value.accountValue.trim()
+            uiStateMutable.update { checkStateForButtonEnabled(savedAccountValue) }
+            sendUiEffect(
+                EnterPaymentDataScreenEffect.ShowInfoDialog(
+                    onDoneButtonClick = {
+                        sendUiEffect(
+                            EnterPaymentDataScreenEffect.NavigateFromEnterPaymentDataScreen(
+                                savedPaymentsJsonString
+                            )
+                        )
+                    },
+                    onDismissClick = {
+                        sendUiEffect(null)
+                    }
+                )
+            )
         }
     }
 
