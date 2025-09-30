@@ -2,14 +2,18 @@ package cy.volleybolley.core.presentation.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -106,6 +110,36 @@ object VolleyTopBar {
             }
         }
     }
+
+    @Stable
+    @Composable
+    fun TopBarWithBackButton(
+        modifier: Modifier = Modifier,
+        title: String,
+        onBackNavigationRequested: () -> Unit
+    ) {
+        Box(modifier = modifier) {
+            IconButton(
+                onClick = onBackNavigationRequested,
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .size(VolleyDimens.DIMEN_24.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_back),
+                    contentDescription = stringResource(id = R.string.back),
+                    tint = VolleyColor.White,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            VolleyText.TitleLarge(
+                text = title,
+                color = VolleyColor.White,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
 }
 
 @Preview
@@ -116,6 +150,18 @@ private fun MyScreen() {
             "Artem",
             "https://avatars.mds.yandex.net/get-yapic/15298/aPbyeCWI9oijiql2AFh3GaX3xyg-1/orig",
             "pro",
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewTopBarWithBackButton() {
+    PreviewContainer(modifier = Modifier.width(300.dp)) {
+        VolleyTopBar.TopBarWithBackButton(
+            modifier = Modifier.fillMaxWidth(),
+            title = stringResource(R.string.registration),
+            onBackNavigationRequested = {}
         )
     }
 }

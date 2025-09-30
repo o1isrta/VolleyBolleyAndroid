@@ -23,13 +23,16 @@ object LaunchRoute : NavMap
 object OnboardingRoute : NavMap
 
 @Serializable
-object SignUpRoute : NavMap
+object AuthorizationRoute : NavMap
 
 @Serializable
 object RegistrationRoute : NavMap
 
 @Serializable
-object RegistrationByPhoneRoute : NavMap
+object AuthorizationByPhoneRoute : NavMap
+
+@Serializable
+object VerifyPhoneNumberRoute : NavMap
 
 @Serializable
 object AboutLevelsRoute : NavMap

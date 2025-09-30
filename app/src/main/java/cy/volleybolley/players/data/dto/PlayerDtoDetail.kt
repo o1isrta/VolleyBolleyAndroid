@@ -13,4 +13,3 @@ data class PlayerDtoDetail(
     @SerialName("level") val level: String,
     @SerialName("latest_activity") val latestActivity: List<ActivityDto>
 )
-

@@ -12,4 +12,3 @@ data class PlayerDto(
     @SerialName("is_favorite") val isFavorite: Boolean,
     @SerialName("level") val level: String
 )
-
