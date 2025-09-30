@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NotificationDto(
-    @SerialName("notification_id") val id: Int,
-    @SerialName("created_at") val createdAt: String,
+    @SerialName("notification_id") val notificationId: Int,
+    @SerialName("date") val date: String,
     @SerialName("title") val title: String,
-    @SerialName("message") val message: String,
+    @SerialName("body") val body: String,
     @SerialName("screen") val screen: String?,
-    @SerialName("game_id") val gameId: String?
+    @SerialName("event_id") val eventId: String?
 )

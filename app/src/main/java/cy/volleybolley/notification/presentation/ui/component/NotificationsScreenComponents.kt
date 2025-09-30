@@ -128,8 +128,8 @@ object NotificationsScreenComponents {
                     itemsIndexed(notifications) { index, notification ->
                         NotificationContent(
                             title = notification.title,
-                            message = notification.message,
-                            date = notification.createdAt,
+                            message = notification.body,
+                            date = notification.date,
                             onClick = { onItemClick(notification) }
                         )
                         if (index < notifications.lastIndex) {
@@ -165,43 +165,43 @@ private fun PreviewNotificationsScreen() {
     val sampleData = listOf(
         NotificationItem(
             title = "New invite",
-            message = "Anton Ivanov invited you",
-            createdAt = "28.08.2025",
-            screen = RouteScreen.JOIN_GAME.screenName,
-            id = 1,
-            gameId = "1",
+            body = "Anton Ivanov invited you",
+            date = "28.08.2025",
+            screen = RouteScreen.INVITE_GAME.screenName,
+            notificationId = 1,
+            eventId = "1",
         ),
         NotificationItem(
             title = "Removed from game",
-            message = "1 September, 6:00–8:00 pm",
-            createdAt = "27.08.2025",
-            screen = RouteScreen.JOIN_GAME.screenName,
-            id = 2,
-            gameId = "2"
+            body = "1 September, 6:00–8:00 pm",
+            date = "27.08.2025",
+            screen = RouteScreen.REMOVED_GAME.screenName,
+            notificationId = 2,
+            eventId = "2"
         ),
         NotificationItem(
             title = "Tourney cancelled",
-            message = "12 September, 2:00–8:00 pm",
-            createdAt = "26.08.2025",
-            screen = RouteScreen.JOIN_GAME.screenName,
-            id = 3,
-            gameId = "3"
+            body = "12 September, 2:00–8:00 pm",
+            date = "26.08.2025",
+            screen = RouteScreen.REMOVED_TOURNEY.screenName,
+            notificationId = 3,
+            eventId = "3"
         ),
         NotificationItem(
             title = "Removed from tourney",
-            message = "15 September, 9:00–11:00 am",
-            createdAt = "25.08.2025",
-            screen = RouteScreen.JOIN_GAME.screenName,
-            id = 4,
-            gameId = "4"
+            body = "15 September, 9:00–11:00 am",
+            date = "25.08.2025",
+            screen = RouteScreen.REMOVED_TOURNEY.screenName,
+            notificationId = 4,
+            eventId = "4"
         ),
         NotificationItem(
             title = "Game cancelled",
-            message = "5 September, 4:00–6:00 pm",
-            createdAt = "24.09.2025",
-            screen = RouteScreen.JOIN_GAME.screenName,
-            id = 5,
-            gameId = "5"
+            body = "5 September, 4:00–6:00 pm",
+            date = "24.09.2025",
+            screen = RouteScreen.CANCELED_GAME.screenName,
+            notificationId = 5,
+            eventId = "5"
         )
     )
     Box() {

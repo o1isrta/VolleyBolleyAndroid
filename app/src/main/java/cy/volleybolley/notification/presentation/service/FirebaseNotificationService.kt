@@ -26,23 +26,25 @@ class FirebaseNotificationService : FirebaseMessagingService(), KoinComponent {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         val data = remoteMessage.data
+        val title = remoteMessage.notification?.title ?: "FCM"
+        val body = remoteMessage.notification?.body ?: ""
         val notificationItem = NotificationItem(
-            id = data["notification_id"]?.toIntOrNull() ?: 0,
-            createdAt = data["created_at"] ?: "",
-            title = data["title"] ?: "FCM",
-            message = data["message"] ?: "",
-            screen = data["screen"],
-            gameId = data["game_id"]
+            notificationId = data[KEY_NOTIFICATION_ID]?.toIntOrNull() ?: 0,
+            date = data[KEY_DATE] ?: "",
+            title = title,
+            body = body,
+            screen = data[KEY_SCREEN],
+            eventId = data[KEY_EVENT_ID]
         )
         showNotification(notificationItem)
     }
 
     private fun showNotification(item: NotificationItem) {
-        val channelId = "default_channel"
+        val channelId = CHANNEL_ID
 
         val intent = Intent(this, MainActivity::class.java).apply {
-            item.screen?.let { putExtra("screen", it) }
-            item.gameId?.let { putExtra("gameId", it) }
+            item.screen?.let { putExtra(KEY_SCREEN, it) }
+            item.eventId?.let { putExtra(KEY_EVENT_ID, it) }
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
@@ -56,7 +58,7 @@ class FirebaseNotificationService : FirebaseMessagingService(), KoinComponent {
         val builder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.mipmap.ic_notification)
             .setContentTitle(item.title)
-            .setContentText(item.message)
+            .setContentText(item.body)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
@@ -66,12 +68,20 @@ class FirebaseNotificationService : FirebaseMessagingService(), KoinComponent {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                "Default Channel",
+                getString(R.string.default_channel_name),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             notificationManager.createNotificationChannel(channel)
         }
 
-        notificationManager.notify(item.id, builder.build())
+        notificationManager.notify(item.notificationId, builder.build())
+    }
+
+    companion object {
+        private const val CHANNEL_ID = "default_channel"
+        private const val KEY_NOTIFICATION_ID = "notification_id"
+        private const val KEY_DATE = "date"
+        private const val KEY_SCREEN = "screen"
+        private const val KEY_EVENT_ID = "event_id"
     }
 }

@@ -11,6 +11,6 @@ sealed interface DeviceTokenRequest {
     ) : DeviceTokenRequest
 
     companion object {
-        private const val FCM_PATH = "/api/fcm-token"
+        private const val FCM_PATH = "/notifications/fcm-auth"
     }
 }

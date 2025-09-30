@@ -88,7 +88,7 @@ class MainActivityViewModel(
         when (event) {
             is MainActivityEvent.IntentReceived -> {
                 _uiState.update {
-                    it.copy(screen = event.screen, gameId = event.gameId)
+                    it.copy(screen = event.screen, eventId = event.eventId)
                 }
             }
 

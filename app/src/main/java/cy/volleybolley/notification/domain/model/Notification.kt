@@ -1,10 +1,10 @@
 package cy.volleybolley.notification.domain.model
 
 data class Notification(
-    val id: Int,
-    val createdAt: String,
+    val notificationId: Int,
+    val date: String,
     val title: String,
     val message: String,
     val screen: String?,
-    val gameId: String?,
+    val eventId: String?,
 )

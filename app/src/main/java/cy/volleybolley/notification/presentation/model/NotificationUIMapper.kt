@@ -6,10 +6,10 @@ import cy.volleybolley.notification.presentation.ui.model.NotificationItem
 fun Notification.toUi(): NotificationItem {
     return NotificationItem(
         title = title,
-        message = message,
-        createdAt = createdAt,
-        id = id,
+        body = message,
+        date = date,
+        notificationId = notificationId,
         screen = screen,
-        gameId = gameId
+        eventId = eventId
     )
 }

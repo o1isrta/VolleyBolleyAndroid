@@ -4,11 +4,11 @@ import cy.volleybolley.notification.domain.model.Notification
 
 fun NotificationDto.toDomain(): Notification {
     return Notification(
-        id = id,
-        createdAt = createdAt,
+        notificationId = notificationId,
+        date = date,
         title = title,
-        message = message,
+        message = body,
         screen = screen,
-        gameId = gameId
+        eventId = eventId
     )
 }

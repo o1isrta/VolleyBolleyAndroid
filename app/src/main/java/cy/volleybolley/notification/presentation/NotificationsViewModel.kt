@@ -68,7 +68,7 @@ class NotificationsViewModel(
     }
 
     private fun handleNotificationClick(notification: NotificationItem) = launchHandling {
-        val result = notificationsUseCase.markNotificationsAsRead(listOf(notification.id))
+        val result = notificationsUseCase.markNotificationsAsRead(listOf(notification.notificationId))
 
         handleResult(
             result,

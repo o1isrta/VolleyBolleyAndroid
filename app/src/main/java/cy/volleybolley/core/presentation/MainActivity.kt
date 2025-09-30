@@ -51,12 +51,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.onEvent(
-            MainActivityEvent.IntentReceived(
-                screen = intent?.getStringExtra("screen"),
-                gameId = intent?.getStringExtra("gameId")
-            )
-        )
+        handleIntent(intent)
         enableEdgeToEdge()
         setContent {
             val state by viewModel.uiState.collectAsState()
@@ -85,7 +80,7 @@ class MainActivity : ComponentActivity() {
                     },
                     onDismissDialog = { viewModel.dismissGlobalDialog() }
                 ) { innerPadding ->
-                    val routeNotification = resolveNotificationRoute(state.screen, state.gameId)
+                    val routeNotification = resolveNotificationRoute(state.screen, state.eventId)
                     NavHostContainer(
                         modifier = Modifier.padding(innerPadding),
                         startDestination = routeNotification ?: LaunchRoute
@@ -99,10 +94,14 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?) {
         viewModel.onEvent(
             MainActivityEvent.IntentReceived(
-                screen = intent.getStringExtra("screen"),
-                gameId = intent.getStringExtra("gameId")
+                screen = intent?.getStringExtra("screen"),
+                eventId = intent?.getStringExtra("eventId")?.toIntOrNull()
             )
         )
     }
