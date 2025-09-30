@@ -3,6 +3,7 @@ package cy.volleybolley.profile.presentation.ui.screens.about
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,6 +40,7 @@ import org.koin.androidx.compose.koinViewModel
 fun AboutScreen(
     navController: NavHostController,
     viewModel: AboutScreenViewModel = koinViewModel(),
+    paddingFromSystemUi: PaddingValues,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
@@ -51,12 +53,14 @@ fun AboutScreen(
                 navController.navigate(it)
             } ?: navController.popBackStack()
         },
-        eventCallback = { event -> viewModel.obtainEvent(event) }
+        eventCallback = { event -> viewModel.obtainEvent(event) },
+        modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
 
 @Composable
 private fun AboutScreen(
+    modifier: Modifier = Modifier,
     state: AboutScreenState,
     effect: AboutScreenEffect?,
     navigateAction: (NavMap?) -> Unit,
@@ -74,7 +78,7 @@ private fun AboutScreen(
 
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
     ) {

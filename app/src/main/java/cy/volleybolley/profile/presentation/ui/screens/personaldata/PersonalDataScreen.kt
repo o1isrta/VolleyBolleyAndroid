@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +27,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
-import cy.volleybolley.core.presentation.ui.VolleyDropDownField
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
@@ -51,6 +51,7 @@ import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalData
 fun PersonalDataScreen(
     navController: NavHostController,
     viewModel: PersonalDataScreenViewModel,
+    paddingFromSystemUi: PaddingValues,
 ) {
     viewModel.handleBackAvatar()
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -64,12 +65,14 @@ fun PersonalDataScreen(
                 navController.navigate(it)
             } ?: navController.popBackStack()
         },
-        eventCallback = { event -> viewModel.obtainEvent(event) }
+        eventCallback = { event -> viewModel.obtainEvent(event) },
+        modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
 
 @Composable
 private fun PersonalDataScreen(
+    modifier: Modifier = Modifier,
     state: PersonalDataScreenState,
     effect: PersonalDataScreenEffect?,
     navigateAction: (NavMap?) -> Unit,
@@ -77,7 +80,7 @@ private fun PersonalDataScreen(
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
     ) {
@@ -139,32 +142,34 @@ private fun PersonalDataScreen(
                 Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
 
                 VolleyTextFieldAttribute.DatePickerField(
-                    inputDate = state.dateOfBirth,
+                    inputDate = state.dateOfBirthMillis,
                     actionForSaveDate = { eventCallback(DateSelect(it)) }
                 )
 
                 Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
                 PersonalDataDivider()
                 Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-                PersonalDataTextMark(stringResource(R.string.your_country))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
 
-                VolleyDropDownField.DropDownGradientField(
-                    inputText = state.country,
-                    valuesList = state.countriesList,
-                    onValueClick = { eventCallback(CountrySelect(it)) }
+                VolleyTextFieldGradient.GradientSpinner(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedItem = state.selectedCountry,
+                    itemList = state.countryList,
+                    getTextByItem = { it?.name ?: "" },
+                    hint = stringResource(id = R.string.your_country),
+                    onItemSelect = { country, _ -> eventCallback(CountrySelect(country!!)) }
                 )
 
                 Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
                 PersonalDataDivider()
                 Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
-                PersonalDataTextMark(stringResource(R.string.your_city))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
 
-                VolleyDropDownField.DropDownGradientField(
-                    inputText = state.city,
-                    valuesList = state.citiesList,
-                    onValueClick = { eventCallback(CitySelect(it)) }
+                VolleyTextFieldGradient.GradientSpinner(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedItem = state.selectedCity,
+                    itemList = state.cityList,
+                    getTextByItem = { it?.name ?: "" },
+                    hint = stringResource(id = R.string.your_city),
+                    onItemSelect = { city, _ -> eventCallback(CitySelect(city!!)) }
                 )
 
                 Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))

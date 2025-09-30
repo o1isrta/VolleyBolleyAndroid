@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,6 +48,7 @@ import cy.volleybolley.profile.presentation.ui.screens.payments.model.BackPaymen
 fun EnterPaymentDataScreen(
     navController: NavHostController,
     viewModel: EnterPaymentDataScreenViewModel,
+    paddingFromSystemUi: PaddingValues,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
@@ -61,12 +63,14 @@ fun EnterPaymentDataScreen(
                 navController.previousBackStackEntry?.savedStateHandle?.set(BackPaymentsHolder.PAYMENTS_KEY, it)
                 navController.popBackStack()
             } ?: navController.popBackStack()
-        }
+        },
+        modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
 
 @Composable
 private fun EnterPaymentDataScreen(
+    modifier: Modifier = Modifier,
     screenPaymentType: PaymentType,
     state: EnterPaymentDataScreenState,
     effect: EnterPaymentDataScreenEffect?,
@@ -77,7 +81,7 @@ private fun EnterPaymentDataScreen(
 
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
     ) {

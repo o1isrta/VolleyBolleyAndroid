@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,6 +43,7 @@ import cy.volleybolley.profile.presentation.ui.screens.payments.PaymentsScreenEv
 fun PaymentsScreen(
     navController: NavHostController,
     viewModel: PaymentsScreenViewModel,
+    paddingFromSystemUi: PaddingValues,
 ) {
     viewModel.handleBackPayments()
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -55,12 +57,14 @@ fun PaymentsScreen(
                 navController.navigate(it)
             } ?: navController.popBackStack()
         },
-        eventCallback = { event -> viewModel.obtainEvent(event) }
+        eventCallback = { event -> viewModel.obtainEvent(event) },
+        modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
 
 @Composable
 private fun PaymentsScreen(
+    modifier: Modifier = Modifier,
     state: PaymentsScreenState,
     effect: PaymentsScreenEffect?,
     navigateAction: (NavMap?) -> Unit,
@@ -68,7 +72,7 @@ private fun PaymentsScreen(
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
     ) {

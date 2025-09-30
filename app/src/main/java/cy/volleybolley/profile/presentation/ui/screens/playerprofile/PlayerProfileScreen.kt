@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,6 +53,7 @@ import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerI
 fun PlayerProfileScreen(
     navController: NavHostController,
     viewModel: PlayerProfileScreenViewModel,
+    paddingFromSystemUi: PaddingValues,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
@@ -66,12 +68,14 @@ fun PlayerProfileScreen(
                 navController.previousBackStackEntry?.savedStateHandle?.set(BackPlayerIdHolder.PLAYER_ID_KEY, it)
                 navController.popBackStack()
             } ?: navController.popBackStack()
-        }
+        },
+        modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
 
 @Composable
 private fun PlayerProfileScreen(
+    modifier: Modifier = Modifier,
     state: PlayerProfileScreenState,
     effect: PlayerProfileScreenEffect?,
     userHoursOffset: Int,
@@ -80,7 +84,7 @@ private fun PlayerProfileScreen(
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
     ) {

@@ -39,7 +39,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun FaqScreen(
     navController: NavHostController,
-    viewModel: FaqScreenViewModel = koinViewModel()
+    viewModel: FaqScreenViewModel = koinViewModel(),
+    paddingFromSystemUi: PaddingValues,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
@@ -52,12 +53,14 @@ fun FaqScreen(
                 navController.navigate(it)
             } ?: navController.popBackStack()
         },
-        eventCallback = { event -> viewModel.obtainEvent(event) }
+        eventCallback = { event -> viewModel.obtainEvent(event) },
+        modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
 
 @Composable
 private fun FaqScreen(
+    modifier: Modifier = Modifier,
     state: FaqScreenState,
     effect: FaqScreenEffect?,
     navigateAction: (NavMap?) -> Unit,
@@ -65,7 +68,7 @@ private fun FaqScreen(
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
     ) {

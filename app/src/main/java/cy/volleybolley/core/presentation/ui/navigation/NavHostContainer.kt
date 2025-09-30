@@ -194,32 +194,55 @@ fun NavHostContainer(
         navigation<ProfileTopLevelRoute>(startDestination = ProfileRoute) {
             composable<ProfileRoute> {
                 ProfileScreen(
+                    paddingFromSystemUi = paddingFromSystemUi,
                     navController = navController,
                     finisher = activityFinisher,
                 )
             }
 
-            composable<AboutRoute> { AboutScreen(navController) }
+            composable<AboutRoute> {
+                AboutScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
 
             composable<ChangePhotoRoute> { backStackEntry ->
                 val avatarString = backStackEntry.toRoute<ChangePhotoRoute>().avatarUrl
-                ChangePhotoScreen(navController = navController, avatarFromPersonalData = avatarString)
+                ChangePhotoScreen(
+                    navController = navController,
+                    avatarFromPersonalData = avatarString,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
             }
 
-            composable<FaqRoute> { FaqScreen(navController) }
+            composable<FaqRoute> {
+                FaqScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
 
             composable<PaymentsRoute> { backStackEntry ->
                 val viewModel = koinViewModel<PaymentsScreenViewModel> {
                     parametersOf(BackPaymentsHolder(backStackEntry.savedStateHandle))
                 }
-                PaymentsScreen(navController, viewModel)
+                PaymentsScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
             }
 
             composable<PersonalDataRoute> { backStackEntry ->
                 val viewModel = koinViewModel<PersonalDataScreenViewModel> {
                     parametersOf(BackAvatarHolder(backStackEntry.savedStateHandle))
                 }
-                PersonalDataScreen(navController, viewModel)
+                PersonalDataScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
             }
 
             composable<PlayerProfileRoute> { backStackEntry ->
@@ -227,14 +250,22 @@ fun NavHostContainer(
                 val viewModel = koinViewModel<PlayerProfileScreenViewModel> {
                     parametersOf(playerId)
                 }
-                PlayerProfileScreen(navController, viewModel)
+                PlayerProfileScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi,
+                )
             }
 
             composable<PlayersRoute> { backStackEntry ->
                 val viewModel = koinViewModel<PlayersScreenViewModel> {
                     parametersOf(BackPlayerIdHolder(backStackEntry.savedStateHandle))
                 }
-                PlayersScreen(navController, viewModel)
+                PlayersScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
             }
 
             composable<EnterPaymentDataRoute> { backStackEntry ->
@@ -242,7 +273,11 @@ fun NavHostContainer(
                 val viewModel = koinViewModel<EnterPaymentDataScreenViewModel> {
                     parametersOf(routeWithArgs.paymentTypeName, routeWithArgs.paymentsJsonString)
                 }
-                EnterPaymentDataScreen(navController, viewModel)
+                EnterPaymentDataScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
             }
         }
     }

@@ -55,6 +55,7 @@ import cy.volleybolley.profile.presentation.ui.screens.players.model.PlayerTemp
 fun PlayersScreen(
     navController: NavHostController,
     viewModel: PlayersScreenViewModel,
+    paddingFromSystemUi: PaddingValues,
 ) {
     viewModel.handleBackPlayerId()
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -68,12 +69,14 @@ fun PlayersScreen(
             route?.let {
                 navController.navigate(it)
             } ?: navController.popBackStack()
-        }
+        },
+        modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
 
 @Composable
 private fun PlayersScreen(
+    modifier: Modifier = Modifier,
     state: PlayersScreenState,
     effect: PlayersScreenEffect?,
     navigateAction: (NavMap?) -> Unit,
@@ -81,7 +84,7 @@ private fun PlayersScreen(
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
     ) {

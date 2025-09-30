@@ -14,6 +14,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -72,6 +73,7 @@ fun ChangePhotoScreen(
     avatarFromPersonalData: String? = null,
     navController: NavHostController,
     viewModel: ChangePhotoScreenViewModel = koinViewModel(),
+    paddingFromSystemUi: PaddingValues,
 ) {
     val context = LocalContext.current
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -138,12 +140,14 @@ fun ChangePhotoScreen(
             }
             navController.popBackStack()
         },
-        eventCallback = { event -> viewModel.obtainEvent(event) }
+        eventCallback = { event -> viewModel.obtainEvent(event) },
+        modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
 
 @Composable
 private fun ChangePhotoScreen(
+    modifier: Modifier = Modifier,
     inputAvatar: String? = null,
     galleryPhotoPicker: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>? = null,
     cameraPhotoPicker: ManagedActivityResultLauncher<Uri, Boolean>? = null,
@@ -159,7 +163,7 @@ private fun ChangePhotoScreen(
 
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(VolleyDimens.DIMEN_8.dp)
     ) {

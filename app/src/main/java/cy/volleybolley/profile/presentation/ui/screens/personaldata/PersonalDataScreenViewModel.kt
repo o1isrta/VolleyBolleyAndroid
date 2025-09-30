@@ -19,12 +19,16 @@ import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalData
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.SurnameChanged
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.BackAvatarHolder
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.GenderType
+import cy.volleybolley.referencedata.domain.api.GetCountriesUseCase
+import cy.volleybolley.referencedata.domain.model.City
+import cy.volleybolley.referencedata.domain.model.Country
 import kotlinx.coroutines.flow.update
 
 class PersonalDataScreenViewModel(
     private val backAvatarHolder: BackAvatarHolder,
     private val getPersonalDataUseCase: GetPersonalDataUseCase,
     private val updatePersonalDataUseCase: UpdatePersonalDataUseCase,
+    private val getCountriesUseCase: GetCountriesUseCase,
 ) : BaseViewModel<PersonalDataScreenState, PersonalDataScreenEvent, PersonalDataScreenEffect>(
     initialState = PersonalDataScreenState()
 ) {
@@ -42,9 +46,20 @@ class PersonalDataScreenViewModel(
     )
 
     init {
-        // getState() пока нельзя тестировать - убрал
+        // getCountriesList() - сперва подтягиваем страны в originState
+        val countries = listOf(Country(
+            id = 0,
+            name = "Thailand",
+            cities = listOf(
+                City(id = 0, name = "Koh Phangan"),
+                City(id = 1, name = "Koh Samui")
+            )
+        ))
+        originState = originState.copy(countryList = countries)
+
+        // getState() - затем сохраняем персональные данные в originState
         launchSafe(getErrorLogMessage = { "PersonalDataScreen >> init: ${it.message}" }) {
-            originState = mockPersonalData.toState()
+            originState = mockPersonalData.addToState()
             uiStateMutable.update { originState }
         }
     }
@@ -64,17 +79,20 @@ class PersonalDataScreenViewModel(
             )
 
             OnUpdateButtonClick -> {
-                launchSafe(getErrorLogMessage = { "PersonalDataScreen >> Update button: ${it.message}" }) {
-                    val newPersonalData = uiState.value.toPersonalData()
-                    updatePersonalDataUseCase.execute(newPersonalData)
-                        .onSuccess {
-                            getPersonalDataUseCase.execute()
-                                .onSuccess { personalData ->
-                                    originState = personalData.toState()
-                                    uiStateMutable.update { originState }
-                                }
-                        }
-                }
+                launchSafe(
+                    getErrorLogMessage = { "PersonalDataScreen >> Update button: ${it.message}" },
+                    block = {
+                        val newPersonalData = uiState.value.toPersonalData()
+                        updatePersonalDataUseCase.execute(newPersonalData)
+                            .onSuccess {
+                                getPersonalDataUseCase.execute()
+                                    .onSuccess { personalData ->
+                                        originState = personalData.addToState()
+                                        uiStateMutable.update { originState }
+                                    }
+                            }
+                    }
+                )
             }
 
             is NameChanged -> {
@@ -90,12 +108,24 @@ class PersonalDataScreenViewModel(
             }
 
             is DateSelect -> {
-                uiStateMutable.update { checkStateForButtonEnabled(it.copy(dateOfBirth = event.date)) }
+                uiStateMutable.update { checkStateForButtonEnabled(it.copy(dateOfBirthMillis = event.date)) }
             }
 
-            is CountrySelect -> {}
+            is CountrySelect -> {
+                uiStateMutable.update {
+                    checkStateForButtonEnabled(
+                        it.copy(
+                            selectedCountry = event.country,
+                            selectedCity = null,
+                            cityList = event.country.cities
+                        )
+                    )
+                }
+            }
 
-            is CitySelect -> {}
+            is CitySelect -> {
+                uiStateMutable.update { checkStateForButtonEnabled(it.copy(selectedCity = event.city)) }
+            }
         }
     }
 
@@ -108,17 +138,23 @@ class PersonalDataScreenViewModel(
         }
     }
 
-    // Неполный метод, потом дописать как будет реализовано API
-    private fun PersonalData.toState(): PersonalDataScreenState {
+    private fun PersonalData.addToState(): PersonalDataScreenState {
+        val countryById = originState.countryList.find { it.id == countryId }
         return PersonalDataScreenState(
             avatar = avatar,
             name = firstName,
             surname = lastName,
+            levelHolder = level,
             genderId = GenderType.Companion.getIdByStringValue(gender),
-            dateOfBirth = VolleyUiUtil.convertTextDateToMillis(
+            dateOfBirthMillis = VolleyUiUtil.convertTextDateToMillis(
                 VolleyUiUtil.DATE_OF_BIRTH_PATTERN_FOR_SERVER,
                 birthDate
             ),
+            selectedCountry = countryById,
+            selectedCity = countryById?.cities?.find { it.id == cityId },
+            countryList = originState.countryList,
+            cityList = countryById?.cities ?: emptyList(),
+            buttonEnabled = originState.buttonEnabled
         )
     }
 
@@ -127,15 +163,15 @@ class PersonalDataScreenViewModel(
             firstName = name,
             lastName = surname,
             gender = GenderType.Companion.getNameValueById(genderId),
-            birthDate = dateOfBirth?.let {
+            birthDate = dateOfBirthMillis?.let {
                 VolleyUiUtil.convertMillisToTextDate(
                     VolleyUiUtil.DATE_OF_BIRTH_PATTERN_FOR_SERVER,
                     it
                 )
             } ?: "2000-12-31",
-            level = "",
-            countryId = -1,
-            cityId = -1,
+            level = levelHolder,
+            countryId = selectedCountry?.id ?: -1,
+            cityId = selectedCity?.id ?: -1,
             avatar = avatar
         )
     }

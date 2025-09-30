@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -62,6 +63,7 @@ import org.koin.androidx.compose.koinViewModel
 fun ProfileScreen(
     navController: NavHostController,
     viewModel: ProfileScreenViewModel = koinViewModel(),
+    paddingFromSystemUi: PaddingValues,
     finisher: () -> Unit,
 ) {
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
@@ -70,10 +72,10 @@ fun ProfileScreen(
         effect = effect,
         navigateAction = { route ->
             navController.navigate(route)
-        }
-    ) { event ->
-        viewModel.obtainEvent(event)
-    }
+        },
+        eventCallback = { event -> viewModel.obtainEvent(event) },
+        modifier = Modifier.padding(paddingFromSystemUi)
+    )
 
     BackHandler { finisher() }
 }

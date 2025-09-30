@@ -57,7 +57,8 @@ val profileModule = module {
         PersonalDataScreenViewModel(
             backAvatarHolder = backAvatarHolder,
             getPersonalDataUseCase = get(),
-            updatePersonalDataUseCase = get()
+            updatePersonalDataUseCase = get(),
+            getCountriesUseCase = get(),
         )
     }
     viewModel { AboutScreenViewModel() }
