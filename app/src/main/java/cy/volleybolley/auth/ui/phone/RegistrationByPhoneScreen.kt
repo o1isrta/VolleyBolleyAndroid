@@ -1,6 +1,7 @@
 package cy.volleybolley.auth.ui.phone
 
 import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,10 +30,10 @@ fun RegistrationByPhoneScreen(
     onAuthorized: (String) -> Unit,
     onError: (String) -> Unit,
     phoneAuthHelper: PhoneAuthHelper,
-    activityProvider: () -> Activity
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
-    val contextProvider = ContextProvider(activityProvider(), viewModel)
+    val activity = LocalActivity.current!!
+    val contextProvider = ContextProvider(activity, viewModel)
 
     LaunchedEffect(Unit) {
         viewModel.uiEffect.collect { effect ->
@@ -57,7 +58,7 @@ fun RegistrationByPhoneScreen(
                 }
 
                 is PhoneAuthEffect.PhoneAuth -> onAuthorized(effect.idToken)
-                is PhoneAuthEffect.ShowError -> onError(activityProvider().getString(effect.messageRes))
+                is PhoneAuthEffect.ShowError -> onError(activity.getString(effect.messageRes))
                 else -> {}
             }
         }
