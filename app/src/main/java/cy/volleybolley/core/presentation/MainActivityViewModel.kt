@@ -1,21 +1,14 @@
 package cy.volleybolley.core.presentation
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseException
 import com.google.firebase.messaging.FirebaseMessaging
-import cy.volleybolley.core.presentation.ui.model.state.MainActivityEvent
-import cy.volleybolley.core.presentation.ui.model.state.MainActivityState
+import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.state.data.DialogData
 import cy.volleybolley.notification.domain.api.permission.NotificationPermissionChecker
 import cy.volleybolley.notification.domain.api.registration.SendDeviceTokenUseCase
 import cy.volleybolley.notification.domain.api.storages.FCMTokenStore
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
@@ -24,22 +17,33 @@ class MainActivityViewModel(
     private val sendDeviceTokenUseCase: SendDeviceTokenUseCase,
     private val fcmTokenStore: FCMTokenStore,
     private val notificationPermissionChecker: NotificationPermissionChecker,
-    private val isUserAuthorized: Boolean = true,
-) : ViewModel() {
+    isUserAuthorized: Boolean = true,
+) : BaseViewModel<MainActivityState, MainActivityEvent, MainActivityEffect>(
+    initialState = MainActivityState()
+) {
+    override val tag = MainActivityViewModel::class.simpleName ?: "MainActivityVM"
 
-    private val _uiState = MutableStateFlow(MainActivityState())
-    val uiState: StateFlow<MainActivityState> = _uiState.asStateFlow()
+    init {
+        if (isUserAuthorized) {
+            updateTokenBasedOnPermission()
+        } else {
+            markReady()
+        }
+    }
+
+    fun isNotificationPermissionGranted(): Boolean {
+        return notificationPermissionChecker.isNotificationPermissionGranted()
+    }
+
     fun updateTokenBasedOnPermission() {
-        viewModelScope.launch {
-            if (isUserAuthorized) {
-                val hasPermission = notificationPermissionChecker.isNotificationPermissionGranted()
-                if (hasPermission) {
-                    updateFcmTokenIfNeeded()
-                }
-                updateUiState(hasPermission)
-            } else {
-                markReady()
+        launchSafe(
+            getErrorLogMessage = { "Failed to check notification permission or update token: $it" }
+        ) {
+            val hasPermission = notificationPermissionChecker.isNotificationPermissionGranted()
+            if (hasPermission) {
+                updateFcmTokenIfNeeded()
             }
+            updateUiState(hasPermission)
         }
     }
 
@@ -57,10 +61,10 @@ class MainActivityViewModel(
         return try {
             FirebaseMessaging.getInstance().token.await()
         } catch (e: IOException) {
-            Log.e(TAG, IO_ERROR_MSG, e)
+            Log.e(tag, IO_ERROR_MSG, e)
             null
         } catch (e: FirebaseException) {
-            Log.e(TAG, FIREBASE_ERROR_MSG, e)
+            Log.e(tag, FIREBASE_ERROR_MSG, e)
             null
         } catch (e: CancellationException) {
             throw e
@@ -68,11 +72,11 @@ class MainActivityViewModel(
     }
 
     private fun markReady() {
-        _uiState.update { it.copy(isReady = true) }
+        uiStateMutable.update { it.copy(isReady = true) }
     }
 
     private fun updateUiState(hasPermission: Boolean) {
-        _uiState.update {
+        uiStateMutable.update {
             it.copy(
                 notificationPermissionGranted = hasPermission,
                 isReady = true
@@ -80,47 +84,49 @@ class MainActivityViewModel(
         }
     }
 
-    fun isNotificationPermissionGranted(): Boolean {
-        return notificationPermissionChecker.isNotificationPermissionGranted()
-    }
-
-    fun onEvent(event: MainActivityEvent) {
+    override fun obtainEvent(event: MainActivityEvent) {
         when (event) {
             is MainActivityEvent.IntentReceived -> {
-                _uiState.update {
+                uiStateMutable.update {
                     it.copy(screen = event.screen, eventId = event.eventId)
                 }
             }
 
             is MainActivityEvent.TokenFetchFailed -> {
-                _uiState.update { it.copy(isReady = true) }
+                uiStateMutable.update { it.copy(isReady = true) }
             }
 
             is MainActivityEvent.NotificationPermissionChanged -> {
-                _uiState.update { it.copy(notificationPermissionGranted = event.granted) }
+                uiStateMutable.update { it.copy(notificationPermissionGranted = event.granted) }
+            }
+
+            is MainActivityEvent.DismissGlobalDialog -> {
+                dismissGlobalDialog()
+            }
+
+            is MainActivityEvent.RequestPermission -> {
+                sendUiEffect(MainActivityEffect.RequestNotificationPermission)
             }
         }
     }
-
     fun showNotificationPermissionDialog(title: String, message: String, onConfirm: () -> Unit) {
-        _uiState.update {
+        uiStateMutable.update {
             it.copy(
                 globalDialog = DialogData(
                     title = title,
                     message = message,
                     onConfirm = onConfirm,
-                    onDismiss = { dismissGlobalDialog() }
+                    onDismiss = { obtainEvent(MainActivityEvent.DismissGlobalDialog) }
                 )
             )
         }
     }
 
-    fun dismissGlobalDialog() {
-        _uiState.update { it.copy(globalDialog = null) }
+    private fun dismissGlobalDialog() {
+        uiStateMutable.update { it.copy(globalDialog = null) }
     }
 
     companion object {
-        private const val TAG = "FCM"
         private const val IO_ERROR_MSG = "Token fetch failed: IO error"
         private const val FIREBASE_ERROR_MSG = "Token fetch failed: Firebase error"
     }

@@ -53,7 +53,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.PersonalDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
-import cy.volleybolley.notification.presentation.ui.NotificationsScreen
+import cy.volleybolley.notification.presentation.NotificationsScreen
 
 @Composable
 fun NavHostContainer(

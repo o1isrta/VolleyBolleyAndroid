@@ -1,4 +1,4 @@
-package cy.volleybolley.notification.presentation.ui
+package cy.volleybolley.notification.presentation
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -7,31 +7,29 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
-import cy.volleybolley.notification.presentation.NotificationsViewModel
-import cy.volleybolley.notification.presentation.model.NotificationsEffect
-import cy.volleybolley.notification.presentation.model.NotificationsEvent
 import cy.volleybolley.notification.presentation.ui.component.NotificationsScreenComponents.NotificationListContent
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NotificationsScreen(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    viewModel: NotificationsViewModel = koinViewModel()
 ) {
-    val viewModel: NotificationsViewModel = koinViewModel()
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        viewModel.effect.collectLatest { effect ->
+    LaunchedEffect(effect) {
+        viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
                 is NotificationsEffect.ShowError -> {
                     Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
@@ -40,6 +38,8 @@ fun NotificationsScreen(
                 is NotificationsEffect.NavigateTo -> {
                     navHostController.navigate(effect.screen)
                 }
+
+                null -> {}
             }
         }
     }
@@ -51,7 +51,7 @@ fun NotificationsScreen(
         NotificationListContent(
             notifications = state.notifications,
             navController = navHostController,
-            onItemClick = { viewModel.onEvent(NotificationsEvent.OnNotificationClick(it)) }
+            onItemClick = { viewModel.obtainEvent(NotificationsEvent.OnNotificationClick(it)) }
         )
     }
 }

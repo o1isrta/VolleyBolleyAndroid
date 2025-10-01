@@ -47,8 +47,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite
-import cy.volleybolley.core.presentation.ui.model.state.MainActivityEvent
-import cy.volleybolley.core.presentation.ui.model.state.MainActivityState
 import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 import cy.volleybolley.core.presentation.ui.navigation.MyGamesTopLevelRoute
@@ -66,7 +64,7 @@ class MainActivity : ComponentActivity() {
     private val requestNotificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
-        viewModel.onEvent(MainActivityEvent.NotificationPermissionChanged(isGranted))
+        viewModel.obtainEvent(MainActivityEvent.NotificationPermissionChanged(isGranted))
         viewModel.updateTokenBasedOnPermission()
     }
 
@@ -76,6 +74,17 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val state by viewModel.uiState.collectAsState()
+            val effect = viewModel.uiEffect.collectAsState(initial = null).value
+
+            LaunchedEffect(effect) {
+                when (effect) {
+                    is MainActivityEffect.RequestNotificationPermission -> {
+                        requestNotificationPermission()
+                    }
+
+                    null -> {}
+                }
+            }
 
             LaunchedEffect(Unit) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
@@ -85,7 +94,7 @@ class MainActivity : ComponentActivity() {
                         title = getString(R.string.notifications),
                         message = getString(R.string.notifications_alert_dialog),
                         onConfirm = {
-                            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            viewModel.obtainEvent(MainActivityEvent.RequestPermission)
                         }
                     )
                 } else {
@@ -96,10 +105,8 @@ class MainActivity : ComponentActivity() {
             VolleybolleyTheme {
                 RootContainer(
                     state = state,
-                    onDismissDialog = { viewModel.dismissGlobalDialog() },
-                    onRequestPermission = {
-                        requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    },
+                    onDismissDialog = { viewModel.obtainEvent(MainActivityEvent.DismissGlobalDialog) },
+                    onRequestPermission = { requestNotificationPermission() },
                     content = { innerPadding, navController ->
                         val routeNotification = resolveNotificationRoute(state.screen, state.eventId)
                         NavHostContainer(
@@ -119,12 +126,18 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleIntent(intent: Intent?) {
-        viewModel.onEvent(
+        viewModel.obtainEvent(
             MainActivityEvent.IntentReceived(
                 screen = intent?.getStringExtra("screen"),
                 eventId = intent?.getStringExtra("eventId")?.toIntOrNull()
             )
         )
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 }
 
