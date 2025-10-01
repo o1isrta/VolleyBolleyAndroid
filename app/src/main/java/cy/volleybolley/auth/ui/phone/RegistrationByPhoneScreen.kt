@@ -1,6 +1,5 @@
 package cy.volleybolley.auth.ui.phone
 
-import android.app.Activity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
