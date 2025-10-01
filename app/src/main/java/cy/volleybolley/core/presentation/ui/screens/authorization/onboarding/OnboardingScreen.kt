@@ -63,7 +63,8 @@ fun OnboardingScreen(
             )
             LogoWithAppName(modifier = Modifier
                 .padding(top = 80.dp)
-                .fillMaxWidth())
+                .fillMaxWidth()
+            )
             Spacer(modifier = Modifier.weight(1f))
             Box(
                 modifier = Modifier

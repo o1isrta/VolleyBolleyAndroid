@@ -9,7 +9,6 @@ import cy.volleybolley.notification.presentation.ui.model.RouteScreen
 
 fun resolveNotificationRoute(screen: String?, eventId: Int?): NavMap? {
     return when (RouteScreen.Companion.fromScreenName(screen)) {
-
         RouteScreen.INVITE_GAME -> eventId?.let { JoinTheGameRoute(it) }
         RouteScreen.INVITE_TOURNEY -> eventId?.let { JoinTheTourneyRoute(it) }
         RouteScreen.REMOVED_GAME -> LaunchRoute

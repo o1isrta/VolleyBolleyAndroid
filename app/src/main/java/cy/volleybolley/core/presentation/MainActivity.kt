@@ -115,7 +115,8 @@ class MainActivity : ComponentActivity() {
                             activityFinisher = { finish() },
                             startDestination = routeNotification ?: LaunchRoute
                         )
-                    })
+                    }
+                )
             }
         }
     }

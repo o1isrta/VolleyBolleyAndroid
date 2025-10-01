@@ -64,7 +64,8 @@ fun VerifyPhoneNumberScreen(
     ) {
         Column(modifier = Modifier
             .padding(20.dp)
-            .fillMaxWidth()) {
+            .fillMaxWidth()
+        ) {
             VolleyTopBar.TopBarWithBackButton(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.registration),
