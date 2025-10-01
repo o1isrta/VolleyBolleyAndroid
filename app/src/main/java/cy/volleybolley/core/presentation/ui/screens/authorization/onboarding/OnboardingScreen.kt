@@ -61,7 +61,8 @@ fun OnboardingScreen(
                 text = stringResource(id = R.string.app_description),
                 color = VolleyColor.White
             )
-            LogoWithAppName(modifier = Modifier
+            LogoWithAppName(
+                modifier = Modifier
                 .padding(top = 80.dp)
                 .fillMaxWidth()
             )

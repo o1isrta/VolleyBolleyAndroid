@@ -62,9 +62,10 @@ fun VerifyPhoneNumberScreen(
             .padding(top = paddingFromSystemUi.calculateTopPadding() + 8.dp, start = 8.dp, end = 8.dp)
             .fillMaxWidth()
     ) {
-        Column(modifier = Modifier
-            .padding(20.dp)
-            .fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxWidth()
         ) {
             VolleyTopBar.TopBarWithBackButton(
                 modifier = Modifier.fillMaxWidth(),
