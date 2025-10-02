@@ -11,18 +11,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +38,7 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyCashField
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
+import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.LevelBadge
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -178,6 +184,17 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                     )
                     // список выбранных игроков и кнопка Manage players
                     if (state.selectedPrivacy == Privacy.Private){
+                        Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)) {
+                            state.players.forEachIndexed { index, player ->
+                                PlayerRowWithRemove(
+                                    player = player,
+                                    //showActions = member.name != null,
+                                    onRemove = {
+                                        viewModel.obtainEvent(GameEnteringConditionsScreenEvent.RemovePlayer(index))
+                                    }
+                                )
+                            }
+                        }
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                         VolleyButton.OutlinedGradientButton(
                             modifier = Modifier.height(44.dp),
@@ -269,6 +286,45 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun PlayerRowWithRemove(
+    player: Player,
+    onRemove: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = VolleyDimens.DIMEN_23.dp)
+    ) {
+        VolleyText.BodyRegular(
+            text = player.name,// ?: stringResource(R.string.free_spot),
+            color = VolleyColor.White,
+            modifier = Modifier.weight(1f)
+        )
+       // if (showActions) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End//Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+            ) {
+                player.level.let { LevelBadge(it) }
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                IconButton(
+                    onClick = onRemove,
+                    modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_remove),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+                    )
+                }
+            }
+       // }
     }
 }
 

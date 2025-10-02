@@ -10,4 +10,5 @@ sealed class GameEnteringConditionsScreenEvent : UiEvent{
     object OnBackClicked : GameEnteringConditionsScreenEvent()     // нажатие на стрелку "Назад"
     object OnAddPaymentClick : GameEnteringConditionsScreenEvent() // Нажатие на кнопку "Add Payment"
     object OnSaveGameClick : GameEnteringConditionsScreenEvent() // Нажатие на кнопку "Save game"
+    class RemovePlayer(val index: Int) : GameEnteringConditionsScreenEvent() // нажатие на кнопку "Удалить игрока из игры"
 }

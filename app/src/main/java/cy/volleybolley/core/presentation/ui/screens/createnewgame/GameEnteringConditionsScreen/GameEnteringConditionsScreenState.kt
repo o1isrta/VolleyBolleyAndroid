@@ -2,13 +2,23 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringC
 
 import cy.volleybolley.core.presentation.base.UiState
 
+private const val LEVEL_HIGH = "H"
+private const val LEVEL_LIGHT = "L"
+private const val LEVEL_MEDIUM = "M"
+
 data class GameEnteringConditionsScreenState (
     val maximumPlayers: Int = 8,
     val selectedPrivacy: Privacy = Privacy.Private,
     val perPerson: String = "5.0",
     val accountNumber: String? = null,  // номер аккаунта, если есть
     val errorMessage: String? = null,
-    val isLoading : Boolean = false     // Для загрузки (если необходимо)
+    val isLoading : Boolean = false,     // Для загрузки (если необходимо)
+    val players: List<Player> = listOf(
+        Player("Kristina Popova", LEVEL_MEDIUM),
+        Player("Polina Vasylyeva", LEVEL_MEDIUM),
+        Player("Anton Ivanov", LEVEL_LIGHT),
+        Player("Aleksandr Abramov", LEVEL_HIGH)
+    )
 ) : UiState
 
 enum class Privacy {
@@ -16,5 +26,10 @@ enum class Privacy {
     Private
 }
 
+// по образу MemberUi из 62 ветки, из файла ChangeTeamScreen.kt
+data class Player(
+    val name: String,//?, // null => Free spot
+    val level: String//? // null => нет бейджа
+)
 
 

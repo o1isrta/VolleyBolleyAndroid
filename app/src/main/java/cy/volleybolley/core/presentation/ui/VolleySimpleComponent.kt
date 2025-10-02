@@ -2,18 +2,27 @@ package cy.volleybolley.core.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -69,6 +78,66 @@ object VolleySimpleComponent {
             modifier = modifier
         )
     }
+
+    // из 62 ветки, из файла ChangeTeamScreen.kt
+    @Composable
+    fun LevelBadge(level: String, modifier: Modifier = Modifier) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = modifier
+                .clip(RoundedCornerShape(VolleyDimens.DIMEN_10.dp))
+                .background(VolleyColor.GreyDark)
+                .padding(
+                    start = VolleyDimens.DIMEN_10.dp,
+                    end = VolleyDimens.DIMEN_10.dp,
+                    top = VolleyDimens.DIMEN_2.dp,
+                    bottom = VolleyDimens.DIMEN_2.dp
+                )
+                .height(VolleyDimens.DIMEN_23.dp)
+        ) {
+            VolleyText.BodyRegular(level, color = VolleyColor.White)
+        }
+    }
+
+    // элемент для выбора игроков. Отличается PlayerRow из СрфтпуеeamScreen порядком элементов
+   /* @Composable
+    @Stable
+    fun PlayerCheckRow (
+        member: MemberUi,
+        showActions: Boolean,
+        onRemove: () -> Unit
+        Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+    .fillMaxWidth()
+    .heightIn(min = VolleyDimens.DIMEN_23.dp)
+    ) {
+        VolleyText.BodyRegular(
+            text = member.name ?: stringResource(R.string.free_spot),
+            color = VolleyColor.White,
+            modifier = Modifier.weight(1f)
+        )
+
+        if (showActions) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+            ) {
+                IconButton(
+                    onClick = onRemove,
+                    modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_remove),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+                    )
+                }
+                member.level?.let { LevelBadge(it) }
+            }
+        }
+    }*/
 }
 
 

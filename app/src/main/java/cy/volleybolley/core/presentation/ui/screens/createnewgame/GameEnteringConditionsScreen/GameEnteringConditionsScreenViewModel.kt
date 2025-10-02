@@ -48,6 +48,16 @@ class GameEnteringConditionsScreenViewModel :
             GameEnteringConditionsScreenEvent.OnSaveGameClick -> {
                 saveGame()
             }
+            is GameEnteringConditionsScreenEvent.RemovePlayer -> {
+                val current = uiStateMutable.value
+                if (event.index in current.players.indices) {
+                    val newPlayers = current.players.toMutableList().apply { removeAt(event.index) }
+                    uiStateMutable.value = current.copy(players = newPlayers)
+                } else {
+                    // опционально: логируем или показываем ошибку
+                    uiStateMutable.value = current.copy(errorMessage = "Invalid player index: ${event.index}")
+                }
+            }
         }
     }
 
