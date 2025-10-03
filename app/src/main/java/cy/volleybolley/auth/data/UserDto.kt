@@ -1,7 +1,9 @@
 package cy.volleybolley.auth.data
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserDto(
     @SerialName("player_id") val playerId: Int,
     @SerialName("is_registered") val isRegistered: Boolean,
@@ -11,6 +13,6 @@ data class UserDto(
     val gender: String,
     @SerialName("date_of_birth") val dateOfBirth: String,
     val level: String,
-    val country: String,
-    val city: String,
+    val country: String?,
+    val city: String?,
 )

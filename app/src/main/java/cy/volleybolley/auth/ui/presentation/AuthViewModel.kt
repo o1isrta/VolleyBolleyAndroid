@@ -15,6 +15,7 @@ class AuthViewModel(private val authRepositoryImpl: AuthRepositoryImpl) : ViewMo
     fun onTokenReceived(token: String?) {
         token?.let {
             viewModelScope.launch {
+                Log.d("ВМ_Токен", token)
                 val response = authRepositoryImpl.loginWithGoogle(it)
                 if (response.isSuccess) {
                     Log.d("ВьюМодельАвторизации",response.body.toString())

@@ -13,6 +13,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
+import io.ktor.http.encodedPath
 import io.ktor.http.isSuccess
 import io.ktor.http.path
 import io.ktor.http.takeFrom
@@ -70,8 +71,11 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
         accessToken?.let { headers.append(HttpHeaders.Authorization, it) }
         url {
             takeFrom(BuildConfig.BASE_URL)
-            path(path)
+            val basePath = encodedPath.removeSuffix("/")   // убираем завершающий слэш
+            val requestPath = path.removePrefix("/")       // убираем начальный слэш
+            encodedPath = "$basePath/$requestPath"
         }
+        Log.v(NETWORK_TAG, "→ FINAL URL = ${this.url.buildString()}")
         body?.let {
             contentType(ContentType.Application.Json)
             setBody(body)
