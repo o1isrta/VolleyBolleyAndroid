@@ -15,6 +15,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.http.path
+import io.ktor.http.takeFrom
 import org.koin.core.component.KoinComponent
 import org.koin.java.KoinJavaComponent.inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -68,6 +69,7 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
     protected fun HttpRequestBuilder.requestConfigure(path: String, accessToken: String?, body: Any? = null) {
         accessToken?.let { headers.append(HttpHeaders.Authorization, it) }
         url {
+            takeFrom(BuildConfig.BASE_URL)
             path(path)
         }
         body?.let {

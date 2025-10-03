@@ -1,5 +1,6 @@
 package cy.volleybolley.auth.ui
 
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,11 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import cy.volleybolley.auth.ui.presentation.AuthViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AuthScreen(clientId: String, onTokenReceived: (String) -> Unit) {
+fun AuthScreen(clientId: String) {
     val context = LocalContext.current
     val viewModel: AuthViewModel = koinViewModel()
     val googleHelper = remember { GoogleSignInHelper(context, clientId) }
@@ -34,7 +36,9 @@ fun AuthScreen(clientId: String, onTokenReceived: (String) -> Unit) {
 
     LaunchedEffect(Unit) {
         viewModel.idToken.collect { token ->
-            onTokenReceived(token)
+            Log.d("ГуглТокен", token)
+            delay(1000)
+            viewModel.onTokenReceived(token)
         }
     }
 
