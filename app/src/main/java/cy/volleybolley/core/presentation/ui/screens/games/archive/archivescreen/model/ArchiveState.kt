@@ -1,15 +1,12 @@
-package cy.volleybolley.core.presentation.ui.screens.games.archive.model
+package cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.model
 
 import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Game
 import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Host
 import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.PlayerShort
 import cy.volleybolley.courts.domain.model.Location
-import java.text.SimpleDateFormat
-import java.util.Locale
-import kotlin.math.max
 
-data class ArchiveScreenState(
+data class ArchiveState(
     val emptyArchive: Boolean = false,
     val games: List<Game> = listOf(
         gameStub(1, "GAME"),
@@ -19,7 +16,7 @@ data class ArchiveScreenState(
     )
 ) : UiState
 
-fun gameStub(id: Int, type: String) = Game(
+private fun gameStub(id: Int, type: String) = Game(
     gameId = id,
     gameType = type,
     host = Host(id = 10, name = "Artem Ivanov", avatar = null, level = "L"),
@@ -44,18 +41,3 @@ fun gameStub(id: Int, type: String) = Game(
         PlayerShort(101, "Artem Ivanov", "L"), PlayerShort(1, "Aleksandr Abramov", "L")
     )
 )
-
-fun formatDateTimeRange(startIso: String, endIso: String): Pair<String, String> {
-    val locale = Locale.ENGLISH
-    val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", locale).apply {
-        timeZone = java.util.TimeZone.getDefault()
-    }
-    val start = parser.parse(startIso)
-    val end = parser.parse(endIso)
-    val dateFmt = SimpleDateFormat("d MMMM", locale)
-    val timeFmt = SimpleDateFormat("h:mm a", locale)
-    val date = dateFmt.format(start ?: 0)
-    val startTime = timeFmt.format(start ?: 0).lowercase(locale)
-    val endTime = timeFmt.format(end ?: max(start?.time ?: 0, 0)).lowercase(locale)
-    return date to "$startTime–$endTime"
-}

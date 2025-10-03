@@ -23,10 +23,10 @@ import cy.volleybolley.core.presentation.ui.screens.findatourney.IndividualPlaye
 import cy.volleybolley.core.presentation.ui.screens.findatourney.InvitePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinIndividualScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinTeamScreen
-import cy.volleybolley.core.presentation.ui.screens.games.archive.ArchiveScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.PastGameScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.PastTourneyScreen
-import cy.volleybolley.core.presentation.ui.screens.games.archive.TeamsScreen
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.ArchiveScreen
+import cy.volleybolley.core.presentation.ui.screens.games.archive.teamsscreen.TeamsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.GameInvitesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.JoinTheTourneyScreen
 import cy.volleybolley.core.presentation.ui.screens.games.mygames.ChangeTeamScreen
@@ -57,7 +57,7 @@ import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
 fun NavHostContainer(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: NavMap = ArchiveRoute, // LaunchRoute,
+    startDestination: NavMap = LaunchRoute,
     activityFinisher: () -> Unit,
 ) {
     NavHost(

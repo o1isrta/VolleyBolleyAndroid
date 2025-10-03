@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.games.archive
+package cy.volleybolley.core.presentation.ui.screens.games.archive.teamsscreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,36 +32,40 @@ import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Play
 import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Team
 
 @Composable
-fun TeamsScreen(navController: NavHostController) {
-
+fun TeamsScreen(
+    navController: NavHostController
+) {
     TeamsScreen(
         teams = listOf(
             Team(
-                listOf(
+                0, listOf(
                     PlayerShort(0, "Anton Ivanov", "H"),
                     PlayerShort(1, "Aleksandr Abramov", "H")
                 )
             ),
             Team(
+                1,
                 listOf(
                     PlayerShort(0, "Anya Levan", "H"),
                     PlayerShort(1, "Alina Lyubimova", "H")
                 )
             ),
             Team(
+                2,
                 listOf(
                     PlayerShort(0, "Maxim Petrov", "H"),
                     PlayerShort(1, "Julia Petrova", "H")
                 )
             ),
             Team(
+                3,
                 listOf(
-                    PlayerShort(0,"Tatiana Kalinina", "H"),
-                    PlayerShort(1,"Artem Artemov", "H")
+                    PlayerShort(0, "Tatiana Kalinina", "H"),
+                    PlayerShort(1, "Artem Artemov", "H")
                 )
             )
         ),
-        onBackClick = { navController.navigateUp() }
+        onBackClick = { navController.popBackStack() }
     )
 }
 
@@ -68,29 +74,35 @@ private fun TeamsScreen(
     teams: List<Team>,
     onBackClick: () -> Unit
 ) {
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                start = VolleyDimens.DIMEN_8.dp,
-                end = VolleyDimens.DIMEN_8.dp,
-                top = VolleyDimens.DIMEN_116.dp
-            )
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
-        ) {
-            TeamsHeader(
-                onBackClick
-            )
+    val scrollState = rememberScrollState()
 
-            teams.forEachIndexed { index, team ->
-                TeamBlock(
-                    team = team,
-                    teamIndex = index
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+    ) {
+        VolleyContainersRootTransparent.TransparentContainer(
+            cornerRadius = VolleyDimens.DIMEN_32,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = VolleyDimens.DIMEN_8.dp
                 )
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(VolleyDimens.DIMEN_20.dp)
+            ) {
+                TeamsHeader(
+                    onBackClick
+                )
+
+                teams.forEachIndexed { index, team ->
+                    TeamBlock(
+                        team = team,
+                        teamIndex = index
+                    )
+                }
             }
         }
     }
@@ -102,10 +114,8 @@ private fun TeamsHeader(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-
-
     ) {
         Icon(
             painter = painterResource(R.drawable.arrow_left_white),
@@ -184,7 +194,7 @@ private fun PlayerRow(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun TeamsScreenPreview() {
     VolleyContainersRootTransparent.Root {

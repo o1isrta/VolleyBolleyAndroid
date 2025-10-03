@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.games.archive
+package cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen
 
 import android.content.Context
 import android.content.Intent
@@ -20,20 +20,29 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
@@ -41,93 +50,77 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography
+import cy.volleybolley.core.presentation.ui.navigation.NavMap
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.event.ArchiveEvent
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.model.ArchiveState
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.viewmodel.ArchiveViewModel
 import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Game
 import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Host
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.PlayerShort
+import cy.volleybolley.core.presentation.ui.screens.games.archive.util.DataTimeRangeFormatter
 import cy.volleybolley.courts.domain.model.Location
 
 @Composable
-fun ArchiveScreen(navController: NavHostController) {
-    ArchiveScreen(
-        emptyArchive = false,
-        onBackClick = { navController.navigateUp() },
-        onButtonClick = { }, // если true, то navController.navigate(SearchCourtRoute)
-        games = listOf(
-//            Game(
-//                gameHost = PlayerShort(
-//                    0,
-//                    name = "Artem Ivanov",
-//                    level = "L"
-//                ),
-//                hostMessage = "Hey! Can’t wait to see you. Make sure to bring some water and towels!",
-//                location = "Karon Beach Club",
-//                timeAndDate = "1 October, 6:00-8:00 pm",
-//                level = "Light",
-//                gender = "Mix",
-//                paymentMethodType = "Thai bank",
-//                paymentMethod = "988 016 7890",
-//                feePerPerson = "2$",
-//                players = listOf(
-//                    PlayerShort(10,"Anton Ivanov", "H"),
-//                    PlayerShort(0,"Aleksandr Abramov", "H")
-//                )
-//            ),
-//            Game(
-//                gameHost = PlayerShort(
-//                    0,
-//                    name = "Polina Vasilieva",
-//                    level = "M"
-//                ),
-//                hostMessage = "Just be happy! 1111112312 3312111123dw f3q42343tkzjbfk segffhbefvsef" +
-//                    " hjfghjsF SEUFhsehFkSF iSUGHEFiuesGF kushFKSEKGK",
-//                location = "Default Court 11111123123312111123",
-//                timeAndDate = "1 September, 6:00-8:00 pm 11111123123312111",
-//                level = "Light",
-//                gender = "Mix",
-//                paymentMethodType = "Thai bank",
-//                paymentMethod = "988 016 7890",
-//                feePerPerson = "3$",
-//                players = listOf(
-//                    PlayerShort("Anya Levan", "H"),
-//                    PlayerShort("Alina Lyubimova", "H")
-//                )
-//            ),
-        )
-    )
+fun ArchiveScreen(
+    navController: NavHostController,
+    viewModel: ArchiveViewModel = viewModel()
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
-//    ArchiveScreen(
-//        emptyArchive = false,
-//        onBackClick = { navController.navigateUp() },
-//    )
+    ArchiveScreen(
+        state = state,
+        effect = effect,
+        onBackClick = { navController.popBackStack() },
+        navigateAction = { route ->
+            navController.navigate(route)
+        },
+        eventCallback = { event ->
+            viewModel.obtainEvent(event)
+        }
+    )
 }
 
 @Composable
 private fun ArchiveScreen(
-    emptyArchive: Boolean,
+    state: ArchiveState,
+    effect: ArchiveEffect?,
     onBackClick: () -> Unit,
-    onButtonClick: () -> Unit,
-    games: List<Game> // Я пока не знаю в каком виде будут приходить игры и турниры вперемешку
+    navigateAction: (NavMap) -> Unit,
+    eventCallback: (ArchiveEvent) -> Unit
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(effect) {
+        effect?.let {
+            when (it) {
+                is ArchiveEffect.Navigate -> navigateAction(it.route)
+                ArchiveEffect.NavigateBack -> onBackClick
+                is ArchiveEffect.OpenMap -> openMap(context, it.location)
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                top = VolleyDimens.DIMEN_116.dp,
-                start = VolleyDimens.DIMEN_8.dp,
-                end = VolleyDimens.DIMEN_8.dp
+                horizontal = VolleyDimens.DIMEN_8.dp
             )
     ) {
 
-        if (emptyArchive) {
+        if (state.emptyArchive) {
             ArchiveNotFoundPlaceHolder(
                 onBackClick = onBackClick,
-                onButtonClick = onButtonClick
+                onButtonClick = { eventCallback(ArchiveEvent.ClickCreateGame) }
             )
         } else {
             ArchiveLazyColumn(
-                games = games,
+                games = state.games,
                 onBackClick = onBackClick,
-                onButtonClick = onButtonClick
+                onButtonClick = { game -> eventCallback(ArchiveEvent.ClickDetails(game)) },
+                onMapClick = { location -> eventCallback(ArchiveEvent.ClickMap(location)) }
             )
         }
     }
@@ -137,7 +130,8 @@ private fun ArchiveScreen(
 private fun ArchiveLazyColumn(
     games: List<Game>,
     onBackClick: () -> Unit,
-    onButtonClick: () -> Unit
+    onButtonClick: (Game) -> Unit,
+    onMapClick: (Location) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -150,6 +144,7 @@ private fun ArchiveLazyColumn(
                 game = game,
                 onBackClick = onBackClick,
                 onButtonClick = onButtonClick,
+                onMapClick = onMapClick,
                 showHeader = index == 0
             )
         }
@@ -160,7 +155,8 @@ private fun ArchiveLazyColumn(
 private fun ArchiveCard(
     game: Game,
     onBackClick: () -> Unit,
-    onButtonClick: () -> Unit,
+    onButtonClick: (Game) -> Unit,
+    onMapClick: (Location) -> Unit,
     showHeader: Boolean
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
@@ -187,10 +183,13 @@ private fun ArchiveCard(
             )
 
             GameInfoBlock(
-                game = game
+                game = game,
+                onMapClick = onMapClick
             )
 
-            DetailsButton(onButtonClick) // передавать кал
+            DetailsButton(
+                onButtonClick = { onButtonClick(game) }
+            )
         }
     }
 }
@@ -214,8 +213,8 @@ private fun HostInfoBlock(host: Host) {
 
         ) {
             VolleyAvatar.CircularAvatar(
-                null,
-                VolleyDimens.DIMEN_40.dp // добавить в модель фотку хоста и сделать лямбду
+                host.avatar,
+                VolleyDimens.DIMEN_40.dp
             )
 
             VolleyText.BodyRegular(
@@ -244,7 +243,10 @@ private fun HostInfoBlock(host: Host) {
 }
 
 @Composable
-private fun GameInfoBlock(game: Game) {
+private fun GameInfoBlock(
+    game: Game,
+    onMapClick: (Location) -> Unit
+) {
     Column {
         Row(
             modifier = Modifier
@@ -257,8 +259,12 @@ private fun GameInfoBlock(game: Game) {
                 modifier = Modifier.padding(end = VolleyDimens.DIMEN_4.dp)
             )
 
+            val (dateText, timeText) = remember(game.startTime, game.endTime) {
+                DataTimeRangeFormatter.format(game.startTime, game.endTime)
+            }
+
             VolleyText.BodyRegular(
-                text = game.startTime,
+                text = "$dateText, $timeText",
                 color = VolleyColor.White,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -272,25 +278,29 @@ private fun GameInfoBlock(game: Game) {
                 .fillMaxWidth()
                 .padding(bottom = VolleyDimens.DIMEN_8.dp)
         ) {
-            VolleyText.BodyBold(
-                text = stringResource(R.string.place_archive),
-                color = VolleyColor.White,
-                modifier = Modifier.padding(end = VolleyDimens.DIMEN_4.dp)
-            )
-
-            VolleyText.BodyRegular(
-                text = game.courtLocation.courtName,
+            val label = stringResource(R.string.place_archive)
+            val text = buildAnnotatedString {
+                append("$label ")
+                addStyle(SpanStyle(fontWeight = FontWeight.Bold), 0, label.length)
+                append(game.courtLocation.courtName)
+            }
+            Text(
+                text = text,
                 color = VolleyColor.White,
                 maxLines = 2,
-                overflow = TextOverflow.Clip,
-                modifier = Modifier.weight(1f)
+                overflow = TextOverflow.Ellipsis,
+                style = VolleyTypography.BodyRegular,
+                modifier = Modifier
+                    .weight(1f)
             )
 
             VolleyButton.ActiveButtonMap(
                 text = stringResource(R.string.map),
-                onClick = { }, // Тут будет внешний интент в карты
+                onClick = {
+                    onMapClick(game.courtLocation)
+                },
                 paddingValues = PaddingValues(VolleyDimens.DIMEN_12.dp, VolleyDimens.DIMEN_8.dp),
-                cornerRadius = VolleyDimens.DIMEN_12
+                cornerRadius = VolleyDimens.DIMEN_12.dp
             )
         }
 
@@ -313,9 +323,9 @@ private fun GameInfoBlock(game: Game) {
 private fun DetailsButton(onButtonClick: () -> Unit) {
     VolleyButton.OutlinedActiveButton(
         text = stringResource(R.string.details),
-        onClick = { onButtonClick },
+        onClick = onButtonClick,
         modifier = Modifier
-            .fillMaxWidth() // возможно придется переделать что ты редачил в стилях
+            .fillMaxWidth()
     )
 }
 
@@ -346,7 +356,7 @@ private fun ArchiveHeader(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
     ) {
         Icon(
@@ -395,6 +405,15 @@ private fun PlaceholderMessage() {
     }
 }
 
+@Composable
+private fun CreateGameButton(onClick: () -> Unit) {
+    VolleyButton.ActiveButton(
+        text = stringResource(R.string.create_a_game),
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
 private fun openMap(context: Context, location: Location) {
     val uri = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}(${
         Uri.encode(location.courtName)
@@ -404,13 +423,24 @@ private fun openMap(context: Context, location: Location) {
     context.startActivity(chooser)
 }
 
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun CreateGameButton(onClick: () -> Unit) { //
-    VolleyButton.ActiveButton(
-        text = stringResource(R.string.create_a_game),
-        onClick = onClick,
-        modifier = Modifier.fillMaxWidth()
-    )
+private fun ArchiveScreenPreview() {
+    VolleyContainersRootTransparent.Root {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.TurquoiseDark)
+        ) {
+            ArchiveScreen(
+                state = ArchiveState(emptyArchive = false),
+                effect = null,
+                onBackClick = {},
+                navigateAction = {},
+                eventCallback = {}
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -422,21 +452,13 @@ private fun ArchiveScreenPlaceholderPreview() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-            ArchiveScreen(rememberNavController())
+            ArchiveScreen(
+                state = ArchiveState(emptyArchive = true),
+                effect = null,
+                onBackClick = {},
+                navigateAction = {},
+                eventCallback = {}
+            )
         }
     }
 }
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//private fun ArchiveScreenPreview(){
-//    VolleyContainersRootTransparent.Root {
-//        Box(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .background(VolleyColor.TurquoiseDark)
-//        ) {
-//            ArchiveScreen(rememberNavController())
-//        }
-//    }
-//}
