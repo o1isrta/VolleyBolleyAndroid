@@ -15,7 +15,6 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.encodedPath
 import io.ktor.http.isSuccess
-import io.ktor.http.path
 import io.ktor.http.takeFrom
 import org.koin.core.component.KoinComponent
 import org.koin.java.KoinJavaComponent.inject
