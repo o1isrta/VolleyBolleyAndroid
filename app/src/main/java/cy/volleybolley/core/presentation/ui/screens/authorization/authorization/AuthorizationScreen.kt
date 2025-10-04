@@ -1,5 +1,10 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 
+import android.app.Activity
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,9 +49,33 @@ fun AuthorizationScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
+
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        val idToken = if (result.resultCode == Activity.RESULT_OK) {
+            viewModel.extractGoogleIdToken(result.data)
+        } else null
+
+        viewModel.obtainEvent(AuthorizationEvent.GoogleTokenReceived(idToken))
+    }
+
     LaunchedEffect(effect) {
         when (effect) {
+            is AuthorizationEffect.LaunchGoogleSignIn -> {
+                val intentSender = (effect as AuthorizationEffect.LaunchGoogleSignIn).intentSender
+                launcher.launch(
+                    IntentSenderRequest.Builder(intentSender).build()
+                )
+            }
+
             is AuthorizationEffect.NavigateToRegistration -> onSuccessRegisteredAction()
+            is AuthorizationEffect.ShowError -> {
+                val message = (effect as AuthorizationEffect.ShowError).message
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+
             null -> {}
         }
     }
@@ -146,7 +176,9 @@ private fun BottomSheetWithSignButtons(
         @Suppress("KotlinConstantConditions")
         if (VolleyFeature.IS_AUTH_BY_GOOGLE_AVAILABLE) {
             VolleyButton.ActiveButtonWithLeadingIcon(
-                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
                 backgroundColor = VolleyColor.White,
                 icon = painterResource(R.drawable.ic_google_placeholder),
                 text = stringResource(R.string.continue_with_google),
@@ -157,7 +189,9 @@ private fun BottomSheetWithSignButtons(
         @Suppress("KotlinConstantConditions")
         if (VolleyFeature.IS_AUTH_BY_FACEBOOK_AVAILABLE) {
             VolleyButton.ActiveButtonWithLeadingIcon(
-                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
                 backgroundColor = VolleyColor.BlueLight,
                 icon = painterResource(R.drawable.ic_facebook_placeholder),
                 text = stringResource(R.string.continue_with_facebook),

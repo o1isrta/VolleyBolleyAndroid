@@ -1,6 +1,5 @@
 package cy.volleybolley.core
 
-import cy.volleybolley.auth.di.authViewModelModule
 import cy.volleybolley.core.di.coreModule
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.di.authorizationModule
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.di.authorizationByPhoneModule
@@ -15,7 +14,6 @@ object DiProvider {
     val modules = listOf(
         coreModule,
         courtsModule,
-        authViewModelModule,
         playersModule,
         referenceDataModule,
         profileModule,

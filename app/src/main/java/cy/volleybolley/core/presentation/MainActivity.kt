@@ -34,7 +34,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
-import cy.volleybolley.auth.ui.AuthScreen
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
@@ -55,17 +54,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             VolleybolleyTheme {
-                AuthScreen(getString(R.string.default_web_client_id))
-                /*RootContainer { innerPadding, navController ->
+                RootContainer { innerPadding, navController ->
                     NavHostContainer(
                         navController = navController,
                         paddingFromSystemUi = innerPadding,
                         activityFinisher = { finish() }
-                    )*/
+                    )
                 }
             }
         }
-   // }
+    }
 }
 
 @Composable

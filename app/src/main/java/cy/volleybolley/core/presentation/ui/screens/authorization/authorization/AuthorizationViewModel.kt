@@ -1,5 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 
+import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.auth.data.AuthRepositoryImpl
 import cy.volleybolley.auth.ui.GoogleSignInHelper
@@ -28,14 +30,28 @@ class AuthorizationViewModel(
                     } else {
                         sendUiEffect(AuthorizationEffect.ShowError("Не удалось запустить Google Sign-in"))
                     }
-
                 }
             }
 
             is AuthorizationEvent.GoogleTokenReceived -> {
                 event.idToken?.let { token ->
                     viewModelScope.launch {
-                       // uiStateMutable.update { copy(isLoading = true) }
+                        uiStateMutable.update { it.copy(isLoading = true) }
+                        val response = authRepositoryImpl.loginWithGoogle(token)
+                        uiStateMutable.update { it.copy(isLoading = false) }
+
+                        if (response.isSuccess) {
+                            Log.d(tag, response.body?.player.toString())
+                            sendUiEffect(AuthorizationEffect.NavigateToRegistration)
+                        } else {
+                            sendUiEffect(
+                                AuthorizationEffect.ShowError("Ошибка авторизации: ${response.resultCode.code}")
+                            )
+                        }
+                    }
+                } ?: run {
+                    viewModelScope.launch {
+                        sendUiEffect(AuthorizationEffect.ShowError("Не удалось получить токен"))
                     }
                 }
             }
@@ -47,4 +63,7 @@ class AuthorizationViewModel(
             }
         }
     }
+
+    fun extractGoogleIdToken(intent: Intent?): String? =
+        googleSignInHelper.extractIdToken(intent)
 }
