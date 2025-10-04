@@ -4,6 +4,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.auth.data.AuthRepositoryImpl
+import cy.volleybolley.auth.domain.AuthInteractor
 import cy.volleybolley.auth.ui.GoogleSignInHelper
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.flow.update
@@ -11,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class AuthorizationViewModel(
     private val googleSignInHelper: GoogleSignInHelper,
-    private val authRepositoryImpl: AuthRepositoryImpl
+    private val authInteractor: AuthInteractor
 ) :
     BaseViewModel<AuthorizationState, AuthorizationEvent, AuthorizationEffect>(
         AuthorizationState()
@@ -37,7 +38,7 @@ class AuthorizationViewModel(
                 event.idToken?.let { token ->
                     viewModelScope.launch {
                         uiStateMutable.update { it.copy(isLoading = true) }
-                        val response = authRepositoryImpl.loginWithGoogle(token)
+                        val response = authInteractor.loginWithGoogle(token)
                         uiStateMutable.update { it.copy(isLoading = false) }
 
                         if (response.isSuccess) {

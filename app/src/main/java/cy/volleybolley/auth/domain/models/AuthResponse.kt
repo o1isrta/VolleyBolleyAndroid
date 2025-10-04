@@ -1,5 +1,6 @@
-package cy.volleybolley.auth.data
+package cy.volleybolley.auth.domain.models
 
+import cy.volleybolley.auth.data.UserDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

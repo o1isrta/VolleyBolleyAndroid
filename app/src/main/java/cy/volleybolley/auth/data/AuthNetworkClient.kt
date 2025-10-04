@@ -1,5 +1,6 @@
 package cy.volleybolley.auth.data
 
+import cy.volleybolley.auth.domain.models.AuthResponse
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
 import cy.volleybolley.core.data.network.model.Response
 import io.ktor.client.call.body
