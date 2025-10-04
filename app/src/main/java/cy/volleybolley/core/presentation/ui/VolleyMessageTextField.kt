@@ -53,10 +53,20 @@ object VolleyMessageTextField {
         actionToTransferContent: (String) -> Unit,
     ) {
         val limitedText = VolleyUiUtil.getLimitedText(maxLength, textInput)
-        Box {
+        Box (
+            modifier = modifier //
+        ){
             MessageContainer(
-                modifier = modifier
+                //modifier = modifier
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
+                // Внутренний Box содержит и текстовое поле, и счётчик,
+                // чтобы backgroundHeight учитывал их обеих
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
                 MessageTextField(
                     textInput = limitedText,
                     maxLength = maxLength,
@@ -75,25 +85,32 @@ object VolleyMessageTextField {
                 )
             }
 
-            Box(
+            /*Box(
                 contentAlignment = Alignment.BottomEnd,
-                modifier = modifier
+                modifier = Modifier//modifier
                     .padding(
                         start = VolleyDimens.DIMEN_16.dp,
                         top = 0.dp,
                         end = VolleyDimens.DIMEN_16.dp,
                         bottom = VolleyDimens.DIMEN_16.dp
                     )
-                    .fillMaxWidth()
-                    .align(Alignment.BottomEnd)
-            ) {
+                  //  .fillMaxWidth()
+                  //  .align(Alignment.BottomEnd)
+            ) {*/
                 VolleyText.BodyLight(
                     text = "${limitedText.length}/$maxLength",
                     maxLines = 1,
                     color = VolleyColor.White,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(
+                            end = VolleyDimens.DIMEN_16.dp,
+                            bottom = VolleyDimens.DIMEN_16.dp
+                        )
                 )
             }
         }
+
 
         LaunchedEffect(textInput) {
             if (textInput.length > maxLength) {
@@ -128,6 +145,7 @@ object VolleyMessageTextField {
                     actionToTransferContent(limitedText)
                 },
                 singleLine = false,
+                modifier = Modifier.fillMaxWidth(),//
                 textStyle = VolleyTypography.BodyRegular.copy(color = VolleyColor.White),
                 cursorBrush = SolidColor(VolleyColor.White),
             )

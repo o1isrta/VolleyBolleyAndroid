@@ -12,9 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,33 +41,254 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 
 @Composable
-fun BasicGameSetupScreen(navController: NavHostController) {
+fun BasicGameSetupScreen(navController: NavHostController,
+                         viewModel: BasicGameSetupScreenViewModel = BasicGameSetupScreenViewModel()) {
     val scrollState = rememberScrollState() //Состояние скролла
-    Column(
-        modifier = Modifier
-            .verticalScroll(scrollState)
-    ){
+    val state by viewModel.uiState.collectAsState()
 
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
-            .padding(VolleyDimens.DIMEN_8.dp)
-    ) {
-        BasicGameSetupScreenContent()
+    /* Column(
+         modifier = Modifier
+             .verticalScroll(scrollState)
+     ) {*/
+// Overlay для отображения индикатора загрузки
+    if (state.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator() // Или другой индикатор загрузки
+        }
+    } else {  // Отображаем основной контент, только если не загружается
+        VolleyContainersRootTransparent.TransparentContainer(
+            cornerRadius = VolleyDimens.DIMEN_32,
+            modifier = Modifier
+                //.fillMaxSize()
+                .padding(VolleyDimens.DIMEN_8.dp)
+        ) {
+            // BasicGameSetupScreenContent()
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = VolleyDimens.DIMEN_20.dp)
+            ) {
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+
+                TitleWithBackArrow(
+                    title = stringResource(R.string.create_a_game),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(scrollState)
+
+                ) {
+                    VolleyText.TitleMedium(
+                        text = stringResource(R.string.your_message),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = VolleyColor.White
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                    VolleyMessageTextField.MessageField(
+                        hint = stringResource(R.string.leave_a_note_for_players),
+                        textInput = "",
+                        modifier = Modifier.fillMaxWidth().height(106.dp)
+                    ) { }
+
+                          Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                    VolleySimpleComponent.DividerLine()// HorizontalLine()
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                    VolleyText.TitleMedium(
+                        text = stringResource(R.string.place),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = VolleyColor.White
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .height(VolleyDimens.DIMEN_44.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .weight(1f), // Важно!  Занимает только часть доступного пространства,
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.ic_mark_yellow),
+                                contentDescription = null,
+                            )
+                            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                            Column(
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                VolleyText.BodyBold(
+                                    text = "Karon Beach Club",
+                                    modifier = Modifier,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = VolleyColor.White
+                                )
+                                VolleyText.BodyLight(
+                                    text = "Patak Rd, Mueang Phuket",
+                                    modifier = Modifier,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = VolleyColor.White
+                                )
+                            }
+                        }
+
+                        VolleyButton.ActiveGradientButton(
+                            modifier = Modifier,//.height(VolleyDimens.DIMEN_44.dp),
+                            text = "Create"
+                        ) { }
+                    }
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                    VolleySimpleComponent.DividerLine() //HorizontalLine()
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                    VolleyText.TitleMedium(
+                        text = stringResource(R.string.date),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = VolleyColor.White
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
+                    VolleyButton.GroupButtonsForDate2(
+                        checkId = 1,
+                        modifier = Modifier,
+                        onSelected = {}
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
+
+                    // здесь будет календарь
+                    /*     Box(
+             modifier = Modifier
+                 .fillMaxWidth()
+                 .height(266.dp)
+                 .clip(RoundedCornerShape(32.dp)) // Задаем скругление углов
+                 .background(VolleyColor.White) // Цвет прямоугольника
+          )
+         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+         */
+                   VolleyText.BodyBold(
+                        text = stringResource(R.string.game_duration),
+                        modifier = Modifier,
+                        color = VolleyColor.White
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        VolleyText.BodyRegular(
+                            text = stringResource(R.string.from),
+                            modifier = Modifier,
+                            color = VolleyColor.White
+                        )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+
+                        VolleyTextFieldAttribute.DurationFieldWithArrows(
+                            inputTime = VolleyTimeStamp(
+                                14,
+                                0,
+                                true
+                            )
+                        ) { }
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+
+                        VolleyText.BodyRegular(
+                            text = stringResource(R.string.to),
+                            modifier = Modifier,
+                            color = VolleyColor.White
+                        )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+
+                        VolleyTextFieldAttribute.DurationFieldWithArrows(
+                            inputTime = VolleyTimeStamp(
+                                15,
+                                0,
+                                true
+                            )
+                        ) { }
+                    }
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                    VolleySimpleComponent.DividerLine() //HorizontalLine()
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                     VolleyText.TitleMedium(
+                        text = stringResource(R.string.gender),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = VolleyColor.White
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
+                    VolleyButton.GroupButtonsForGender3(
+                        modifier = Modifier,
+                        onSelected = {}
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                    VolleySimpleComponent.DividerLine() //HorizontalLine()
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                          VolleyText.TitleMedium(
+                        text = stringResource(R.string.player_level),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = VolleyColor.White
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+
+                    VolleyButton.GroupButtonsForLevel(
+                        checkId = 3,
+                        modifier = Modifier,
+                        onSelected = {}
+                    )
+                }
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+
+                VolleyButton.ActiveButton(
+                    modifier = Modifier
+                        // .padding(VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_16.dp)
+                        .height(44.dp)
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth(),
+                    text = stringResource(R.string.next_game),
+                    onClick = {}
+                )
+
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+            }
+        }
     }
-    VolleyButton.ActiveButton(
-        modifier = Modifier
-            .padding(VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_16.dp)
-            .height(44.dp)
-            .align(Alignment.CenterHorizontally)
-            .fillMaxWidth(),
-        text = stringResource(R.string.next_game),
-        onClick = {}
-    )
-}
+    /* }*/
+
 }
 
-@Composable
+/*@Composable
 fun BasicGameSetupScreenContent(
 ) {
     Column(
@@ -174,7 +399,7 @@ fun BasicGameSetupScreenContent(
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
 
         // здесь будет календарь
-       /*     Box(
+       *//*     Box(
     modifier = Modifier
         .fillMaxWidth()
         .height(266.dp)
@@ -182,7 +407,7 @@ fun BasicGameSetupScreenContent(
         .background(VolleyColor.White) // Цвет прямоугольника
  )
 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-*/
+*//*
         VolleyText.BodyBold(
             text = stringResource(R.string.game_duration),
             modifier = Modifier,
@@ -267,8 +492,21 @@ Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
         )
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+        
+        VolleyButton.ActiveButton(
+            modifier = Modifier
+               // .padding(VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_16.dp)
+                .height(44.dp)
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+            text = stringResource(R.string.next_game),
+            onClick = {}
+        )
+
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
     }
-}
+}*/
+
 
 @Preview
 @Composable

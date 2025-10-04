@@ -14,11 +14,11 @@ data class GameEnteringConditionsScreenState (
     val accountNumber: String? = null,  // номер аккаунта, если есть
     val errorMessage: String? = null,
     val isLoading : Boolean = false,     // Для загрузки (если необходимо)
-    val players: List<Player> = listOf(
-        Player("Kristina Popova", LEVEL_MEDIUM),
-        Player("Polina Vasylyeva", LEVEL_MEDIUM),
-        Player("Anton Ivanov", LEVEL_LIGHT),
-        Player("Aleksandr Abramov", LEVEL_HIGH)
+    val players: List<PlayerUI> = listOf(
+        PlayerUI("Kristina Popova", LEVEL_MEDIUM),
+        PlayerUI("Polina Vasylyeva", LEVEL_MEDIUM),
+        PlayerUI("Anton Ivanov", LEVEL_LIGHT),
+        PlayerUI("Aleksandr Abramov", LEVEL_HIGH)
     )
 ) : UiState
 
@@ -28,7 +28,7 @@ enum class Privacy {
 }
 
 // по образу MemberUi из 62 ветки, из файла ChangeTeamScreen.kt
-data class Player(
+data class PlayerUI(
     val name: String,//?, // null => Free spot
     val level: String//? // null => нет бейджа
 )

@@ -18,6 +18,6 @@ sealed class GameEnteringConditionsScreenEvent : UiEvent {
         GameEnteringConditionsScreenEvent() // нажатие на кнопку "Удалить игрока из игры"
 
     object OpenPrivacyOptions : GameEnteringConditionsScreenEvent() // запрос на открытие экрана Privacy
-    data class PlayersSelected(val players: List<Player>) :
+    data class PlayersSelected(val players: List<PlayerUI>) :
         GameEnteringConditionsScreenEvent() // результат из Privacy screen
 }

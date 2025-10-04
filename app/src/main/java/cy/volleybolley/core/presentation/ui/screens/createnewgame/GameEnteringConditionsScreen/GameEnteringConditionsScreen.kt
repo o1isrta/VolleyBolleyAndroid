@@ -313,7 +313,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
 
 @Composable
 private fun PlayerRowWithRemove(
-    player: Player,
+    player: PlayerUI,
     onRemove: () -> Unit
 ) {
     Row(
