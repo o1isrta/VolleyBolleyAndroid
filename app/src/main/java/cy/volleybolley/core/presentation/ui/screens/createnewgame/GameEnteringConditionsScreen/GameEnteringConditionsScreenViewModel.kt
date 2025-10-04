@@ -18,25 +18,31 @@ class GameEnteringConditionsScreenViewModel :
     override fun obtainEvent(event: GameEnteringConditionsScreenEvent) {
         when (event) {
             is GameEnteringConditionsScreenEvent.PrivacySelected -> {
-                // Используем setState для обновления uiState
-               /* setState { currentState ->
-                    currentState.copy(selectedPrivacy = event.privacy)
-                }*/
+                // Обработка выбора Public (Private через OpenPrivacyRequested)
                 uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = event.privacy)
             }
+            is GameEnteringConditionsScreenEvent.OpenPrivacyOptions -> {
+                val current = uiStateMutable.value
+                val manageMode = current.selectedPrivacy == Privacy.Private
+                // отправляем эффект навигации (manageMode = true, если уже был private выбран до нажатия)
+                sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy(manageMode))
+            }
+
+            is GameEnteringConditionsScreenEvent.PlayersSelected -> {
+                // Пользователь вернулся с Privacy screen, нажав нажал Add
+                val current = uiStateMutable.value
+                uiStateMutable.value = current.copy(
+                    selectedPrivacy = Privacy.Private,
+                    players = event.players
+                )
+            }
             is GameEnteringConditionsScreenEvent.PerPersonChanged -> {
-               /* setState { currentState ->
-                    currentState.copy(perPerson = event.perPerson)
-                }*/
                 uiStateMutable.value = uiStateMutable.value.copy(perPerson = event.perPerson)
             }
             GameEnteringConditionsScreenEvent.CheckIfAccountExists -> {
                 checkIfAccountExists()
             }
             is GameEnteringConditionsScreenEvent.MaximumPlayersChanged -> {
-                /*setState { currentState ->
-                    currentState.copy(maximumPlayers = event.maximumPersons)
-                }*/
                 uiStateMutable.value = uiStateMutable.value.copy(maximumPlayers = event.maximumPersons)
             }
             GameEnteringConditionsScreenEvent.OnBackClicked -> {
@@ -76,7 +82,6 @@ class GameEnteringConditionsScreenViewModel :
             }
         ){
             val accountNumber = getAccountNumber() // Получение номера счета (аккаунта), если он есть
-            /*setState { currentState ->  currentState.copy( accountNumber = accountNumber ) }*/
             uiStateMutable.value = uiStateMutable.value.copy( accountNumber = accountNumber )
         }
     }

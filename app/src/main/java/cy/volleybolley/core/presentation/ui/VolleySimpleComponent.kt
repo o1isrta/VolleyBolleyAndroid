@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -87,13 +88,14 @@ object VolleySimpleComponent {
             modifier = modifier
                 .clip(RoundedCornerShape(VolleyDimens.DIMEN_10.dp))
                 .background(VolleyColor.GreyDark)
-                .padding(
-                    start = VolleyDimens.DIMEN_10.dp,
-                    end = VolleyDimens.DIMEN_10.dp,
-                    top = VolleyDimens.DIMEN_2.dp,
-                    bottom = VolleyDimens.DIMEN_2.dp
-                )
+                //.padding(
+                //    start = VolleyDimens.DIMEN_10.dp,
+                //    end = VolleyDimens.DIMEN_10.dp,
+                //    top = VolleyDimens.DIMEN_2.dp,
+                //    bottom = VolleyDimens.DIMEN_2.dp
+                //)
                 .height(VolleyDimens.DIMEN_23.dp)
+                .width(VolleyDimens.DIMEN_30.dp)
         ) {
             VolleyText.BodyRegular(level, color = VolleyColor.White)
         }
@@ -168,6 +170,21 @@ private fun PreviewTitleWithBackArrow() {
                     modifier = Modifier
                         .padding(VolleyDimens.DIMEN_20.dp)
                         .fillMaxWidth()
+                )
+                VolleySimpleComponent.LevelBadge(
+                    "L",
+                    modifier = Modifier
+                        .padding(VolleyDimens.DIMEN_20.dp)
+                 )
+                VolleySimpleComponent.LevelBadge(
+                    "M",
+                    modifier = Modifier
+                        .padding(VolleyDimens.DIMEN_20.dp)
+                )
+                VolleySimpleComponent.LevelBadge(
+                    "H",
+                    modifier = Modifier
+                        .padding(VolleyDimens.DIMEN_20.dp)
                 )
             }
         }

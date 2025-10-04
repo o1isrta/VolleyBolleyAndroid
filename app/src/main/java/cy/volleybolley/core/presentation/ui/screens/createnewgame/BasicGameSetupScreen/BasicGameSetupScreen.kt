@@ -61,27 +61,13 @@ fun BasicGameSetupScreen(navController: NavHostController) {
         onClick = {}
     )
 }
-//    Button(onClick = { navController.popBackStack() }) {
-//        Text("Назад")
-//    }
 }
-
-/*@Composable
-fun HorizontalLine(
-) {
-    HorizontalDivider(
-        modifier = Modifier,
-        color = VolleyColor.Divider,
-        thickness = VolleyDimens.DIMEN_1.dp
-    )
-}*/
 
 @Composable
 fun BasicGameSetupScreenContent(
 ) {
     Column(
         modifier = Modifier
-//.verticalScroll(rememberScrollState())
             .padding(horizontal = VolleyDimens.DIMEN_20.dp)
     ) {
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
@@ -244,23 +230,6 @@ Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
                 )
             ) { }
         }
-
-            /*Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-            HorizontalLine()
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleyText.TitleLarge(
-            text = stringResource(R.string.tourney_type),
-            modifier = Modifier.fillMaxWidth(),
-            color = VolleyColor.White
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-        VolleyButton.GroupButtonsForTourneyType(
-            modifier = Modifier,
-            onClick = {}
-        )*/
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
         VolleySimpleComponent.DividerLine() //HorizontalLine()

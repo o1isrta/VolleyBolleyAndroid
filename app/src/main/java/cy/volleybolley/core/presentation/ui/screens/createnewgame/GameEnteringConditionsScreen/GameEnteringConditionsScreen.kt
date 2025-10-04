@@ -42,7 +42,6 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.LevelBadge
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.OUTLINED_GRADIENT_BUTTON_TEXT
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -91,6 +90,15 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                     )
                     val succeedJson = Json.encodeToString(succeed)
                     navController.navigate(SuccessRoute(succeedGame = succeedJson))
+                }
+                is GameEnteringConditionsScreenEffect.NavigateToPrivacy -> {
+                    // Передадим manageMode и текущий список игроков в savedStateHandle
+                    //val currentEntry = navController.currentBackStackEntry
+                    //currentEntry?.savedStateHandle?.set("manage_mode", effect.manageMode)
+                    // Передаём текущий список игроков как JSON, чтобы Privacy screen мог показать существующих
+                   // val playersJson = gson.toJson(uiState.players)
+                   // currentEntry?.savedStateHandle?.set("existing_players_json", playersJson)
+                    navController.navigate("privacy") // ваша route для экрана выбора игроков
                 }
                 //Обработка всех возможных случаев
                 else -> {
@@ -174,8 +182,19 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                                 2 -> Privacy.Private
                                 else -> null // Обработка некорректной позиции
                             }
-                            selectedPrivacy?.let {
-                                viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PrivacySelected(it))
+                            selectedPrivacy?.let { privacy ->
+                                when ( privacy ) {
+                                    //viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PrivacySelected(it))
+                                    Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PrivacySelected(Privacy.Public))
+                                    Privacy.Private -> {
+                                        // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
+                                        state.selectedPrivacy?.let { privacy ->
+                                            if (privacy == Privacy.Public)
+                                                viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OpenPrivacyOptions)
+                                        }
+                                        // Если уже Private — ничего не делать
+                                    }
+                                }
                             } ?: run {
                                 // Обработка нераспознанной позиции
                                 Log.e("GameEnteringConditionsScreen", "Нераспознанная позиция: $position")
@@ -199,7 +218,10 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                         VolleyButton.OutlinedGradientButton(
                             modifier = Modifier.height(44.dp),
                             text = stringResource(R.string.manage_players),
-                            onClick = {}
+                            onClick = {
+                                // Управление игроками -> открываем Privacy screen в manageMode
+                                viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OpenPrivacyOptions)
+                            }
                         )
                     }
 
