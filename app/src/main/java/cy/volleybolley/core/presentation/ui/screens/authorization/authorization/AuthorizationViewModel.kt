@@ -1,21 +1,42 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 
 import androidx.lifecycle.viewModelScope
+import cy.volleybolley.auth.data.AuthRepositoryImpl
+import cy.volleybolley.auth.ui.GoogleSignInHelper
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AuthorizationViewModel :
+class AuthorizationViewModel(
+    private val googleSignInHelper: GoogleSignInHelper,
+    private val authRepositoryImpl: AuthRepositoryImpl
+) :
     BaseViewModel<AuthorizationState, AuthorizationEvent, AuthorizationEffect>(
         AuthorizationState()
     ) {
 
-    override val tag: String = "SignUpViewModel"
+    override val tag: String = "AuthorizationViewModel"
 
     override fun obtainEvent(event: AuthorizationEvent) {
         when (event) {
             AuthorizationEvent.ContinueWithGoogleClicked -> {
                 viewModelScope.launch {
-                    sendUiEffect(AuthorizationEffect.NavigateToRegistration)
+                    //sendUiEffect(AuthorizationEffect.NavigateToRegistration)
+                    val intentSender = googleSignInHelper.launch()
+                    if (intentSender != null) {
+                        sendUiEffect(AuthorizationEffect.LaunchGoogleSignIn(intentSender))
+                    } else {
+                        sendUiEffect(AuthorizationEffect.ShowError("Не удалось запустить Google Sign-in"))
+                    }
+
+                }
+            }
+
+            is AuthorizationEvent.GoogleTokenReceived -> {
+                event.idToken?.let { token ->
+                    viewModelScope.launch {
+                       // uiStateMutable.update { copy(isLoading = true) }
+                    }
                 }
             }
 
