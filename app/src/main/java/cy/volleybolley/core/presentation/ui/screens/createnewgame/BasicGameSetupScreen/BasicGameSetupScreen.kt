@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -92,7 +93,7 @@ fun BasicGameSetupScreen(navController: NavHostController,
                     VolleyMessageTextField.MessageField(
                         hint = stringResource(R.string.leave_a_note_for_players),
                         textInput = "",
-                        modifier = Modifier.fillMaxWidth().height(106.dp)
+                        modifier = Modifier.height(106.dp)
                     ) { }
 
                           Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
