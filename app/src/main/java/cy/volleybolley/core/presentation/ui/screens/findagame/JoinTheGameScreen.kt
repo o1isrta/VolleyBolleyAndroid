@@ -480,4 +480,3 @@ private fun JoinTheGameScreenPreview() {
         }
     }
 }
-

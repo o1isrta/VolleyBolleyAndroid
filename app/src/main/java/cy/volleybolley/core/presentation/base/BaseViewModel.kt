@@ -31,16 +31,16 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
      */
     val uiState: StateFlow<State> = uiStateMutable.asStateFlow()
 
-    protected val effectMutable = Channel<Effect?>(Channel.BUFFERED)
+    protected val uiEffectMutable = Channel<Effect?>(Channel.BUFFERED)
 
     /**
      * Выходная точка (удобный костыль MVI) для одноразовых событий (показать toast или диалог)
      */
-    val uiEffect: Flow<Effect?> = effectMutable.receiveAsFlow()
+    val uiEffect: Flow<Effect?> = uiEffectMutable.receiveAsFlow()
 
     protected fun sendUiEffect(effect: Effect?) {
         viewModelScope.launch {
-            effectMutable.send(effect)
+            uiEffectMutable.send(effect)
         }
     }
 
