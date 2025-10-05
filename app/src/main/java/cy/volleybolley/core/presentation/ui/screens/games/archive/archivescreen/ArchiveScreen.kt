@@ -1,8 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,7 +36,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -59,6 +55,7 @@ import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.
 import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Game
 import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Host
 import cy.volleybolley.core.presentation.ui.screens.games.archive.util.DataTimeRangeFormatter
+import cy.volleybolley.core.presentation.ui.screens.games.archive.util.openMap
 import cy.volleybolley.courts.domain.model.Location
 
 @Composable
@@ -97,7 +94,7 @@ private fun ArchiveScreen(
             when (it) {
                 is ArchiveEffect.Navigate -> navigateAction(it.route)
                 ArchiveEffect.NavigateBack -> onBackClick
-                is ArchiveEffect.OpenMap -> openMap(context, it.location)
+                is ArchiveEffect.OpenMap -> context.openMap(it.location)
             }
         }
     }
@@ -179,7 +176,7 @@ private fun ArchiveCard(
 
             HorizontalDivider(
                 thickness = VolleyDimens.DIMEN_1.dp,
-                color = VolleyColor.White
+                color = VolleyColor.White.copy(alpha = 0.25f)
             )
 
             GameInfoBlock(
@@ -412,15 +409,6 @@ private fun CreateGameButton(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier.fillMaxWidth()
     )
-}
-
-private fun openMap(context: Context, location: Location) {
-    val uri = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}(${
-        Uri.encode(location.courtName)
-    })".toUri()
-    val intent = Intent(Intent.ACTION_VIEW, uri)
-    val chooser = Intent.createChooser(intent, context.getString(R.string.open_with))
-    context.startActivity(chooser)
 }
 
 @Preview(showBackground = true, showSystemUi = true)

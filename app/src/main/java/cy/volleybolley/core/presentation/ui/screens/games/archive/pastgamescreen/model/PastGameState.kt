@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.model
+package cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescreen.model
 
 import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Game
@@ -6,15 +6,11 @@ import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Host
 import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.PlayerShort
 import cy.volleybolley.courts.domain.model.Location
 
-data class ArchiveState(
-    val emptyArchive: Boolean = false,
-    val games: List<Game> = listOf(
-        mockGame(1, "GAME"),
-        mockGame(2, "TOURNAMENT"),
-        mockGame(1, "GAME"),
-        mockGame(2, "TOURNAMENT"),
-    )
-) : UiState // нужно будет переделать в формат LCE чтобы отображать loading и placeholder (можно добавить еще и isRefreshing)
+sealed interface PastGameState : UiState {
+    data object Loading : PastGameState
+    data class Content(val game: Game = mockGame(0, "GAME")) : PastGameState
+    object Error : PastGameState
+}
 
 private fun mockGame(id: Int, type: String) = Game(
     gameId = id,

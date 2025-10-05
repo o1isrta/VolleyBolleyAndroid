@@ -24,8 +24,8 @@ import cy.volleybolley.core.presentation.ui.screens.findatourney.IndividualPlaye
 import cy.volleybolley.core.presentation.ui.screens.findatourney.InvitePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinIndividualScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinTeamScreen
-import cy.volleybolley.core.presentation.ui.screens.games.archive.PastGameScreen
-import cy.volleybolley.core.presentation.ui.screens.games.archive.PastTourneyScreen
+import cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescreen.PastGameScreen
+import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.PastTourneyScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.ArchiveScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.teamsscreen.TeamsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.GameInvitesScreen

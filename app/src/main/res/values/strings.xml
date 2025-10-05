@@ -233,4 +233,7 @@
     <string name="level_pro_prefix">Pro:</string>
     <string name="level_pro_description">Elite level, official championships experience</string>
     <string name="registration_about_levels_navigation_hint">Navigate to more about levels</string>
+    <string name="refresh">Refresh</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="payment_type_and_account">%1$s · %2$s</string>
 </resources>
