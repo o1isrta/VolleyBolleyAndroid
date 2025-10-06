@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
+import cy.volleybolley.auth.data.UserDto
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -26,7 +27,7 @@ object OnboardingRoute : NavMap
 object AuthorizationRoute : NavMap
 
 @Serializable
-object RegistrationRoute : NavMap
+data class RegistrationRoute(val user: String = "") : NavMap
 
 @Serializable
 object AuthorizationByPhoneRoute : NavMap

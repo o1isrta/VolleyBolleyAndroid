@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.registration
 
+import cy.volleybolley.auth.data.UserDto
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.referencedata.domain.model.City
 import cy.volleybolley.referencedata.domain.model.Country
@@ -13,14 +14,16 @@ class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent
 
     init {
         uiStateMutable.update {
-            val countyList = listOf(Country(
-                id = 0,
-                name = "Thailand",
-                cities = listOf(
-                    City(id = 0, name = "Koh Phangan"),
-                    City(id = 1, name = "Koh Samui")
+            val countyList = listOf(
+                Country(
+                    id = 0,
+                    name = "Thailand",
+                    cities = listOf(
+                        City(id = 0, name = "Koh Phangan"),
+                        City(id = 1, name = "Koh Samui")
+                    )
                 )
-            ))
+            )
             it.copy(
                 countryList = countyList,
                 selectedCountry = countyList.first(),
@@ -104,4 +107,15 @@ class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent
             newState.selectedCountry != null && newState.selectedCity != null &&
             newState.dateOfBirthMillis != null
     }
+
+    fun setUser(user: UserDto) {
+        uiStateMutable.update {
+            it.copy(
+                user = user,
+                name = user.firstName,
+                surname = user.lastName,
+            )
+        }
+    }
+
 }

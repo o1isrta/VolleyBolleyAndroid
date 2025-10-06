@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import cy.volleybolley.core.presentation.ui.screens.authorization.aboutlevels.AboutLevelsScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.AuthorizationByPhoneScreen
@@ -77,12 +78,18 @@ fun NavHostContainer(
             AuthorizationScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
                 onNavigateToRegisterByPhoneRequested = { navController.navigate(AuthorizationByPhoneRoute) },
-                onSuccessRegisteredAction = { navController.navigate(RegistrationRoute) }
+                onSuccessRegisteredAction = { user ->
+                    navController.navigate(RegistrationRoute(user))
+                }
             )
         }
-        composable<RegistrationRoute> {
+        composable<RegistrationRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<RegistrationRoute>()
+            val user  = route.user
+
             RegistrationScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
+                user = user,
                 onRegistrationSuccessEvent = {
                     navController.navigate(HomeRoute) {
                         popUpTo(LaunchRoute) { inclusive = false }
