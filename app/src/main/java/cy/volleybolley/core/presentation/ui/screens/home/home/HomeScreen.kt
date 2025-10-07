@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +40,6 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateNewGameClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateTourneyClick
@@ -48,6 +48,10 @@ import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.On
 import cy.volleybolley.core.presentation.ui.screens.home.home.model.DigitIcon
 import cy.volleybolley.courts.domain.model.Location
 import org.koin.androidx.compose.koinViewModel
+
+const val HOME_FIND_GAME_TEXT_WEIGHT = 0.6f
+const val HOME_FIND_GAME_COUNT_WEIGHT = 0.4f
+const val HOME_CREATE_GAME_BUTTON_ALPHA = 0.85f
 
 @Composable
 fun HomeScreen(
@@ -70,6 +74,7 @@ fun HomeScreen(
     BackHandler { finisher() }
 }
 
+@Stable
 @Composable
 private fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -86,7 +91,7 @@ private fun HomeScreen(
             contentScale = ContentScale.FillBounds,
             painter = painterResource(R.drawable.home_wallpaper2),
             modifier = Modifier
-                .fillMaxWidth(VolleyUiUtil.HOME_CREATE_GAME_BUTTON_ALPHA)
+                .fillMaxWidth(HOME_CREATE_GAME_BUTTON_ALPHA)
                 .aspectRatio(1f)
         )
 
@@ -132,6 +137,7 @@ private fun HomeScreen(
     }
 }
 
+@Stable
 @Composable
 private fun CreateNewGameButton(
     modifier: Modifier = Modifier,
@@ -181,6 +187,7 @@ private fun CreateNewGameButton(
     }
 }
 
+@Stable
 @Composable
 private fun LocationDescription(
     modifier: Modifier = Modifier,
@@ -226,6 +233,7 @@ private fun LocationDescription(
     }
 }
 
+@Stable
 @Composable
 private fun FindGameButton(
     modifier: Modifier = Modifier,
@@ -248,7 +256,7 @@ private fun FindGameButton(
             Column(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
-                    .weight(VolleyUiUtil.HOME_FIND_GAME_TEXT_WEIGHT)
+                    .weight(HOME_FIND_GAME_TEXT_WEIGHT)
                     .padding(
                         top = VolleyDimens.DIMEN_12.dp,
                         start = VolleyDimens.DIMEN_12.dp,
@@ -286,21 +294,22 @@ private fun FindGameButton(
 
             GamesAvailableBlock(
                 gamesCount = gamesCount,
-                modifier = Modifier.weight(VolleyUiUtil.HOME_FIND_GAME_COUNT_WEIGHT)
+                modifier = Modifier.weight(HOME_FIND_GAME_COUNT_WEIGHT)
             )
         }
     }
 }
 
+@Stable
 @Composable
 private fun GamesAvailableBlock(
     modifier: Modifier = Modifier,
     gamesCount: Int = 0,
 ) {
-    val digitsStringValuesList = gamesCount.toString().chunked(1)
+    val digitsStringValuesList = gamesCount.toString().toList()
     val topGapForDigits = when (digitsStringValuesList.size) {
-        1 + 1 + 1 -> VolleyDimens.DIMEN_10
-        1 + 1 + 1 + 1 -> VolleyDimens.DIMEN_16
+        VolleyDimens.DIMEN_3 -> VolleyDimens.DIMEN_10
+        VolleyDimens.DIMEN_4 -> VolleyDimens.DIMEN_16
         else -> 0
     }
 

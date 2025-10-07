@@ -17,17 +17,17 @@ enum class DigitIcon(@DrawableRes val resId: Int) {
 
     companion object {
         @JvmStatic
-        fun getIconResByString(digitStringValue: String): Int {
+        fun getIconResByString(digitStringValue: Char): Int {
             return when (digitStringValue) {
-                "1" -> ONE.resId
-                "2" -> TWO.resId
-                "3" -> THREE.resId
-                "4" -> FOUR.resId
-                "5" -> FIVE.resId
-                "6" -> SIX.resId
-                "7" -> SEVEN.resId
-                "8" -> EIGHT.resId
-                "9" -> NINE.resId
+                '1' -> ONE.resId
+                '2' -> TWO.resId
+                '3' -> THREE.resId
+                '4' -> FOUR.resId
+                '5' -> FIVE.resId
+                '6' -> SIX.resId
+                '7' -> SEVEN.resId
+                '8' -> EIGHT.resId
+                '9' -> NINE.resId
                 else -> ZERO.resId
             }
         }

@@ -8,7 +8,7 @@ data class HomeScreenState(
     val location: Location = Location(
         longitude = 0.0,
         latitude = 0.0,
-        courtName = "No name",
-        locationName = "Zero point"
+        courtName = "",
+        locationName = ""
     )
 ) : UiState
