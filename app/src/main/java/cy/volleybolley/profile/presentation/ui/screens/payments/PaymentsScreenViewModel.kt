@@ -2,7 +2,6 @@ package cy.volleybolley.profile.presentation.ui.screens.payments
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyMocks
-import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.EnterPaymentDataRoute
 import cy.volleybolley.profile.domain.GetPaymentsUseCase
 import cy.volleybolley.profile.domain.UpdatePaymentsUseCase

@@ -81,7 +81,7 @@ object VolleyMocks {
             lastName = "Иванов",
             avatarUrl = null,
             isFavorite = true,
-            level = "LIGHT"
+            level = USER_LEVEL
         ),
         PlayerTemp(
             id = 2,
@@ -89,7 +89,7 @@ object VolleyMocks {
             lastName = "Петрова",
             avatarUrl = null,
             isFavorite = false,
-            level = "MEDIUM"
+            level = USER_LEVEL
         ),
         PlayerTemp(
             id = 3,
@@ -97,7 +97,7 @@ object VolleyMocks {
             lastName = "Смирнов",
             avatarUrl = null,
             isFavorite = true,
-            level = "HARD"
+            level = USER_LEVEL
         ),
         PlayerTemp(
             id = 4,
@@ -105,7 +105,7 @@ object VolleyMocks {
             lastName = "Васильева",
             avatarUrl = null,
             isFavorite = false,
-            level = "PRO"
+            level = USER_LEVEL
         ),
     )
 
@@ -116,7 +116,7 @@ object VolleyMocks {
             lastName = "Иванов",
             avatarUrl = null,
             isFavorite = true,
-            level = "LIGHT",
+            level = USER_LEVEL,
             latestActivity = listOf()
         ),
         PlayerDetailTemp(
@@ -125,7 +125,7 @@ object VolleyMocks {
             lastName = "Петрова",
             avatarUrl = null,
             isFavorite = false,
-            level = "MEDIUM",
+            level = USER_LEVEL,
             latestActivity = listOf(
                 PlayerActivityTemp(
                     eventTimestamp = "2025-07-13T14:23:45Z",
@@ -144,7 +144,7 @@ object VolleyMocks {
             lastName = "Смирнов",
             avatarUrl = null,
             isFavorite = true,
-            level = "HARD",
+            level = USER_LEVEL,
             latestActivity = listOf(
                 PlayerActivityTemp(
                     eventTimestamp = "2025-08-16T14:23:45Z",
@@ -172,7 +172,7 @@ object VolleyMocks {
             lastName = "Васильева",
             avatarUrl = null,
             isFavorite = false,
-            level = "PRO",
+            level = USER_LEVEL,
             latestActivity = listOf(
                 PlayerActivityTemp(
                     eventTimestamp = "2025-08-16T14:23:45Z",
