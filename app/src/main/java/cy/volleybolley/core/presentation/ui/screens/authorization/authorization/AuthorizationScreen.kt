@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
-import cy.volleybolley.auth.data.UserDto
 import cy.volleybolley.core.domain.VolleyFeature
 import cy.volleybolley.core.presentation.RootContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -57,8 +56,9 @@ fun AuthorizationScreen(
     ) { result ->
         val idToken = if (result.resultCode == Activity.RESULT_OK) {
             viewModel.extractGoogleIdToken(result.data)
-        } else null
-
+        } else {
+            null
+        }
         viewModel.obtainEvent(AuthorizationEvent.GoogleTokenReceived(idToken))
     }
 
@@ -75,6 +75,7 @@ fun AuthorizationScreen(
                 val user = (effect as AuthorizationEffect.NavigateToRegistration).user
                 onSuccessRegisteredAction(user)
             }
+
             is AuthorizationEffect.ShowError -> {
                 val message = (effect as AuthorizationEffect.ShowError).message
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
-import cy.volleybolley.auth.data.UserDto
 import kotlinx.serialization.Serializable
 
 @Serializable

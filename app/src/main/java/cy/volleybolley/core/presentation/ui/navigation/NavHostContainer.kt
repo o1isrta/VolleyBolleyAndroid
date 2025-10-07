@@ -85,7 +85,7 @@ fun NavHostContainer(
         }
         composable<RegistrationRoute> { backStackEntry ->
             val route = backStackEntry.toRoute<RegistrationRoute>()
-            val user  = route.user
+            val user = route.user
 
             RegistrationScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
