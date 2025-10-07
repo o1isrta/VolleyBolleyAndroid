@@ -4,6 +4,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.auth.domain.AuthInteractor
+import cy.volleybolley.auth.domain.TokensInteractor
 import cy.volleybolley.auth.ui.GoogleSignInHelper
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.flow.update
@@ -12,7 +13,8 @@ import kotlinx.serialization.json.Json
 
 class AuthorizationViewModel(
     private val googleSignInHelper: GoogleSignInHelper,
-    private val authInteractor: AuthInteractor
+    private val authInteractor: AuthInteractor,
+    private val tokensInteractor: TokensInteractor
 ) :
     BaseViewModel<AuthorizationState, AuthorizationEvent, AuthorizationEffect>(
         AuthorizationState()
@@ -24,7 +26,6 @@ class AuthorizationViewModel(
         when (event) {
             AuthorizationEvent.ContinueWithGoogleClicked -> {
                 viewModelScope.launch {
-                    //sendUiEffect(AuthorizationEffect.NavigateToRegistration)
                     val intentSender = googleSignInHelper.launch()
                     if (intentSender != null) {
                         sendUiEffect(AuthorizationEffect.LaunchGoogleSignIn(intentSender))
@@ -46,6 +47,15 @@ class AuthorizationViewModel(
                             val user = response.body?.player
                             if (user != null) {
                                 val userJson = Json.encodeToString(user)
+                                val accessToken = response.body?.accessToken
+                                val refreshToken = response.body?.refreshToken
+                                if (accessToken != null && refreshToken != null) {
+                                    tokensInteractor.saveTokens(accessToken, refreshToken)
+                                    val token = tokensInteractor.getAccessToken()
+                                    Log.d("AccessToken", token.toString())
+                                } else {
+                                    sendUiEffect(AuthorizationEffect.ShowError("Ошибка: не удалось сохранить токены"))
+                                }
                                 sendUiEffect(AuthorizationEffect.NavigateToRegistration(userJson))
                             } else {
                                 sendUiEffect(
