@@ -2,6 +2,7 @@ package cy.volleybolley.profile.presentation.ui.screens.personaldata
 
 import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.ChangePhotoRoute
 import cy.volleybolley.profile.domain.GetPersonalDataUseCase
@@ -20,7 +21,6 @@ import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalData
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.BackAvatarHolder
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.GenderType
 import cy.volleybolley.referencedata.domain.api.GetCountriesUseCase
-import cy.volleybolley.referencedata.domain.model.City
 import cy.volleybolley.referencedata.domain.model.Country
 import kotlinx.coroutines.flow.update
 
@@ -34,32 +34,13 @@ class PersonalDataScreenViewModel(
 ) {
     private var originState: PersonalDataScreenState = uiState.value
 
-    val mockPersonalData = PersonalData(
-        firstName = "Anonymous",
-        lastName = "Nemislimus",
-        gender = "MALE",
-        birthDate = "1987-03-23",
-        level = "LIGHT",
-        countryId = 2,
-        cityId = 202,
-        avatar = "https://cdn.fishki.net/upload/post/2021/03/29/3682461/gallery/tn/wil-hughes-troll-face.jpg"
-    )
-
     init {
         // getCountriesList() - сперва подтягиваем страны в originState
-        val countries = listOf(Country(
-            id = 0,
-            name = "Thailand",
-            cities = listOf(
-                City(id = 0, name = "Koh Phangan"),
-                City(id = 1, name = "Koh Samui")
-            )
-        ))
-        originState = originState.copy(countryList = countries)
+        originState = originState.copy(countryList = VolleyMocks.countries)
 
         // getState() - затем сохраняем персональные данные в originState
         launchSafe(getErrorLogMessage = { "PersonalDataScreen >> init: ${it.message}" }) {
-            originState = mockPersonalData.addToState()
+            originState = VolleyMocks.mockPersonalData.addToState()
             uiStateMutable.update { originState }
         }
     }

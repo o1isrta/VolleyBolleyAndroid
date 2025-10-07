@@ -40,6 +40,7 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
+import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite
@@ -90,10 +91,9 @@ fun RootContainer(
             topBar = {
                 if (showTopBar) {
                     VolleyTopBar.TopBar(
-                        firstName = "nemislimus",
-                        avatar = "https://cdn.fishki.net/upload/post/2021/03/29/3682461/gallery/tn/" +
-                            "wil-hughes-troll-face.jpg",
-                        levelName = "PRO"
+                        firstName = VolleyMocks.USER_NAME,
+                        avatar = VolleyMocks.USER_AVATAR,
+                        levelName = VolleyMocks.USER_LEVEL
                     )
                 }
             },

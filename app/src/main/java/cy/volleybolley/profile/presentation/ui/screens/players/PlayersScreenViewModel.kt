@@ -1,6 +1,7 @@
 package cy.volleybolley.profile.presentation.ui.screens.players
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.PlayerProfileRoute
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEffect.NavigateFromPlayersScreen
@@ -24,7 +25,7 @@ class PlayersScreenViewModel(
 
     init {
         // getPlayers()
-        originAllPlayers.addAll(VolleyUiUtil.mockPlayers)
+        originAllPlayers.addAll(VolleyMocks.mockPlayers)
         originFavoritePlayers.addAll(getFavoritePlayers())
         uiStateMutable.update { it.copy(players = originAllPlayers) }
     }

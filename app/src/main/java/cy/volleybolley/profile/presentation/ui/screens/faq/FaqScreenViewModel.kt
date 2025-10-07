@@ -1,6 +1,7 @@
 package cy.volleybolley.profile.presentation.ui.screens.faq
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEffect.NavigateFromFaqScreen
 import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEvent.OnBackFromFaqClick
@@ -11,7 +12,7 @@ class FaqScreenViewModel : BaseViewModel<FaqScreenState, FaqScreenEvent, FaqScre
 ) {
     init {
         // Mock init
-        uiStateMutable.update { FaqScreenState(faqText = VolleyUiUtil.parseMarkdown(VolleyUiUtil.MOCK_FAQ)) }
+        uiStateMutable.update { FaqScreenState(faqText = VolleyUiUtil.parseMarkdown(VolleyMocks.MOCK_FAQ)) }
     }
 
     override val tag: String = FaqScreenViewModel::class.simpleName ?: "FaqScreenViewModel"

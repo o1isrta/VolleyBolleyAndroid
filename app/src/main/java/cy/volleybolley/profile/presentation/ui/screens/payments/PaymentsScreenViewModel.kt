@@ -1,6 +1,7 @@
 package cy.volleybolley.profile.presentation.ui.screens.payments
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.EnterPaymentDataRoute
 import cy.volleybolley.profile.domain.GetPaymentsUseCase
@@ -25,7 +26,7 @@ class PaymentsScreenViewModel(
 ) {
     init {
 //        getPayments()  >> execute getPaymentsUseCase
-        uiStateMutable.update { it.copy(payments = VolleyUiUtil.mockPayments) }
+        uiStateMutable.update { it.copy(payments = VolleyMocks.mockPayments) }
     }
 
     override val tag: String = PaymentsScreenViewModel::class.simpleName ?: "PaymentsScreenViewModel"
