@@ -5,5 +5,5 @@ import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.games.domain.model.event.tournament.JoinedTournament
 
 interface JoinTournamentUseCase {
-    suspend fun joinTournament(tournamentId: Int): VolleyResult<JoinedTournament, ErrorType>
+    suspend fun joinTournament(tournamentId: Int, teamId: Int? = null): VolleyResult<JoinedTournament, ErrorType>
 }

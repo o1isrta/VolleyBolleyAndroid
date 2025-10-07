@@ -2,7 +2,7 @@ package cy.volleybolley.games.data.network
 
 import cy.volleybolley.games.data.dto.CreateGameDto
 import cy.volleybolley.games.data.dto.PlayersDto
-import cy.volleybolley.games.data.dto.RatePlayerDto
+import cy.volleybolley.games.data.dto.RatePlayersDto
 
 sealed interface GamesRequest {
     val accessToken: String?
@@ -80,7 +80,7 @@ sealed interface GamesRequest {
         val gameId: Int
     ) : GamesRequest {
         fun fullPath(): String {
-            return "$GAMES/$gameId/$CANCEL"
+            return "$GAMES/$gameId"
         }
     }
 
@@ -94,7 +94,7 @@ sealed interface GamesRequest {
 
     class RatePlayers(
         val gameId: Int,
-        val players: List<RatePlayerDto>
+        val players: RatePlayersDto
     ) : GamesRequest {
         fun fullPath(): String {
             return "$GAMES/$gameId/$RATE_PLAYERS"
@@ -120,7 +120,6 @@ sealed interface GamesRequest {
         const val UPCOMING = "upcoming"
         const val JOIN_GAME = "join-game"
         const val JOIN_TOURNAMENT = "join-tournament"
-        const val CANCEL = "cancel"
         const val RATE_PLAYERS = "rate-players"
         const val SKIP = "skip"
     }

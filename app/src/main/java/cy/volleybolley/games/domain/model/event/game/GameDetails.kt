@@ -9,6 +9,7 @@ data class GameDetails(
     val gameId: Int,
     val host: Host,
     val message: String,
+    val isPrivate: Boolean,
     val courtLocation: Location,
     val startTime: String,
     val endTime: String,

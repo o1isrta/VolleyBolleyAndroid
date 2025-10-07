@@ -48,6 +48,7 @@ fun GamesResponse.GetGameDetails.toDomain(): GameDetails = GameDetails(
     gameId = gameId,
     host = host.toDomain(),
     message = message,
+    isPrivate = isPrivate,
     courtLocation = courtLocation.toDomain(),
     startTime = startTime,
     endTime = endTime,

@@ -14,7 +14,7 @@ import cy.volleybolley.games.domain.model.event.tournament.CreatedTournament
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 
 class TournamentsRepositoryImpl(
-    val networkClient: NetworkClient<TournamentsRequest, TournamentsResponse>
+    private val networkClient: NetworkClient<TournamentsRequest, TournamentsResponse>
 ) : TournamentsRepository {
 
     override suspend fun createTournament(tournament: CreateTournament): VolleyResult<CreatedTournament, ErrorType> {

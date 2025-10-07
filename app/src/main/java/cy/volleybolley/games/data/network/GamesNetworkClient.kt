@@ -118,19 +118,17 @@ class GamesNetworkClient : KtorNetworkClient<GamesRequest, GamesResponse>() {
 
             is GamesRequest.JoinGame -> httpResponse.body<GamesResponse.JoinGame>()
 
-            is GamesRequest.DeclineGameInvite ->
-                httpResponse.body<GamesResponse.DeclineGameInvite>()
+            is GamesRequest.DeclineGameInvite -> GamesResponse.DeclineGameInvite()
 
             is GamesRequest.GetPlayersToRate -> httpResponse.body<GamesResponse.GetPlayersToRate>()
 
-            is GamesRequest.RatePlayers -> httpResponse.body<GamesResponse.RatePlayers>()
+            is GamesRequest.RatePlayers -> GamesResponse.RatePlayers()
 
-            is GamesRequest.SkipRating -> httpResponse.body<GamesResponse.SkipRating>()
+            is GamesRequest.SkipRating -> GamesResponse.SkipRating()
 
-            is GamesRequest.InvitePlayersToGame ->
-                httpResponse.body<GamesResponse.InvitePlayersToGame>()
+            is GamesRequest.InvitePlayersToGame -> GamesResponse.InvitePlayersToGame()
 
-            is GamesRequest.CancelGame -> httpResponse.body<GamesResponse.CancelGame>()
+            is GamesRequest.CancelGame -> GamesResponse.CancelGame()
         }
     }
 }

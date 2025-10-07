@@ -5,6 +5,7 @@ import cy.volleybolley.games.data.dto.HostDto
 import cy.volleybolley.games.data.dto.PlayerShortDto
 import cy.volleybolley.games.data.dto.PlayersDto
 import cy.volleybolley.games.data.dto.RatePlayerDto
+import cy.volleybolley.games.data.dto.RatePlayersDto
 import cy.volleybolley.games.data.dto.TeamDto
 import cy.volleybolley.games.data.network.GamesResponse
 import cy.volleybolley.games.domain.model.entity.Host
@@ -18,13 +19,13 @@ fun HostDto.toDomain(): Host = Host(
     id = id,
     name = "$firstName $lastName",
     avatar = avatar,
-    level = enumValues<LevelType>().firstOrNull { it.name.equals(level, ignoreCase = true) } ?: LevelType.UNCONFINED
+    level = LevelType.findByLevelName(level)
 )
 
 fun PlayerShortDto.toDomain(): PlayerShort = PlayerShort(
     playerId = playerId,
     name = "$firstName $lastName",
-    level = enumValues<LevelType>().firstOrNull { it.name.equals(level, ignoreCase = true) } ?: LevelType.UNCONFINED,
+    level = LevelType.findByLevelName(level),
     avatar = avatar ?: "",
 )
 
@@ -48,7 +49,7 @@ fun RatePlayer.toData(): RatePlayerDto = RatePlayerDto(
     levelChanged = levelChanged.name,
 )
 
-fun List<RatePlayer>.toData(): List<RatePlayerDto> = this.map { it.toData() }
+fun List<RatePlayer>.toData(): RatePlayersDto = RatePlayersDto(this.map { it.toData() })
 
 fun List<PlayerShortDto>.toDomain(): List<PlayerShort> = this.map { it.toDomain() }
 

@@ -42,7 +42,11 @@ class TournamentsNetworkClient : KtorNetworkClient<TournamentsRequest, Tournamen
 
                 is TournamentsRequest.JoinTournament -> {
                     method = HttpMethod.Post
-                    requestConfigure(request.fullPath(), request.accessToken)
+                    requestConfigure(
+                        request.fullPath(),
+                        request.accessToken,
+                        body = request.teamId
+                    )
                 }
 
                 is TournamentsRequest.DeclineTournamentInvite -> {
@@ -79,23 +83,21 @@ class TournamentsNetworkClient : KtorNetworkClient<TournamentsRequest, Tournamen
         return when (requestType) {
             is TournamentsRequest.CreateTournament -> httpResponse.body<TournamentsResponse.CreateTournament>()
 
-            is TournamentsRequest.DeclineTournamentInvite ->
-                httpResponse.body<TournamentsResponse.DeclineTournamentInvite>()
+            is TournamentsRequest.DeclineTournamentInvite -> TournamentsResponse.DeclineTournamentInvite()
 
             is TournamentsRequest.GetPlayersToRate -> httpResponse.body<TournamentsResponse.GetPlayersToRate>()
 
             is TournamentsRequest.GetTournamentDetails -> httpResponse.body<TournamentsResponse.GetTournamentDetails>()
 
-            is TournamentsRequest.InvitePlayersToTournament ->
-                httpResponse.body<TournamentsResponse.InvitePlayersToTournament>()
+            is TournamentsRequest.InvitePlayersToTournament -> TournamentsResponse.InvitePlayersToTournament()
 
             is TournamentsRequest.JoinTournament -> httpResponse.body<TournamentsResponse.JoinTournament>()
 
-            is TournamentsRequest.RatePlayers -> httpResponse.body<TournamentsResponse.RatePlayers>()
+            is TournamentsRequest.RatePlayers -> TournamentsResponse.RatePlayers()
 
-            is TournamentsRequest.SkipRating -> httpResponse.body<TournamentsResponse.SkipRating>()
+            is TournamentsRequest.SkipRating -> TournamentsResponse.SkipRating()
 
-            is TournamentsRequest.CancelTournament -> httpResponse.body<TournamentsResponse.CancelTournament>()
+            is TournamentsRequest.CancelTournament -> TournamentsResponse.CancelTournament()
         }
     }
 }

@@ -9,7 +9,7 @@ import cy.volleybolley.games.domain.model.event.tournament.JoinedTournament
 class JoinTournamentUseCaseImpl(
     private val repository: TournamentParticipationRepository
 ) : JoinTournamentUseCase {
-    override suspend fun joinTournament(tournamentId: Int): VolleyResult<JoinedTournament, ErrorType> {
-        return repository.joinTournament(tournamentId)
+    override suspend fun joinTournament(tournamentId: Int, teamId: Int?): VolleyResult<JoinedTournament, ErrorType> {
+        return repository.joinTournament(tournamentId, teamId)
     }
 }

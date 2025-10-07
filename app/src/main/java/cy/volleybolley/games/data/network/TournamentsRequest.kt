@@ -2,8 +2,7 @@ package cy.volleybolley.games.data.network
 
 import cy.volleybolley.games.data.dto.CreateTournamentDto
 import cy.volleybolley.games.data.dto.PlayersDto
-import cy.volleybolley.games.data.dto.RatePlayerDto
-import cy.volleybolley.games.data.network.GamesRequest.Companion.CANCEL
+import cy.volleybolley.games.data.dto.RatePlayersDto
 import cy.volleybolley.games.data.network.GamesRequest.Companion.INVITES
 import cy.volleybolley.games.data.network.GamesRequest.Companion.INVITE_PLAYERS
 import cy.volleybolley.games.data.network.GamesRequest.Companion.JOIN_TOURNAMENT
@@ -32,7 +31,7 @@ sealed interface TournamentsRequest {
         val tournamentId: Int
     ) : TournamentsRequest {
         fun fullPath(): String {
-            return "$TOURNAMENTS/$tournamentId/$CANCEL"
+            return "$TOURNAMENTS/$tournamentId"
         }
     }
 
@@ -47,6 +46,7 @@ sealed interface TournamentsRequest {
 
     class JoinTournament(
         val tournamentId: Int,
+        val teamId: Int?,
     ) : TournamentsRequest {
         fun fullPath(): String {
             return "$TOURNAMENTS/$tournamentId/$JOIN_TOURNAMENT"
@@ -71,7 +71,7 @@ sealed interface TournamentsRequest {
 
     class RatePlayers(
         val tournamentId: Int,
-        val players: List<RatePlayerDto>
+        val players: RatePlayersDto
     ) : TournamentsRequest {
         fun fullPath(): String {
             return "$TOURNAMENTS/$tournamentId/$RATE_PLAYERS"

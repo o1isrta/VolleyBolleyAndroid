@@ -33,8 +33,9 @@ class TournamentParticipationRepositoryImpl(
         }
     }
 
-    override suspend fun joinTournament(tournamentId: Int): VolleyResult<JoinedTournament, ErrorType> {
-        val response = networkClient.getResponse(TournamentsRequest.JoinTournament(tournamentId = tournamentId))
+    override suspend fun joinTournament(tournamentId: Int, teamId: Int?): VolleyResult<JoinedTournament, ErrorType> {
+        val response =
+            networkClient.getResponse(TournamentsRequest.JoinTournament(tournamentId = tournamentId, teamId = teamId))
 
         if (!response.isSuccess) {
             return VolleyResult.Failure(response.resultCode.mapToErrorType())

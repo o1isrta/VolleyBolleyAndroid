@@ -33,6 +33,7 @@ sealed interface GamesResponse {
         @SerialName("game_id") val gameId: Int,
         @SerialName("host") val host: HostDto,
         @SerialName("message") val message: String,
+        @SerialName("is_private") val isPrivate: Boolean,
         @SerialName("court_location") val courtLocation: LocationDto,
         @SerialName("start_time") val startTime: String,
         @SerialName("end_time") val endTime: String,

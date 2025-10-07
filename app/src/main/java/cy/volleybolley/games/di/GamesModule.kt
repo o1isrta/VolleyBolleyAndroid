@@ -67,27 +67,27 @@ val gamesModule = module {
         TournamentsNetworkClient()
     }
 
-    single<GamesRepository>(HttpClientQualifier.GAMES.qualifier) {
-        GamesRepositoryImpl(networkClient = get())
+    single<GamesRepository> {
+        GamesRepositoryImpl(networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier))
     }
-    single<GameParticipationRepository>(HttpClientQualifier.GAMES.qualifier) {
-        GameParticipationRepositoryImpl(networkClient = get())
+    single<GameParticipationRepository> {
+        GameParticipationRepositoryImpl(networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier))
     }
-    single<GameFeedRepository>(HttpClientQualifier.GAMES.qualifier) {
-        GameFeedRepositoryImpl(networkClient = get())
+    single<GameFeedRepository> {
+        GameFeedRepositoryImpl(networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier))
     }
-    single<GameRatingRepository>(HttpClientQualifier.GAMES.qualifier) {
-        GameRatingRepositoryImpl(networkClient = get())
+    single<GameRatingRepository> {
+        GameRatingRepositoryImpl(networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier))
     }
 
-    single<TournamentsRepository>(HttpClientQualifier.TOURNAMENTS.qualifier) {
-        TournamentsRepositoryImpl(networkClient = get())
+    single<TournamentsRepository> {
+        TournamentsRepositoryImpl(networkClient = get(qualifier = HttpClientQualifier.TOURNAMENTS.qualifier))
     }
-    single<TournamentParticipationRepository>(HttpClientQualifier.GAMES.qualifier) {
-        TournamentParticipationRepositoryImpl(networkClient = get())
+    single<TournamentParticipationRepository> {
+        TournamentParticipationRepositoryImpl(networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier))
     }
-    single<TournamentRatingRepository>(HttpClientQualifier.GAMES.qualifier) {
-        TournamentRatingRepositoryImpl(networkClient = get())
+    single<TournamentRatingRepository> {
+        TournamentRatingRepositoryImpl(networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier))
     }
 
     // Domain

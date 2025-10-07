@@ -5,5 +5,12 @@ enum class LevelType(val level: String) {
     LIGHT("Light"),
     MEDIUM("Medium"),
     HARD("Hard"),
-    PRO("Pro")
+    PRO("Pro");
+
+    companion object {
+        @JvmStatic
+        fun findByLevelName(level: String?): LevelType {
+            return entries.find { it.level == level } ?: UNCONFINED
+        }
+    }
 }

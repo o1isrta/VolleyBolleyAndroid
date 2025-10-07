@@ -14,7 +14,7 @@ import cy.volleybolley.games.domain.model.event.game.CreatedGame
 import cy.volleybolley.games.domain.model.event.game.GameDetails
 
 class GamesRepositoryImpl(
-    val networkClient: NetworkClient<GamesRequest, GamesResponse>
+    private val networkClient: NetworkClient<GamesRequest, GamesResponse>
 ) : GamesRepository {
     override suspend fun createGame(game: CreateGame): VolleyResult<CreatedGame, ErrorType> {
         val response = networkClient.getResponse(GamesRequest.CreateGame(game = game.toData()))
