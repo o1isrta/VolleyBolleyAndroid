@@ -8,4 +8,3 @@ data class Player(
     val isFavorite: Boolean,
     val level: String
 )
-
