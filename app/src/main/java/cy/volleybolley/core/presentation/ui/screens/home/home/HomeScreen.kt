@@ -39,6 +39,7 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
+import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateNewGameClick
@@ -470,12 +471,7 @@ private fun PreviewHomeScreen() {
         ) {
             val state = HomeScreenState(
                 nearGamesCount = 13,
-                location = Location(
-                    longitude = 7.866269,
-                    latitude = 98.396756,
-                    courtName = "Phuket Municipal Stadium",
-                    locationName = "Mueang Phuket District"
-                )
+                location = VolleyMocks.mockLocation
             )
             HomeScreen(
                 state = state,

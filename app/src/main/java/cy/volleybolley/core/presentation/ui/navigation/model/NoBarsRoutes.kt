@@ -27,7 +27,7 @@ enum class NoBarsRoutes(val className: String, val noBottomBar: Boolean, val noT
             if (routeName.isEmpty()) {
                 return false
             }
-            return !NoBarsRoutes.entries.filter { it.noBottomBar }.map { it.className }.contains(routeName)
+            return entries.filter { it.noBottomBar }.find { routeName.contains(it.className) } == null
         }
 
         @JvmStatic
@@ -35,7 +35,7 @@ enum class NoBarsRoutes(val className: String, val noBottomBar: Boolean, val noT
             if (routeName.isEmpty()) {
                 return false
             }
-            return !NoBarsRoutes.entries.filter { it.noTopBar }.map { it.className }.contains(routeName)
+            return entries.filter { it.noTopBar }.find { routeName.contains(it.className) } == null
         }
     }
 }

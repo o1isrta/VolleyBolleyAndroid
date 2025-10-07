@@ -1,6 +1,7 @@
 package cy.volleybolley.core.presentation.ui.model
 
 object VolleyDimens {
+    const val DIMEN_0: Int = 0
     const val DIMEN_1: Int = 1
     const val DIMEN_2: Int = 2
     const val DIMEN_3: Int = 3
@@ -32,6 +33,7 @@ object VolleyDimens {
     const val DIMEN_48: Int = 48
     const val DIMEN_52: Int = 52
     const val DIMEN_56: Int = 56
+    const val DIMEN_60: Int = 60
     const val DIMEN_63: Int = 63
     const val DIMEN_64: Int = 64
     const val DIMEN_71: Int = 71
