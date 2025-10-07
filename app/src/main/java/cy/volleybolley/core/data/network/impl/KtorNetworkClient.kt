@@ -70,8 +70,8 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
         accessToken?.let { headers.append(HttpHeaders.Authorization, it) }
         url {
             takeFrom(BuildConfig.BASE_URL)
-            val basePath = encodedPath.removeSuffix("/")   // убираем завершающий слэш
-            val requestPath = path.removePrefix("/")       // убираем начальный слэш
+            val basePath = encodedPath.removeSuffix("/")
+            val requestPath = path.removePrefix("/")
             encodedPath = "$basePath/$requestPath"
         }
         Log.v(NETWORK_TAG, "→ FINAL URL = ${this.url.buildString()}")
