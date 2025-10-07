@@ -155,6 +155,7 @@
     <string name="levels_can_drop">Levels can drop due to:</string>
     <string name="fair_play_policy">Fair Play Policy</string>
     <string name="log_out_question">Are you sure you want to log out of your account?</string>
+    <string name="delete_account_question">Are you sure you want to delete your account?</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="founder">Founder</string>

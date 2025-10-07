@@ -20,6 +20,7 @@ class ChangePhotoScreenViewModel(
     initialState = ChangePhotoScreenState()
 ) {
     private var originAvatarString: String? = uiState.value.avatarUrl
+    private var chosenImageByteArray: ByteArray? = null
 
     override val tag: String = ChangePhotoScreenViewModel::class.simpleName ?: "ChangePhotoScreenViewModel"
 
@@ -35,29 +36,34 @@ class ChangePhotoScreenViewModel(
             )
 
             is OnGalleryPhotoSelect -> {
-                uiStateMutable.update { checkStateForButtonEnabled(event.pictureUri, event.pictureBytes) }
+                chosenImageByteArray = event.pictureBytes
+                uiStateMutable.update { checkStateForButtonEnabled(event.pictureUri) }
             }
 
             is OnCameraPhotoCreate -> {
-                uiStateMutable.update { checkStateForButtonEnabled(event.photoUri, event.photoBytes) }
+                chosenImageByteArray = event.photoBytes
+                uiStateMutable.update { checkStateForButtonEnabled(event.photoUri) }
             }
 
             OnDeletePhotoClick -> {
-                uiStateMutable.update { checkStateForButtonEnabled(null, null) }
+                chosenImageByteArray = null
+                uiStateMutable.update { checkStateForButtonEnabled(null) }
             }
 
             OnSaveButtonClick -> {
+                /* Here we`ll use chosenImageByteArray as argument for updateAvatarUseCase.
+                We will replace newAvatar with a boolean flag that will determine
+                whether to update the avatar in PersonalData or not. */
                 val newAvatar = uiState.value.avatarUrl ?: ""
                 sendUiEffect(NavigateFromChangePhotoScreen(newAvatar))
             }
         }
     }
 
-    private fun checkStateForButtonEnabled(newAvatarUri: Uri?, newBytes: ByteArray?): ChangePhotoScreenState {
+    private fun checkStateForButtonEnabled(newAvatarUri: Uri?): ChangePhotoScreenState {
         val newAvatarString = newAvatarUri?.toString()
         return ChangePhotoScreenState(
             avatarUrl = newAvatarString,
-            avatarBytes = newBytes,
             buttonEnabled = newAvatarString != originAvatarString
         )
     }

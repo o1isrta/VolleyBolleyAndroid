@@ -45,7 +45,10 @@ fun PaymentsScreen(
     viewModel: PaymentsScreenViewModel,
     paddingFromSystemUi: PaddingValues,
 ) {
-    viewModel.handleBackPayments()
+    LaunchedEffect(Unit) {
+        viewModel.handleBackPayments()
+    }
+
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 

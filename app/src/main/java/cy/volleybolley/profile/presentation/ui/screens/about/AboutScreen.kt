@@ -33,7 +33,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreenEffect.NavigateFromAboutScreen
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreenEvent.OnBackFromAboutClick
-import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreenEvent.OnStateInitialiseByResources
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -42,11 +41,9 @@ fun AboutScreen(
     viewModel: AboutScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues,
 ) {
-    val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     AboutScreen(
-        state = state,
         effect = effect,
         navigateAction = { route ->
             route?.let {
@@ -61,21 +58,10 @@ fun AboutScreen(
 @Composable
 private fun AboutScreen(
     modifier: Modifier = Modifier,
-    state: AboutScreenState,
     effect: AboutScreenEffect?,
     navigateAction: (NavMap?) -> Unit,
     eventCallback: (AboutScreenEvent) -> Unit,
 ) {
-    if (!state.isInitializedState) {
-        eventCallback(
-            OnStateInitialiseByResources(
-                founderName = stringResource(R.string.about_founder_value),
-                designersNames = stringResource(R.string.about_designers_value),
-                developersNames = stringResource(R.string.about_developers_value),
-            )
-        )
-    }
-
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32,
         modifier = modifier
@@ -98,7 +84,7 @@ private fun AboutScreen(
 
                 AboutTextLine(
                     title = stringResource(R.string.founder),
-                    value = state.founder,
+                    value = stringResource(R.string.about_founder_value),
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -108,7 +94,7 @@ private fun AboutScreen(
 
                 AboutTextLine(
                     title = stringResource(R.string.designed_by),
-                    value = state.designedBy,
+                    value = stringResource(R.string.about_designers_value),
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -118,7 +104,7 @@ private fun AboutScreen(
 
                 AboutTextLine(
                     title = stringResource(R.string.developed_by),
-                    value = state.developedBy,
+                    value = stringResource(R.string.about_developers_value),
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -190,11 +176,6 @@ private fun PreviewAboutScreen() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             AboutScreen(
-                state = AboutScreenState(
-                    founder = "Name Surname",
-                    designedBy = "Name Surname\nLongName LongSurname\nSuperLongName SuperLongSurname\nName Surname",
-                    developedBy = "Name Surname\nName Surname\nName Surname"
-                ),
                 effect = null,
                 navigateAction = {},
                 eventCallback = {},

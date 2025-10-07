@@ -21,10 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -56,7 +52,6 @@ import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEven
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEvent.OnPersonalDataClick
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEvent.OnPlayersClick
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEvent.OnSupportClick
-import cy.volleybolley.profile.presentation.ui.screens.profile.model.ProfileDialogType
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -87,8 +82,6 @@ private fun ProfileScreen(
     navigateAction: (NavMap) -> Unit,
     eventCallback: (ProfileScreenEvent) -> Unit,
 ) {
-    var typeOfDialog: ProfileDialogType? by remember { mutableStateOf(null) }
-
     Column(
         modifier = modifier
     ) {
@@ -173,33 +166,27 @@ private fun ProfileScreen(
     LaunchedEffect(effect) {
         when (effect) {
             is NavigateFromProfileScreen -> navigateAction(effect.route)
-
-            is ShowLogoutDialog -> {
-                val actualDialogType = ProfileDialogType.LOGOUT.apply {
-                    setPositiveAction(effect.onPositiveButtonClick)
-                }
-                typeOfDialog = actualDialogType
-            }
-
-            is ShowDeleteAccountDialog -> {
-                val actualDialogType = ProfileDialogType.DELETE.apply {
-                    setPositiveAction(effect.onPositiveButtonClick)
-                }
-                typeOfDialog = actualDialogType
-            }
-
+            is ShowLogoutDialog -> {}
+            is ShowDeleteAccountDialog -> {}
             null -> Unit
         }
     }
 
-    typeOfDialog?.let { dialogType ->
+    if (effect is ShowLogoutDialog) {
         ProfileDialog(
-            text = dialogType.dialogText,
-            onDismiss = { typeOfDialog = null },
-            onConfirm = dialogType.action
+            text = stringResource(R.string.log_out_question),
+            onConfirm = effect.onPositiveButtonClick,
+            onDismiss = effect.onNegativeButtonClick
         )
     }
 
+    if (effect is ShowDeleteAccountDialog) {
+        ProfileDialog(
+            text = stringResource(R.string.delete_account_question),
+            onConfirm = effect.onPositiveButtonClick,
+            onDismiss = effect.onNegativeButtonClick
+        )
+    }
 }
 
 @Stable

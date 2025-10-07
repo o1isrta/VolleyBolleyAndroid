@@ -78,6 +78,7 @@ class ProfileScreenViewModel(
                         sendUiEffect(NavigateFromProfileScreen(LaunchRoute))
                     }
                 },
+                onNegativeButtonClick = { sendUiEffect(null) }
             )
         )
     }
@@ -97,6 +98,7 @@ class ProfileScreenViewModel(
                             }
                     }
                 },
+                onNegativeButtonClick = { sendUiEffect(null) }
             )
         )
     }

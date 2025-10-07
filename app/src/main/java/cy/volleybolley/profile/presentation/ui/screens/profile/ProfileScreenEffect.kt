@@ -8,9 +8,11 @@ sealed interface ProfileScreenEffect : UiEffect {
 
     data class ShowLogoutDialog(
         val onPositiveButtonClick: () -> Unit,
+        val onNegativeButtonClick: () -> Unit,
     ) : ProfileScreenEffect
 
     data class ShowDeleteAccountDialog(
         val onPositiveButtonClick: () -> Unit,
+        val onNegativeButtonClick: () -> Unit,
     ) : ProfileScreenEffect
 }

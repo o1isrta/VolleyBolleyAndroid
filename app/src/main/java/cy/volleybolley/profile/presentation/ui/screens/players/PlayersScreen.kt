@@ -57,7 +57,10 @@ fun PlayersScreen(
     viewModel: PlayersScreenViewModel,
     paddingFromSystemUi: PaddingValues,
 ) {
-    viewModel.handleBackPlayerId()
+    LaunchedEffect(Unit) {
+        viewModel.handleBackPlayerId()
+    }
+
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 

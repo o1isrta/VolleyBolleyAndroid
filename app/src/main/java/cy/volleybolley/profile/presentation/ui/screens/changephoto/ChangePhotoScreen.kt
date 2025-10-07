@@ -79,6 +79,7 @@ fun ChangePhotoScreen(
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    // On Uri changes we`ll create events
     var galleryPictureUri: Uri? by remember { mutableStateOf(null) }
     var cameraPictureUri: Uri? by remember { mutableStateOf(null) }
 
