@@ -11,9 +11,12 @@ import cy.volleybolley.games.data.network.TournamentsResponse
 import cy.volleybolley.games.domain.api.TournamentRatingRepository
 import cy.volleybolley.games.domain.model.entity.PlayerShort
 import cy.volleybolley.games.domain.model.entity.RatePlayer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class TournamentRatingRepositoryImpl(
-    private val networkClient: NetworkClient<TournamentsRequest, TournamentsResponse>
+    private val networkClient: NetworkClient<TournamentsRequest, TournamentsResponse>,
+    private val applicationScope: CoroutineScope
 ) : TournamentRatingRepository {
     override suspend fun getPlayersToRate(tournamentId: Int): VolleyResult<List<PlayerShort>, ErrorType> {
         val response = networkClient.getResponse(TournamentsRequest.GetPlayersToRate(tournamentId = tournamentId))
@@ -24,21 +27,28 @@ class TournamentRatingRepositoryImpl(
         return preview?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
-    override suspend fun ratePlayers(tournamentId: Int, players: List<RatePlayer>): VolleyResult<Unit, ErrorType> {
-        val response =
-            networkClient.getResponse(
+    override fun ratePlayers(
+        tournamentId: Int,
+        players: List<RatePlayer>,
+        onResult: (VolleyResult<Unit, ErrorType>) -> Unit
+    ) {
+        applicationScope.launch {
+            val response = networkClient.getResponse(
                 TournamentsRequest.RatePlayers(
                     tournamentId = tournamentId,
                     players = players.toData()
                 )
             )
+            val result: VolleyResult<Unit, ErrorType> = if (response.isSuccess) {
+                VolleyResult.Success(Unit)
+            } else {
+                VolleyResult.Failure(response.resultCode.mapToErrorType())
+            }
 
-        return if (response.isSuccess) {
-            VolleyResult.Success(Unit)
-        } else {
-            VolleyResult.Failure(response.resultCode.mapToErrorType())
+            onResult(result)
         }
     }
+
 
     override suspend fun skipRating(tournamentId: Int): VolleyResult<Unit, ErrorType> {
         val response = networkClient.getResponse(TournamentsRequest.SkipRating(tournamentId = tournamentId))

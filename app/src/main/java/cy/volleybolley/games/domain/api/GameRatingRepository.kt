@@ -7,7 +7,11 @@ import cy.volleybolley.games.domain.model.entity.RatePlayer
 
 interface GameRatingRepository {
     suspend fun getPlayersToRate(gameId: Int): VolleyResult<List<PlayerShort>, ErrorType>
-    suspend fun ratePlayers(gameId: Int, players: List<RatePlayer>): VolleyResult<Unit, ErrorType>
     suspend fun skipRating(gameId: Int): VolleyResult<Unit, ErrorType>
+    fun ratePlayers(
+        gameId: Int,
+        players: List<RatePlayer>,
+        onResult: (VolleyResult<Unit, ErrorType>) -> Unit
+    )
 }
 

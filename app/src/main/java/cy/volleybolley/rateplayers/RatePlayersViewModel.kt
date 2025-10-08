@@ -1,11 +1,19 @@
 package cy.volleybolley.rateplayers
 
+import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.games.domain.api.game.GetPlayersToRateUseCase
+import cy.volleybolley.games.domain.api.game.RatePlayersUseCase
+import cy.volleybolley.games.domain.model.entity.RatePlayer
+import cy.volleybolley.games.domain.model.entity.RatingType
+import cy.volleybolley.games.domain.model.event.EventType
 import kotlinx.coroutines.flow.update
 
 class RatePlayersViewModel(
     private val eventId: Int,
-    private val eventType: String,
+    private val eventType: EventType,
+    private val ratePlayersUseCase: RatePlayersUseCase,
+    private val getPlayersToRateUseCase: GetPlayersToRateUseCase,
 ) : BaseViewModel<RatePlayersState, RatePlayersEvent, RatePlayersEffect>(
     initialState = RatePlayersState()
 ) {
@@ -18,42 +26,30 @@ class RatePlayersViewModel(
                 "$tag init ${throwable.message}"
             }
         ) {
-            /*
-            getPlayersToRateUseCase.get(id, type)
-            Получение и маппинг в ui модель, чтобы сразу ставить RatingType
-            Новый state:
-                isLoading = false
-                players = PlayersShortUI
-             */
+            when (val result = getPlayersToRateUseCase.getPlayers(eventId, eventType)) {
+                is VolleyResult.Success -> {
+                    uiStateMutable.update { currentState ->
+                        currentState.copy(
+                            isLoading = false,
+                            players = result.data.map {
+                                PlayerShortUI(
+                                    playerId = it.playerId,
+                                    name = it.name,
+                                    level = it.level,
+                                    avatar = it.avatar
+                                )
+                            })
+                    }
+                }
 
-            // моковые данные
-            uiStateMutable.update { currentState ->
-                currentState.copy(
-                    isLoading = false,
-                    players = listOf(
-                        PlayerShortUI(
-                            playerId = 1,
-                            name = "Kristina Popova",
-                            level = LevelType.LIGHT,
-                            avatar = null,
-                            rating = RatingType.CONFIRM
-                        ),
-                        PlayerShortUI(
-                            playerId = 2,
-                            name = "Jane Dow",
-                            level = LevelType.HARD,
-                            avatar = null,
-                            rating = RatingType.CONFIRM
-                        ),
-                        PlayerShortUI(
-                            playerId = 3,
-                            name = "John Smith",
-                            level = LevelType.LIGHT,
-                            avatar = null,
-                            rating = RatingType.CONFIRM
+                is VolleyResult.Failure -> {
+                    uiStateMutable.update { currentState ->
+                        currentState.copy(
+                            isLoading = false,
+                            players = emptyList()
                         )
-                    )
-                )
+                    }
+                }
             }
         }
     }
@@ -77,12 +73,18 @@ class RatePlayersViewModel(
                 "$tag confirmRating ${throwable.message}"
             }
         ) {
-            /*
-            поменять скоуп в репозитории на AppScope,
-            так как экран может закрыться раньше чем отправятся данные!!!
 
-            ratePlayersUseCase.ratePlayers(ratingPlayers)
-             */
+            ratePlayersUseCase.ratePlayers(
+                id = eventId,
+                type = eventType,
+                players = ratingPlayers,
+            ) { result ->
+                when (result) {
+                    is VolleyResult.Failure -> {}
+                    is VolleyResult.Success -> {}
+                }
+            }
+
             sendUiEffect(RatePlayersEffect.CloseScreen)
         }
     }

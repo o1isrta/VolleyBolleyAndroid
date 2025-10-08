@@ -12,14 +12,24 @@ class RatePlayersUseCaseImpl(
     private val gameRepository: GameRatingRepository,
     private val tournamentRepository: TournamentRatingRepository
 ) : RatePlayersUseCase {
-    override suspend fun ratePlayers(
+    override fun ratePlayers(
         id: Int,
         type: EventType,
-        players: List<RatePlayer>
-    ): VolleyResult<Unit, ErrorType> {
-        return when (type) {
-            EventType.GAME -> gameRepository.ratePlayers(gameId = id, players = players)
-            EventType.TOURNAMENT -> tournamentRepository.ratePlayers(tournamentId = id, players = players)
+        players: List<RatePlayer>,
+        onResult: (VolleyResult<Unit, ErrorType>) -> Unit
+    ) {
+        when (type) {
+            EventType.GAME -> gameRepository.ratePlayers(
+                gameId = id,
+                players = players,
+                onResult = onResult
+            )
+
+            EventType.TOURNAMENT -> tournamentRepository.ratePlayers(
+                tournamentId = id,
+                players = players,
+                onResult = onResult
+            )
         }
     }
 }
