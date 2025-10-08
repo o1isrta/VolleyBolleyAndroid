@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.home.rateplayers
+package cy.volleybolley.rateplayers
 
 import cy.volleybolley.core.presentation.base.UiEvent
 

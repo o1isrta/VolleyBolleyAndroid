@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.home.rateplayers
+package cy.volleybolley.rateplayers
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +31,7 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Tran
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsForChangeLevel
+import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -80,7 +81,7 @@ private fun RatePlayersScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    VolleyProgress.CircularProgress()
                 }
             } else {
                 Column(
@@ -119,6 +120,7 @@ private fun RatePlayersScreen(
     }
 }
 
+@Stable
 @Composable
 private fun Header() {
     Column(
@@ -135,6 +137,7 @@ private fun Header() {
     }
 }
 
+@Stable
 @Composable
 private fun PlayerBox(
     player: PlayerShortUI,
@@ -143,7 +146,7 @@ private fun PlayerBox(
     Column(
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_12.dp)
     ) {
-        PlayerInfo(player = player)
+        PlayerInfo(player = player, modifier = Modifier.fillMaxWidth())
         GroupButtonsForChangeLevel(
             checkId = player.rating.checkId,
             modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -152,27 +155,35 @@ private fun PlayerBox(
     }
 }
 
+@Stable
 @Composable
 private fun PlayerInfo(
-    player: PlayerShortUI
+    player: PlayerShortUI,
+    modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier
     ) {
-        CircularAvatar(avatar = player.avatar, size = VolleyDimens.DIMEN_32.dp)
+        CircularAvatar(avatar = player.avatar, size = VolleyDimens.DIMEN_40.dp)
         VolleyText.BodyRegular(text = player.name, color = VolleyColor.White)
         Spacer(Modifier.weight(1f))
-        LevelPill(level = player.level.level.firstOrNull()?.toString() ?: "")
+        if (player.level != LevelType.UNCONFINED) {
+            LevelPill(level = player.level.level.first().toString())
+        }
     }
 }
 
+@Stable
 @Composable
-private fun LevelPill(level: String) {
+private fun LevelPill(
+    modifier: Modifier = Modifier,
+    level: String
+) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .height(VolleyDimens.DIMEN_23.dp)
             .width(VolleyDimens.DIMEN_30.dp)
             .clip(RoundedCornerShape(VolleyDimens.DIMEN_10.dp))

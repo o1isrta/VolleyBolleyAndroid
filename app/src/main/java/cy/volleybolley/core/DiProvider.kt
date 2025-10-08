@@ -10,6 +10,7 @@ import cy.volleybolley.courts.di.courtsModule
 import cy.volleybolley.games.di.gamesModule
 import cy.volleybolley.players.di.playersModule
 import cy.volleybolley.profile.di.profileModule
+import cy.volleybolley.rateplayers.di.ratePlayersModule
 import cy.volleybolley.referencedata.di.referenceDataModule
 
 object DiProvider {
@@ -25,6 +26,7 @@ object DiProvider {
         launchModule,
         authorizationModule,
         registrationModule,
-        authorizationByPhoneModule
+        authorizationByPhoneModule,
+        ratePlayersModule,
     )
 }
