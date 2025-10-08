@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class HostDto(
-    @SerialName("id") val id: Int,
+    @SerialName("player_id") val id: Int,
     @SerialName("first_name") val firstName: String,
     @SerialName("last_name") val lastName: String,
     @SerialName("avatar") val avatar: String?,

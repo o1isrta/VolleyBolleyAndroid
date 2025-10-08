@@ -6,6 +6,7 @@ import cy.volleybolley.games.data.dto.PlayerShortDto
 import cy.volleybolley.games.data.dto.PlayersDto
 import cy.volleybolley.games.data.dto.RatePlayerDto
 import cy.volleybolley.games.data.dto.RatePlayersDto
+import cy.volleybolley.games.data.dto.ShortTeamDto
 import cy.volleybolley.games.data.dto.TeamDto
 import cy.volleybolley.games.data.network.GamesResponse
 import cy.volleybolley.games.domain.model.entity.Host
@@ -29,14 +30,14 @@ fun PlayerShortDto.toDomain(): PlayerShort = PlayerShort(
     avatar = avatar ?: "",
 )
 
-fun TeamDto.toDomainShort(): ShortTeam = ShortTeam(
-    teamId = teamId ?: -1,
-    players = players.map { it.playerId }
-)
-
 fun TeamDto.toDomain(): Team = Team(
     teamId = teamId ?: -1,
     players = players.toDomain()
+)
+
+fun ShortTeamDto.toDomain(): ShortTeam = ShortTeam(
+    teamId = teamId ?: -1,
+    players = players
 )
 
 fun GamesResponse.GetPreview.toDomain(): Preview = Preview(
@@ -54,5 +55,3 @@ fun List<RatePlayer>.toData(): RatePlayersDto = RatePlayersDto(this.map { it.toD
 fun List<PlayerShortDto>.toDomain(): List<PlayerShort> = this.map { it.toDomain() }
 
 fun List<PlayerShort>.toPlayersData(): PlayersDto = PlayersDto(this.map { it.playerId })
-
-fun List<TeamDto>.toDomainShort(): List<ShortTeam> = this.map { it.toDomainShort() }

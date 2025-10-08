@@ -3,6 +3,7 @@ package cy.volleybolley.games.data.network
 import cy.volleybolley.courts.data.dto.LocationDto
 import cy.volleybolley.games.data.dto.HostDto
 import cy.volleybolley.games.data.dto.PlayerShortDto
+import cy.volleybolley.games.data.dto.ShortTeamDto
 import cy.volleybolley.games.data.dto.TeamDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -24,7 +25,7 @@ sealed interface TournamentsResponse {
         @SerialName("payment_type") val paymentType: String,
         @SerialName("payment_account") val paymentAccount: String?,
         @SerialName("currency_type") val currencyType: String,
-        @SerialName("teams") val teams: List<TeamDto>,
+        @SerialName("teams") val teams: List<ShortTeamDto>,
         @SerialName("court_location") val location: LocationDto,
     ) : TournamentsResponse
 
