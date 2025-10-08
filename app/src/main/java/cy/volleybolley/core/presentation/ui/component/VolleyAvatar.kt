@@ -38,7 +38,11 @@ object VolleyAvatar {
                 .size(size)
                 .clip(CircleShape)
                 .border(1.dp, VolleyColor.White, CircleShape)
-                .clickable(onClick = onClick)
+                .clickable(
+                    interactionSource = null,
+                    indication = null,
+                    onClick = onClick
+                )
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)

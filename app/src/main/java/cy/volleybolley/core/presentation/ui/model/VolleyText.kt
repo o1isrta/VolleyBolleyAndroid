@@ -8,7 +8,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 
+@UiLibraryMarker
 object VolleyText {
 
     @Stable
@@ -131,6 +133,25 @@ object VolleyText {
             style = VolleyTypography.BodyBold,
             modifier = modifier,
             color = color,
+            textAlign = textAlign,
+            maxLines = maxLines,
+            overflow = overflow
+        )
+    }
+
+    @Stable
+    @Composable
+    fun BodyBoldGradient(
+        text: String,
+        modifier: Modifier = Modifier,
+        textAlign: TextAlign? = null,
+        maxLines: Int = Int.MAX_VALUE,
+        overflow: TextOverflow = TextOverflow.Clip
+    ) {
+        Text(
+            text = text,
+            style = VolleyTypography.BodyBoldGradient,
+            modifier = modifier,
             textAlign = textAlign,
             maxLines = maxLines,
             overflow = overflow
@@ -303,4 +324,26 @@ object VolleyText {
             overflow = overflow
         )
     }
+
+    @Stable
+    @Composable
+    fun HeroBody(
+        text: String,
+        modifier: Modifier = Modifier,
+        color: Color = Color.Unspecified,
+        textAlign: TextAlign? = null,
+        maxLines: Int = Int.MAX_VALUE,
+        overflow: TextOverflow = TextOverflow.Clip
+    ) {
+        Text(
+            text = text,
+            style = VolleyTypography.HeroBody,
+            modifier = modifier,
+            color = color,
+            textAlign = textAlign,
+            maxLines = maxLines,
+            overflow = overflow
+        )
+    }
+
 }

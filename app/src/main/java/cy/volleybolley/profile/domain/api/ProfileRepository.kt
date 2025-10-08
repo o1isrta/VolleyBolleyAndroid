@@ -10,6 +10,6 @@ interface ProfileRepository {
     suspend fun getPayments(): VolleyResult<List<Payment>, ErrorType>
     suspend fun updatePersonalData(data: PersonalData): VolleyResult<Unit, ErrorType>
     suspend fun updatePayments(payments: List<Payment>): VolleyResult<Unit, ErrorType>
-    suspend fun updateAvatar(imageBytes: ByteArray?): VolleyResult<String, ErrorType>
+    suspend fun updateAvatar(photoBytes: ByteArray?): VolleyResult<String, ErrorType>
     suspend fun deleteProfile(): VolleyResult<Unit, ErrorType>
 }

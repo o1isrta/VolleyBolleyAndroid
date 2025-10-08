@@ -1,7 +1,7 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +13,14 @@ import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScre
 import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.SignUpScreen
+import androidx.navigation.toRoute
+import cy.volleybolley.core.presentation.ui.screens.authorization.aboutlevels.AboutLevelsScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.AuthorizationByPhoneScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.VerifyPhoneNumberScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.registration.RegistrationScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
@@ -41,9 +49,9 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.Upcoming
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.home.HomeScreen
+import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
-import cy.volleybolley.core.presentation.ui.screens.home.rateplayers.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.AboutScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
@@ -53,28 +61,65 @@ import cy.volleybolley.core.presentation.ui.screens.profile.PersonalDataScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun NavHostContainer(
-    modifier: Modifier = Modifier,
+    paddingFromSystemUi: PaddingValues,
     navController: NavHostController,
     startDestination: NavMap = LaunchRoute,
     activityFinisher: () -> Unit,
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination,
-        modifier = modifier
+        startDestination = startDestination
     ) {
         // authorization
         composable<LaunchRoute> { LaunchScreen(navController) }
-        composable<OnboardingRoute> { OnboardingScreen(navController) }
-        composable<SignUpRoute> { SignUpScreen(navController) }
-        composable<RegistrationRoute> { RegistrationScreen(navController) }
-        composable<RegistrationByPhoneRoute> { RegistrationByPhoneScreen(navController) }
-        composable<AboutLevelsRoute> { AboutLevelsScreen(navController) }
+        composable<OnboardingRoute> {
+            OnboardingScreen(
+                onNextScreenRequested = { navController.navigate(AuthorizationRoute) },
+                paddingFromSystemUi = paddingFromSystemUi
+            )
+        }
+        composable<AuthorizationRoute> {
+            AuthorizationScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onNavigateToRegisterByPhoneRequested = { navController.navigate(AuthorizationByPhoneRoute) },
+                onSuccessRegisteredAction = { navController.navigate(RegistrationRoute) }
+            )
+        }
+        composable<RegistrationRoute> {
+            RegistrationScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onRegistrationSuccessEvent = {
+                    navController.navigate(HomeRoute) {
+                        popUpTo(LaunchRoute) { inclusive = false }
+                    }
+                },
+                onRequestNavigateToAboutLevels = { navController.navigate(AboutLevelsRoute) }
+            )
+        }
+        composable<AuthorizationByPhoneRoute> {
+            AuthorizationByPhoneScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onBackNavigationRequested = { navController.popBackStack() },
+                requestNavigateToVerifyPhoneScreen = {
+                    navController.navigate(VerifyPhoneNumberRoute)
+                }
+            )
+        }
+        composable<VerifyPhoneNumberRoute> {
+            VerifyPhoneNumberScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onBackNavigationRequested = { navController.popBackStack() },
+                onNavigateToRegistrationScreenRequested = {
+                    navController.navigate(RegistrationRoute)
+                }
+            )
+        }
+        composable<AboutLevelsRoute> {
+            AboutLevelsScreen(onBackNavigationRequested = { navController.popBackStack() })
+        }
 
         // Home nested graph
         navigation<HomeTopLevelRoute>(startDestination = HomeRoute) {
@@ -160,14 +205,86 @@ fun NavHostContainer(
                     finisher = activityFinisher,
                 )
             }
-            composable<PlayersRoute> { PlayersScreen(navController) }
-            composable<PlayerProfileRoute> { PlayerProfileScreen(navController) }
-            composable<PersonalDataRoute> { PersonalDataScreen(navController) }
-            composable<ChangePhotoRoute> { ChangePhotoScreen(navController) }
-            composable<PaymentsRoute> { PaymentsScreen(navController) }
-            composable<EnterPaymentDataRoute> { EnterPaymentDataScreen(navController) }
-            composable<FaqRoute> { FaqScreen(navController) }
-            composable<AboutRoute> { AboutScreen(navController) }
+
+            composable<AboutRoute> {
+                AboutScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+
+            composable<ChangePhotoRoute> { backStackEntry ->
+                val avatarString = backStackEntry.toRoute<ChangePhotoRoute>().avatarUrl
+                ChangePhotoScreen(
+                    navController = navController,
+                    avatarFromPersonalData = avatarString,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+
+            composable<FaqRoute> {
+                FaqScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+
+            composable<PaymentsRoute> { backStackEntry ->
+                val viewModel = koinViewModel<PaymentsScreenViewModel> {
+                    parametersOf(BackPaymentsHolder(backStackEntry.savedStateHandle))
+                }
+                PaymentsScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+
+            composable<PersonalDataRoute> { backStackEntry ->
+                val viewModel = koinViewModel<PersonalDataScreenViewModel> {
+                    parametersOf(BackAvatarHolder(backStackEntry.savedStateHandle))
+                }
+                PersonalDataScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+
+            composable<PlayerProfileRoute> { backStackEntry ->
+                val playerId = backStackEntry.toRoute<PlayerProfileRoute>().playerId
+                val viewModel = koinViewModel<PlayerProfileScreenViewModel> {
+                    parametersOf(playerId)
+                }
+                PlayerProfileScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi,
+                )
+            }
+
+            composable<PlayersRoute> { backStackEntry ->
+                val viewModel = koinViewModel<PlayersScreenViewModel> {
+                    parametersOf(BackPlayerIdHolder(backStackEntry.savedStateHandle))
+                }
+                PlayersScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+
+            composable<EnterPaymentDataRoute> { backStackEntry ->
+                val routeWithArgs = backStackEntry.toRoute<EnterPaymentDataRoute>()
+                val viewModel = koinViewModel<EnterPaymentDataScreenViewModel> {
+                    parametersOf(routeWithArgs.paymentTypeName, routeWithArgs.paymentsJsonString)
+                }
+                EnterPaymentDataScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
         }
     }
 }

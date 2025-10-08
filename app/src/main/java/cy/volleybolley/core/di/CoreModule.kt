@@ -1,6 +1,7 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.home.rateplayers.RatePlayersViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -54,4 +55,6 @@ val coreModule = module {
             eventType = eventType,
         )
     }
+
+    viewModel { HomeScreenViewModel() }
 }
