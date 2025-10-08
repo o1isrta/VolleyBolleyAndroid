@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cy.volleybolley.R
+import cy.volleybolley.core.domain.model.LevelType
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
@@ -35,6 +36,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.games.domain.model.entity.RatingType
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 @Composable
