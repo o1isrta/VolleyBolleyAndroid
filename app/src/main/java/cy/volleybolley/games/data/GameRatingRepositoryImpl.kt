@@ -30,19 +30,11 @@ class GameRatingRepositoryImpl(
     override fun ratePlayers(
         gameId: Int,
         players: List<RatePlayer>,
-        onResult: (VolleyResult<Unit, ErrorType>) -> Unit
     ) {
         applicationScope.launch {
-            val response =
-                networkClient.getResponse(GamesRequest.RatePlayers(gameId = gameId, players = players.toData()))
-
-            val result: VolleyResult<Unit, ErrorType> = if (response.isSuccess) {
-                VolleyResult.Success(Unit)
-            } else {
-                VolleyResult.Failure(response.resultCode.mapToErrorType())
-            }
-
-            onResult(result)
+            networkClient.getResponse(
+                GamesRequest.RatePlayers(gameId = gameId, players = players.toData())
+            )
         }
     }
 

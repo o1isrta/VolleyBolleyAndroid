@@ -78,12 +78,7 @@ class RatePlayersViewModel(
                 id = eventId,
                 type = eventType,
                 players = ratingPlayers,
-            ) { result ->
-                when (result) {
-                    is VolleyResult.Failure -> {}
-                    is VolleyResult.Success -> {}
-                }
-            }
+            )
 
             sendUiEffect(RatePlayersEffect.CloseScreen)
         }

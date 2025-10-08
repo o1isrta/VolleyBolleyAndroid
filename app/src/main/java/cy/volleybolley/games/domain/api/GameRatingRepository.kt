@@ -11,7 +11,6 @@ interface GameRatingRepository {
     fun ratePlayers(
         gameId: Int,
         players: List<RatePlayer>,
-        onResult: (VolleyResult<Unit, ErrorType>) -> Unit
     )
 }
 
