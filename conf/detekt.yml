@@ -104,7 +104,7 @@ complexity:
         constructorThreshold: 7
         ignoreDefaultParameters: true
         ignoreDataClasses: true
-        ignoreAnnotated: [ "Inject", "InjectConstructor", "Composable" ]
+        ignoreAnnotated: [ "Inject", "InjectConstructor", "Composable", "Serializable" ]
     MethodOverloading:
         active: true
         threshold: 4
