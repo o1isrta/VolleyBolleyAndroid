@@ -5,7 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import cy.volleybolley.core.presentation.ui.screens.authorization.aboutlevels.AboutLevelsScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.AuthorizationByPhoneScreen
@@ -40,19 +42,30 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.JoinedPl
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGameDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
-import cy.volleybolley.core.presentation.ui.screens.home.HomeScreen
-import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
-import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.AboutScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.FaqScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.PaymentsScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.PersonalDataScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
+import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
+import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
+import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreen
+import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreen
+import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenViewModel
+import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreen
+import cy.volleybolley.profile.presentation.ui.screens.payments.PaymentsScreen
+import cy.volleybolley.profile.presentation.ui.screens.payments.PaymentsScreenViewModel
+import cy.volleybolley.profile.presentation.ui.screens.payments.model.BackPaymentsHolder
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreen
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenViewModel
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.BackAvatarHolder
+import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreen
+import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenViewModel
+import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreen
+import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenViewModel
+import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreen
+import cy.volleybolley.rateplayers.RatePlayersScreen
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
+
 
 @Composable
 fun NavHostContainer(
@@ -119,6 +132,7 @@ fun NavHostContainer(
             composable<HomeRoute> {
                 HomeScreen(
                     navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi,
                     finisher = activityFinisher,
                 )
             }
@@ -134,7 +148,15 @@ fun NavHostContainer(
                     }
                 )
             }
-            composable<SuccessRoute> { SuccessScreen(navController) }
+            composable<SuccessRoute> { backStackEntry ->
+                val event = backStackEntry.toRoute<SuccessRoute>().succeedGame
+                SuccessScreen(
+                    navController = navController,
+                    viewModel = koinViewModel {
+                        parametersOf(event)
+                    }
+                )
+            }
 
             composable<RatePlayersRoute> { backStackEntry ->
                 val args = backStackEntry.toRoute<RatePlayersRoute>()

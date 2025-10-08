@@ -1,7 +1,9 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
-import cy.volleybolley.core.presentation.ui.screens.home.rateplayers.RatePlayersViewModel
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
+import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -46,13 +48,6 @@ val coreModule = module {
                 json(get())
             }
         }
-    }
-
-    viewModel { (eventId: Int, eventType: String) ->
-        RatePlayersViewModel(
-            eventId = eventId,
-            eventType = eventType,
-        )
     }
 
     viewModel { (event: SucceedGame) ->
