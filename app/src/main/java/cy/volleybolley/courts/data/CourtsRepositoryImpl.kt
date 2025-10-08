@@ -11,7 +11,7 @@ import cy.volleybolley.courts.domain.api.CourtsRepository
 import cy.volleybolley.courts.domain.model.Court
 
 class CourtsRepositoryImpl(
-    val networkClient: NetworkClient<CourtsRequest, CourtsResponse>
+    private val networkClient: NetworkClient<CourtsRequest, CourtsResponse>
 ) : CourtsRepository {
 
     override suspend fun getCourts(searchQuery: String?): VolleyResult<List<Court>, ErrorType> {
