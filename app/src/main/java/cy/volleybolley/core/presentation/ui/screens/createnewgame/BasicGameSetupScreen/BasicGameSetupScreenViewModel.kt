@@ -1,11 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenEffect
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenEvent
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.Privacy
-import kotlinx.coroutines.Dispatchers
-import kotlin.random.Random
+import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 
 class BasicGameSetupScreenViewModel :
     BaseViewModel<BasicGameSetupScreenState, BasicGameSetupScreenEvent, BasicGameSetupScreenEffect>(
@@ -13,6 +9,29 @@ class BasicGameSetupScreenViewModel :
     ) {
     override val tag: String = "BasicGameSetupScreenViewModel"
 
+    companion object {
+        val MAX_LENGTH = VolleyDimens.DIMEN_160
+    }
+
+    fun onEvent(event: BasicGameSetupScreenEvent) {
+        when (event) {
+            is BasicGameSetupScreenEvent.MessageChanged -> {
+                // ограничиваем длину в ViewModel — можно бы убрать ограничение в MessageField
+                val limited = getLimitedText(MAX_LENGTH, event.text)
+                uiStateMutable.value = uiStateMutable.value.copy(message = limited)
+            }
+            BasicGameSetupScreenEvent.OnBackClicked -> {
+                sendUiEffect(BasicGameSetupScreenEffect.NavigateBack)
+            }
+            BasicGameSetupScreenEvent.OnCreateClick -> {
+                sendUiEffect(BasicGameSetupScreenEffect.NavigateToCreatePlace)
+            }
+            is BasicGameSetupScreenEvent.OnDateSelected -> {
+                // Обновляем состояние с выбранной датой
+                uiStateMutable.value = uiStateMutable.value.copy(date = event.date)
+            }
+        }
+    }
     init {
         // проверяем, есть  ли аккаунт
         //obtainEvent(BasicGameSetupScreenEvent.)
@@ -92,4 +111,31 @@ class BasicGameSetupScreenViewModel :
     private fun getAccountNumber(): String? {
         return if (Random.nextBoolean()) "123 45 6789" else null // для теста, заменить на получение номера из профиля
     }*/
+    /**
+     * Ограничивает текст по длине, не разрубая суррогатные пары.
+     * maxLength — ожидаемый максимальный размер в кодовых единицах (Int).
+     */
+    private fun getLimitedText(maxLength: Int, input: String): String {
+        if (maxLength <= 0) return ""
+        if (input.length <= maxLength) return input
+
+        // Не разрезаем суррогатную пару: если на границе стоит high surrogate — сдвинуть на 1 влево
+        var end = maxLength
+        if (end > 0 && Character.isHighSurrogate(input[end - 1])) {
+            end -= 1
+        }
+        return input.substring(0, end)
+    }
+
+    /**
+     * Возвращает "n / max" (сейчас используется для счётчика символов).
+     */
+    fun formatCounter(text: String, maxLength: Int): String =
+        "${text.length} / $maxLength"
+
+    /**
+     * Сколько символов осталось до лимита (>=0).
+     */
+    fun remaining(text: String, maxLength: Int): Int =
+        (maxLength - text.length).coerceAtLeast(0)
 }

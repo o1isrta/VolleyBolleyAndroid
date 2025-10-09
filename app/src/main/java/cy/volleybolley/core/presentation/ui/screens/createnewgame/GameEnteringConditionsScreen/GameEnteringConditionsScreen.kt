@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
@@ -55,7 +56,8 @@ import kotlinx.serialization.json.Json
 
 @Composable
 fun GameEnteringConditionsScreen(navController: NavHostController,
-                                 viewModel: GameEnteringConditionsScreenViewModel = GameEnteringConditionsScreenViewModel()) {
+                                 viewModel: GameEnteringConditionsScreenViewModel = viewModel()//= GameEnteringConditionsScreenViewModel()
+) {
 
     val scrollState = rememberScrollState() //Состояние скролла
     val state by viewModel.uiState.collectAsState()

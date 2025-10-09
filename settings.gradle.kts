@@ -16,6 +16,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            setUrl("https://jitpack.io")
+        }
     }
 }
 
@@ -23,3 +26,4 @@ includeBuild("build-logic")
 
 rootProject.name = "Volleybolley"
 include(":app")
+

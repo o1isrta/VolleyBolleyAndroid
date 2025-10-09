@@ -48,6 +48,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite
+import cy.volleybolley.core.presentation.ui.navigation.BasicGameSetupRoute
 import cy.volleybolley.core.presentation.ui.navigation.GameEnteringConditionsRoute
 import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.MyGamesTopLevelRoute
@@ -55,6 +56,7 @@ import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
 import cy.volleybolley.core.presentation.ui.navigation.ProfileTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.model.NoBarsRoutes
 import cy.volleybolley.core.presentation.ui.navigation.model.TopLevelRoute
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreen
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 class MainActivity : ComponentActivity() {
@@ -177,7 +179,7 @@ fun RootContainer(
 
     // ВРЕМЕННЫЙ ПЕРЕХОД ДЛЯ ОТЛАДКИ:
     LaunchedEffect(Unit) {
-        navController.navigate(GameEnteringConditionsRoute) // Или "basic_game_setup_route"
+        navController.navigate(BasicGameSetupRoute) //(GameEnteringConditionsRoute) // Или "basic_game_setup_route"
     }
 
     Surface(
