@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -25,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -37,6 +40,7 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
+import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite
@@ -87,16 +91,19 @@ fun RootContainer(
             topBar = {
                 if (showTopBar) {
                     VolleyTopBar.TopBar(
-                        firstName = "nemislimus",
-                        avatar = "https://cdn.fishki.net/upload/post/2021/03/29/3682461/gallery/tn/" +
-                            "wil-hughes-troll-face.jpg",
-                        levelName = "PRO"
+                        firstName = VolleyMocks.USER_NAME,
+                        avatar = VolleyMocks.USER_AVATAR,
+                        levelName = VolleyMocks.USER_LEVEL
                     )
                 }
             },
             bottomBar = {
+                val paddingFromSystemUi = ScaffoldDefaults.contentWindowInsets.asPaddingValues()
+                val bottomBarHeight = remember {
+                    VolleyDimens.DIMEN_60.dp + paddingFromSystemUi.calculateBottomPadding()
+                }
                 if (showBottomNav) {
-                    BottomNavComponent(navController, currentDestination)
+                    BottomNavComponent(bottomBarHeight, navController, currentDestination)
                 }
             },
             content = { innerPadding ->
@@ -108,6 +115,7 @@ fun RootContainer(
 
 @Composable
 private fun BottomNavComponent(
+    bottomNavBarHeight: Dp,
     navController: NavHostController,
     currentDestination: NavDestination?
 ) {
@@ -121,8 +129,8 @@ private fun BottomNavComponent(
         TopLevelRoute(
             stringResource(R.string.my_games),
             MyGamesTopLevelRoute,
-            painterResource(R.drawable.ic_players),
-            painterResource(R.drawable.ic_players_gradient)
+            painterResource(R.drawable.ic_ball),
+            painterResource(R.drawable.ic_ball_gradient)
         ),
         TopLevelRoute(
             stringResource(R.string.profile),
@@ -138,15 +146,17 @@ private fun BottomNavComponent(
             topEnd = VolleyDimens.DIMEN_36.dp
         )
     }
+
     BottomAppBar(
+        contentPadding = PaddingValues(0.dp),
         containerColor = VolleyColor.TurquoiseBottom,
         modifier = Modifier
             .background(
                 color = VolleyColor.TurquoiseBottom,
                 shape = shape
             )
-            .height(VolleyDimens.DIMEN_81.dp)
             .padding(top = VolleyDimens.DIMEN_10.dp)
+            .height(bottomNavBarHeight)
             .clip(shape)
     ) {
         topLevelRoutes.forEach { topRoute ->

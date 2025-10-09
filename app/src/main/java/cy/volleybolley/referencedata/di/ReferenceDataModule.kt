@@ -31,7 +31,7 @@ val referenceDataModule = module {
 
     single<ReferenceDataRemoteRepository> {
         ReferenceDataRemoteRepositoryImpl(
-            networkClient = get(),
+            networkClient = get(HttpClientQualifier.REFERENCE_DATA.qualifier),
             localRepository = get()
         )
     }

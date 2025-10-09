@@ -75,12 +75,12 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun updateAvatar(
-        imageBytes: ByteArray?,
+        photoBytes: ByteArray?,
     ): VolleyResult<String, ErrorType> {
         val response = networkClient.getResponse(
             ProfileRequest.UpdateProfileAvatar(
                 accessToken = accessToken,
-                body = AvatarDto(convertImageBytesToBase64String(imageBytes))
+                body = AvatarDto(convertImageBytesToBase64String(photoBytes))
             )
         )
         if (!response.isSuccess) {
