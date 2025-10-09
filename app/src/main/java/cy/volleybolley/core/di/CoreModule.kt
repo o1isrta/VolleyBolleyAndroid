@@ -53,9 +53,8 @@ val coreModule = module {
         MainActivityViewModel(
             sendDeviceTokenUseCase = get(),
             fcmTokenStore = get(),
-            notificationPermissionChecker = get(),
+            notificationPermissionChecker = get()
         )
     }
-    
     viewModel { HomeScreenViewModel() }
 }
