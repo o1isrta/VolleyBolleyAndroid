@@ -15,7 +15,6 @@ object DiProvider {
     val modules = listOf(
         coreModule,
         courtsModule,
-        authViewModelModule,
         gamesModule,
         profileModule,
         playersModule,
