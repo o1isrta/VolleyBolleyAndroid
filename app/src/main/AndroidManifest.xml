@@ -28,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+      
         <service
             android:name=".notification.presentation.service.FirebaseNotificationService"
             android:exported="false">
@@ -35,6 +36,17 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+      
+        <provider
+            android:authorities="cy.volleybolley.fileprovider"
+            android:name=".core.presentation.VolleyFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+      
     </application>
 
 </manifest>

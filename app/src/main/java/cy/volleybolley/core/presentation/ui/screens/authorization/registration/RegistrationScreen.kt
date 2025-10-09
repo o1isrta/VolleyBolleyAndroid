@@ -164,7 +164,7 @@ private fun FillRegistrationData(
                 selectedItem = state.selectedCountry,
                 itemList = state.countryList,
                 getTextByItem = { it?.name ?: "" },
-                hint = stringResource(id = R.string.your_county),
+                hint = stringResource(id = R.string.your_country),
                 onItemSelect = { item, _ -> eventCallback(RegistrationEvent.CountrySelected(item!!)) }
             )
             HorizontalDivider(

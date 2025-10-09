@@ -2,6 +2,7 @@ package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.presentation.MainActivityViewModel
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -55,4 +56,6 @@ val coreModule = module {
             notificationPermissionChecker = get(),
         )
     }
+    
+    viewModel { HomeScreenViewModel() }
 }

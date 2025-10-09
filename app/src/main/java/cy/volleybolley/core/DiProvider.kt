@@ -8,6 +8,7 @@ import cy.volleybolley.core.presentation.ui.screens.authorization.launch.di.laun
 import cy.volleybolley.core.presentation.ui.screens.authorization.registration.di.registrationModule
 import cy.volleybolley.courts.di.courtsModule
 import cy.volleybolley.notification.di.notificationsModule
+import cy.volleybolley.games.di.gamesModule
 import cy.volleybolley.players.di.playersModule
 import cy.volleybolley.profile.di.profileModule
 import cy.volleybolley.referencedata.di.referenceDataModule
@@ -16,6 +17,7 @@ object DiProvider {
     val modules = listOf(
         coreModule,
         courtsModule,
+        gamesModule,
         playersModule,
         referenceDataModule,
         profileModule,

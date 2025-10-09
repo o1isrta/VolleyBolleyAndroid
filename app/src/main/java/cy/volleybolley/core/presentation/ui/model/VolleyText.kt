@@ -141,6 +141,25 @@ object VolleyText {
 
     @Stable
     @Composable
+    fun BodyBoldGradient(
+        text: String,
+        modifier: Modifier = Modifier,
+        textAlign: TextAlign? = null,
+        maxLines: Int = Int.MAX_VALUE,
+        overflow: TextOverflow = TextOverflow.Clip
+    ) {
+        Text(
+            text = text,
+            style = VolleyTypography.BodyBoldGradient,
+            modifier = modifier,
+            textAlign = textAlign,
+            maxLines = maxLines,
+            overflow = overflow
+        )
+    }
+
+    @Stable
+    @Composable
     fun BodyRegular(
         text: String,
         modifier: Modifier = Modifier,
