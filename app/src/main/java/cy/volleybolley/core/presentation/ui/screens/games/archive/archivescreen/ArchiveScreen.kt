@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -75,7 +76,12 @@ fun ArchiveScreen(
         },
         eventCallback = { event ->
             viewModel.obtainEvent(event)
-        }
+        },
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                horizontal = VolleyDimens.DIMEN_8.dp
+            )
     )
 }
 
@@ -85,7 +91,8 @@ private fun ArchiveScreen(
     effect: ArchiveEffect?,
     onBackClick: () -> Unit,
     navigateAction: (NavMap) -> Unit,
-    eventCallback: (ArchiveEvent) -> Unit
+    eventCallback: (ArchiveEvent) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
 
@@ -100,11 +107,7 @@ private fun ArchiveScreen(
     }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                horizontal = VolleyDimens.DIMEN_8.dp
-            )
+        modifier = modifier
     ) {
 
         if (state.emptyArchive) {
@@ -123,15 +126,17 @@ private fun ArchiveScreen(
     }
 }
 
+@Stable
 @Composable
 private fun ArchiveLazyColumn(
     games: List<Game>,
     onBackClick: () -> Unit,
     onButtonClick: (Game) -> Unit,
-    onMapClick: (Location) -> Unit
+    onMapClick: (Location) -> Unit,
+    modifier: Modifier = Modifier.fillMaxSize()
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
     ) {
         itemsIndexed(
@@ -148,22 +153,24 @@ private fun ArchiveLazyColumn(
     }
 }
 
+@Stable
 @Composable
 private fun ArchiveCard(
     game: Game,
     onBackClick: () -> Unit,
     onButtonClick: (Game) -> Unit,
     onMapClick: (Location) -> Unit,
-    showHeader: Boolean
+    showHeader: Boolean,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(VolleyDimens.DIMEN_20.dp)
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp)
+            modifier = modifier
         ) {
 
             if (showHeader) {
@@ -191,6 +198,7 @@ private fun ArchiveCard(
     }
 }
 
+@Stable
 @Composable
 private fun HostInfoBlock(host: Host) {
     Column {
@@ -239,16 +247,18 @@ private fun HostInfoBlock(host: Host) {
     }
 }
 
+@Stable
 @Composable
 private fun GameInfoBlock(
     game: Game,
-    onMapClick: (Location) -> Unit
+    onMapClick: (Location) -> Unit,
+    modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    Column {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+    ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = VolleyDimens.DIMEN_8.dp)
+            modifier = modifier
         ) {
             VolleyText.BodyBold(
                 text = stringResource(R.string.completed),
@@ -271,9 +281,7 @@ private fun GameInfoBlock(
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = VolleyDimens.DIMEN_8.dp)
+            modifier = modifier
         ) {
             val label = stringResource(R.string.place_archive)
             val text = buildAnnotatedString {
@@ -303,7 +311,7 @@ private fun GameInfoBlock(
 
         VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = VolleyDimens.DIMEN_16,
-            modifier = Modifier.fillMaxWidth()
+            modifier = modifier
         ) {
             VolleyText.BodyRegular(
                 text = game.message,
@@ -316,16 +324,17 @@ private fun GameInfoBlock(
     }
 }
 
+@Stable
 @Composable
-private fun DetailsButton(onButtonClick: () -> Unit) {
+private fun DetailsButton(onButtonClick: () -> Unit, modifier: Modifier = Modifier.fillMaxWidth()) {
     VolleyButton.OutlinedActiveButton(
         text = stringResource(R.string.details),
         onClick = onButtonClick,
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
     )
 }
 
+@Stable
 @Composable
 private fun ArchiveNotFoundPlaceHolder(
     onBackClick: () -> Unit,
@@ -347,6 +356,7 @@ private fun ArchiveNotFoundPlaceHolder(
     }
 }
 
+@Stable
 @Composable
 private fun ArchiveHeader(
     onBackClick: () -> Unit,
@@ -375,6 +385,7 @@ private fun ArchiveHeader(
     }
 }
 
+@Stable
 @Composable
 private fun PlaceholderMessage() {
     Column(

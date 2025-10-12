@@ -23,6 +23,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -101,6 +102,7 @@ private fun PastGameScreen(
     )
 }
 
+@Stable
 @Composable
 private fun Render(
     state: PastGameState,
@@ -129,23 +131,23 @@ private fun Render(
     }
 }
 
+@Stable
 @Composable
 private fun ShowPastGameDetails(
     game: Game,
     onBackClick: () -> Unit,
-    onMapClick: (Location) -> Unit
+    onMapClick: (Location) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val scrollState = rememberScrollState()
-
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp),
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(VolleyDimens.DIMEN_20.dp)
-                .scrollable(scrollState, Orientation.Vertical)
+                .scrollable(rememberScrollState(), Orientation.Vertical)
         ) {
             PastGameHeader(onBackClick = onBackClick)
             HostInfoBlock(host = game.host, message = game.message)
@@ -171,6 +173,7 @@ private fun ShowPastGameDetails(
     }
 }
 
+@Stable
 @Composable
 private fun PlayersBlock(
     players: List<PlayerShort>
@@ -191,6 +194,7 @@ private fun PlayersBlock(
     }
 }
 
+@Stable
 @Composable
 private fun PlayersRow(index: Int, player: PlayerShort) {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -218,6 +222,7 @@ private fun PlayersRow(index: Int, player: PlayerShort) {
     }
 }
 
+@Stable
 @Composable
 private fun PaymentBlock(
     paymentType: String,
@@ -264,6 +269,7 @@ private fun PaymentBlock(
     }
 }
 
+@Stable
 @Composable
 private fun AboutGameBlock(
     courtLocation: Location,
@@ -359,7 +365,7 @@ private fun AboutGameBlock(
     }
 }
 
-
+@Stable
 @Composable
 private fun HostInfoBlock(host: Host, message: String) {
     Column(
@@ -415,6 +421,7 @@ private fun HostInfoBlock(host: Host, message: String) {
     }
 }
 
+@Stable
 @Composable
 private fun DividerGlass() {
     HorizontalDivider(
@@ -423,6 +430,7 @@ private fun DividerGlass() {
     )
 }
 
+@Stable
 @Composable
 private fun ShowErrorPlaceholder(
     onBackClick: () -> Unit,
@@ -444,8 +452,9 @@ private fun ShowErrorPlaceholder(
     }
 }
 
+@Stable
 @Composable
-private fun PastGameHeader(
+private fun PastGameHeader( // переделать на стандартный
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -471,11 +480,12 @@ private fun PastGameHeader(
     }
 }
 
+@Stable
 @Composable
-private fun PlaceholderMessage() {
+private fun PlaceholderMessage(modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
     ) {
         Image(
@@ -498,19 +508,24 @@ private fun PlaceholderMessage() {
     }
 }
 
+@Stable
 @Composable
-private fun RefreshButton(onClick: () -> Unit) {
+private fun RefreshButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     VolleyButton.ActiveButton(
         text = stringResource(R.string.refresh),
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     )
 }
 
+@Stable
 @Composable
-private fun ShowLoader() {
+private fun ShowLoader(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
