@@ -8,7 +8,10 @@ sealed class BasicGameSetupScreenEvent  : UiEvent {
     //    object CheckIfAccountExists : GameEnteringConditionsScreenEvent() // Проверка, существует ли аккаунт
     object OnBackClicked : BasicGameSetupScreenEvent()     // нажатие на стрелку "Назад"
     data class MessageChanged(val text: String) : BasicGameSetupScreenEvent() // изменение сообщения
-    object OnCreateClick  : BasicGameSetupScreenEvent()     // нажатие на кнопку "Create"
-    data class OnDateSelected(val date: Date) : BasicGameSetupScreenEvent()
+    object OnChangeClick  : BasicGameSetupScreenEvent()     // нажатие на кнопку "Create"
+    data class OnDateSelected(val date: Date) : BasicGameSetupScreenEvent() // пользователь подстверждает выбор даты в календаре
+    object OnPickDateClicked : BasicGameSetupScreenEvent() // Нажатие на кнопку pick date
+    object OnTodayClicked : BasicGameSetupScreenEvent() // Нажатие на кнопку Today
+
 }
 

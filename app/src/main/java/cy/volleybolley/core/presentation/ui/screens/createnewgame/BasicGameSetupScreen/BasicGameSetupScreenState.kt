@@ -29,6 +29,7 @@ data class BasicGameSetupScreenState(
     val levels: List<Level> = listOf(Level.Light, Level.Medium, Level.Hard), //    val levels: Array<Int>
     val errorMessage: String? = null,
     val isLoading : Boolean = false     // Для загрузки (если необходимо)
+ //   val isPickDateClicked: Boolean = false // нажата кнопка Pick Date, то есть показывается календарь
 )  : UiState
 
 enum class Gender {

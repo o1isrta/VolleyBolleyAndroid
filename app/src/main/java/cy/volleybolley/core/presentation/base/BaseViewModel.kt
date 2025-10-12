@@ -38,13 +38,6 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
     /**
      * Выходная точка (удобный костыль MVI) для одноразовых событий (показать toast или диалог)
      */
-/*    val uiEffect: Flow<Effect?> = _effect.receiveAsFlow()
-
-    protected fun sendUiEffect(effect: Effect?) {
-        viewModelScope.launch {
-            _effect.send(effect)
-        }
-    }*/
     val uiEffect: Flow<Effect?> = uiEffectMutable.receiveAsFlow()
 
     protected fun sendUiEffect(effect: Effect?) {
@@ -77,9 +70,4 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
             }
         }
     }
-
-    // функция для обновления состояния
-/*    protected fun setState(update: (State) -> State) {
-        _uiState.value = update(_uiState.value)
-    }*/
 }

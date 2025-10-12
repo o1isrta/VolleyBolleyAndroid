@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,8 +44,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.navigation.SearchCourtRoute
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenEvent
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.Privacy
 import kotlinx.coroutines.flow.collectLatest
 import java.util.Date
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,6 +55,7 @@ fun BasicGameSetupScreen(navController: NavHostController,
     val scrollState = rememberScrollState() //Состояние скролла
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val showCalendar = viewModel.showCalendar.collectAsState().value
 
     LaunchedEffect(viewModel.uiEffect) { // подписываемся на Effect
         viewModel.uiEffect.collectLatest { effect ->
@@ -72,6 +73,7 @@ fun BasicGameSetupScreen(navController: NavHostController,
                     Log.w("BasicGameSetupScreen", "Unhandled effect: $effect")
                 }
             }
+            viewModel.clearEffect() // Очистка Effect после обработки
         }
     }
 // Overlay для отображения индикатора загрузки
@@ -173,7 +175,7 @@ fun BasicGameSetupScreen(navController: NavHostController,
                         VolleyButton.ActiveGradientButton(
                             modifier = Modifier,//.height(VolleyDimens.DIMEN_44.dp),
                             text = "Create",
-                            onClick = {viewModel.obtainEvent(BasicGameSetupScreenEvent.OnCreateClick)}
+                            onClick = {viewModel.obtainEvent(BasicGameSetupScreenEvent.OnChangeClick)}
                         )
                     }
 
@@ -190,20 +192,42 @@ fun BasicGameSetupScreen(navController: NavHostController,
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
                     val todayDate: Date = Date()
-                    val isPickDateSelected = !isSameDay(state.date, todayDate)
+                  //  val isPickDateSelected = !isSameDay(state.date, todayDate)
 
                     VolleyButton.GroupButtonsForDate2(
-                        checkId = if (isSameDay(state.date, Date())) 1 else 2,
+                        checkId = if (viewModel.isSameDay(state.date, Date())) 1 else 2,
                         modifier = Modifier,
                         onSelected = { position ->
-                            val selectedDate: Date? = when (position) {
-                                1 -> Date() // Сегодня
-                                2 -> {
-                                    // При выборе "Pick Date" не устанавливаем дату сразу,
-                                    // а показываем календарь для выбора
-                                    // Оставляем текущую дату state.date как временную
-                                    state.date
+                            when (position) {
+                                1 -> {
+                                    // Сегодня
+                                    viewModel.obtainEvent(BasicGameSetupScreenEvent.OnTodayClicked)
                                 }
+
+                                2 -> {
+                                    //Выбрать Дату (Pick Date)
+                                    viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked)
+                                }
+
+                                else -> {
+                                    // Обработка нераспознанной позиции
+                                    Log.e("BasicGameSetupScreen", "Нераспознанная позиция кнопки даты: $position")
+                                }
+                            }
+                        }
+                           /* val selectedDate: Date? = when (position) {
+                                1 -> {
+                                    // Сегодня
+                                    viewModel.obtainEvent(BasicGameSetupScreenEvent.OnTodayClicked)
+                                    Date() //  Возвращаем сегодняшнюю дату
+                                }
+
+                                2 -> {
+                                    // Выбрать Дату
+                                    viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked)
+                                    state.date // Возвращаем текущую дату из state, чтобы календарь отображался
+                                }
+
                                 else -> null // Обработка некорректной позиции
                             }
 
@@ -212,8 +236,15 @@ fun BasicGameSetupScreen(navController: NavHostController,
                             } ?: run {
                                 // Обработка нераспознанной позиции
                                 Log.e("BasicGameSetupScreen", "Нераспознанная позиция кнопки даты: $position")
+                                //  Можно отправить UiEffect, чтобы показать сообщение пользователю
+                                *//* viewModel.sendUiEffect(
+                                    BasicGameSetupScreenEffect.ShowError(
+                                        "Нераспознанная позиция кнопки даты: $position"
+                                    )
+                                )*//*
                             }
-                        }
+                        }*/
+
                     )
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
 
@@ -228,17 +259,21 @@ fun BasicGameSetupScreen(navController: NavHostController,
          Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
          */
                     // Календарь показывается только если выбрана кнопка "Pick Date"
-                    if (isPickDateSelected) {
-                        DatePickerSection(
+                    if (showCalendar) {  // Используем флаг из ViewModel
+                        CalendarSection(
                             selectedDate = state.date,
                             onDateSelected = { selectedDate ->
-                                viewModel.obtainEvent(BasicGameSetupScreenEvent.OnDateSelected(selectedDate))
-                            },
-                            modifier = Modifier.fillMaxWidth()
+                                viewModel.obtainEvent(
+                                    BasicGameSetupScreenEvent.OnDateSelected(
+                                        selectedDate
+                                    )
+                                )
+                            }
                         )
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
                     }
 
-                   VolleyText.BodyBold(
+                    VolleyText.BodyBold(
                         text = stringResource(R.string.game_duration),
                         modifier = Modifier,
                         color = VolleyColor.White
@@ -336,236 +371,46 @@ fun BasicGameSetupScreen(navController: NavHostController,
             }
         }
     }
-    /* }*/
-
 }
 
-fun isSameDay(date1: Date, date2: Date): Boolean {
-    val calendar1 = Calendar.getInstance().apply { time = date1 }
-    val calendar2 = Calendar.getInstance().apply { time = date2 }
-
-    return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
-        calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR)
-}
-
-/*@Composable
-fun BasicGameSetupScreenContent(
+// Calendar Section
+@Composable
+fun CalendarSection(
+    selectedDate: Date,
+    onDateSelected: (Date) -> Unit
 ) {
-    Column(
+    // здесь будет календарь
+    Box(
         modifier = Modifier
-            .padding(horizontal = VolleyDimens.DIMEN_20.dp)
-    ) {
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+            .fillMaxWidth()
+            .height(266.dp)
+            .clip(RoundedCornerShape(32.dp)) // Задаем скругление углов
+            .background(VolleyColor.White) // Цвет прямоугольника
+    )
 
-        TitleWithBackArrow(
-            title = stringResource(R.string.create_a_game),
-            modifier = Modifier.fillMaxWidth()
-        )
+/*    val currentDate = remember { YearMonth.now() }
+    val startDate = remember { currentDate.minusMonths(12) }
+    val endDate = remember { currentDate.plusMonths(12) }
+    val firstDayOfWeek = remember { DayOfWeek.MONDAY } // Или любой другой день недели
 
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+    val calendarState = rememberCalendarState(
+        startMonth = startDate,
+        endMonth = endDate,
+        firstVisibleMonth = currentDate,
+        firstDayOfWeek = firstDayOfWeek
+    )
 
-        VolleyText.TitleMedium(
-            text = stringResource(R.string.your_message),
-            modifier = Modifier.fillMaxWidth(),
-            color = VolleyColor.White
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleyMessageTextField.MessageField(
-            hint = stringResource(R.string.leave_a_note_for_players),
-            textInput = "",
-            modifier = Modifier
-        ) { }
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleySimpleComponent.DividerLine()// HorizontalLine()
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleyText.TitleMedium(
-            text = stringResource(R.string.place),
-            modifier = Modifier.fillMaxWidth(),
-            color = VolleyColor.White
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .height(VolleyDimens.DIMEN_44.dp)
-                .fillMaxWidth()
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .weight(1f), // Важно!  Занимает только часть доступного пространства,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_mark_yellow),
-                    contentDescription = null,
-                )
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-                Column(
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    VolleyText.BodyBold(
-                        text = "Karon Beach Club",
-                        modifier = Modifier,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = VolleyColor.White
-                    )
-                    VolleyText.BodyLight(
-                        text = "Patak Rd, Mueang Phuket",
-                        modifier = Modifier,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = VolleyColor.White
-                    )
-                }
-            }
-
-            VolleyButton.ActiveGradientButton(
-                modifier = Modifier,//.height(VolleyDimens.DIMEN_44.dp),
-                text = "Create"
-            ) { }
-        }
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleySimpleComponent.DividerLine() //HorizontalLine()
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleyText.TitleMedium(
-            text = stringResource(R.string.date),
-            modifier = Modifier.fillMaxWidth(),
-            color = VolleyColor.White
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-        VolleyButton.GroupButtonsForDate2(
-            checkId = 1,
-            modifier = Modifier,
-            onSelected = {}
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
-
-        // здесь будет календарь
-       *//*     Box(
-    modifier = Modifier
-        .fillMaxWidth()
-        .height(266.dp)
-        .clip(RoundedCornerShape(32.dp)) // Задаем скругление углов
-        .background(VolleyColor.White) // Цвет прямоугольника
- )
-Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-*//*
-        VolleyText.BodyBold(
-            text = stringResource(R.string.game_duration),
-            modifier = Modifier,
-            color = VolleyColor.White
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            VolleyText.BodyRegular(
-                text = stringResource(R.string.from),
-                modifier = Modifier,
-                color = VolleyColor.White
+    HorizontalCalendar(
+        state = calendarState,
+        dayContent = { day ->
+            Day(
+                day = day,
+                isSelected = isSameDay(dateFromCalendarDay(day), selectedDate), //проверка на выделение
+                onDateSelected = { onDateSelected(dateFromCalendarDay(day)) }
             )
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-
-            VolleyTextFieldAttribute.DurationFieldWithArrows(
-                inputTime = VolleyTimeStamp(
-                    14,
-                    0,
-                    true
-                )
-            ) { }
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-
-            VolleyText.BodyRegular(
-                text = stringResource(R.string.to),
-                modifier = Modifier,
-                color = VolleyColor.White
-            )
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-
-            VolleyTextFieldAttribute.DurationFieldWithArrows(
-                inputTime = VolleyTimeStamp(
-                    15,
-                    0,
-                    true
-                )
-            ) { }
         }
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-        VolleySimpleComponent.DividerLine() //HorizontalLine()
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleyText.TitleMedium(
-            text = stringResource(R.string.gender),
-            modifier = Modifier.fillMaxWidth(),
-            color = VolleyColor.White
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-        VolleyButton.GroupButtonsForGender3(
-            modifier = Modifier,
-            onSelected = {}
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-        VolleySimpleComponent.DividerLine() //HorizontalLine()
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleyText.TitleMedium(
-            text = stringResource(R.string.player_level),
-            modifier = Modifier.fillMaxWidth(),
-            color = VolleyColor.White
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-        VolleyButton.GroupButtonsForLevel(
-            checkId = 3,
-            modifier = Modifier,
-            onSelected = {}
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-        
-        VolleyButton.ActiveButton(
-            modifier = Modifier
-               // .padding(VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_16.dp)
-                .height(44.dp)
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(),
-            text = stringResource(R.string.next_game),
-            onClick = {}
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-    }
-}*/
+    )*/
+}
 
 
 @Preview
@@ -580,3 +425,6 @@ private fun BasicGameSetupScreenPreview() {
         BasicGameSetupScreen(navController = navController)
     }
 }
+
+
+
