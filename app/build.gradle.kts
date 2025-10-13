@@ -33,6 +33,14 @@ android {
         val serverUrl = localProperties.getProperty("SERVER_URL")
             ?: error("You should add SERVER_URL property in local.properties")
         buildConfigField("String", "BASE_URL", "\"$serverUrl\"")
+
+        val webClientId = localProperties.getProperty("WEB_CLIENT_ID")
+            ?: error("You should add WEB_CLIENT_ID property in local.properties")
+        buildConfigField("String", "WEB_CLIENT_ID", "\"$webClientId\"")
+
+        val appPrefs = localProperties.getProperty("APP_PREFS")
+            ?: error("You should add APP_PREFS property in local.properties")
+        buildConfigField("String", "APP_PREFS", "\"appPrefs\"")
     }
 
     buildTypes {

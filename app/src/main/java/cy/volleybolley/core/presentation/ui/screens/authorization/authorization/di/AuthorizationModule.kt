@@ -2,6 +2,7 @@ package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 
 import android.content.Context
 import android.content.SharedPreferences
+import cy.volleybolley.BuildConfig
 import cy.volleybolley.auth.data.AuthNetworkClient
 import cy.volleybolley.auth.data.AuthRepositoryImpl
 import cy.volleybolley.auth.data.TokensRepositoryImpl
@@ -19,7 +20,7 @@ import org.koin.dsl.module
 
 val authorizationModule = module {
     factory<SharedPreferences> {
-        androidContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        androidContext().getSharedPreferences(BuildConfig.APP_PREFS, Context.MODE_PRIVATE)
     }
 
     factory<TokensRepository> { TokensRepositoryImpl(get()) }
@@ -32,7 +33,7 @@ val authorizationModule = module {
     single {
         GoogleSignInHelper(
             androidContext(),
-            "20383666755-8u850oene64ckce5i194d1rag5st0v73.apps.googleusercontent.com"
+            BuildConfig.WEB_CLIENT_ID
         )
     }
 
