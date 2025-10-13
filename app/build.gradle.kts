@@ -40,7 +40,7 @@ android {
 
         val appPrefs = localProperties.getProperty("APP_PREFS")
             ?: error("You should add APP_PREFS property in local.properties")
-        buildConfigField("String", "APP_PREFS", "\"appPrefs\"")
+        buildConfigField("String", "APP_PREFS", "\"$appPrefs\"")
     }
 
     buildTypes {
