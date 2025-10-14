@@ -73,6 +73,20 @@ object VolleyTypography {
         letterSpacing = 0.sp
     )
 
+    val BodyBoldGradient = TextStyle(
+        brush = Brush.verticalGradient(
+            colors = listOf(
+                VolleyColor.YellowForGradient,
+                VolleyColor.GreenForGradient
+            )
+        ),
+        fontFamily = HeroFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 19.2.sp,
+        letterSpacing = 0.sp
+    )
+
     val BodyRegular = TextStyle(
         fontFamily = HeroFamily,
         fontWeight = FontWeight.Normal,
