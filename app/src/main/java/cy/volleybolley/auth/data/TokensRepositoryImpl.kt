@@ -1,14 +1,17 @@
 package cy.volleybolley.auth.data
 
-import android.content.SharedPreferences
+import android.content.Context
 import androidx.core.content.edit
 import cy.volleybolley.auth.domain.TokensRepository
 
-class TokensRepositoryImpl(private val sharedPrefs: SharedPreferences) : TokensRepository {
+class TokensRepositoryImpl(context: Context) : TokensRepository {
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
+        private const val APP_PREFS = "app_prefs"
     }
+
+    private val sharedPrefs = context.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE)
 
     override suspend fun saveTokens(accessToken: String, refreshToken: String) {
         sharedPrefs.edit {

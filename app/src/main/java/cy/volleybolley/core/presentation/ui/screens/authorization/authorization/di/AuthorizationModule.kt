@@ -1,7 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.authorization.di
 
-import android.content.Context
-import android.content.SharedPreferences
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.auth.data.AuthNetworkClient
 import cy.volleybolley.auth.data.AuthRepositoryImpl
@@ -19,10 +17,6 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val authorizationModule = module {
-    factory<SharedPreferences> {
-        androidContext().getSharedPreferences(BuildConfig.APP_PREFS, Context.MODE_PRIVATE)
-    }
-
     factory<TokensRepository> { TokensRepositoryImpl(get()) }
     factory<TokensInteractor> { TokensInteractorImpl(get()) }
 
