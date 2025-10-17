@@ -5,8 +5,8 @@ import cy.volleybolley.auth.data.TokensRepositoryImpl
 import cy.volleybolley.auth.data.network.AuthNetworkClient
 import cy.volleybolley.auth.data.network.model.AuthRequest
 import cy.volleybolley.auth.data.network.model.AuthResponse
-import cy.volleybolley.auth.domain.AuthUseCase
 import cy.volleybolley.auth.domain.AuthRepository
+import cy.volleybolley.auth.domain.AuthUseCase
 import cy.volleybolley.auth.domain.TokensInteractor
 import cy.volleybolley.auth.domain.TokensRepository
 import cy.volleybolley.auth.domain.impl.AuthUseCaseImpl
@@ -37,6 +37,6 @@ val authorizationModule = module {
     }
 
     viewModel {
-        AuthorizationViewModel(get(), get(), get())
+        AuthorizationViewModel(get(), get())
     }
 }

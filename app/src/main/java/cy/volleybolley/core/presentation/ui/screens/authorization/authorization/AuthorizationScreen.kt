@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 
-import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
@@ -32,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.auth.ui.GoogleSignInHelper
 import cy.volleybolley.core.domain.VolleyFeature
 import cy.volleybolley.core.presentation.RootContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -45,30 +45,30 @@ fun AuthorizationScreen(
     onNavigateToRegisterByPhoneRequested: () -> Unit,
     onSuccessRegisteredAction: (String) -> Unit,
     paddingFromSystemUi: PaddingValues,
-    viewModel: AuthorizationViewModel = koinViewModel()
+    viewModel: AuthorizationViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     val context = LocalContext.current
+    val googleSignInHelper = GoogleSignInHelper(context)
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
-        val idToken = if (result.resultCode == Activity.RESULT_OK) {
-            viewModel.extractGoogleIdToken(result.data)
-        } else {
-            null
-        }
+        val idToken = googleSignInHelper.extractIdToken(result.data)
         viewModel.obtainEvent(AuthorizationEvent.GoogleTokenReceived(idToken))
     }
 
     LaunchedEffect(effect) {
         when (effect) {
             is AuthorizationEffect.LaunchGoogleSignIn -> {
-                val intentSender = (effect as AuthorizationEffect.LaunchGoogleSignIn).intentSender
-                launcher.launch(
-                    IntentSenderRequest.Builder(intentSender).build()
-                )
+                val intentSender = googleSignInHelper.launch()
+                if (intentSender != null) {
+                    launcher.launch(IntentSenderRequest.Builder(intentSender).build())
+                } else {
+                    Toast.makeText(context, "Ошибка авторизации", Toast.LENGTH_SHORT).show()
+                }
             }
 
             is AuthorizationEffect.NavigateToRegistration -> {
