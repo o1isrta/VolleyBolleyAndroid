@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
-import cy.volleybolley.auth.data.UserDto
+import cy.volleybolley.auth.data.dto.UserDto
 import cy.volleybolley.core.presentation.RootContainer
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
