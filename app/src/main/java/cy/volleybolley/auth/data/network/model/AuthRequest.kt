@@ -9,5 +9,4 @@ sealed interface AuthRequest {
         val body: GoogleAuthRequestBodyDto
     ) : AuthRequest
 
-    // data class Phone(val request: PhoneAuthRequest) : AuthRequestType()
 }

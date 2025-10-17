@@ -35,7 +35,6 @@ val authorizationModule = module {
     single {
         GoogleSignInHelper(
             androidContext(),
-            BuildConfig.WEB_CLIENT_ID
         )
     }
 

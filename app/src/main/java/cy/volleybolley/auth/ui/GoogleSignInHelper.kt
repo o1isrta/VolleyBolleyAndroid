@@ -7,18 +7,19 @@ import android.util.Log
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.ApiException
+import cy.volleybolley.R
 import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.tasks.await
 
 class GoogleSignInHelper(
     context: Context,
-    clientId: String
 ) {
     companion object {
         private const val E_TAG = "SignIn"
         private const val E_MESSAGE = "Sign-in failed"
     }
     private val oneTapClient = Identity.getSignInClient(context)
+    private val clientId = context.getString(R.string.default_web_client_id)
 
     private val signInRequest = BeginSignInRequest.builder()
         .setGoogleIdTokenRequestOptions(

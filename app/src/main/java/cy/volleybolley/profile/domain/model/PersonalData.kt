@@ -1,5 +1,8 @@
 package cy.volleybolley.profile.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class PersonalData(
     val firstName: String,
     val lastName: String,

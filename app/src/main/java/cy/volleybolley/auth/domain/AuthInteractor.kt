@@ -1,8 +1,9 @@
 package cy.volleybolley.auth.domain
 
-import cy.volleybolley.auth.data.network.model.AuthResponse
-import cy.volleybolley.core.data.network.model.Response
+import cy.volleybolley.auth.domain.models.LoginData
+import cy.volleybolley.core.domain.model.ErrorType
+import cy.volleybolley.core.domain.model.VolleyResult
 
 interface AuthInteractor {
-    suspend fun loginWithGoogle(idToken: String): Response<AuthResponse>
+    suspend fun loginWithGoogle(idToken: String): VolleyResult<LoginData, ErrorType>
 }

@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
-import cy.volleybolley.auth.data.dto.UserDto
 import cy.volleybolley.core.presentation.RootContainer
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
@@ -37,6 +36,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsF
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.profile.domain.model.PersonalData
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 
@@ -51,10 +51,10 @@ fun RegistrationScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
-    val userDto: UserDto = Json.decodeFromString(user)
+    val personalData: PersonalData = Json.decodeFromString(user)
 
-    LaunchedEffect(effect, userDto) {
-        viewModel.setUser(userDto)
+    LaunchedEffect(effect, personalData) {
+        viewModel.setUser(personalData)
 
         when (effect) {
             is RegistrationEffect.NavigateToHome -> onRegistrationSuccessEvent()
@@ -98,7 +98,8 @@ fun RegistrationScreen(
                     color = VolleyColor.White
                 )
                 FillRegistrationData(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(top = 16.dp, bottom = 20.dp, start = 20.dp, end = 20.dp),
                     state = state,
                     onRequestNavigateToAboutLevels = onRequestNavigateToAboutLevels,
@@ -165,7 +166,9 @@ private fun FillRegistrationData(
 
         item {
             VolleyTextFieldGradient.GradientSpinner(
-                modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth(),
                 selectedItem = state.selectedCountry,
                 itemList = state.countryList,
                 getTextByItem = { it?.name ?: "" },
@@ -181,7 +184,9 @@ private fun FillRegistrationData(
 
         item {
             VolleyTextFieldGradient.GradientSpinner(
-                modifier = Modifier.padding(top = 16.dp, bottom = 188.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 188.dp)
+                    .fillMaxWidth(),
                 selectedItem = state.selectedCity,
                 itemList = state.cityList,
                 getTextByItem = { it?.name ?: "" },
@@ -209,7 +214,9 @@ private fun FillNameAndSurname(
             actionToTransferContent = onTypeName
         )
         VolleyTextFieldGradient.GradientTextFieldWithLabel(
-            modifier = Modifier.padding(top = 14.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth(),
             text = surname,
             hint = stringResource(R.string.surname),
             actionToTransferContent = onTypeSurname
@@ -290,7 +297,9 @@ private fun LevelChooser(
                 color = VolleyColor.White
             )
             IconButton(
-                modifier = Modifier.padding(top = 1.dp, start = 8.dp).size(18.dp),
+                modifier = Modifier
+                    .padding(top = 1.dp, start = 8.dp)
+                    .size(18.dp),
                 onClick = onRequestNavigateToAboutLevels
             ) {
                 Image(
@@ -301,7 +310,9 @@ private fun LevelChooser(
         }
         GroupButtonsForLevel(
             checkId = selectedLevelIndex,
-            modifier = Modifier.padding(top = 12.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .fillMaxWidth(),
             onSelected = onLevelClick
         )
         HorizontalDivider(

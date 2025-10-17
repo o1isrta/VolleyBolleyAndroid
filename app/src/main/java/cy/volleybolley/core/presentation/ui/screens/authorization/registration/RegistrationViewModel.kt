@@ -1,8 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.registration
 
-import cy.volleybolley.auth.data.dto.UserDto
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyMocks
+import cy.volleybolley.profile.domain.model.PersonalData
 import cy.volleybolley.referencedata.domain.model.Country
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
@@ -98,12 +98,12 @@ class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent
             newState.dateOfBirthMillis != null
     }
 
-    fun setUser(user: UserDto) {
+    fun setUser(user: PersonalData) {
         uiStateMutable.update {
             it.copy(
                 user = user,
-                name = user.firstName ?: "",
-                surname = user.lastName ?: "",
+                name = user.firstName,
+                surname = user.lastName,
             )
         }
     }

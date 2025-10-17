@@ -8,8 +8,8 @@ import kotlinx.serialization.Serializable
 sealed interface AuthResponse {
     @Serializable
     class GoogleResponse(
-        @SerialName("accessToken") val accessToken: String,
-        @SerialName("refreshToken") val refreshToken: String,
+        @SerialName("access_token") val accessToken: String,
+        @SerialName("refresh_token") val refreshToken: String,
         @SerialName("player") val playerUser: UserDto,
     ) : AuthResponse
 }
