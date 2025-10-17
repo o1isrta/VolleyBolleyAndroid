@@ -2,7 +2,7 @@ package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 
 import android.content.Intent
 import androidx.lifecycle.viewModelScope
-import cy.volleybolley.auth.domain.AuthInteractor
+import cy.volleybolley.auth.domain.AuthUseCase
 import cy.volleybolley.auth.domain.TokensInteractor
 import cy.volleybolley.auth.ui.GoogleSignInHelper
 import cy.volleybolley.core.domain.model.onFailure
@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 
 class AuthorizationViewModel(
     private val googleSignInHelper: GoogleSignInHelper,
-    private val authInteractor: AuthInteractor,
+    private val authUseCase: AuthUseCase,
     private val tokensInteractor: TokensInteractor
 ) : BaseViewModel<AuthorizationState, AuthorizationEvent, AuthorizationEffect>(
     AuthorizationState()
@@ -39,7 +39,7 @@ class AuthorizationViewModel(
                 event.idToken?.let { token ->
                     viewModelScope.launch {
                         uiStateMutable.update { it.copy(isLoading = true) }
-                        val result = authInteractor.loginWithGoogle(token)
+                        val result = authUseCase.loginWithGoogle(token)
                         uiStateMutable.update { it.copy(isLoading = false) }
                         // -----------------------------
                         result.onSuccess { loginData ->
