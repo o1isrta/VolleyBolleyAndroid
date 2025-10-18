@@ -1,5 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
@@ -7,10 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 
-class BasicGameSetupScreenViewModel :
+open class BasicGameSetupScreenViewModel :
     BaseViewModel<BasicGameSetupScreenState, BasicGameSetupScreenEvent, BasicGameSetupScreenEffect>(
         BasicGameSetupScreenState()
     ) {
@@ -20,8 +24,8 @@ class BasicGameSetupScreenViewModel :
         val MAX_LENGTH = VolleyDimens.DIMEN_160
     }
     // флаг для показа календаря
-    private val _showCalendar = MutableStateFlow(false)
-    val showCalendar: StateFlow<Boolean> = _showCalendar.asStateFlow()
+    private val _showCalendar = MutableStateFlow( !isSameDay(uiStateMutable.value.date, LocalDate.now()))
+    open val showCalendar: StateFlow<Boolean> = _showCalendar.asStateFlow()
 
     init {
         // проверяем, есть  ли аккаунт
@@ -44,9 +48,13 @@ class BasicGameSetupScreenViewModel :
             }
             is BasicGameSetupScreenEvent.OnDateSelected -> {
                 // устанавливаем выбранную дату
-                uiStateMutable.value = uiStateMutable.value.copy(date = event.date)
-                // Скрываем календарь только если выбранная дата - сегодня
-                _showCalendar.value = !isSameDay(event.date, Date())
+                if (!event.date.isBefore(LocalDate.now())) {
+                    uiStateMutable.value = uiStateMutable.value.copy(date = event.date)
+                    // Скрываем календарь только если выбранная дата - сегодня
+                    if (isSameDay(event.date, LocalDate.now())) {
+                        _showCalendar.value = false
+                    }
+                }
             }
             is BasicGameSetupScreenEvent.OnPickDateClicked -> {
                 // показываем календарь при нажатии на pick Date
@@ -54,7 +62,7 @@ class BasicGameSetupScreenViewModel :
             }
             BasicGameSetupScreenEvent.OnTodayClicked -> {
                 // Скрываем календарь при нажатии "Today" и устанавливаем сегодняшнюю дату
-                uiStateMutable.value = uiStateMutable.value.copy(date = Date()/*, isPickDateClicked = false*/)
+                uiStateMutable.value = uiStateMutable.value.copy(date = LocalDate.now()/*, isPickDateClicked = false*/)
                 _showCalendar.value = false // скрываем календарь
             }
         }
@@ -83,15 +91,16 @@ class BasicGameSetupScreenViewModel :
     }
 
     //Вспомогательная ф-ция для сравнения дней
-    fun isSameDay(date1: Date, date2: Date): Boolean {
-        val calendar1 = Calendar.getInstance()
-        calendar1.time = date1
-        val calendar2 = Calendar.getInstance()
-        calendar2.time = date2
-
-        return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
-            calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) &&
-            calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH)
+    fun isSameDay(date1: LocalDate, date2: LocalDate): Boolean {
+        return date1 == date2
+//        val calendar1 = Calendar.getInstance()
+//        calendar1.time = date1
+//        val calendar2 = Calendar.getInstance()
+//        calendar2.time = date2
+//
+//        return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
+//            calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) &&
+//            calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH)
     }
 
     /**
@@ -105,4 +114,14 @@ class BasicGameSetupScreenViewModel :
      *//*
     fun remaining(text: String, maxLength: Int): Int =
         (maxLength - text.length).coerceAtLeast(0)*/
+}
+
+// Специальный ViewModel для Preview
+class BasicGameSetupScreenViewModelPreview : BasicGameSetupScreenViewModel() {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val _showCalendarPreview = MutableStateFlow(LocalDate.now() != LocalDate.of(2025, 10, 20))  // Пример
+    @RequiresApi(Build.VERSION_CODES.O)
+    override val showCalendar: StateFlow<Boolean> = _showCalendarPreview.asStateFlow()
+
+
 }

@@ -1,6 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -23,7 +24,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,10 +45,12 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.navigation.SearchCourtRoute
 import kotlinx.coroutines.flow.collectLatest
-import java.util.Date
 import androidx.lifecycle.viewmodel.compose.viewModel
-import java.util.Calendar
+import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
+import java.time.LocalDate
+import java.util.Date
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BasicGameSetupScreen(navController: NavHostController,
                          viewModel: BasicGameSetupScreenViewModel = viewModel()) { // = BasicGameSetupScreenViewModel ()
@@ -191,11 +193,10 @@ fun BasicGameSetupScreen(navController: NavHostController,
 
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
-                    val todayDate: Date = Date()
-                  //  val isPickDateSelected = !isSameDay(state.date, todayDate)
+                        //val todayDate: Date = Date()
 
                     VolleyButton.GroupButtonsForDate2(
-                        checkId = if (viewModel.isSameDay(state.date, Date())) 1 else 2,
+                        checkId = if (viewModel.isSameDay(state.date, LocalDate.now())) 1 else 2,
                         modifier = Modifier,
                         onSelected = { position ->
                             when (position) {
@@ -215,36 +216,6 @@ fun BasicGameSetupScreen(navController: NavHostController,
                                 }
                             }
                         }
-                           /* val selectedDate: Date? = when (position) {
-                                1 -> {
-                                    // Сегодня
-                                    viewModel.obtainEvent(BasicGameSetupScreenEvent.OnTodayClicked)
-                                    Date() //  Возвращаем сегодняшнюю дату
-                                }
-
-                                2 -> {
-                                    // Выбрать Дату
-                                    viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked)
-                                    state.date // Возвращаем текущую дату из state, чтобы календарь отображался
-                                }
-
-                                else -> null // Обработка некорректной позиции
-                            }
-
-                            selectedDate?.let { date ->
-                                viewModel.obtainEvent(BasicGameSetupScreenEvent.OnDateSelected(date))
-                            } ?: run {
-                                // Обработка нераспознанной позиции
-                                Log.e("BasicGameSetupScreen", "Нераспознанная позиция кнопки даты: $position")
-                                //  Можно отправить UiEffect, чтобы показать сообщение пользователю
-                                *//* viewModel.sendUiEffect(
-                                    BasicGameSetupScreenEffect.ShowError(
-                                        "Нераспознанная позиция кнопки даты: $position"
-                                    )
-                                )*//*
-                            }
-                        }*/
-
                     )
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
 
@@ -260,7 +231,7 @@ fun BasicGameSetupScreen(navController: NavHostController,
          */
                     // Календарь показывается только если выбрана кнопка "Pick Date"
                     if (showCalendar) {  // Используем флаг из ViewModel
-                        CalendarSection(
+                        VolleyCalendar.CalendarSection(
                             selectedDate = state.date,
                             onDateSelected = { selectedDate ->
                                 viewModel.obtainEvent(
@@ -373,46 +344,6 @@ fun BasicGameSetupScreen(navController: NavHostController,
     }
 }
 
-// Calendar Section
-@Composable
-fun CalendarSection(
-    selectedDate: Date,
-    onDateSelected: (Date) -> Unit
-) {
-    // здесь будет календарь
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(266.dp)
-            .clip(RoundedCornerShape(32.dp)) // Задаем скругление углов
-            .background(VolleyColor.White) // Цвет прямоугольника
-    )
-
-/*    val currentDate = remember { YearMonth.now() }
-    val startDate = remember { currentDate.minusMonths(12) }
-    val endDate = remember { currentDate.plusMonths(12) }
-    val firstDayOfWeek = remember { DayOfWeek.MONDAY } // Или любой другой день недели
-
-    val calendarState = rememberCalendarState(
-        startMonth = startDate,
-        endMonth = endDate,
-        firstVisibleMonth = currentDate,
-        firstDayOfWeek = firstDayOfWeek
-    )
-
-    HorizontalCalendar(
-        state = calendarState,
-        dayContent = { day ->
-            Day(
-                day = day,
-                isSelected = isSameDay(dateFromCalendarDay(day), selectedDate), //проверка на выделение
-                onDateSelected = { onDateSelected(dateFromCalendarDay(day)) }
-            )
-        }
-    )*/
-}
-
-
 @Preview
 @Composable
 private fun BasicGameSetupScreenPreview() {
@@ -422,9 +353,8 @@ private fun BasicGameSetupScreenPreview() {
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
-        BasicGameSetupScreen(navController = navController)
+        BasicGameSetupScreen(viewModel = BasicGameSetupScreenViewModelPreview(), navController = navController)
+        // BasicGameSetupScreen(navController = navController)
     }
 }
-
-
 
