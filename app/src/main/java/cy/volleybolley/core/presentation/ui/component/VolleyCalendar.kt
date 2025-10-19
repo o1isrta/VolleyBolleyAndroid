@@ -1,7 +1,6 @@
 package cy.volleybolley.core.presentation.ui.component
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,16 +12,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -31,14 +26,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.HorizontalCalendar
@@ -51,18 +51,12 @@ import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 import kotlinx.coroutines.launch
 import java.text.DateFormatSymbols
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.ZoneId
-import java.time.format.TextStyle
-import java.util.Calendar
-import java.util.Date
 import java.util.Locale
-
 
 @UiLibraryMarker
 object VolleyCalendar {
@@ -71,8 +65,8 @@ object VolleyCalendar {
     @Composable
     fun CalendarSection(
         selectedDate: LocalDate,
-        onDateSelected: (LocalDate) -> Unit,
-        modifier: Modifier = Modifier
+        onDateSelected: (LocalDate) -> Unit//,
+       // modifier: Modifier = Modifier
     ) {
         val today = LocalDate.now()
         val currentMonth = YearMonth.now()
@@ -95,7 +89,6 @@ object VolleyCalendar {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                //.height(266.dp)
                 .aspectRatio(319f / 266f) // Сохраняем пропорции
                 .background(VolleyColor.White, RoundedCornerShape(32.dp))
                 .padding(12.dp,12.dp,12.dp, 12.dp)
@@ -112,10 +105,9 @@ object VolleyCalendar {
                     Day(
                         day = day,
                         isSelected = selectedDate == day.date,
+                        isToday = day.date == today, //  Передаем isToday
                         isSelectable = day.date >= today,
-                        onDateSelected = {
-                            onDateSelected(it)
-                        }//(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant())) }
+                        onDateSelected = {onDateSelected(it) }
                     )
                 },
 //                monthHeader = { month ->
@@ -131,14 +123,13 @@ object VolleyCalendar {
 fun Day(
     day: CalendarDay,
     isSelected: Boolean,
+    isToday: Boolean,
     isSelectable: Boolean,
     onDateSelected: (LocalDate) -> Unit
 ) {
-  //  val context = LocalContext.current
     Box(
         modifier = Modifier
             .aspectRatio(42.14f / 32.2f) // Сохраняем пропорции
-           // .padding(3.dp)
             //Делаем недоступными дни, которые раньше текущей даты
             .then(
                 if (day.position == DayPosition.MonthDate && isSelectable) {
@@ -152,9 +143,8 @@ fun Day(
         contentAlignment = Alignment.Center
     ) {
         val contentColor = when {
-            //isSelected -> VolleyColor.TextCalendarDark
-            day.position == DayPosition.MonthDate && day.date == LocalDate.now() -> VolleyColor.OrangeHard
-            //Сегодня
+            //day.position == DayPosition.MonthDate && isToday -> VolleyColor.OrangeHard
+             //Сегодня
             day.position == DayPosition.MonthDate -> VolleyColor.TextCalendarDark
             else -> VolleyColor.TextCalendarLightGrey
         }
@@ -169,6 +159,7 @@ fun Day(
         } else {
             null
         }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -181,16 +172,54 @@ fun Day(
                 color = contentColor,
                 textAlign = TextAlign.Center
             )
+            if (isToday) {
+                GradientBorder(
+                    borderWidth = 2.dp,
+                    gradientColors = listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient)
+                )
+            }
         }
     }
 }
 
 @Composable
+fun GradientBorder(borderWidth: Dp, gradientColors: List<Color>) {
+    val strokeWidthPx = with(LocalDensity.current) { borderWidth.toPx() }
+    val cornerRadius = 16.dp // Здесь задаем радиус скругления углов (16dp)
+    val cornerRadiusPx = with(LocalDensity.current) { cornerRadius.toPx() }
+    val offset = strokeWidthPx / 2
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        drawRoundRect(
+            brush = Brush.linearGradient(colors = gradientColors),
+            topLeft = Offset(offset, offset),
+            size = Size(size.width - 2 * offset, size.height - 2 * offset),
+            cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+            style = Stroke(width = strokeWidthPx)
+        )
+    }
+}
+/*@Composable
+fun GradientBorder(borderWidth: Dp, gradientColors: List<Color>) {
+    val strokeWidthPx = with(LocalDensity.current) { borderWidth.toPx() }
+    val offset = strokeWidthPx / 2 //  Немного отодвигаем внутрь,  компенсируя толщину обводки
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        drawOval(
+            brush = Brush.linearGradient(colors = gradientColors),
+            topLeft = Offset(offset, offset),
+            size = Size(size.width - 2 * offset, size.height - 2 * offset),
+            // radius = size.minDimension / 2,
+            style = Stroke(width = strokeWidthPx)
+        )
+    }
+}*/
+
+@Composable
 fun MonthHeader(month: CalendarMonth, calendarState: CalendarState) {
    // val currentMonth = remember { mutableStateOf(month.yearMonth) }
     val coroutineScope = rememberCoroutineScope()
-    val currentYear = YearMonth.now().year
-    val currentYearMonth = YearMonth.now()
+        //val currentYear = YearMonth.now().year
+   // val currentYearMonth = YearMonth.now()
 
     // Проверяем, достигнуты ли границы
     val isPreviousMonthDisabled = month.yearMonth <= calendarState.startMonth //month.yearMonth.year <= currentYear && month.yearMonth <= currentYearMonth
@@ -212,9 +241,7 @@ fun MonthHeader(month: CalendarMonth, calendarState: CalendarState) {
    // val monthName = month.yearMonth.month.name.lowercase(Locale.ENGLISH).replaceFirstChar {
    //     if (it.isLowerCase()) it.titlecase(Locale.ENGLISH) else it.toString()
     Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-           // .padding(horizontal = 12.dp),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -243,8 +270,6 @@ fun MonthHeader(month: CalendarMonth, calendarState: CalendarState) {
         ){
             VolleyText.ButtonText(
                 text = "$monthName, ", // Используем отформатированное имя месяца
-                //   text = "${month.yearMonth.month.name}, ${month.yearMonth.year}",
-              //  modifier = Modifier.padding(horizontal = 16.dp)
                 color = VolleyColor.TextCalendarDark
             )
             Row(
@@ -260,9 +285,7 @@ fun MonthHeader(month: CalendarMonth, calendarState: CalendarState) {
             ){
                 VolleyText.ButtonText(
                     text = "${month.yearMonth.year}", // Используем отформатированное имя месяца
-                    //   text = "${month.yearMonth.month.name}, ${month.yearMonth.year}",
-                    //  modifier = Modifier.padding(horizontal = 16.dp)
-                )
+                  )
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_5.dp))
 
                 Image(
@@ -300,11 +323,7 @@ fun DaysOfWeekHeader() {
     val daysOfWeek = remember {
         DateFormatSymbols.getInstance(Locale.ENGLISH).shortWeekdays.toList().let {
             it.subList(1, it.size).let { // отбрасываем первый пустой элемент
-                it.subList(1, it.size) + it.subList(
-                    0,
-                    1
-                ) // Перемещаем воскресенье в конец, чтобы начиналось с понедельника
-
+                it.subList(1, it.size) + it.subList(0, 1) // Перемещаем воскресенье в конец, чтобы начиналось с понедельника
             }
         }
     }
@@ -330,7 +349,7 @@ fun DaysOfWeekHeader() {
 @Preview
 @Composable
 private fun CalendarSectionPreview() {
-    val previewDate = remember { mutableStateOf(LocalDate.of(2025, 10, 17)) } // Начальная дата для preview
+    val previewDate = remember { mutableStateOf(LocalDate.of(2025, 10, 22)) } // Начальная дата для preview
 
     Box(
         modifier = Modifier
@@ -340,7 +359,6 @@ private fun CalendarSectionPreview() {
     ) {
         VolleyCalendar.CalendarSection(
             selectedDate = previewDate.value,//LocalDate.of(2025, 10, 20),
-            //onDateSelected = {}
             onDateSelected = { newDate -> previewDate.value = newDate } //  Обновляем previewDate при выборе новой даты
         )
     }
