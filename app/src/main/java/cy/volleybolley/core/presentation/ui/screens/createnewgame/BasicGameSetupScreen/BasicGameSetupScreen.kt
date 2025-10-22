@@ -2,6 +2,7 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetu
 
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,13 +43,12 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.navigation.SearchCourtRoute
 import kotlinx.coroutines.flow.collectLatest
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
+import cy.volleybolley.core.presentation.ui.navigation.GameEnteringConditionsRoute
 import java.time.LocalDate
-import java.util.Date
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -68,6 +68,12 @@ fun BasicGameSetupScreen(navController: NavHostController,
                 }
                 BasicGameSetupScreenEffect.NavigateBack -> {
                     navController.popBackStack()
+                }
+                is BasicGameSetupScreenEffect.NavigateNextStep-> {
+                    navController.navigate(GameEnteringConditionsRoute)
+                }
+                is BasicGameSetupScreenEffect.ShowError -> {
+                    Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_SHORT).show()
                 }
                 //Обработка всех возможных случаев
                 else -> {
@@ -119,8 +125,11 @@ fun BasicGameSetupScreen(navController: NavHostController,
                     VolleyMessageTextField.MessageField(
                         hint = stringResource(R.string.leave_a_note_for_players),
                         textInput = state.message,
-                        modifier = Modifier.height(106.dp)
-                    ) { }
+                        modifier = Modifier.height(106.dp),
+                        actionToTransferContent = { newMessage ->
+                            viewModel.obtainEvent(BasicGameSetupScreenEvent.MessageChanged(newMessage))
+                        }
+                    )
 
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
@@ -266,12 +275,12 @@ fun BasicGameSetupScreen(navController: NavHostController,
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
 
                         VolleyTextFieldAttribute.DurationFieldWithArrows(
-                            inputTime = VolleyTimeStamp(
-                                14,
-                                0,
-                                true
-                            )
-                        ) { }
+                            inputTime = state.startTime
+                        ) {
+                            time ->
+                          //  Log.d("TimePicker", "DurationFieldWithArrows - Time selected: $time")  // Добавьте это
+                            viewModel.obtainEvent(BasicGameSetupScreenEvent.OnStartTimeChanged(time))
+                        }
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
 
@@ -284,12 +293,12 @@ fun BasicGameSetupScreen(navController: NavHostController,
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
 
                         VolleyTextFieldAttribute.DurationFieldWithArrows(
-                            inputTime = VolleyTimeStamp(
-                                15,
-                                0,
-                                true
-                            )
-                        ) { }
+                            inputTime = state.finishTime
+                        ) {
+                            time ->
+                        //    Log.d("TimePicker", "DurationFieldWithArrows2 - Time selected: $time")  // Добавьте это
+                            viewModel.obtainEvent(BasicGameSetupScreenEvent.OnFinishTimeChanged(time))
+                        }
                     }
 
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
@@ -306,7 +315,9 @@ fun BasicGameSetupScreen(navController: NavHostController,
 
                     VolleyButton.GroupButtonsForGender3(
                         modifier = Modifier,
-                        onSelected = {}
+                        onSelected = {
+                          //  viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked)
+                        }
                     )
 
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
@@ -335,7 +346,9 @@ fun BasicGameSetupScreen(navController: NavHostController,
                             .align(Alignment.CenterHorizontally)
                             .fillMaxWidth(),
                         text = stringResource(R.string.next_game),
-                        onClick = {}
+                        onClick = {
+                            viewModel.obtainEvent(BasicGameSetupScreenEvent.OnNextStepClick)
+                        }
                     )
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                 }

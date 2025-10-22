@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -349,6 +350,7 @@ object VolleyTextFieldAttribute {
 
         if (showTimePicker) {
             TimePickerDialog(
+                initialTime = inputTime, // Передаем inputTime в TimePickerDialog
                 onDismiss = { showTimePicker = false },
                 actionForSaveTime = actionForSaveTime,
             )
@@ -422,6 +424,7 @@ object VolleyTextFieldAttribute {
 
         if (showTimePicker) {
             TimePickerDialog(
+                initialTime = inputTime, // Передаем inputTime в TimePickerDialog
                 onDismiss = { showTimePicker = false },
                 actionForSaveTime = actionForSaveTime,
             )
@@ -500,14 +503,22 @@ object VolleyTextFieldAttribute {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun TimePickerDialog(
+        initialTime: VolleyTimeStamp?, // Добавляем параметр для времени
         onDismiss: () -> Unit,
         actionForSaveTime: (VolleyTimeStamp?) -> Unit,
     ) {
         val currentTime = Calendar.getInstance()
+        val initialHour = initialTime?.hour ?: currentTime.get(Calendar.HOUR_OF_DAY)
+        val initialMinute = initialTime?.minutes ?: currentTime.get(Calendar.MINUTE)
+        val is24HourFormat = false
+
         val timePickerState = rememberTimePickerState(
-            initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-            initialMinute = currentTime.get(Calendar.MINUTE),
-            is24Hour = false,
+//            initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
+//            initialMinute = currentTime.get(Calendar.MINUTE),
+//            is24Hour = false,
+            initialHour = initialHour,
+            initialMinute = initialMinute,
+            is24Hour = is24HourFormat
         )
 
         AlertDialog(
@@ -525,13 +536,24 @@ object VolleyTextFieldAttribute {
             confirmButton = {
                 TextButton(
                     onClick = {
+                        val hour = timePickerState.hour
+                        val minute = timePickerState.minute
+                        val isAfternoon = hour >= 12  // Если час >= 12, то это PM
                         val stampOfTime = VolleyTimeStamp(
-                            hour = timePickerState.hour,
-                            minutes = timePickerState.minute,
-                            isAfternoon = timePickerState.isAfternoon
+                            hour = if (hour > 12) hour - 12 else hour, // Преобразуем в 12-часовой формат
+                            minutes = minute,
+                            isAfternoon = isAfternoon,
                         )
                         actionForSaveTime(stampOfTime)
                         onDismiss()
+//                        val stampOfTime = VolleyTimeStamp(
+//                            hour = timePickerState.hour,
+//                            minutes = timePickerState.minute,
+//                            isAfternoon = timePickerState.isAfternoon
+//                        )
+//                        Log.d("TimePicker", "Time confirm: $stampOfTime")
+//                        actionForSaveTime(stampOfTime)
+//                        onDismiss()
                     }
                 ) {
                     VolleyText.BodyBold(

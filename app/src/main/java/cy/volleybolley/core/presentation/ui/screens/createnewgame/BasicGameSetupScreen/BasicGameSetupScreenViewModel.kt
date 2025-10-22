@@ -1,18 +1,19 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
+import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.util.Calendar
-import java.util.Date
 
 open class BasicGameSetupScreenViewModel :
     BaseViewModel<BasicGameSetupScreenState, BasicGameSetupScreenEvent, BasicGameSetupScreenEffect>(
@@ -27,12 +28,16 @@ open class BasicGameSetupScreenViewModel :
     private val _showCalendar = MutableStateFlow( !isSameDay(uiStateMutable.value.date, LocalDate.now()))
     open val showCalendar: StateFlow<Boolean> = _showCalendar.asStateFlow()
 
+//    private val _effectError = MutableStateFlow<BasicGameSetupScreenEffect?>(null)
+//    val effectError: StateFlow<BasicGameSetupScreenEffect?> = _effectError
+
     init {
         // проверяем, есть  ли аккаунт
         //obtainEvent(BasicGameSetupScreenEvent.)
     }
 
     override fun obtainEvent(event: BasicGameSetupScreenEvent) {
+        var timeChangeJob: Job? = null
         when (event) {
             is BasicGameSetupScreenEvent.MessageChanged -> {
                 // ограничиваем длину в ViewModel — можно бы убрать ограничение в MessageField
@@ -65,8 +70,91 @@ open class BasicGameSetupScreenViewModel :
                 uiStateMutable.value = uiStateMutable.value.copy(date = LocalDate.now()/*, isPickDateClicked = false*/)
                 _showCalendar.value = false // скрываем календарь
             }
+            is BasicGameSetupScreenEvent.OnStartTimeChanged -> {
+                timeChangeJob?.cancel()
+                timeChangeJob = viewModelScope.launch {
+                    Log.d("TimePicker", "ViewModel: Received OnEndTimeChanged event: ${event.time}")
+                    delay(300) // Дебаунс 300ms
+                    val newState = uiStateMutable.value.copy(
+                        startTime = event.time//,
+                       // errorMessage = validateTimes(event.time, uiStateMutable.value.endTime)
+                    )
+                    uiStateMutable.value = newState
+                    Log.d("TimePicker", "ViewModel: New UI State: ${uiStateMutable.value}")
+                    // validateTimes(newState.startTime, newState.endTime)
+                }
+            }
+            is BasicGameSetupScreenEvent.OnFinishTimeChanged -> {
+                timeChangeJob?.cancel()
+                timeChangeJob = viewModelScope.launch {
+                    Log.d("TimePicker", "ViewModel: Received OnEndTimeChanged event: ${event.time}")
+                    delay(300) // Дебаунс 300ms
+                    val newState = uiStateMutable.value.copy(
+                        finishTime = event.time//,
+                     //   errorMessage = validateTimes(uiStateMutable.value.startTime, event.time)
+                    )
+                    uiStateMutable.value = newState
+                    Log.d("TimePicker", "ViewModel: New UI State: ${uiStateMutable.value}")
+                    //  validateTimes(newState.startTime, newState.endTime)
+                }
+            }
+            is BasicGameSetupScreenEvent.OnNextStepClick -> {
+                val message: String = validateData()
+                if (message.isEmpty()) {
+                    sendUiEffect(BasicGameSetupScreenEffect.NavigateNextStep)
+                }
+                else {
+                    sendUiEffect(BasicGameSetupScreenEffect.ShowError(message = message))
+                }
+            }
         }
     }
+
+    private fun validateData() : String{
+        val startTime = uiStateMutable.value.startTime
+        val finishTime = uiStateMutable.value.finishTime
+
+        if (startTime == null || finishTime == null) {
+            return "Please select both start and end times." // Или другое сообщение об ошибке
+        }
+        if (finishTime.compareTo(startTime) <= 0) {
+            return "The end time of the game must be after the start time."
+        }
+        // Рассчитываем длительность игры в минутах
+        val durationMinutes = calculateDurationMinutes(startTime, finishTime)
+
+        // Проверяем, чтобы длительность игры была не меньше часа (60 минут) и не больше 4 часов (240 минут)
+        if (durationMinutes < 60) {
+            return "The game duration must be at least one hour."
+        }
+        if (durationMinutes > 240) {
+            return "The game duration must be no more than 4 hours."
+        }
+        return ""
+    }
+
+    // Подсчет разницы во времени
+    private fun calculateDurationMinutes(startTime: VolleyTimeStamp, endTime: VolleyTimeStamp): Int {
+        val startTotalMinutes = (startTime.hour + if (startTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * 60 + startTime.minutes
+        val endTotalMinutes = (endTime.hour + if (endTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * endTime.minutes
+        return endTotalMinutes - startTotalMinutes
+    }
+
+//    private fun validateTimes(start: VolleyTimeStamp, end: VolleyTimeStamp){
+//        if (end.compareTo(start) < 0) { // Если end меньше start
+//            viewModelScope.launch {
+//                _effectError.value = BasicGameSetupScreenEffect.ShowSnackbar("End time must be after start time")
+//            }
+//        } else {
+//            viewModelScope.launch {
+//                _effectError.value = BasicGameSetupScreenEffect.ClearSnackbar
+//            }
+//        }
+//    }
+
+//    public fun clearErrorEffect() {
+//        _effectError.value = null
+//    }
 
     /**
      * Ограничивает текст по длине, не разрубая суррогатные пары.

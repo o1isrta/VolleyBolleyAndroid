@@ -6,7 +6,7 @@ class VolleyTimeStamp(
     val isAfternoon: Boolean,
 ) {
     val hour12Format: Int
-        get() = hour - if (isAfternoon) AFTERNOON_VALUE else 0
+        get() = hour //hour - if (isAfternoon) AFTERNOON_VALUE else 0
 
     fun getTimeString24HourFormat() = "$hour:${getCorrectMinutesString()}"
 
@@ -16,9 +16,24 @@ class VolleyTimeStamp(
 
     private fun getCorrectMinutesString() = "%02d".format(minutes)
 
+    /**
+     * Метод для сравнения двух временных меток.
+     * Возвращает отрицательное значение, если текущее время меньше,
+     * ноль, если они равны, и положительное, если текущее время больше.
+     */
+    fun compareTo(other: VolleyTimeStamp): Int {
+        val thisTotalMinutes = (hour + if (isAfternoon) AFTERNOON_VALUE else 0) * 60 + minutes
+        val otherTotalMinutes = (other.hour + if (other.isAfternoon) AFTERNOON_VALUE else 0) * 60 + other.minutes
+        return thisTotalMinutes - otherTotalMinutes
+    }
+
     companion object {
         const val AFTERNOON_VALUE: Int = 12
         const val PM_MARK = "PM"
         const val AM_MARK = "AM"
+    }
+
+    override fun toString(): String {
+        return "VolleyTimeStamp(hour=$hour, minutes=$minutes, isAfternoon=$isAfternoon)"
     }
 }
