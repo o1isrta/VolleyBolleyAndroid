@@ -35,6 +35,16 @@ android {
         buildConfigField("String", "BASE_URL", "\"$serverUrl\"")
     }
 
+    signingConfigs {
+        // Debug configuration with common keystore
+        getByName("debug") {
+            storeFile = rootProject.file("keystore/team-debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -45,6 +55,7 @@ android {
             )
         }
         debug {
+            signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(
