@@ -24,6 +24,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -947,8 +951,9 @@ object VolleyButton {
     /**
      * слайдер-группа кнопок выбора Map|List
      */
+    @Stable
     @Composable
-    fun SliderButtonsMap(checkId: Int = 1, modifier: Modifier, onClick: () -> Unit) {
+    fun SliderButtonsMap(checkId: Int = 1, modifier: Modifier, onTabSelected: (Int) -> Unit) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
@@ -976,13 +981,13 @@ object VolleyButton {
                     modifier = Modifier.size(100.dp, 28.dp),
                     text = MAP_TEXT,
                     isChecked = checkId == 1,
-                    onClick = onClick
+                    onClick = { onTabSelected(1) }
                 )
                 SliderButton(
                     modifier = Modifier.size(100.dp, 28.dp),
                     text = LIST_TEXT,
                     isChecked = checkId == 2,
-                    onClick = onClick
+                    onClick = { onTabSelected(2) }
                 )
             }
         }
@@ -1506,10 +1511,11 @@ private fun PreviewGroupButtonsForTourneyType() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewSliderButtonsMap() {
+    var selected by remember { mutableIntStateOf(1) }
     PreviewContainer {
         SliderButtonsMap(
             modifier = Modifier,
-            onClick = {}
+            onTabSelected = { selected = if (selected == 1) 2 else 1 }
         )
     }
 }
@@ -1570,7 +1576,9 @@ fun PreviewGradientTextButton() {
                 onClick = {}
             )
             VolleyButton.GradientTextButton(
-                modifier = Modifier.padding(top = 20.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .fillMaxWidth(),
                 text = stringResource(R.string.get_new_code),
                 isEnable = true,
                 onClick = {}

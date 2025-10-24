@@ -250,4 +250,5 @@
     <string name="payment_type_revolut">Revolut</string>
     <string name="payment_type_unknown">Unknown</string>
     <string name="back_arrow_button">Back from screen button</string>
+    <string name="navigation">Navigation</string>
 </resources>

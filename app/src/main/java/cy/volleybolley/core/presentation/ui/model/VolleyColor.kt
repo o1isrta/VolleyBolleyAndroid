@@ -87,5 +87,7 @@ object VolleyColor {
 
     val TextCalendarDark = Color(color = 0xFF333333)
     val TextCalendarLightGrey = Color(color = 0xFFE0E0E0)
+    val NotificationColor = Color(color = 0x30AAC8E0)
 
+    val TagColor = Color(color = 0xFF578D83)
 }

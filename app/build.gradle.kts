@@ -33,6 +33,10 @@ android {
         val serverUrl = localProperties.getProperty("SERVER_URL")
             ?: error("You should add SERVER_URL property in local.properties")
         buildConfigField("String", "BASE_URL", "\"$serverUrl\"")
+
+        val mapsApiKey = localProperties.getProperty("MAPS_API_KEY")
+            ?: error("You must define MAPS_API_KEY in local.properties")
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -97,4 +101,10 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.firebase.auth)
     implementation(platform(libs.firebase.bom))
+
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.android.maps.utils)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.maps.compose)
 }
