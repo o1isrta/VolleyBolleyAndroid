@@ -37,6 +37,8 @@ android {
         val mapsApiKey = localProperties.getProperty("MAPS_API_KEY")
             ?: error("You should add MAPS_API_KEY property in local.properties")
         buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
+
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     signingConfigs {
