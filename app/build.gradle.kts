@@ -33,6 +33,10 @@ android {
         val serverUrl = localProperties.getProperty("SERVER_URL")
             ?: error("You should add SERVER_URL property in local.properties")
         buildConfigField("String", "BASE_URL", "\"$serverUrl\"")
+
+        val mapsApiKey = localProperties.getProperty("MAPS_API_KEY")
+            ?: error("You should add MAPS_API_KEY property in local.properties")
+        buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
     }
 
     signingConfigs {

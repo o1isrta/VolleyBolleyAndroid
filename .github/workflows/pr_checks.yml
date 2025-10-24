@@ -41,6 +41,7 @@ jobs:
                 env:
                     VOLLEY_SERVER_URL: ${{ secrets.VOLLEY_SERVER_URL }}
                     VOLLEY_GOOGLE_SERVICES: ${{ secrets.VOLLEY_GOOGLE_SERVICES }}
+                    VOLLEY_MAPS_API_KEY: ${{ secrets.VOLLEY_MAPS_API_KEY }}
                     TEAM_DEBUG_KEYSTORE: ${{ secrets.TEAM_DEBUG_KEYSTORE }}
                 run: |
                     sh ci/add_debug_env.sh && sh ci/add_google_services_file.sh && sh ci/add_team_keystore.sh
@@ -80,6 +81,7 @@ jobs:
                 env:
                     VOLLEY_SERVER_URL: ${{ secrets.VOLLEY_SERVER_URL }}
                     VOLLEY_GOOGLE_SERVICES: ${{ secrets.VOLLEY_GOOGLE_SERVICES }}
+                    VOLLEY_MAPS_API_KEY: ${{ secrets.VOLLEY_MAPS_API_KEY }}
                     TEAM_DEBUG_KEYSTORE: ${{ secrets.TEAM_DEBUG_KEYSTORE }}
                 run: |
                     sh ci/add_debug_env.sh && sh ci/add_google_services_file.sh && sh ci/add_team_keystore.sh
