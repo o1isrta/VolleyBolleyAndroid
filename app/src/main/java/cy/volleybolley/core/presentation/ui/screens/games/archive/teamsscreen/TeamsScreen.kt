@@ -1,6 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.games.archive.teamsscreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,57 +28,31 @@ import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBarWithBac
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.PlayerShort
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.ShortTeam
+import cy.volleybolley.core.presentation.ui.screens.games.archive.teamsscreen.model.TeamsScreenState
+import cy.volleybolley.games.domain.model.entity.PlayerShort
+import cy.volleybolley.games.domain.model.entity.Team
 
 @Composable
 fun TeamsScreen(
     navController: NavHostController
 ) {
     TeamsScreen(
-        teams = listOf(
-            ShortTeam(
-                0, listOf(
-                    PlayerShort(0, "Anton Ivanov", "H"),
-                    PlayerShort(1, "Aleksandr Abramov", "H")
-                )
-            ),
-            ShortTeam(
-                1,
-                listOf(
-                    PlayerShort(0, "Anya Levan", "H"),
-                    PlayerShort(1, "Alina Lyubimova", "H")
-                )
-            ),
-            ShortTeam(
-                2,
-                listOf(
-                    PlayerShort(0, "Maxim Petrov", "H"),
-                    PlayerShort(1, "Julia Petrova", "H")
-                )
-            ),
-            ShortTeam(
-                3,
-                listOf(
-                    PlayerShort(0, "Tatiana Kalinina", "H"),
-                    PlayerShort(1, "Artem Artemov", "H")
-                )
-            )
-        ),
-        onBackClick = { navController.popBackStack() }
+        state = TeamsScreenState.Teams(),
+        onBackClick = { navController.popBackStack() },
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     )
 }
 
 @Composable
-private fun TeamsScreen( // Походу придется сделать еще и экран с отдельными игроками
+private fun TeamsScreen(
     modifier: Modifier = Modifier,
-    teams: List<ShortTeam>,
+    state: TeamsScreenState,
     onBackClick: () -> Unit
 ) {
     Box(
         modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
     ) {
         VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = VolleyDimens.DIMEN_32,
@@ -91,17 +66,22 @@ private fun TeamsScreen( // Походу придется сделать еще 
                 modifier = Modifier
                     .padding(VolleyDimens.DIMEN_20.dp)
             ) {
-                TopBarWithBackButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(R.string.teams),
-                    onBackNavigationRequested = onBackClick
-                )
+                when (state) {
+                    is TeamsScreenState.Players -> {
+                        PlayersList(
+                            modifier = Modifier.fillMaxWidth(),
+                            players = state.players[0].players,
+                            onBackClick = onBackClick
+                        )
+                    }
 
-                teams.forEachIndexed { index, team ->
-                    TeamBlock(
-                        team = team,
-                        teamIndex = index
-                    )
+                    is TeamsScreenState.Teams -> {
+                        TeamsList(
+                            modifier = Modifier.fillMaxWidth(),
+                            teams = state.teams,
+                            onBackClick = onBackClick
+                        )
+                    }
                 }
             }
         }
@@ -110,9 +90,81 @@ private fun TeamsScreen( // Походу придется сделать еще 
 
 @Stable
 @Composable
+private fun PlayersList(
+    modifier: Modifier = Modifier,
+    players: List<PlayerShort>,
+    onBackClick: () -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
+        modifier = modifier
+    ) {
+        TopBarWithBackButton(
+            modifier = modifier,
+            title = stringResource(R.string.players),
+            onBackNavigationRequested = onBackClick
+        )
+
+        players.forEachIndexed { index, player ->
+            PlayersRow(index, player)
+        }
+    }
+}
+
+@Stable
+@Composable
+private fun PlayersRow(index: Int, player: PlayerShort) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        VolleyText.BodyRegular(
+            text = "${index + 1}. ${player.name}",
+            color = VolleyColor.White,
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = VolleyDimens.DIMEN_8.dp)
+        )
+
+        Box(
+            modifier = Modifier
+                .size(VolleyDimens.DIMEN_32.dp, VolleyDimens.DIMEN_20.dp)
+                .clip(RoundedCornerShape(VolleyDimens.DIMEN_8.dp))
+                .background(VolleyColor.GreyDark)
+
+        ) {
+            VolleyText.BodyRegular(
+                text = player.level.name.first().toString(),
+                color = VolleyColor.White,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
+}
+
+@Stable
+@Composable
+private fun TeamsList(
+    modifier: Modifier = Modifier,
+    teams: List<Team>,
+    onBackClick: () -> Unit
+) {
+    TopBarWithBackButton(
+        modifier = modifier,
+        title = stringResource(R.string.teams),
+        onBackNavigationRequested = onBackClick
+    )
+
+    teams.forEachIndexed { index, team ->
+        TeamBlock(
+            team = team,
+            teamIndex = index
+        )
+    }
+}
+
+@Stable
+@Composable
 private fun TeamBlock(
     modifier: Modifier = Modifier,
-    team: ShortTeam,
+    team: Team,
     teamIndex: Int
 ) {
     val topPadding = if (teamIndex == 0) VolleyDimens.DIMEN_16.dp else VolleyDimens.DIMEN_20.dp
@@ -160,7 +212,7 @@ private fun PlayerRow(
 
         ) {
             VolleyText.BodyRegular(
-                text = player.level,
+                text = player.level.name.first().toString(),
                 color = VolleyColor.White,
                 modifier = Modifier
                     .align(Alignment.Center)

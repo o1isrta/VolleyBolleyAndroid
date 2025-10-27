@@ -2,7 +2,6 @@ package cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,6 +42,8 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyProgress
+import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -53,11 +53,12 @@ import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.event.ArchiveEvent
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.model.ArchiveState
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.viewmodel.ArchiveViewModel
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Game
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Host
 import cy.volleybolley.core.presentation.ui.screens.games.archive.util.DataTimeRangeFormatter
 import cy.volleybolley.core.presentation.ui.screens.games.archive.util.openMap
 import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.games.domain.model.entity.Host
+import cy.volleybolley.games.domain.model.event.Event
+import cy.volleybolley.games.domain.model.event.EventType
 
 @Composable
 fun ArchiveScreen(
@@ -79,9 +80,7 @@ fun ArchiveScreen(
         },
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                horizontal = VolleyDimens.DIMEN_8.dp
-            )
+            .padding(horizontal = VolleyDimens.DIMEN_8.dp)
     )
 }
 
@@ -109,19 +108,29 @@ private fun ArchiveScreen(
     Box(
         modifier = modifier
     ) {
+        when (state) {
+            ArchiveState.Loading -> ShowLoader()
 
-        if (state.emptyArchive) {
-            ArchiveNotFoundPlaceHolder(
+            ArchiveState.Error -> ArchivePlaceholder(
                 onBackClick = onBackClick,
-                onButtonClick = { eventCallback(ArchiveEvent.ClickCreateGame) }
+                onButtonClick = { eventCallback(ArchiveEvent.Refresh) }
             )
-        } else {
-            ArchiveLazyColumn(
-                games = state.games,
-                onBackClick = onBackClick,
-                onButtonClick = { game -> eventCallback(ArchiveEvent.ClickDetails(game)) },
-                onMapClick = { location -> eventCallback(ArchiveEvent.ClickMap(location)) }
-            )
+
+            ArchiveState.Empty -> {
+                ArchivePlaceholder(
+                    onBackClick = onBackClick,
+                    onButtonClick = { eventCallback(ArchiveEvent.ClickCreateGame) }
+                )
+            }
+
+            is ArchiveState.Content -> {
+                ArchiveLazyColumn(
+                    competitionEvents = state.competitionEvents,
+                    onBackClick = onBackClick,
+                    onButtonClick = { gameDetails -> eventCallback(ArchiveEvent.ClickDetails(gameDetails)) },
+                    onMapClick = { location -> eventCallback(ArchiveEvent.ClickMap(location)) }
+                )
+            }
         }
     }
 }
@@ -129,25 +138,28 @@ private fun ArchiveScreen(
 @Stable
 @Composable
 private fun ArchiveLazyColumn(
-    games: List<Game>,
+    competitionEvents: List<Event>,
     onBackClick: () -> Unit,
-    onButtonClick: (Game) -> Unit,
+    onButtonClick: (Event) -> Unit,
     onMapClick: (Location) -> Unit,
-    modifier: Modifier = Modifier.fillMaxSize()
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
     ) {
         itemsIndexed(
-            items = games
-        ) { index, game ->
+            items = competitionEvents
+        ) { index, event ->
             ArchiveCard(
-                game = game,
+                competitionEvent = event,
                 onBackClick = onBackClick,
                 onButtonClick = onButtonClick,
                 onMapClick = onMapClick,
-                showHeader = index == 0
+                showHeader = index == 0,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(VolleyDimens.DIMEN_20.dp)
             )
         }
     }
@@ -156,14 +168,12 @@ private fun ArchiveLazyColumn(
 @Stable
 @Composable
 private fun ArchiveCard(
-    game: Game,
+    competitionEvent: Event,
     onBackClick: () -> Unit,
-    onButtonClick: (Game) -> Unit,
+    onButtonClick: (Event) -> Unit,
     onMapClick: (Location) -> Unit,
     showHeader: Boolean,
     modifier: Modifier = Modifier
-        .fillMaxWidth()
-        .padding(VolleyDimens.DIMEN_20.dp)
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         cornerRadius = VolleyDimens.DIMEN_32
@@ -172,27 +182,48 @@ private fun ArchiveCard(
             verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp),
             modifier = modifier
         ) {
-
             if (showHeader) {
-                ArchiveHeader(onBackClick)
+                ArchiveHeader(
+                    modifier = Modifier.fillMaxWidth(),
+                    onBackClick = onBackClick
+                )
             }
 
-            HostInfoBlock(
-                host = game.host
-            )
+            when (competitionEvent.type) {
+                EventType.GAME -> {
+                    HostInfoBlock(host = competitionEvent.host, true)
+                    HorizontalDivider(
+                        thickness = VolleyDimens.DIMEN_1.dp,
+                        color = VolleyColor.White.copy(alpha = 0.25f)
+                    )
+                    CompetitionEventInfoBlock(
+                        eventStartTime = competitionEvent.startTime,
+                        eventEndTime = competitionEvent.endTime,
+                        courtLocation = competitionEvent.location,
+                        eventMessage = competitionEvent.message,
+                        onMapClick = onMapClick,
+                    )
+                }
 
-            HorizontalDivider(
-                thickness = VolleyDimens.DIMEN_1.dp,
-                color = VolleyColor.White.copy(alpha = 0.25f)
-            )
-
-            GameInfoBlock(
-                game = game,
-                onMapClick = onMapClick
-            )
+                EventType.TOURNAMENT -> {
+                    HostInfoBlock(host = competitionEvent.host, false)
+                    HorizontalDivider(
+                        thickness = VolleyDimens.DIMEN_1.dp,
+                        color = VolleyColor.White.copy(alpha = 0.25f)
+                    )
+                    CompetitionEventInfoBlock(
+                        eventStartTime = competitionEvent.startTime,
+                        eventEndTime = competitionEvent.endTime,
+                        courtLocation = competitionEvent.location,
+                        eventMessage = competitionEvent.message,
+                        onMapClick = onMapClick,
+                    )
+                }
+            }
 
             DetailsButton(
-                onButtonClick = { onButtonClick(game) }
+                modifier = Modifier.fillMaxWidth(),
+                onButtonClick = { onButtonClick(competitionEvent) }
             )
         }
     }
@@ -200,10 +231,11 @@ private fun ArchiveCard(
 
 @Stable
 @Composable
-private fun HostInfoBlock(host: Host) {
+private fun HostInfoBlock(host: Host, isGame: Boolean) {
+
     Column {
         VolleyText.BodyBold(
-            text = stringResource(R.string.game_host),
+            text = if (isGame) stringResource(R.string.game_host) else stringResource(R.string.tourney_host),
             color = VolleyColor.White,
             modifier = Modifier.align(Alignment.Start)
         )
@@ -211,9 +243,7 @@ private fun HostInfoBlock(host: Host) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    top = VolleyDimens.DIMEN_8.dp
-                ),
+                .padding(top = VolleyDimens.DIMEN_8.dp),
             verticalAlignment = Alignment.CenterVertically
 
         ) {
@@ -238,7 +268,7 @@ private fun HostInfoBlock(host: Host) {
 
             ) {
                 VolleyText.BodyRegular(
-                    text = host.level,
+                    text = host.level.name.first().toString(),
                     color = VolleyColor.White,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -249,10 +279,13 @@ private fun HostInfoBlock(host: Host) {
 
 @Stable
 @Composable
-private fun GameInfoBlock(
-    game: Game,
+private fun CompetitionEventInfoBlock(
+    eventStartTime: String,
+    eventEndTime: String,
+    courtLocation: Location,
+    eventMessage: String,
     onMapClick: (Location) -> Unit,
-    modifier: Modifier = Modifier.fillMaxWidth()
+    modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
@@ -266,8 +299,8 @@ private fun GameInfoBlock(
                 modifier = Modifier.padding(end = VolleyDimens.DIMEN_4.dp)
             )
 
-            val (dateText, timeText) = remember(game.startTime, game.endTime) {
-                DataTimeRangeFormatter.format(game.startTime, game.endTime)
+            val (dateText, timeText) = remember(eventStartTime, eventEndTime) {
+                DataTimeRangeFormatter.format(eventStartTime, eventEndTime)
             }
 
             VolleyText.BodyRegular(
@@ -287,7 +320,7 @@ private fun GameInfoBlock(
             val text = buildAnnotatedString {
                 append("$label ")
                 addStyle(SpanStyle(fontWeight = FontWeight.Bold), 0, label.length)
-                append(game.courtLocation.courtName)
+                append(courtLocation.courtName)
             }
             Text(
                 text = text,
@@ -302,7 +335,7 @@ private fun GameInfoBlock(
             VolleyButton.ActiveButtonMap(
                 text = stringResource(R.string.map),
                 onClick = {
-                    onMapClick(game.courtLocation)
+                    onMapClick(courtLocation)
                 },
                 paddingValues = PaddingValues(VolleyDimens.DIMEN_12.dp, VolleyDimens.DIMEN_8.dp),
                 cornerRadius = VolleyDimens.DIMEN_12.dp
@@ -314,7 +347,7 @@ private fun GameInfoBlock(
             modifier = modifier
         ) {
             VolleyText.BodyRegular(
-                text = game.message,
+                text = eventMessage,
                 color = VolleyColor.White,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -326,7 +359,7 @@ private fun GameInfoBlock(
 
 @Stable
 @Composable
-private fun DetailsButton(onButtonClick: () -> Unit, modifier: Modifier = Modifier.fillMaxWidth()) {
+private fun DetailsButton(onButtonClick: () -> Unit, modifier: Modifier = Modifier) {
     VolleyButton.OutlinedActiveButton(
         text = stringResource(R.string.details),
         onClick = onButtonClick,
@@ -336,7 +369,7 @@ private fun DetailsButton(onButtonClick: () -> Unit, modifier: Modifier = Modifi
 
 @Stable
 @Composable
-private fun ArchiveNotFoundPlaceHolder(
+private fun ArchivePlaceholder(
     onBackClick: () -> Unit,
     onButtonClick: () -> Unit
 ) {
@@ -349,7 +382,10 @@ private fun ArchiveNotFoundPlaceHolder(
                 .fillMaxWidth()
                 .padding(VolleyDimens.DIMEN_20.dp)
         ) {
-            ArchiveHeader(onBackClick)
+            ArchiveHeader(
+                modifier = Modifier.fillMaxWidth(),
+                onBackClick = onBackClick
+            )
             PlaceholderMessage()
             CreateGameButton(onButtonClick)
         }
@@ -362,27 +398,11 @@ private fun ArchiveHeader(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.arrow_left_white),
-            contentDescription = null,
-            tint = VolleyColor.White,
-            modifier = Modifier.clickable {
-                onBackClick()
-            }
-        )
-
-
-        VolleyText.TitleLarge(
-            text = stringResource(R.string.archive),
-            color = VolleyColor.White,
-            modifier = Modifier.align(Alignment.Center)
-        )
-
-    }
+    VolleyTopBar.TopBarWithBackButton(
+        modifier = modifier,
+        title = stringResource(R.string.archive),
+        onBackNavigationRequested = onBackClick
+    )
 }
 
 @Stable
@@ -422,6 +442,17 @@ private fun CreateGameButton(onClick: () -> Unit) {
     )
 }
 
+@Stable
+@Composable
+private fun ShowLoader(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        VolleyProgress.CircularProgress()
+    }
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun ArchiveScreenPreview() {
@@ -432,7 +463,7 @@ private fun ArchiveScreenPreview() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             ArchiveScreen(
-                state = ArchiveState(emptyArchive = false),
+                state = ArchiveState.Content(),
                 effect = null,
                 onBackClick = {},
                 navigateAction = {},
@@ -452,7 +483,7 @@ private fun ArchiveScreenPlaceholderPreview() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             ArchiveScreen(
-                state = ArchiveState(emptyArchive = true),
+                state = ArchiveState.Empty,
                 effect = null,
                 onBackClick = {},
                 navigateAction = {},

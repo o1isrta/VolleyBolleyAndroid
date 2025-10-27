@@ -2,7 +2,6 @@ package cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescree
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -44,12 +43,11 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyProgress
+import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Game
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Host
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.PlayerShort
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescreen.effect.PastGameEffect
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescreen.event.PastGameEvent
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescreen.model.PastGameState
@@ -57,6 +55,9 @@ import cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.util.DataTimeRangeFormatter
 import cy.volleybolley.core.presentation.ui.screens.games.archive.util.openMap
 import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.games.domain.model.entity.Host
+import cy.volleybolley.games.domain.model.entity.PlayerShort
+import cy.volleybolley.games.domain.model.event.game.GameDetails
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 @Composable
@@ -87,7 +88,7 @@ private fun PastGameScreen(
     val context = LocalContext.current
 
     LaunchedEffect(effect) {
-        effect?.let { it ->
+        effect?.let {
             when (it) {
                 PastGameEffect.NavigateBack -> onBackClick
                 is PastGameEffect.OpenMap -> context.openMap(it.location)
@@ -113,6 +114,7 @@ private fun Render(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = VolleyDimens.DIMEN_8.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         when (state) {
             PastGameState.Loading -> ShowLoader()
@@ -134,7 +136,7 @@ private fun Render(
 @Stable
 @Composable
 private fun ShowPastGameDetails(
-    game: Game,
+    game: GameDetails,
     onBackClick: () -> Unit,
     onMapClick: (Location) -> Unit,
     modifier: Modifier = Modifier
@@ -149,7 +151,10 @@ private fun ShowPastGameDetails(
                 .padding(VolleyDimens.DIMEN_20.dp)
                 .scrollable(rememberScrollState(), Orientation.Vertical)
         ) {
-            PastGameHeader(onBackClick = onBackClick)
+            PastGameHeader(
+                onBackClick = onBackClick,
+                modifier = Modifier.fillMaxWidth()
+            )
             HostInfoBlock(host = game.host, message = game.message)
             DividerGlass()
             AboutGameBlock(
@@ -162,7 +167,7 @@ private fun ShowPastGameDetails(
             )
             DividerGlass()
             PaymentBlock(
-                paymentType = game.paymentType,
+                paymentType = game.paymentType.name,
                 paymentAccount = game.paymentAccount,
                 currencyType = game.currencyType,
                 pricePerPerson = game.pricePerPerson
@@ -214,7 +219,7 @@ private fun PlayersRow(index: Int, player: PlayerShort) {
 
         ) {
             VolleyText.BodyRegular(
-                text = player.level,
+                text = player.level.name.first().toString(),
                 color = VolleyColor.White,
                 modifier = Modifier.align(Alignment.Center)
             )
@@ -400,7 +405,7 @@ private fun HostInfoBlock(host: Host, message: String) {
 
             ) {
                 VolleyText.BodyRegular(
-                    text = host.level,
+                    text = host.level.name.first().toString(),
                     color = VolleyColor.White,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -445,7 +450,10 @@ private fun ShowErrorPlaceholder(
                 .fillMaxWidth()
                 .padding(VolleyDimens.DIMEN_20.dp)
         ) {
-            PastGameHeader(onBackClick)
+            PastGameHeader(
+                onBackClick = onBackClick,
+                modifier = Modifier.fillMaxWidth()
+            )
             PlaceholderMessage()
             RefreshButton(onButtonClick)
         }
@@ -454,30 +462,15 @@ private fun ShowErrorPlaceholder(
 
 @Stable
 @Composable
-private fun PastGameHeader( // переделать на стандартный
+private fun PastGameHeader(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.arrow_left_white),
-            contentDescription = null,
-            tint = VolleyColor.White,
-            modifier = Modifier.clickable {
-                onBackClick()
-            }
-        )
-
-        VolleyText.TitleLarge(
-            text = stringResource(R.string.past_game),
-            color = VolleyColor.White,
-            modifier = Modifier.align(Alignment.Center)
-        )
-
-    }
+    VolleyTopBar.TopBarWithBackButton(
+        modifier = modifier,
+        title = stringResource(R.string.past_game),
+        onBackNavigationRequested = onBackClick
+    )
 }
 
 @Stable
@@ -528,7 +521,7 @@ private fun ShowLoader(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        VolleyProgress.CircularProgress()
     }
 }
 

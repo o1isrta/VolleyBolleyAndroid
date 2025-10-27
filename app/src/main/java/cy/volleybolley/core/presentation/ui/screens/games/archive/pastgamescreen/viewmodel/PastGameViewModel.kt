@@ -11,7 +11,7 @@ class PastGameViewModel : BaseViewModel<PastGameState, PastGameEvent, PastGameEf
     override val tag: String = PastGameViewModel::class.simpleName ?: ""
 
     override fun obtainEvent(event: PastGameEvent) {
-        when(event) {
+        when (event) {
             PastGameEvent.OnBackClick -> sendUiEffect(PastGameEffect.NavigateBack)
             is PastGameEvent.OnMapClick -> sendUiEffect(PastGameEffect.OpenMap(event.location))
             PastGameEvent.Refresh -> {

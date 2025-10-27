@@ -1,43 +1,21 @@
 package cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.model
 
 import cy.volleybolley.core.presentation.base.UiState
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Game
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Host
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.PlayerShort
-import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.core.presentation.ui.screens.games.archive.util.provideMockItem
+import cy.volleybolley.games.domain.model.event.Event
+import cy.volleybolley.games.domain.model.event.EventType
 
-data class ArchiveState(
-    val emptyArchive: Boolean = false,
-    val games: List<Game> = listOf(
-        mockGame(1, "GAME"),
-        mockGame(2, "TOURNAMENT"),
-        mockGame(1, "GAME"),
-        mockGame(2, "TOURNAMENT"),
-    )
-) : UiState // нужно будет переделать в формат LCE чтобы отображать loading и placeholder (можно добавить еще и isRefreshing)
+sealed interface ArchiveState : UiState {
+    data object Loading : ArchiveState
+    data object Error : ArchiveState
+    data class Content(
+        val competitionEvents: List<Event> = listOf(
+            provideMockItem(1, EventType.GAME),
+            provideMockItem(2, EventType.TOURNAMENT),
+            provideMockItem(1, EventType.GAME),
+            provideMockItem(2, EventType.TOURNAMENT),
+        )
+    ) : ArchiveState
 
-private fun mockGame(id: Int, type: String) = Game(
-    gameId = id,
-    gameType = type,
-    host = Host(id = 10, name = "Artem Ivanov", avatar = null, level = "L"),
-    message = if (id == 1) "Hi! This is a really long test message to check how the bubble expands when there are many characters inside. It should properly wrap across multiple lines, no cuts."
-    else "Afterlunch meet. 6$ entry fee, our favorite place, don’t miss",
-    courtLocation = Location(
-        longitude = 98.2929,
-        latitude = 7.8471,
-        courtName = if (id == 1) "Karon Beach Club" else "The Shore at Katathani Resort",
-        locationName = if (id == 1) "Karon" else "Kata Noi"
-    ),
-    startTime = if (id == 1) "2025-10-10T18:00:00" else "2025-10-16T13:00:00",
-    endTime = if (id == 1) "2025-10-10T20:00:00" else "2025-10-16T14:00:00",
-    gender = "Mix",
-    levels = listOf("Light"),
-    pricePerPerson = "2",
-    maximumPlayers = 4,
-    paymentType = "Thai bank",
-    paymentAccount = "988 016 7890",
-    currencyType = "$",
-    players = listOf(
-        PlayerShort(101, "Artem Ivanov", "L"), PlayerShort(1, "Aleksandr Abramov", "L")
-    )
-)
+    data object Empty : ArchiveState
+}

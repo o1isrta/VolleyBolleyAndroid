@@ -7,10 +7,10 @@ import cy.volleybolley.core.presentation.ui.navigation.PastTourneyRoute
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.event.ArchiveEvent
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.model.ArchiveState
-import java.util.Locale
+import cy.volleybolley.games.domain.model.event.EventType
 
 class ArchiveViewModel :
-    BaseViewModel<ArchiveState, ArchiveEvent, ArchiveEffect>(initialState = ArchiveState()) {
+    BaseViewModel<ArchiveState, ArchiveEvent, ArchiveEffect>(initialState = ArchiveState.Content()) {
     override val tag: String = ArchiveViewModel::class.simpleName ?: ""
 
     override fun obtainEvent(event: ArchiveEvent) {
@@ -18,10 +18,9 @@ class ArchiveViewModel :
             ArchiveEvent.ClickBack -> sendUiEffect(ArchiveEffect.NavigateBack)
             ArchiveEvent.ClickCreateGame -> sendUiEffect(ArchiveEffect.Navigate(BasicGameSetupRoute))
             is ArchiveEvent.ClickDetails -> {
-                val route = when (event.game.gameType.uppercase(Locale.ROOT)) {
-                    "GAME" -> PastGameRoute
-                    "TOURNAMENT" -> PastTourneyRoute
-                    else -> PastGameRoute
+                val route = when (event.competitionEvent.type) {
+                    EventType.GAME -> PastGameRoute
+                    EventType.TOURNAMENT -> PastTourneyRoute
                 }
                 sendUiEffect(ArchiveEffect.Navigate(route))
             }

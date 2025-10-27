@@ -13,8 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -40,14 +41,12 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Host
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.ShortTeam
-import cy.volleybolley.core.presentation.ui.screens.games.archive.datamodel.Tourney
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.effect.PastTourneyEffect
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.event.PastTourneyEvent
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.model.PastTourneyState
@@ -55,6 +54,9 @@ import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscr
 import cy.volleybolley.core.presentation.ui.screens.games.archive.util.DataTimeRangeFormatter
 import cy.volleybolley.core.presentation.ui.screens.games.archive.util.openMap
 import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.games.domain.model.entity.Host
+import cy.volleybolley.games.domain.model.entity.Team
+import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 @Composable
@@ -117,6 +119,7 @@ private fun Render(
     Box(
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         when (state) {
             PastTourneyState.Loading -> ShowLoader()
@@ -140,7 +143,7 @@ private fun Render(
 @Composable
 private fun ShowPastTourneyDetails(
     modifier: Modifier = Modifier,
-    tourney: Tourney,
+    tourney: TournamentDetails,
     onBackClick: () -> Unit,
     onMapClick: () -> Unit,
     onJoinedPlayersClick: () -> Unit
@@ -170,7 +173,7 @@ private fun ShowPastTourneyDetails(
             ) { onMapClick }
             DividerGlass()
             PaymentBlock(
-                paymentType = tourney.paymentType,
+                paymentType = tourney.paymentType.name,
                 paymentAccount = tourney.paymentAccount,
                 currencyType = tourney.currencyType,
                 pricePerPerson = tourney.pricePerPerson
@@ -188,7 +191,7 @@ private fun ShowPastTourneyDetails(
 @Composable
 private fun JoinedPlayersBlock(
     isIndividual: Boolean,
-    teams: List<ShortTeam>?,
+    teams: List<Team>?,
     onButtonClick: () -> Unit
 ) {
     Column(
@@ -397,7 +400,7 @@ private fun HostInfoBlock(host: Host, message: String) {
 
             ) {
                 VolleyText.BodyRegular(
-                    text = host.level,
+                    text = host.level.name.first().toString(),
                     color = VolleyColor.White,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -501,7 +504,7 @@ private fun ShowLoader(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        VolleyProgress.CircularProgress()
     }
 }
 
