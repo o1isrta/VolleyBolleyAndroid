@@ -232,7 +232,6 @@ private fun ArchiveCard(
 @Stable
 @Composable
 private fun HostInfoBlock(host: Host, isGame: Boolean) {
-
     Column {
         VolleyText.BodyBold(
             text = if (isGame) stringResource(R.string.game_host) else stringResource(R.string.tourney_host),
