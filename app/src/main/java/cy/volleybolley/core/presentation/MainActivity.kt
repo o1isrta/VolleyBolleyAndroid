@@ -43,6 +43,7 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ISCHECKED_TRUE_TEXT
+import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -158,7 +159,7 @@ private fun ButtonDemo() {
             onSelected = {}
         )
         VolleyButton.GroupButtonsForLevel(
-            checkId = 2,
+            checkedLevels = setOf(Level.Medium, Level.Hard),
             modifier = Modifier
                 .padding(24.dp)
                 .fillMaxWidth(),

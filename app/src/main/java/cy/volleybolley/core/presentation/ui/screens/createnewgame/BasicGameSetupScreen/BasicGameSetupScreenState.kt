@@ -3,6 +3,7 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetu
 import android.os.Build
 import androidx.annotation.RequiresApi
 import cy.volleybolley.core.presentation.base.UiState
+import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
@@ -26,33 +27,14 @@ data class BasicGameSetupScreenState @RequiresApi(Build.VERSION_CODES.O) constru
         photo = "",
         tags = listOf()
     ),
-    //val date: Date = Calendar.getInstance().time, // Получаем текущую дату и время
-    // val date: Date = getDateFor2025_10_20(), // Используем функцию для создания Date
-    val date: LocalDate = LocalDate.of(2025, 10, 20), // Используем LocalDate  val date: LocalDate = LocalDate.now()
+    val date: LocalDate = LocalDate.now(), //val date: LocalDate = LocalDate.of(2025, 10, 20), // Используем LocalDate  val date: LocalDate = LocalDate.now()
     val startTime: VolleyTimeStamp? = VolleyTimeStamp(2,0, true), // val startTime: String = "02:00",
     val finishTime: VolleyTimeStamp? = VolleyTimeStamp(4,0, true), // val endTime: String  = "04:00",
     val gender: Gender  = Gender.Mix,
-    val levels: List<Level> = listOf(Level.Light, Level.Medium, Level.Hard), //    val levels: Array<Int>
+    val levels: Set<Level> = setOf(Level.Light, Level.Medium, Level.Hard), //    val levels: Array<Int>
     //val errorMessage: String? = null,
     val isLoading : Boolean = false     // Для загрузки (если необходимо)
- //   val isPickDateClicked: Boolean = false // нажата кнопка Pick Date, то есть показывается календарь
 )  : UiState
-
-/*fun getDateFor2025_10_20(): Date {
-    val calendar = Calendar.getInstance()
-    calendar.set(2025, Calendar.OCTOBER, 20) // ВНИМАНИЕ: Calendar.OCTOBER = 9 (январь = 0)
-    return calendar.time
-}*/
-
-fun getDateFor2025_10_20(): Date {
-    val calendar = Calendar.getInstance()
-    calendar.set(2025, Calendar.OCTOBER, 20) // ВНИМАНИЕ: Calendar.OCTOBER = 9 (январь = 0)
-    calendar.set(Calendar.HOUR_OF_DAY, 0)
-    calendar.set(Calendar.MINUTE, 0)
-    calendar.set(Calendar.SECOND, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
-    return calendar.time
-}
 
 enum class Gender {
     Mix,
@@ -60,9 +42,9 @@ enum class Gender {
     Women
 }
 
-enum class Level {
-    Light,
-    Medium,
-    Hard,
-    Pro
-}
+//enum class Level {
+//    Light,
+//    Medium,
+//    Hard,
+//    Pro
+//}

@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -51,6 +52,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.OUTLINED_GRAD
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtonsMap
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtonsPlayers
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
+import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -816,9 +818,176 @@ object VolleyButton {
         )
     }
 
+
     /**
      * группа кнопок выбора Level (из 4 кнопок: Light, Medium, Hard, Pro)
      */
+    @Composable
+    fun GroupButtonsForLevel(
+        modifier: Modifier = Modifier,
+        checkedLevels: Set<Level> = setOf(Level.Light), // По умолчанию одна кнопка
+        onSelected: (Set<Level>) -> Unit
+    ) {
+        val paddingValues = PaddingValues(all = 10.dp)
+        // Функция для получения номера кнопки по Level
+        fun getPositionForLevel(level: Level): Int =
+            when (level) {
+                Level.Light -> 1
+                Level.Medium-> 2
+                Level.Hard -> 3
+                Level.Pro -> 4
+            }
+
+        // Функция для получения Level по номеру кнопки
+        fun getLevelForPosition(position: Int): Level? =
+            when (position) {
+                1 -> Level.Light
+                2 -> Level.Medium
+                3 -> Level.Hard
+                4 -> Level.Pro
+                else -> null // Или можно выбросить исключение, если не ожидается других значений
+            }
+
+        ButtonsGroup(
+            listOf(
+                ButtonItem(
+                    position = 1,
+                    isChecked = checkedLevels.contains(Level.Light),
+                    button = { _, isChecked, onClick ->
+                        CheckGradientButton(
+                            text = LIGHT_TEXT,
+                            isChecked = isChecked,
+                            paddingValues = paddingValues,
+                            onClick = onClick
+                        )
+                    }
+                ),
+                ButtonItem(
+                    position = 2,
+                    isChecked = checkedLevels.contains(Level.Medium),
+                    button = { _, isChecked, onClick ->
+                        CheckGradientButton(
+                            text = MEDIUM_TEXT,
+                            isChecked = isChecked,
+                            paddingValues = paddingValues,
+                            onClick = onClick
+                        )
+                    }
+                ),
+                ButtonItem(
+                    position = 3,
+                    isChecked = checkedLevels.contains(Level.Hard),
+                    button = { _, isChecked, onClick ->
+                        CheckGradientButton(
+                            text = HARD_TEXT,
+                            isChecked = isChecked,
+                            paddingValues = paddingValues,
+                            onClick = onClick
+                        )
+                    }
+                ),
+                ButtonItem(
+                    position = 4,
+                    isChecked = checkedLevels.contains(Level.Pro),
+                    button = { _, isChecked, onClick ->
+                        CheckGradientButton(
+                            text = PRO_TEXT,
+                            isChecked = isChecked,
+                            paddingValues = paddingValues,
+                            onClick = onClick
+                        )
+                    }
+                )
+            ),
+            modifier = modifier.height(height = 40.dp),
+            onSelected = { position ->
+                val level = getLevelForPosition(position) // Получаем Level по номеру кнопки
+                if (level != null) {
+                    val newCheckedLevels = checkedLevels.toMutableSet()
+
+                    if (newCheckedLevels.contains(level)) {
+                        newCheckedLevels.remove(level) // Снимаем отметку, если кнопка уже выбрана
+                    } else {
+                        newCheckedLevels.add(level) // Добавляем новую отметку
+                    }
+                    onSelected(newCheckedLevels)
+                }
+            }
+        )
+    }
+
+   /* @Composable
+    fun GroupButtonsForLevel(
+        checkedIds: Set<Int> = setOf(1), // По умолчанию одна кнопка
+        modifier: Modifier,
+        onSelected: (Set<Int>) -> Unit
+    ) {
+        val paddingValues = PaddingValues(all = 10.dp)
+        ButtonsGroup(
+            listOf(
+                ButtonItem(
+                    position = 1,
+                    isChecked = checkedIds.contains(1),
+                    button = { _, isChecked, onClick ->
+                        CheckGradientButton(
+                            text = LIGHT_TEXT,
+                            isChecked = isChecked,
+                            paddingValues = paddingValues,
+                            onClick = onClick
+                        )
+                    }
+                ),
+                ButtonItem(
+                    position = 2,
+                    isChecked = checkedIds.contains(2),
+                    button = { _, isChecked, onClick ->
+                        CheckGradientButton(
+                            text = MEDIUM_TEXT,
+                            isChecked = isChecked,
+                            paddingValues = paddingValues,
+                            onClick = onClick
+                        )
+                    }
+                ),
+                ButtonItem(
+                    position = 3,
+                    isChecked = checkedIds.contains(3),
+                    button = { _, isChecked, onClick ->
+                        CheckGradientButton(
+                            text = HARD_TEXT,
+                            isChecked = isChecked,
+                            paddingValues = paddingValues,
+                            onClick = onClick
+                        )
+                    }
+                ),
+                ButtonItem(
+                    position = 4,
+                    isChecked = checkedIds.contains(4),
+                    button = { _, isChecked, onClick ->
+                        CheckGradientButton(
+                            text = PRO_TEXT,
+                            isChecked = isChecked,
+                            paddingValues = paddingValues,
+                            onClick = onClick
+                        )
+                    }
+                )
+            ),
+            modifier = modifier.height(height = 40.dp),
+            onSelected = { position ->
+                val newCheckedIds = checkedIds.toMutableSet()
+                if (newCheckedIds.contains(position)) {
+                    newCheckedIds.remove(position) // Снимаем отметку, если кнопка уже выбрана
+                } else {
+                    newCheckedIds.add(position) // Добавляем новую отметку
+                }
+                onSelected(newCheckedIds)
+            }
+        )
+    }*/
+
+    /*
     @Composable
     fun GroupButtonsForLevel(
         checkId: Int = 1,
@@ -881,6 +1050,7 @@ object VolleyButton {
             onSelected = onSelected
         )
     }
+     */
 
     /**
      * группа кнопок выбора Tourney Type (из 2 кнопок: Individual, Team)
@@ -1410,7 +1580,7 @@ private fun PreviewGroupButtonsForGender2() {
 private fun PreviewGroupButtonsForLevel() {
     PreviewContainer(modifier = Modifier.width(400.dp)) {
         VolleyButton.GroupButtonsForLevel(
-            checkId = 2,
+            checkedLevels = setOf(Level.Light, Level.Medium, Level.Pro), //checkId = 2,
             modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
         )
@@ -1530,7 +1700,7 @@ private fun PreviewCombo() {
                     onSelected = {}
                 )
                 VolleyButton.GroupButtonsForLevel(
-                    2,
+                    checkedLevels = setOf(Level.Light, Level.Medium),
                     modifier = Modifier
                         .padding(vertical = 12.dp)
                         .align(Alignment.Start),

@@ -51,7 +51,7 @@ open class BasicGameSetupScreenViewModel :
                 // переход на экран CreatePlace при нажатии на кнопку Change
                 sendUiEffect(BasicGameSetupScreenEffect.NavigateToCreatePlace)
             }
-            is BasicGameSetupScreenEvent.OnDateSelected -> {
+            is BasicGameSetupScreenEvent.DateSelected -> {
                 // устанавливаем выбранную дату
                 if (!event.date.isBefore(LocalDate.now())) {
                     uiStateMutable.value = uiStateMutable.value.copy(date = event.date)
@@ -70,7 +70,7 @@ open class BasicGameSetupScreenViewModel :
                 uiStateMutable.value = uiStateMutable.value.copy(date = LocalDate.now()/*, isPickDateClicked = false*/)
                 _showCalendar.value = false // скрываем календарь
             }
-            is BasicGameSetupScreenEvent.OnStartTimeChanged -> {
+            is BasicGameSetupScreenEvent.StartTimeChanged -> {
                 timeChangeJob?.cancel()
                 timeChangeJob = viewModelScope.launch {
                     Log.d("TimePicker", "ViewModel: Received OnEndTimeChanged event: ${event.time}")
@@ -84,7 +84,7 @@ open class BasicGameSetupScreenViewModel :
                     // validateTimes(newState.startTime, newState.endTime)
                 }
             }
-            is BasicGameSetupScreenEvent.OnFinishTimeChanged -> {
+            is BasicGameSetupScreenEvent.FinishTimeChanged -> {
                 timeChangeJob?.cancel()
                 timeChangeJob = viewModelScope.launch {
                     Log.d("TimePicker", "ViewModel: Received OnEndTimeChanged event: ${event.time}")
@@ -106,6 +106,15 @@ open class BasicGameSetupScreenViewModel :
                 else {
                     sendUiEffect(BasicGameSetupScreenEffect.ShowError(message = message))
                 }
+            }
+            is BasicGameSetupScreenEvent.GenderSelected -> {
+                uiStateMutable.value = uiStateMutable.value.copy(gender = event.gender)
+            }
+            is BasicGameSetupScreenEvent.PlayerLevelSelected -> {
+                if(event.levels.isEmpty())
+                    sendUiEffect(BasicGameSetupScreenEffect.ShowError(message = "Please, select player level!"))
+                else
+                    uiStateMutable.value = uiStateMutable.value.copy(levels = event.levels)
             }
         }
     }
@@ -136,7 +145,7 @@ open class BasicGameSetupScreenViewModel :
     // Подсчет разницы во времени
     private fun calculateDurationMinutes(startTime: VolleyTimeStamp, endTime: VolleyTimeStamp): Int {
         val startTotalMinutes = (startTime.hour + if (startTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * 60 + startTime.minutes
-        val endTotalMinutes = (endTime.hour + if (endTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * endTime.minutes
+        val endTotalMinutes = (endTime.hour + if (endTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * 60 + endTime.minutes
         return endTotalMinutes - startTotalMinutes
     }
 
@@ -207,7 +216,7 @@ open class BasicGameSetupScreenViewModel :
 // Специальный ViewModel для Preview
 class BasicGameSetupScreenViewModelPreview : BasicGameSetupScreenViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
-    private val _showCalendarPreview = MutableStateFlow(LocalDate.now() != LocalDate.of(2025, 10, 20))  // Пример
+    private val _showCalendarPreview = MutableStateFlow(LocalDate.now() != LocalDate.of(2025, 10, 23))  // Пример
     @RequiresApi(Build.VERSION_CODES.O)
     override val showCalendar: StateFlow<Boolean> = _showCalendarPreview.asStateFlow()
 

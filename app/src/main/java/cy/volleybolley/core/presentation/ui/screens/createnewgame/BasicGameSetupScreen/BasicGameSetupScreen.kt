@@ -228,23 +228,13 @@ fun BasicGameSetupScreen(navController: NavHostController,
                     )
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
 
-                    // здесь будет календарь
-                    /*     Box(
-             modifier = Modifier
-                 .fillMaxWidth()
-                 .height(266.dp)
-                 .clip(RoundedCornerShape(32.dp)) // Задаем скругление углов
-                 .background(VolleyColor.White) // Цвет прямоугольника
-          )
-         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-         */
                     // Календарь показывается только если выбрана кнопка "Pick Date"
                     if (showCalendar) {  // Используем флаг из ViewModel
                         VolleyCalendar.CalendarSection(
                             selectedDate = state.date,
                             onDateSelected = { selectedDate ->
                                 viewModel.obtainEvent(
-                                    BasicGameSetupScreenEvent.OnDateSelected(
+                                    BasicGameSetupScreenEvent.DateSelected(
                                         selectedDate
                                     )
                                 )
@@ -277,9 +267,7 @@ fun BasicGameSetupScreen(navController: NavHostController,
                         VolleyTextFieldAttribute.DurationFieldWithArrows(
                             inputTime = state.startTime
                         ) {
-                            time ->
-                          //  Log.d("TimePicker", "DurationFieldWithArrows - Time selected: $time")  // Добавьте это
-                            viewModel.obtainEvent(BasicGameSetupScreenEvent.OnStartTimeChanged(time))
+                            time -> viewModel.obtainEvent(BasicGameSetupScreenEvent.StartTimeChanged(time))
                         }
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
@@ -295,9 +283,7 @@ fun BasicGameSetupScreen(navController: NavHostController,
                         VolleyTextFieldAttribute.DurationFieldWithArrows(
                             inputTime = state.finishTime
                         ) {
-                            time ->
-                        //    Log.d("TimePicker", "DurationFieldWithArrows2 - Time selected: $time")  // Добавьте это
-                            viewModel.obtainEvent(BasicGameSetupScreenEvent.OnFinishTimeChanged(time))
+                            time -> viewModel.obtainEvent(BasicGameSetupScreenEvent.FinishTimeChanged(time))
                         }
                     }
 
@@ -314,17 +300,32 @@ fun BasicGameSetupScreen(navController: NavHostController,
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
                     VolleyButton.GroupButtonsForGender3(
+                        checkId = when (state.gender) {
+                            Gender.Mix -> 1
+                            Gender.Men -> 2
+                            Gender.Women -> 3
+                        },
                         modifier = Modifier,
-                        onSelected = {
-                          //  viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked)
-                        }
+                        onSelected = { position ->
+                            val selectedGender = when (position) {
+                                1 -> Gender.Mix
+                                2 -> Gender.Men
+                                3 -> Gender.Women
+                                else -> null // Обработка некорректной позиции
+                            }
+                            selectedGender?.let { gender ->
+                                viewModel.obtainEvent(BasicGameSetupScreenEvent.GenderSelected(gender))
+                            } ?: run {
+                                // Обработка нераспознанной позиции
+                                Log.e("BasicGameSetupScreen", "Нераспознанная позиция: $position")
+                            } }
                     )
 
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                     VolleySimpleComponent.DividerLine() //HorizontalLine()
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-                          VolleyText.TitleMedium(
+                        VolleyText.TitleMedium(
                         text = stringResource(R.string.player_level),
                         modifier = Modifier.fillMaxWidth(),
                         color = VolleyColor.White
@@ -333,9 +334,11 @@ fun BasicGameSetupScreen(navController: NavHostController,
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
                     VolleyButton.GroupButtonsForLevel(
-                        checkId = 3,
                         modifier = Modifier,
-                        onSelected = {}
+                        checkedLevels = state.levels,
+                        onSelected = { levels ->
+                                viewModel.obtainEvent(BasicGameSetupScreenEvent.PlayerLevelSelected(levels))
+                        }
                     )
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
 

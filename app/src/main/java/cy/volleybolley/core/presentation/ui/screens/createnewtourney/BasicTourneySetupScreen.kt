@@ -33,6 +33,7 @@ import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -294,7 +295,7 @@ fun BasicTourneySetupScreenContent(
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
         VolleyButton.GroupButtonsForLevel(
-            checkId = 3,
+            checkedLevels = setOf(Level.Hard),
             modifier = Modifier,
             onSelected = {}
         )
