@@ -8,22 +8,22 @@ import cy.volleybolley.courts.domain.model.Court
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-class CourtViewModel @Inject constructor(
+class SearchCourtViewModel @Inject constructor(
     private val courtsUseCase: CourtsUseCase
-) : BaseViewModel<CourtState, CourtEvent, CourtEffect>(CourtState()) {
+) : BaseViewModel<SearchCourtState, SearchCourtEvent, SearchCourtEffect>(SearchCourtState()) {
 
-    override val tag: String = "CourtViewModel"
+    override val tag: String = "SearchCourtViewModel"
 
-    override fun obtainEvent(event: CourtEvent) {
+    override fun obtainEvent(event: SearchCourtEvent) {
         when (event) {
-            is CourtEvent.LoadCourts -> loadCourts()
-            is CourtEvent.OnBackFromCourtListScreen -> sendUiEffect(CourtEffect.NavigateBack)
-            is CourtEvent.ClickOnCourtMarker -> clickOnCourtMarker(event.court)
-            is CourtEvent.ClickOnCourtDetails -> clickOnCourtDetails(event.court)
-            is CourtEvent.ClickOnChooseCourt -> clickOnChooseCourt(event.court)
-            is CourtEvent.ClickOnMap -> clickOnMap()
-            is CourtEvent.UpdateUserLocation -> updateUserLocation(event.latLng)
-            is CourtEvent.DeniedUserLocation -> deniedUserLocation()
+            is SearchCourtEvent.LoadSearchCourt -> loadCourts()
+            is SearchCourtEvent.OnBackFromSearchCourtListScreen -> sendUiEffect(SearchCourtEffect.NavigateBack)
+            is SearchCourtEvent.ClickOnSearchCourtMarker -> clickOnCourtMarker(event.court)
+            is SearchCourtEvent.ClickOnSearchCourtDetails -> clickOnCourtDetails(event.court)
+            is SearchCourtEvent.ClickOnChooseSearchCourt -> clickOnChooseCourt(event.court)
+            is SearchCourtEvent.ClickOnMap -> clickOnMap()
+            is SearchCourtEvent.UpdateUserLocation -> updateUserLocation(event.latLng)
+            is SearchCourtEvent.DeniedUserLocation -> deniedUserLocation()
         }
     }
 
@@ -40,13 +40,13 @@ class CourtViewModel @Inject constructor(
 
                     is VolleyResult.Failure -> {
                         uiStateMutable.update { it.copy(isLoading = false) }
-                        sendUiEffect(CourtEffect.ShowError("Failed to load courts: ${result.error}"))
+                        sendUiEffect(SearchCourtEffect.ShowError("Failed to load courts: ${result.error}"))
                     }
                 }
             },
             onError = { error ->
                 uiStateMutable.update { it.copy(isLoading = false) }
-                sendUiEffect(CourtEffect.ShowError("Network error: ${error.message}"))
+                sendUiEffect(SearchCourtEffect.ShowError("Network error: ${error.message}"))
             }
         )
     }
@@ -76,7 +76,7 @@ class CourtViewModel @Inject constructor(
     }
 
     private fun clickOnChooseCourt(court: Court) {
-        sendUiEffect(CourtEffect.NavigateToGameCreation(court))
+        sendUiEffect(SearchCourtEffect.NavigateToGameCreation(court))
     }
 
     private fun clickOnMap() {

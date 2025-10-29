@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng
 import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.courts.domain.model.Court
 
-data class CourtState(
+data class SearchCourtState(
     val courts: List<Court> = emptyList(),
     val selectedCourt: Court? = null,
     val userLocation: LatLng? = null,

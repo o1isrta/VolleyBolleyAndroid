@@ -1,11 +1,7 @@
-package cy.volleybolley.courts.presentation
+package cy.volleybolley.core.presentation.ui.screens.courts
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -37,12 +33,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -59,17 +53,20 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.courts.domain.model.Court
-import cy.volleybolley.courts.domain.model.Location
-import cy.volleybolley.courts.presentation.ListScreenComponents.CourtDetailsContent
-import cy.volleybolley.courts.presentation.ListScreenComponents.DistanceContainer
+import cy.volleybolley.courts.presentation.SearchCourtEvent
+import cy.volleybolley.courts.presentation.SearchCourtState
 
 object MapScreenComponents {
+    private const val DEFAULT_LAT = 7.8804
+    private const val DEFAULT_LNG = 98.3923
+    private const val DEFAULT_ZOOM = 14f
+    private val DEFAULT_LAT_LNG = LatLng(DEFAULT_LAT, DEFAULT_LNG)
     @SuppressLint("MissingPermission")
     @OptIn(ExperimentalPermissionsApi::class)
     @Composable
     fun MapScreen(
-        state: CourtState,
-        onEvent: (CourtEvent) -> Unit,
+        state: SearchCourtState,
+        onEvent: (SearchCourtEvent) -> Unit,
         modifier: Modifier = Modifier
     ) {
         val context = LocalContext.current
@@ -89,8 +86,8 @@ object MapScreenComponents {
                         fusedLocationClient.lastLocation
                             .addOnSuccessListener { location ->
                                 location?.let {
-                                    onEvent(CourtEvent.UpdateUserLocation(LatLng(it.latitude, it.longitude)))
-                                } ?: onEvent(CourtEvent.DeniedUserLocation)
+                                    onEvent(SearchCourtEvent.UpdateUserLocation(LatLng(it.latitude, it.longitude)))
+                                } ?: onEvent(SearchCourtEvent.DeniedUserLocation)
                             }
                     }
 
@@ -105,98 +102,75 @@ object MapScreenComponents {
             modifier = modifier
         )
     }
-}
 
-@Composable
-private fun MapScreenContent(
-    state: CourtState,
-    onEvent: (CourtEvent) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val context = LocalContext.current
-    val defaultLatLng = LatLng(7.8804, 98.3923)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(state.userLocation ?: defaultLatLng, 14f)
-    }
-    Box(modifier = modifier.fillMaxSize()) {
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState,
-            uiSettings = MapUiSettings(zoomControlsEnabled = false),
-            onMapClick = { onEvent(CourtEvent.ClickOnMap) }
-        ) {
-            state.userLocation?.let { userLocation ->
-                Marker(
-                    state = MarkerState(position = userLocation),
-                    title = "You are here",
-                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
-                )
-            }
-
-            state.courts.forEach { court ->
-                Marker(
-                    state = MarkerState(position = court.location.toLatLng()),
-                    title = court.location.courtName,
-                    icon = court.getMarkerIcon(context, state.selectedCourt),
-                    onClick = {
-                        onEvent(CourtEvent.ClickOnCourtMarker(court))
-                        true
-                    }
-                )
-            }
+    @Composable
+    private fun MapScreenContent(
+        state: SearchCourtState,
+        onEvent: (SearchCourtEvent) -> Unit,
+        modifier: Modifier = Modifier
+    ) {
+        val context = LocalContext.current
+        val defaultLatLng = DEFAULT_LAT_LNG
+        val cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(state.userLocation ?: defaultLatLng, DEFAULT_ZOOM)
         }
-
-        state.selectedCourt?.let { court ->
-            AnimatedVisibility(
-                visible = true,
-                enter = fadeIn() + slideInVertically(),
-                exit = fadeOut() + slideOutVertically()
+        Box(modifier = modifier.fillMaxSize()) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+                uiSettings = MapUiSettings(zoomControlsEnabled = false),
+                onMapClick = { onEvent(SearchCourtEvent.ClickOnMap) }
             ) {
-                val modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(VolleyDimens.DIMEN_8.dp)
+                state.userLocation?.let { userLocation ->
+                    Marker(
+                        state = MarkerState(position = userLocation),
+                        title = "You are here",
+                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+                    )
+                }
 
-                if (state.showDetails) {
-                    CourtMapItemDetail(
-                        court = court,
-                        onClick = { onEvent(CourtEvent.ClickOnMap) },
-                        onChooseCourt = { onEvent(CourtEvent.ClickOnChooseCourt(court)) },
-                        modifier = modifier
+                state.courts.forEach { court ->
+                    Marker(
+                        state = MarkerState(position = court.location.toLatLng()),
+                        title = court.location.courtName,
+                        icon = court.getMarkerIcon(context, state.selectedCourt),
+                        onClick = {
+                            onEvent(SearchCourtEvent.ClickOnSearchCourtMarker(court))
+                            true
+                        }
                     )
-                } else {
-                    CourtMapItemWithButton(
-                        court = court,
-                        onClick = { onEvent(CourtEvent.ClickOnCourtDetails(court)) },
-                        onChooseCourt = { onEvent(CourtEvent.ClickOnChooseCourt(court)) },
-                        modifier = modifier
-                    )
+                }
+            }
+
+            state.selectedCourt?.let { court ->
+                AnimatedVisibility(
+                    visible = true,
+                    enter = fadeIn() + slideInVertically(),
+                    exit = fadeOut() + slideOutVertically()
+                ) {
+                    val modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(VolleyDimens.DIMEN_8.dp)
+
+                    if (state.showDetails) {
+                        CourtMapItemDetail(
+                            court = court,
+                            onClick = { onEvent(SearchCourtEvent.ClickOnMap) },
+                            onChooseCourt = { onEvent(SearchCourtEvent.ClickOnChooseSearchCourt(court)) },
+                            modifier = modifier
+                        )
+                    } else {
+                        CourtMapItemWithButton(
+                            court = court,
+                            onClick = { onEvent(SearchCourtEvent.ClickOnSearchCourtDetails(court)) },
+                            onChooseCourt = { onEvent(SearchCourtEvent.ClickOnChooseSearchCourt(court)) },
+                            modifier = modifier
+                        )
+                    }
                 }
             }
         }
     }
-}
-
-private fun Location.toLatLng() = LatLng(latitude, longitude)
-
-private fun Court.getMarkerIcon(context: Context, selectedCourt: Court?): BitmapDescriptor {
-    return if (this.courtId == selectedCourt?.courtId) {
-        context.drawableToBitmapDescriptor(R.drawable.ic_pin_map)
-    } else {
-        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
-    }
-}
-
-private fun Context.drawableToBitmapDescriptor(@DrawableRes drawableRes: Int): BitmapDescriptor {
-    val drawable = ContextCompat.getDrawable(this, drawableRes)!!
-    val bitmap = Bitmap.createBitmap(
-        drawable.intrinsicWidth,
-        drawable.intrinsicHeight,
-        Bitmap.Config.ARGB_8888
-    )
-    val canvas = Canvas(bitmap)
-    drawable.setBounds(0, 0, canvas.width, canvas.height)
-    drawable.draw(canvas)
-    return BitmapDescriptorFactory.fromBitmap(bitmap)
 }
 
 @Composable
@@ -239,7 +213,7 @@ private fun CourtMapItem(
                 )
             }
 
-            DistanceContainer(
+            ListScreenComponents.DistanceContainer(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 distance = "Nearest"
             )
@@ -323,7 +297,7 @@ private fun CourtMapItemDetail(
                 onClick = onClick
             )
 
-            CourtDetailsContent(
+            ListScreenComponents.CourtDetailsContent(
                 court = court,
                 onChooseCourt = onChooseCourt
             )
@@ -334,7 +308,7 @@ private fun CourtMapItemDetail(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewMapScreenContent() {
-    var selectedCourt by remember { mutableStateOf(MockData.sampleCourts[0]) }
+    var selectedCourt by remember { mutableStateOf(CourtsMockData.sampleCourts[0]) }
 
     Box(
         modifier = Modifier
@@ -364,7 +338,7 @@ private fun PreviewMapScreenContent() {
 @Composable
 private fun PreviewCourtMapItemWithButton() {
     CourtMapItemWithButton(
-        court = MockData.sampleCourts[0],
+        court = CourtsMockData.sampleCourts[0],
         onClick = {},
         onChooseCourt = {},
         modifier = Modifier
@@ -375,7 +349,7 @@ private fun PreviewCourtMapItemWithButton() {
 @Composable
 private fun PreviewCourtMapItemDetail() {
     CourtMapItemDetail(
-        court = MockData.sampleCourts[1],
+        court = CourtsMockData.sampleCourts[1],
         onClick = {},
         onChooseCourt = {}
     )

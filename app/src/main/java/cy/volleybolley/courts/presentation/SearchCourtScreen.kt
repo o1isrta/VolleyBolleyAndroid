@@ -12,14 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import cy.volleybolley.courts.presentation.CourtsComponents.CourtMapListSwitcherScreen
+import cy.volleybolley.core.presentation.ui.screens.courts.CourtsComponents.CourtMapListSwitcherScreen
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchCourtScreen(
     navHostController: NavHostController,
-    viewModel: CourtViewModel = koinViewModel(),
+    viewModel: SearchCourtViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -28,22 +28,22 @@ fun SearchCourtScreen(
     LaunchedEffect(Unit) {
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
-                is CourtEffect.ShowError -> {
+                is SearchCourtEffect.ShowError -> {
                     Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is CourtEffect.NavigateToGameCreation -> {
+                is SearchCourtEffect.NavigateToGameCreation -> {
                     navHostController.navigate("create_game") // Дальнейшее создание игры
                 }
 
-                is CourtEffect.NavigateBack -> {
+                is SearchCourtEffect.NavigateBack -> {
                     navHostController.popBackStack()
                 }
 
                 null -> {}
             }
         }
-        viewModel.obtainEvent(CourtEvent.LoadCourts)
+        viewModel.obtainEvent(SearchCourtEvent.LoadSearchCourt)
     }
 
     CourtListContent(
@@ -58,8 +58,8 @@ fun SearchCourtScreen(
 private fun CourtListContent(
     isMapSelected: Boolean,
     onTabSelected: (Boolean) -> Unit,
-    state: CourtState,
-    onEvent: (CourtEvent) -> Unit,
+    state: SearchCourtState,
+    onEvent: (SearchCourtEvent) -> Unit,
 ) {
     CourtMapListSwitcherScreen(
         state = state,

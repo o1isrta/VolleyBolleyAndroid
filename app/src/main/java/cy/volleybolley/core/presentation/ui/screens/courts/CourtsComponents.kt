@@ -1,4 +1,4 @@
-package cy.volleybolley.courts.presentation
+package cy.volleybolley.core.presentation.ui.screens.courts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,14 +25,16 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtonsMap
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
-import cy.volleybolley.courts.presentation.CourtsComponents.CourtMapListSwitcherScreen
-import cy.volleybolley.courts.presentation.MapScreenComponents.MapScreen
+import cy.volleybolley.core.presentation.ui.screens.courts.MapScreenComponents.MapScreen
+import cy.volleybolley.courts.presentation.SearchCourtEvent
+import cy.volleybolley.courts.presentation.SearchCourtState
+import cy.volleybolley.courts.util.UiStateRenderer
 
 object CourtsComponents {
     @Composable
     fun CourtMapListSwitcherScreen(
-        state: CourtState,
-        onEvent: (CourtEvent) -> Unit,
+        state: SearchCourtState,
+        onEvent: (SearchCourtEvent) -> Unit,
         isMapSelected: Boolean,
         onTabSelected: (Boolean) -> Unit,
         modifier: Modifier = Modifier,
@@ -120,9 +122,9 @@ private fun MapListTopBar(
 private fun PreviewCourtMapListSwitcherScreen() {
     var isMapSelected by remember { mutableStateOf(false) }
 
-    val previewState = CourtState(
-        courts = MockData.sampleCourts,
-        selectedCourt = MockData.sampleCourts[1],
+    val previewState = SearchCourtState(
+        courts = CourtsMockData.sampleCourts,
+        selectedCourt = CourtsMockData.sampleCourts[1],
         isLoading = false,
         error = null
     )
@@ -131,7 +133,7 @@ private fun PreviewCourtMapListSwitcherScreen() {
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
-        CourtMapListSwitcherScreen(
+        CourtsComponents.CourtMapListSwitcherScreen(
             state = previewState,
             onEvent = {},
             isMapSelected = isMapSelected,
@@ -139,7 +141,6 @@ private fun PreviewCourtMapListSwitcherScreen() {
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

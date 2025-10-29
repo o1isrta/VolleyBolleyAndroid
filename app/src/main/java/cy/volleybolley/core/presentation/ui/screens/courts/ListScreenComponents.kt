@@ -1,4 +1,4 @@
-package cy.volleybolley.courts.presentation
+package cy.volleybolley.core.presentation.ui.screens.courts
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -43,12 +43,14 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.courts.domain.model.Court
+import cy.volleybolley.courts.presentation.SearchCourtEvent
+import cy.volleybolley.courts.presentation.SearchCourtState
 
 object ListScreenComponents {
     @Composable
     fun ListContent(
-        state: CourtState,
-        onEvent: (CourtEvent) -> Unit,
+        state: SearchCourtState,
+        onEvent: (SearchCourtEvent) -> Unit,
         modifier: Modifier = Modifier
     ) {
         TransparentContainer(
@@ -66,8 +68,8 @@ object ListScreenComponents {
 
     @Composable
     private fun CourtsSearchList(
-        state: CourtState,
-        onEvent: (CourtEvent) -> Unit
+        state: SearchCourtState,
+        onEvent: (SearchCourtEvent) -> Unit
     ) {
         var searchText by remember { mutableStateOf("") }
         val filteredCourts by remember(state.courts, searchText) {
@@ -100,13 +102,13 @@ object ListScreenComponents {
                     if (isSelected) {
                         CourtItemDetails(
                             court = court,
-                            onClick = { onEvent(CourtEvent.ClickOnCourtMarker(court)) },
-                            onChooseCourt = { onEvent(CourtEvent.ClickOnChooseCourt(court)) }
+                            onClick = { onEvent(SearchCourtEvent.ClickOnSearchCourtMarker(court)) },
+                            onChooseCourt = { onEvent(SearchCourtEvent.ClickOnChooseSearchCourt(court)) }
                         )
                     } else {
                         CourtListItem(
                             court = court,
-                            onClick = { onEvent(CourtEvent.ClickOnCourtMarker(court)) },
+                            onClick = { onEvent(SearchCourtEvent.ClickOnSearchCourtMarker(court)) },
                             modifier = Modifier.padding(vertical = VolleyDimens.DIMEN_16.dp)
                         )
                     }
@@ -196,7 +198,6 @@ object ListScreenComponents {
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
         ) {
-
             CourtImageWithTags(
                 photoUrl = court.photo,
                 tags = court.tags
@@ -303,15 +304,13 @@ object ListScreenComponents {
                 error = painterResource(R.drawable.preview_court_png),
                 contentScale = ContentScale.Crop
             )
-
-
             Row(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(VolleyDimens.DIMEN_16.dp),
                 horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_4.dp)
             ) {
-                tags.take(4).forEach { tag ->
+                tags.forEach { tag ->
                     TagItem(tag = tag)
                 }
             }
@@ -322,9 +321,9 @@ object ListScreenComponents {
 @Preview(heightDp = 1000)
 @Composable
 private fun PreviewListScreen() {
-    val previewState = CourtState(
-        courts = MockData.sampleCourts,
-        selectedCourt = MockData.sampleCourts[2],
+    val previewState = SearchCourtState(
+        courts = CourtsMockData.sampleCourts,
+        selectedCourt = CourtsMockData.sampleCourts[2],
         isLoading = false,
         error = null
     )
@@ -353,11 +352,11 @@ private fun PreviewComponentContainer() {
         )
         ListScreenComponents.CourtListItem(
             modifier = Modifier.padding(vertical = VolleyDimens.DIMEN_16.dp),
-            court = MockData.sampleCourts[0],
+            court = CourtsMockData.sampleCourts[0],
             onClick = {}
         )
         ListScreenComponents.CourtDetailsContent(
-            court = MockData.sampleCourts[0],
+            court = CourtsMockData.sampleCourts[0],
             onChooseCourt = {},
         )
     }

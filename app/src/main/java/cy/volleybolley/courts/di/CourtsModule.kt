@@ -9,7 +9,7 @@ import cy.volleybolley.courts.data.network.CourtsResponse
 import cy.volleybolley.courts.domain.CourtsUseCaseImpl
 import cy.volleybolley.courts.domain.api.CourtsRepository
 import cy.volleybolley.courts.domain.api.CourtsUseCase
-import cy.volleybolley.courts.presentation.CourtViewModel
+import cy.volleybolley.courts.presentation.SearchCourtViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -30,5 +30,5 @@ val courtsModule = module {
     }
 
     // ViewModel
-    viewModel { CourtViewModel(courtsUseCase = get()) }
+    viewModel { SearchCourtViewModel(courtsUseCase = get()) }
 }
