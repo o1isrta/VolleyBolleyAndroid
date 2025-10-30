@@ -37,13 +37,12 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.profile.domain.model.PersonalData
-import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RegistrationScreen(
     paddingFromSystemUi: PaddingValues,
-    user: String,
+    personalData: PersonalData?,
     viewModel: RegistrationViewModel = koinViewModel(),
     onRequestNavigateToAboutLevels: () -> Unit,
     onRegistrationSuccessEvent: () -> Unit,
@@ -51,10 +50,8 @@ fun RegistrationScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
-    val personalData: PersonalData = Json.decodeFromString(user)
-
     LaunchedEffect(effect, personalData) {
-        viewModel.setUser(personalData)
+        personalData?.let { viewModel.setUser(it) }
 
         when (effect) {
             is RegistrationEffect.NavigateToHome -> onRegistrationSuccessEvent()

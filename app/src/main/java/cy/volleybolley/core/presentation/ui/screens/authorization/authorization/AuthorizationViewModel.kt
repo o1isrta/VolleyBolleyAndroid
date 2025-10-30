@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 
-import androidx.lifecycle.viewModelScope
 import cy.volleybolley.auth.domain.api.usecase.AuthUseCase
 import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveTokensUseCase
@@ -16,8 +15,6 @@ import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.GoogleSignInFailed
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.GoogleTokenReceived
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 class AuthorizationViewModel(
     private val authUseCase: AuthUseCase,
@@ -32,14 +29,18 @@ class AuthorizationViewModel(
     override fun obtainEvent(event: AuthorizationEvent) {
         when (event) {
             ContinueWithGoogleClicked -> {
-                viewModelScope.launch {
-                    sendUiEffect(LaunchGoogleSignIn)
-                }
+                sendUiEffect(LaunchGoogleSignIn)
             }
 
             is GoogleTokenReceived -> {
-                event.idToken?.let { token ->
-                    viewModelScope.launch {
+                val token = event.idToken
+                if (token == null) {
+                    sendUiEffect(ShowToast(message = "Couldn't get authorization token"))
+                    return
+                }
+
+                launchSafe(
+                    block = {
                         uiStateMutable.update { it.copy(isLoading = true) }
                         val result = authUseCase.loginWithGoogle(token)
                         uiStateMutable.update { it.copy(isLoading = false) }
@@ -52,38 +53,24 @@ class AuthorizationViewModel(
                             saveTokensUseCase.execute(accessToken, refreshToken)
                             savePersonalDataUseCase.execute(user)
 
-                            val userJson = Json.encodeToString(user)
-                            sendUiEffect(NavigateToRegistration(userJson))
+                            sendUiEffect(NavigateToRegistration(user))
 
                         }.onFailure { error ->
-                            sendUiEffect(
-                                ShowToast(
-                                    message = "Authorization error: $error"
-                                )
-                            )
+                            sendUiEffect(ShowToast(message = "Authorization error: $error"))
                         }
-                    }
-                } ?: run {
-                    viewModelScope.launch {
-                        sendUiEffect(
-                            ShowToast(
-                                message = "Couldn't get authorization token"
-                            )
-                        )
-                    }
-                }
+                    },
+                    onError = {
+                        uiStateMutable.update { it.copy(isLoading = false) }
+                        sendUiEffect(ShowToast(message = "Unexpected error during authorization"))
+                    },
+                    getErrorLogMessage = { "GoogleTokenReceived: unexpected error -> ${it.message}" }
+                )
             }
 
             GoogleSignInCancelled -> { /* user cancel auth - do nothing */ }
 
             GoogleSignInFailed -> {
-                viewModelScope.launch {
-                    sendUiEffect(
-                        ShowToast(
-                            message = "Google Sign-In error"
-                        )
-                    )
-                }
+                sendUiEffect(ShowToast(message = "Google Sign-In error"))
             }
 
             is ContinueWithFacebookClicked -> {
