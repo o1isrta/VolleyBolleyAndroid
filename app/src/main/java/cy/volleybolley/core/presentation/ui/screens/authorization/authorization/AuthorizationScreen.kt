@@ -38,6 +38,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugLog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -49,6 +50,8 @@ fun AuthorizationScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
+    val screenTag: String = stringResource(R.string.auth_screen_log_tag)
+    val errorTitle: String = stringResource(R.string.auth_error)
 
     val context = LocalContext.current
     val googleSignInHelper = GoogleSignInHelper(context)
@@ -61,27 +64,39 @@ fun AuthorizationScreen(
     }
 
     LaunchedEffect(effect) {
+        showDebugLog(screenTag, "LaunchedEffect triggered: $effect")
+
         when (effect) {
             is AuthorizationEffect.LaunchGoogleSignIn -> {
+                showDebugLog(screenTag, "🚀 Starting Google Sign-In flow")
                 val intentSender = googleSignInHelper.launch()
+
+                showDebugLog(screenTag, "IntentSender: $intentSender")
+
                 if (intentSender != null) {
+                    showDebugLog(screenTag, "✅ Launching intent...")
                     launcher.launch(IntentSenderRequest.Builder(intentSender).build())
                 } else {
-                    Toast.makeText(context, "Ошибка авторизации", Toast.LENGTH_SHORT).show()
+                    showDebugLog(screenTag, "❌ IntentSender is null!")
+                    Toast.makeText(context, errorTitle, Toast.LENGTH_SHORT).show()
                 }
             }
 
             is AuthorizationEffect.NavigateToRegistration -> {
+                showDebugLog(screenTag, "Navigate to registration")
                 val user = (effect as AuthorizationEffect.NavigateToRegistration).user
                 onSuccessRegisteredAction(user)
             }
 
             is AuthorizationEffect.ShowError -> {
+                showDebugLog(screenTag, "Show error")
                 val message = (effect as AuthorizationEffect.ShowError).message
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
 
-            null -> {}
+            null -> {
+                showDebugLog(screenTag, "Effect is null")
+            }
         }
     }
     AuthorizationScreen(

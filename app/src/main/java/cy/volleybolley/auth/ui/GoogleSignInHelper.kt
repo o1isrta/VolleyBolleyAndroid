@@ -3,25 +3,41 @@ package cy.volleybolley.auth.ui
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import android.util.Log
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.ApiException
+import cy.volleybolley.BuildConfig
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugExceptionLog
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugLog
 import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.tasks.await
 
 class GoogleSignInHelper(
     context: Context,
 ) {
-    companion object {
-        private const val E_TAG = "SignIn"
-        private const val E_MESSAGE = "Sign-in failed"
-    }
     private val oneTapClient = Identity.getSignInClient(context)
     private val clientId = context.getString(R.string.default_web_client_id)
 
-    private val signInRequest = BeginSignInRequest.builder()
+    init {
+        if (BuildConfig.DEBUG) {
+            showDebugLog(TAG, "🔑 Client ID: $clientId")
+            showDebugLog(TAG, "📦 Package: ${context.packageName}")
+        }
+    }
+
+    private val signInRequestAuthorized = BeginSignInRequest.builder()
+        .setGoogleIdTokenRequestOptions(
+            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                .setSupported(true)
+                .setServerClientId(clientId)
+                .setFilterByAuthorizedAccounts(true)
+                .build()
+        )
+        .setAutoSelectEnabled(false)
+        .build()
+
+    private val signInRequestAll = BeginSignInRequest.builder()
         .setGoogleIdTokenRequestOptions(
             BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                 .setSupported(true)
@@ -29,28 +45,55 @@ class GoogleSignInHelper(
                 .setFilterByAuthorizedAccounts(false)
                 .build()
         )
-        .setAutoSelectEnabled(true)
+        .setAutoSelectEnabled(false)
         .build()
 
-    suspend fun launch(): IntentSender? = try {
-        val result = oneTapClient.beginSignIn(signInRequest).await()
-        result.pendingIntent.intentSender
-    } catch (e: ApiException) {
-        Log.w(E_TAG, E_MESSAGE, e)
-        null
-    } catch (e: CancellationException) {
-        Log.w(E_TAG, E_MESSAGE, e)
-        throw e
+    suspend fun launch(): IntentSender? {
+        return try {
+            showDebugLog(TAG, "🚀 Trying with authorized accounts only...")
+
+            try {
+                val result = oneTapClient.beginSignIn(signInRequestAuthorized).await()
+                showDebugLog(TAG, "✅ Success with authorized accounts")
+                return result.pendingIntent.intentSender
+            } catch (e: ApiException) {
+                showDebugExceptionLog(TAG, "⚠️ No authorized accounts, trying all accounts...", e)
+
+                val result = oneTapClient.beginSignIn(signInRequestAll).await()
+                showDebugLog(TAG, "✅ Success with all accounts")
+                return result.pendingIntent.intentSender
+            }
+        } catch (e: ApiException) {
+            showDebugExceptionLog(TAG, "❌ Both attempts failed: statusCode=${e.statusCode}, message=${e.message}", e)
+            null
+        } catch (e: CancellationException) {
+            showDebugExceptionLog(TAG, "⚠️ Cancelled", e)
+            throw e
+        }
     }
 
     fun extractIdToken(intent: Intent?): String? = try {
+        showDebugLog(TAG, "📥 Extracting ID token from intent...")
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)
-        credential.googleIdToken
+        val token = credential.googleIdToken
+
+        if (token != null) {
+            showDebugLog(TAG, "✅ Token extracted successfully")
+            showDebugLog(TAG, "Token preview: ${token.take(30)}...")
+        } else {
+            showDebugLog(TAG, "❌ Token is null!")
+        }
+
+        token
     } catch (e: ApiException) {
-        Log.w(E_TAG, E_MESSAGE, e)
+        showDebugExceptionLog(TAG, "❌ Extract failed: statusCode=${e.statusCode}, message=${e.message}", e)
         null
-    } catch (e: CancellationException) {
-        Log.w(E_TAG, E_MESSAGE, e)
-        throw e
+    } catch (e: Exception) {
+        showDebugExceptionLog(TAG, "❌ Unexpected error during extraction", e)
+        null
+    }
+
+    companion object {
+        private const val TAG = "GoogleSignInHelper"
     }
 }
