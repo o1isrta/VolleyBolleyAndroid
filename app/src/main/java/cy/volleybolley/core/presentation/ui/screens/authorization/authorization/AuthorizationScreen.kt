@@ -70,9 +70,11 @@ fun AuthorizationScreen(
                 val idToken = googleSignInHelper.extractIdToken(result.data)
                 viewModel.obtainEvent(AuthorizationEvent.GoogleTokenReceived(idToken))
             }
+
             Activity.RESULT_CANCELED -> {
                 viewModel.obtainEvent(AuthorizationEvent.GoogleSignInCancelled)
             }
+
             else -> {
                 viewModel.obtainEvent(AuthorizationEvent.GoogleSignInFailed)
             }
@@ -96,6 +98,9 @@ fun AuthorizationScreen(
                     showDebugLog(screenTag, "❌ IntentSender is null!")
                     Toast.makeText(context, errorTitle, Toast.LENGTH_SHORT).show()
                 }
+
+                // Reset the effect after processing so that it can be started again
+                viewModel.absorbEffect()
             }
 
             is NavigateToRegistration -> {
