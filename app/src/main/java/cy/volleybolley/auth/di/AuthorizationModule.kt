@@ -6,13 +6,13 @@ import cy.volleybolley.auth.data.network.AuthNetworkClient
 import cy.volleybolley.auth.data.network.model.AuthRequest
 import cy.volleybolley.auth.data.network.model.AuthResponse
 import cy.volleybolley.auth.domain.api.AuthRepository
+import cy.volleybolley.auth.domain.api.LoginDataRepository
 import cy.volleybolley.auth.domain.api.usecase.AuthUseCase
 import cy.volleybolley.auth.domain.api.usecase.ClearAllLoginDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.ClearTokensUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetAccessTokenUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetRefreshTokenUseCase
-import cy.volleybolley.auth.domain.api.LoginDataRepository
 import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveTokensUseCase
 import cy.volleybolley.auth.domain.impl.usecase.AuthUseCaseImpl
