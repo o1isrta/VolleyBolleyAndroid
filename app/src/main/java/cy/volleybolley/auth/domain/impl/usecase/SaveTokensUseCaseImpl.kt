@@ -1,7 +1,7 @@
 package cy.volleybolley.auth.domain.impl.usecase
 
-import cy.volleybolley.auth.domain.api.usecase.SaveTokensUseCase
 import cy.volleybolley.auth.domain.api.LoginDataRepository
+import cy.volleybolley.auth.domain.api.usecase.SaveTokensUseCase
 
 class SaveTokensUseCaseImpl(
     private val loginDataRepository: LoginDataRepository

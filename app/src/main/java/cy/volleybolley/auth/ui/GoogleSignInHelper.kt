@@ -49,27 +49,30 @@ class GoogleSignInHelper(
         .build()
 
     suspend fun launch(): IntentSender? {
-        return try {
+        var intentSender: IntentSender? = null
+
+        try {
             showDebugLog(TAG, "🚀 Trying with authorized accounts only...")
 
-            try {
+            intentSender = try {
                 val result = oneTapClient.beginSignIn(signInRequestAuthorized).await()
                 showDebugLog(TAG, "✅ Success with authorized accounts")
-                return result.pendingIntent.intentSender
+                result.pendingIntent.intentSender
             } catch (e: ApiException) {
                 showDebugExceptionLog(TAG, "⚠️ No authorized accounts, trying all accounts...", e)
 
                 val result = oneTapClient.beginSignIn(signInRequestAll).await()
                 showDebugLog(TAG, "✅ Success with all accounts")
-                return result.pendingIntent.intentSender
+                result.pendingIntent.intentSender
             }
         } catch (e: ApiException) {
             showDebugExceptionLog(TAG, "❌ Both attempts failed: statusCode=${e.statusCode}, message=${e.message}", e)
-            null
         } catch (e: CancellationException) {
             showDebugExceptionLog(TAG, "⚠️ Cancelled", e)
             throw e
         }
+
+        return intentSender
     }
 
     fun extractIdToken(intent: Intent?): String? = try {
@@ -79,7 +82,7 @@ class GoogleSignInHelper(
 
         if (token != null) {
             showDebugLog(TAG, "✅ Token extracted successfully")
-            showDebugLog(TAG, "Token preview: ${token.take(30)}...")
+            showDebugLog(TAG, "Token preview: ${token.take(TOKEN_PREVIEW_LENGTH)}...")
         } else {
             showDebugLog(TAG, "❌ Token is null!")
         }
@@ -88,12 +91,10 @@ class GoogleSignInHelper(
     } catch (e: ApiException) {
         showDebugExceptionLog(TAG, "❌ Extract failed: statusCode=${e.statusCode}, message=${e.message}", e)
         null
-    } catch (e: Exception) {
-        showDebugExceptionLog(TAG, "❌ Unexpected error during extraction", e)
-        null
     }
 
     companion object {
         private const val TAG = "GoogleSignInHelper"
+        private const val TOKEN_PREVIEW_LENGTH = 30
     }
 }
