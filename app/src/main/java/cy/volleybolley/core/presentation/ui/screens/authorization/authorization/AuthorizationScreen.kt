@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
@@ -39,6 +40,11 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugLog
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.LaunchGoogleSignIn
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.NavigateToRegistration
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.ShowToast
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.ContinueWithFacebookClicked
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.ContinueWithGoogleClicked
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -59,15 +65,25 @@ fun AuthorizationScreen(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
-        val idToken = googleSignInHelper.extractIdToken(result.data)
-        viewModel.obtainEvent(AuthorizationEvent.GoogleTokenReceived(idToken))
+        when (result.resultCode) {
+            Activity.RESULT_OK -> {
+                val idToken = googleSignInHelper.extractIdToken(result.data)
+                viewModel.obtainEvent(AuthorizationEvent.GoogleTokenReceived(idToken))
+            }
+            Activity.RESULT_CANCELED -> {
+                viewModel.obtainEvent(AuthorizationEvent.GoogleSignInCancelled)
+            }
+            else -> {
+                viewModel.obtainEvent(AuthorizationEvent.GoogleSignInFailed)
+            }
+        }
     }
 
     LaunchedEffect(effect) {
         showDebugLog(screenTag, "LaunchedEffect triggered: $effect")
 
         when (effect) {
-            is AuthorizationEffect.LaunchGoogleSignIn -> {
+            is LaunchGoogleSignIn -> {
                 showDebugLog(screenTag, "🚀 Starting Google Sign-In flow")
                 val intentSender = googleSignInHelper.launch()
 
@@ -82,16 +98,14 @@ fun AuthorizationScreen(
                 }
             }
 
-            is AuthorizationEffect.NavigateToRegistration -> {
+            is NavigateToRegistration -> {
                 showDebugLog(screenTag, "Navigate to registration")
-                val user = (effect as AuthorizationEffect.NavigateToRegistration).user
+                val user = (effect as NavigateToRegistration).user
                 onSuccessRegisteredAction(user)
             }
 
-            is AuthorizationEffect.ShowError -> {
-                showDebugLog(screenTag, "Show error")
-                val message = (effect as AuthorizationEffect.ShowError).message
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            is ShowToast -> {
+                Toast.makeText(context, (effect as ShowToast).message, Toast.LENGTH_SHORT).show()
             }
 
             null -> {
@@ -203,7 +217,7 @@ private fun BottomSheetWithSignButtons(
                 icon = painterResource(R.drawable.ic_google_placeholder),
                 text = stringResource(R.string.continue_with_google),
                 textColor = VolleyColor.TextDark,
-                onClick = { eventCallback(AuthorizationEvent.ContinueWithGoogleClicked) }
+                onClick = { eventCallback(ContinueWithGoogleClicked) }
             )
         }
         @Suppress("KotlinConstantConditions")
@@ -216,7 +230,7 @@ private fun BottomSheetWithSignButtons(
                 icon = painterResource(R.drawable.ic_facebook_placeholder),
                 text = stringResource(R.string.continue_with_facebook),
                 textColor = VolleyColor.White,
-                onClick = { eventCallback(AuthorizationEvent.ContinueWithFacebookClicked) }
+                onClick = { eventCallback(ContinueWithFacebookClicked) }
             )
         }
     }

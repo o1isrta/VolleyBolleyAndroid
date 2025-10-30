@@ -1,16 +1,28 @@
 package cy.volleybolley.auth.di
 
 import cy.volleybolley.auth.data.AuthRepositoryImpl
-import cy.volleybolley.auth.data.TokensRepositoryImpl
+import cy.volleybolley.auth.data.LoginDataRepositoryImpl
 import cy.volleybolley.auth.data.network.AuthNetworkClient
 import cy.volleybolley.auth.data.network.model.AuthRequest
 import cy.volleybolley.auth.data.network.model.AuthResponse
-import cy.volleybolley.auth.domain.AuthRepository
-import cy.volleybolley.auth.domain.AuthUseCase
-import cy.volleybolley.auth.domain.TokensInteractor
-import cy.volleybolley.auth.domain.TokensRepository
-import cy.volleybolley.auth.domain.impl.AuthUseCaseImpl
-import cy.volleybolley.auth.domain.impl.TokensInteractorImpl
+import cy.volleybolley.auth.domain.api.AuthRepository
+import cy.volleybolley.auth.domain.api.usecase.AuthUseCase
+import cy.volleybolley.auth.domain.api.usecase.ClearAllLoginDataUseCase
+import cy.volleybolley.auth.domain.api.usecase.ClearTokensUseCase
+import cy.volleybolley.auth.domain.api.usecase.GetAccessTokenUseCase
+import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
+import cy.volleybolley.auth.domain.api.usecase.GetRefreshTokenUseCase
+import cy.volleybolley.auth.domain.api.LoginDataRepository
+import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
+import cy.volleybolley.auth.domain.api.usecase.SaveTokensUseCase
+import cy.volleybolley.auth.domain.impl.usecase.AuthUseCaseImpl
+import cy.volleybolley.auth.domain.impl.usecase.ClearAllLoginDataUseCaseImpl
+import cy.volleybolley.auth.domain.impl.usecase.ClearTokensUseCaseImpl
+import cy.volleybolley.auth.domain.impl.usecase.GetAccessTokenUseCaseImpl
+import cy.volleybolley.auth.domain.impl.usecase.GetPersonalDataUseCaseImpl
+import cy.volleybolley.auth.domain.impl.usecase.GetRefreshTokenUseCaseImpl
+import cy.volleybolley.auth.domain.impl.usecase.SavePersonalDataUseCaseImpl
+import cy.volleybolley.auth.domain.impl.usecase.SaveTokensUseCaseImpl
 import cy.volleybolley.auth.ui.GoogleSignInHelper
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.di.HttpClientQualifier
@@ -20,8 +32,18 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val authorizationModule = module {
-    single<TokensRepository> { TokensRepositoryImpl(get()) }
-    single<TokensInteractor> { TokensInteractorImpl(get()) }
+    single<LoginDataRepository> { LoginDataRepositoryImpl(get(), get()) }
+
+    // Token Use Cases
+    single<SaveTokensUseCase> { SaveTokensUseCaseImpl(get()) }
+    single<GetAccessTokenUseCase> { GetAccessTokenUseCaseImpl(get()) }
+    single<GetRefreshTokenUseCase> { GetRefreshTokenUseCaseImpl(get()) }
+    single<ClearTokensUseCase> { ClearTokensUseCaseImpl(get()) }
+
+    // PersonalData Use Cases
+    single<SavePersonalDataUseCase> { SavePersonalDataUseCaseImpl(get()) }
+    single<GetPersonalDataUseCase> { GetPersonalDataUseCaseImpl(get()) }
+    single<ClearAllLoginDataUseCase> { ClearAllLoginDataUseCaseImpl(get()) }
 
     single<NetworkClient<AuthRequest, AuthResponse>>(HttpClientQualifier.AUTH.qualifier) {
         AuthNetworkClient()
@@ -37,6 +59,6 @@ val authorizationModule = module {
     }
 
     viewModel {
-        AuthorizationViewModel(get(), get())
+        AuthorizationViewModel(get(), get(), get())
     }
 }

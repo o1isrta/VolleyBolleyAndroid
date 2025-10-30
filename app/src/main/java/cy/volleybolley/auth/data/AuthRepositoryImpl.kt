@@ -4,7 +4,7 @@ import cy.volleybolley.auth.data.dto.GoogleAuthRequestBodyDto
 import cy.volleybolley.auth.data.dto.toDomain
 import cy.volleybolley.auth.data.network.model.AuthRequest
 import cy.volleybolley.auth.data.network.model.AuthResponse
-import cy.volleybolley.auth.domain.AuthRepository
+import cy.volleybolley.auth.domain.api.AuthRepository
 import cy.volleybolley.auth.domain.models.LoginData
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.data.network.model.mapToErrorType

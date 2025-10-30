@@ -1,18 +1,28 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 
 import androidx.lifecycle.viewModelScope
-import cy.volleybolley.auth.domain.AuthUseCase
-import cy.volleybolley.auth.domain.TokensInteractor
+import cy.volleybolley.auth.domain.api.usecase.AuthUseCase
+import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
+import cy.volleybolley.auth.domain.api.usecase.SaveTokensUseCase
 import cy.volleybolley.core.domain.model.onFailure
 import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.LaunchGoogleSignIn
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.NavigateToRegistration
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.ShowToast
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.ContinueWithFacebookClicked
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.ContinueWithGoogleClicked
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.GoogleSignInCancelled
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.GoogleSignInFailed
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.GoogleTokenReceived
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class AuthorizationViewModel(
     private val authUseCase: AuthUseCase,
-    private val tokensInteractor: TokensInteractor
+    private val saveTokensUseCase: SaveTokensUseCase,
+    private val savePersonalDataUseCase: SavePersonalDataUseCase
 ) : BaseViewModel<AuthorizationState, AuthorizationEvent, AuthorizationEffect>(
     AuthorizationState()
 ) {
@@ -21,13 +31,13 @@ class AuthorizationViewModel(
 
     override fun obtainEvent(event: AuthorizationEvent) {
         when (event) {
-            AuthorizationEvent.ContinueWithGoogleClicked -> {
+            ContinueWithGoogleClicked -> {
                 viewModelScope.launch {
-                    sendUiEffect(AuthorizationEffect.LaunchGoogleSignIn)
+                    sendUiEffect(LaunchGoogleSignIn)
                 }
             }
 
-            is AuthorizationEvent.GoogleTokenReceived -> {
+            is GoogleTokenReceived -> {
                 event.idToken?.let { token ->
                     viewModelScope.launch {
                         uiStateMutable.update { it.copy(isLoading = true) }
@@ -39,19 +49,45 @@ class AuthorizationViewModel(
                             val accessToken = loginData.accessToken
                             val refreshToken = loginData.refreshToken
 
+                            saveTokensUseCase.execute(accessToken, refreshToken)
+                            savePersonalDataUseCase.execute(user)
+
                             val userJson = Json.encodeToString(user)
-                            tokensInteractor.saveTokens(accessToken, refreshToken)
-                            sendUiEffect(AuthorizationEffect.NavigateToRegistration(userJson))
+                            sendUiEffect(NavigateToRegistration(userJson))
 
                         }.onFailure { error ->
-                            sendUiEffect(AuthorizationEffect.ShowError("Ошибка авторизации: $error"))
+                            sendUiEffect(
+                                ShowToast(
+                                    message = "Authorization error: $error"
+                                )
+                            )
                         }
+                    }
+                } ?: run {
+                    viewModelScope.launch {
+                        sendUiEffect(
+                            ShowToast(
+                                message = "Couldn't get authorization token"
+                            )
+                        )
                     }
                 }
             }
 
-            is AuthorizationEvent.ContinueWithFacebookClicked -> {
-                // Тут должна быть и может даже будет авторизация через Facebook
+            GoogleSignInCancelled -> { /* user cancel auth - do nothing */ }
+
+            GoogleSignInFailed -> {
+                viewModelScope.launch {
+                    sendUiEffect(
+                        ShowToast(
+                            message = "Google Sign-In error"
+                        )
+                    )
+                }
+            }
+
+            is ContinueWithFacebookClicked -> {
+                // Handle Facebook Auth
             }
         }
     }
