@@ -88,18 +88,18 @@ fun NavHostContainer(
             AuthorizationScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
                 onNavigateToRegisterByPhoneRequested = { navController.navigate(AuthorizationByPhoneRoute) },
-                onSuccessRegisteredAction = { personalData ->
-                    navController.navigate(RegistrationRoute(personalData))
+                onSuccessRegisteredAction = { user ->
+                    navController.navigate(RegistrationRoute(user))
                 }
             )
         }
         composable<RegistrationRoute> { backStackEntry ->
             val route = backStackEntry.toRoute<RegistrationRoute>()
-            val personalData = route.personalData
+            val user = route.user
 
             RegistrationScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
-                personalData = personalData,
+                user = user,
                 onRegistrationSuccessEvent = {
                     navController.navigate(HomeRoute) {
                         popUpTo(LaunchRoute) { inclusive = false }

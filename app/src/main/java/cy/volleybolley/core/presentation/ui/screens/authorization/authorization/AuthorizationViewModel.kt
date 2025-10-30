@@ -15,6 +15,7 @@ import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.GoogleSignInFailed
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.GoogleTokenReceived
 import kotlinx.coroutines.flow.update
+import kotlinx.serialization.json.Json
 
 class AuthorizationViewModel(
     private val authUseCase: AuthUseCase,
@@ -53,7 +54,8 @@ class AuthorizationViewModel(
                             saveTokensUseCase.execute(accessToken, refreshToken)
                             savePersonalDataUseCase.execute(user)
 
-                            sendUiEffect(NavigateToRegistration(user))
+                            val userJson = Json.encodeToString(user)
+                            sendUiEffect(NavigateToRegistration(userJson))
 
                         }.onFailure { error ->
                             sendUiEffect(ShowToast(message = "Authorization error: $error"))
