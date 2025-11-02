@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.core.content.edit
 import cy.volleybolley.auth.domain.api.LoginDataRepository
 import cy.volleybolley.profile.domain.model.PersonalData
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class LoginDataRepositoryImpl(
@@ -20,10 +19,15 @@ class LoginDataRepositoryImpl(
 
     private val sharedPrefs = context.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE)
 
-    // Токены
-    override suspend fun saveTokens(accessToken: String, refreshToken: String) {
+    // Tokens
+    override suspend fun saveAccessToken(accessToken: String) {
         sharedPrefs.edit {
             putString(KEY_ACCESS_TOKEN, accessToken)
+        }
+    }
+
+    override suspend fun saveRefreshToken(refreshToken: String) {
+        sharedPrefs.edit {
             putString(KEY_REFRESH_TOKEN, refreshToken)
         }
     }
@@ -43,7 +47,7 @@ class LoginDataRepositoryImpl(
         }
     }
 
-    // Персональные данные
+    // Personal Data
     override suspend fun savePersonalData(personalData: PersonalData) {
         val personalDataJson = json.encodeToString(personalData)
         sharedPrefs.edit {
@@ -56,17 +60,12 @@ class LoginDataRepositoryImpl(
         return personalDataJson?.let { json.decodeFromString<PersonalData>(it) }
     }
 
-    override suspend fun updatePersonalData(personalData: PersonalData) {
-        savePersonalData(personalData)
-    }
-
     override suspend fun clearPersonalData() {
         sharedPrefs.edit {
             remove(KEY_PERSONAL_DATA)
         }
     }
 
-    // Полная очистка
     override suspend fun clearAll() {
         sharedPrefs.edit {
             remove(KEY_ACCESS_TOKEN)

@@ -13,6 +13,6 @@ data class UserDto(
     @SerialName("gender") val gender: String?,
     @SerialName("date_of_birth") val dateOfBirth: String?,
     @SerialName("level") val level: String?,
-    @SerialName("country") val country: String?,
-    @SerialName("city") val city: String?,
+    @SerialName("country") val country: Int?, // This is mean country_id
+    @SerialName("city") val city: Int?, // This is mean city_id
 )

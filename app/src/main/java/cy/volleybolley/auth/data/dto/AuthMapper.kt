@@ -12,10 +12,8 @@ fun UserDto.toPersonalData(): PersonalData {
         birthDate = dateOfBirth ?: "",
         level = level ?: "",
         avatar = avatar,
-        // Тут надо с беком обсудить, чтобы они тоже индексы присылали, ведь мы по словарям ищем страну и город
-        // и на других экранах делаем именно так... Пока поставил mock
-        countryId = 0,
-        cityId = 0,
+        countryId = country ?: -1,
+        cityId = city ?: -1,
     )
 }
 

@@ -4,7 +4,8 @@ import cy.volleybolley.profile.domain.model.PersonalData
 
 interface LoginDataRepository {
     // Токены
-    suspend fun saveTokens(accessToken: String, refreshToken: String)
+    suspend fun saveAccessToken(accessToken: String)
+    suspend fun saveRefreshToken(refreshToken: String)
     suspend fun getAccessToken(): String?
     suspend fun getRefreshToken(): String?
     suspend fun clearTokens()
@@ -12,7 +13,6 @@ interface LoginDataRepository {
     // Персональные данные
     suspend fun savePersonalData(personalData: PersonalData)
     suspend fun getPersonalData(): PersonalData?
-    suspend fun updatePersonalData(personalData: PersonalData)
     suspend fun clearPersonalData()
 
     // Полная очистка
