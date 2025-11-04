@@ -20,4 +20,3 @@ data class CreatedGame(
     val players: List<Int>,
     val location: Location,
 )
-

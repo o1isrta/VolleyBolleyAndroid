@@ -20,6 +20,15 @@ class AuthNetworkClient : KtorNetworkClient<AuthRequest, AuthResponse>() {
                     )
                 }
             }
+            is AuthRequest.RefreshAccessToken -> {
+                httpClient.post(urlString = BuildConfig.BASE_URL) {
+                    requestConfigure(
+                        path = request.path,
+                        accessToken = null,
+                        body = request.body
+                    )
+                }
+            }
         }
     }
 
@@ -31,6 +40,10 @@ class AuthNetworkClient : KtorNetworkClient<AuthRequest, AuthResponse>() {
             is AuthRequest.Google -> {
                 val googleResponse = httpResponse.body<AuthResponse.GoogleResponse>()
                 googleResponse
+            }
+            is AuthRequest.RefreshAccessToken -> {
+                val refreshResponse = httpResponse.body<AuthResponse.RefreshAccessTokenResponse>()
+                refreshResponse
             }
         }
     }

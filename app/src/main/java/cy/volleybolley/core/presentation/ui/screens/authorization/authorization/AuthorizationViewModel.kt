@@ -2,8 +2,9 @@ package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 
 import cy.volleybolley.auth.data.AuthRepositoryImpl.Companion.TAG
 import cy.volleybolley.auth.domain.api.usecase.GoogleTokenAuthUseCase
-import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveAccessTokenUseCase
+import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
+import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenTimestampUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenUseCase
 import cy.volleybolley.core.domain.model.onFailure
 import cy.volleybolley.core.domain.model.onSuccess
@@ -25,6 +26,7 @@ class AuthorizationViewModel(
     private val googleTokenAuthUseCase: GoogleTokenAuthUseCase,
     private val saveAccessTokenUseCase: SaveAccessTokenUseCase,
     private val saveRefreshTokenUseCase: SaveRefreshTokenUseCase,
+    private val saveRefreshTokenTimestampUseCase: SaveRefreshTokenTimestampUseCase,
     private val savePersonalDataUseCase: SavePersonalDataUseCase
 ) : BaseViewModel<AuthorizationState, AuthorizationEvent, AuthorizationEffect>(
     AuthorizationState()
@@ -59,6 +61,7 @@ class AuthorizationViewModel(
 
                             saveRefreshTokenUseCase.execute(refreshToken)
                             saveAccessTokenUseCase.execute(accessToken)
+                            saveRefreshTokenTimestampUseCase.execute(System.currentTimeMillis())
                             savePersonalDataUseCase.execute(user)
 
                             val userJson = Json.encodeToString(user)

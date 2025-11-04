@@ -25,6 +25,8 @@ import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.navigation.AuthorizationRoute
+import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 import cy.volleybolley.core.presentation.ui.navigation.OnboardingRoute
 import org.koin.compose.viewmodel.koinViewModel
@@ -38,8 +40,20 @@ fun LaunchScreen(
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     LaunchedEffect(effect) {
         when (effect) {
-            is LaunchEffect.NavigateToOnboarding -> {
+            is LaunchScreenEffect.NavigateToOnboarding -> {
                 navController.navigate(OnboardingRoute) {
+                    popUpTo(LaunchRoute) { inclusive = true }
+                }
+            }
+
+            is LaunchScreenEffect.NavigateToHome -> {
+                navController.navigate(HomeTopLevelRoute) {
+                    popUpTo(LaunchRoute) { inclusive = true }
+                }
+            }
+
+            is LaunchScreenEffect.NavigateToAuthorization -> {
+                navController.navigate(AuthorizationRoute) {
                     popUpTo(LaunchRoute) { inclusive = true }
                 }
             }
@@ -51,7 +65,7 @@ fun LaunchScreen(
 }
 
 @Composable
-fun LaunchScreen(state: LaunchState) {
+fun LaunchScreen(state: LaunchScreenState) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -97,5 +111,5 @@ fun LogoWithAppName(modifier: Modifier = Modifier, isProgressBarVisible: Boolean
 @Preview(showBackground = true)
 @Composable
 private fun LaunchScreenPreview() {
-    LaunchScreen(state = LaunchState(isLoading = true))
+    LaunchScreen(state = LaunchScreenState(isLoading = true))
 }

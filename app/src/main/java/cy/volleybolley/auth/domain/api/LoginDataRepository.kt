@@ -1,20 +1,27 @@
 package cy.volleybolley.auth.domain.api
 
 import cy.volleybolley.profile.domain.model.PersonalData
+import kotlinx.coroutines.flow.StateFlow
 
 interface LoginDataRepository {
-    // Токены
+    // Auth state
+    val isAuthenticated: StateFlow<Boolean>
+
+    // Tokens
     suspend fun saveAccessToken(accessToken: String)
     suspend fun saveRefreshToken(refreshToken: String)
     suspend fun getAccessToken(): String?
     suspend fun getRefreshToken(): String?
     suspend fun clearTokens()
 
-    // Персональные данные
+    // Timestamp for Refresh Token
+    suspend fun saveRefreshTokenTimestamp(timestamp: Long)
+    suspend fun getRefreshTokenTimestamp(): Long?
+
+    // Personal data
     suspend fun savePersonalData(personalData: PersonalData)
     suspend fun getPersonalData(): PersonalData?
     suspend fun clearPersonalData()
 
-    // Полная очистка
     suspend fun clearAll()
 }

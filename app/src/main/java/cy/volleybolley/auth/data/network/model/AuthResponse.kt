@@ -12,4 +12,9 @@ sealed interface AuthResponse {
         @SerialName("refresh_token") val refreshToken: String,
         @SerialName("player") val playerUser: UserDto,
     ) : AuthResponse
+
+    @Serializable
+    class RefreshAccessTokenResponse(
+        @SerialName("access_token") val accessToken: String
+    ) : AuthResponse
 }

@@ -10,4 +10,3 @@ interface GameRatingRepository {
     suspend fun ratePlayers(gameId: Int, players: List<RatePlayer>): VolleyResult<Unit, ErrorType>
     suspend fun skipRating(gameId: Int): VolleyResult<Unit, ErrorType>
 }
-

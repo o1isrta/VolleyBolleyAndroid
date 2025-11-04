@@ -7,23 +7,31 @@ import cy.volleybolley.auth.data.network.model.AuthRequest
 import cy.volleybolley.auth.data.network.model.AuthResponse
 import cy.volleybolley.auth.domain.api.AuthRepository
 import cy.volleybolley.auth.domain.api.LoginDataRepository
+import cy.volleybolley.auth.domain.api.usecase.CheckRefreshTokenExpirationUseCase
 import cy.volleybolley.auth.domain.api.usecase.ClearAllLoginDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.ClearTokensUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetAccessTokenUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
+import cy.volleybolley.auth.domain.api.usecase.GetRefreshTokenTimestampUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetRefreshTokenUseCase
 import cy.volleybolley.auth.domain.api.usecase.GoogleTokenAuthUseCase
+import cy.volleybolley.auth.domain.api.usecase.RefreshAccessTokenUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveAccessTokenUseCase
 import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
+import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenTimestampUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenUseCase
+import cy.volleybolley.auth.domain.impl.usecase.CheckRefreshTokenExpirationUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.ClearAllLoginDataUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.ClearTokensUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.GetAccessTokenUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.GetPersonalDataUseCaseImpl
+import cy.volleybolley.auth.domain.impl.usecase.GetRefreshTokenTimestampUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.GetRefreshTokenUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.GoogleTokenAuthUseCaseImpl
+import cy.volleybolley.auth.domain.impl.usecase.RefreshAccessTokenUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.SaveAccessTokenUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.SavePersonalDataUseCaseImpl
+import cy.volleybolley.auth.domain.impl.usecase.SaveRefreshTokenTimestampUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.SaveRefreshTokenUseCaseImpl
 import cy.volleybolley.auth.ui.GoogleSignInHelper
 import cy.volleybolley.core.data.network.api.NetworkClient
@@ -42,6 +50,14 @@ val authorizationModule = module {
     single<GetAccessTokenUseCase> { GetAccessTokenUseCaseImpl(get()) }
     single<GetRefreshTokenUseCase> { GetRefreshTokenUseCaseImpl(get()) }
     single<ClearTokensUseCase> { ClearTokensUseCaseImpl(get()) }
+
+    // Timestamp Use Cases
+    single<SaveRefreshTokenTimestampUseCase> { SaveRefreshTokenTimestampUseCaseImpl(get()) }
+    single<GetRefreshTokenTimestampUseCase> { GetRefreshTokenTimestampUseCaseImpl(get()) }
+
+    // Refresh Token Use Cases
+    single<RefreshAccessTokenUseCase> { RefreshAccessTokenUseCaseImpl(get(), get()) }
+    single<CheckRefreshTokenExpirationUseCase> { CheckRefreshTokenExpirationUseCaseImpl(get()) }
 
     // PersonalData Use Cases
     single<SavePersonalDataUseCase> { SavePersonalDataUseCaseImpl(get()) }
@@ -62,6 +78,6 @@ val authorizationModule = module {
     }
 
     viewModel {
-        AuthorizationViewModel(get(), get(), get(), get())
+        AuthorizationViewModel(get(), get(), get(), get(), get())
     }
 }

@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.core.content.edit
 import cy.volleybolley.auth.domain.api.LoginDataRepository
 import cy.volleybolley.profile.domain.model.PersonalData
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.json.Json
 
 class LoginDataRepositoryImpl(
@@ -13,11 +16,18 @@ class LoginDataRepositoryImpl(
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
+        private const val KEY_REFRESH_TOKEN_TIMESTAMP = "refresh_token_timestamp"
         private const val KEY_PERSONAL_DATA = "personal_data"
         private const val APP_PREFS = "app_prefs"
     }
 
     private val sharedPrefs = context.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE)
+
+    // StateFlow for runtime refreshToken check and throw user to AuthScreen
+    private val _isAuthenticated = MutableStateFlow(
+        sharedPrefs.getString(KEY_REFRESH_TOKEN, null) != null
+    )
+    override val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
 
     // Tokens
     override suspend fun saveAccessToken(accessToken: String) {
@@ -30,6 +40,7 @@ class LoginDataRepositoryImpl(
         sharedPrefs.edit {
             putString(KEY_REFRESH_TOKEN, refreshToken)
         }
+        _isAuthenticated.value = true
     }
 
     override suspend fun getAccessToken(): String? {
@@ -44,7 +55,21 @@ class LoginDataRepositoryImpl(
         sharedPrefs.edit {
             remove(KEY_ACCESS_TOKEN)
             remove(KEY_REFRESH_TOKEN)
+            remove(KEY_REFRESH_TOKEN_TIMESTAMP)
         }
+        _isAuthenticated.value = false
+    }
+
+    // Timestamp
+    override suspend fun saveRefreshTokenTimestamp(timestamp: Long) {
+        sharedPrefs.edit {
+            putLong(KEY_REFRESH_TOKEN_TIMESTAMP, timestamp)
+        }
+    }
+
+    override suspend fun getRefreshTokenTimestamp(): Long? {
+        val timestamp = sharedPrefs.getLong(KEY_REFRESH_TOKEN_TIMESTAMP, -1L)
+        return if (timestamp == -1L) null else timestamp
     }
 
     // Personal Data
@@ -70,7 +95,9 @@ class LoginDataRepositoryImpl(
         sharedPrefs.edit {
             remove(KEY_ACCESS_TOKEN)
             remove(KEY_REFRESH_TOKEN)
+            remove(KEY_REFRESH_TOKEN_TIMESTAMP)
             remove(KEY_PERSONAL_DATA)
         }
+        _isAuthenticated.value = false
     }
 }

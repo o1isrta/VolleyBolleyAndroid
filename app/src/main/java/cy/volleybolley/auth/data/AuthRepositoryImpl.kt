@@ -1,6 +1,7 @@
 package cy.volleybolley.auth.data
 
 import cy.volleybolley.auth.data.dto.GoogleAuthRequestBodyDto
+import cy.volleybolley.auth.data.dto.RefreshAccessTokenRequestBodyDto
 import cy.volleybolley.auth.data.dto.UserDto
 import cy.volleybolley.auth.data.dto.toDomain
 import cy.volleybolley.auth.data.network.model.AuthRequest
@@ -31,6 +32,21 @@ class AuthRepositoryImpl(private val networkClient: NetworkClient<AuthRequest, A
         showUserDtoLog(userDto)
 
         return loginData?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+    }
+
+    override suspend fun refreshAccessToken(refreshToken: String): VolleyResult<String, ErrorType> {
+        val response = networkClient.getResponse(
+            AuthRequest.RefreshAccessToken(
+                body = RefreshAccessTokenRequestBodyDto(refreshToken)
+            )
+        )
+
+        if (!response.isSuccess) {
+            return VolleyResult.Failure(response.resultCode.mapToErrorType())
+        }
+
+        val accessToken = (response.body as? AuthResponse.RefreshAccessTokenResponse)?.accessToken
+        return accessToken?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
     private fun showUserDtoLog(userDto: UserDto?) {

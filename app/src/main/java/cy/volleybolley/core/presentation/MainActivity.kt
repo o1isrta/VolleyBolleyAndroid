@@ -19,6 +19,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +31,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -37,6 +41,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
+import cy.volleybolley.auth.domain.api.LoginDataRepository
+import cy.volleybolley.auth.domain.api.usecase.CheckRefreshTokenExpirationUseCase
+import cy.volleybolley.auth.domain.api.usecase.ClearAllLoginDataUseCase
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
@@ -44,15 +51,25 @@ import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite
+import cy.volleybolley.core.presentation.ui.navigation.AuthorizationRoute
 import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
+import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 import cy.volleybolley.core.presentation.ui.navigation.MyGamesTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
+import cy.volleybolley.core.presentation.ui.navigation.OnboardingRoute
 import cy.volleybolley.core.presentation.ui.navigation.ProfileTopLevelRoute
+import cy.volleybolley.core.presentation.ui.navigation.RegistrationRoute
 import cy.volleybolley.core.presentation.ui.navigation.model.NoBarsRoutes
 import cy.volleybolley.core.presentation.ui.navigation.model.TopLevelRoute
 import cy.volleybolley.ui.theme.VolleybolleyTheme
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
+    private val checkRefreshTokenExpirationUseCase: CheckRefreshTokenExpirationUseCase by inject()
+    private val clearAllLoginDataUseCase: ClearAllLoginDataUseCase by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -68,6 +85,25 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onStop() {
+        super.onStop()
+        lifecycleScope.launch {
+            val shouldLogout = checkRefreshTokenExpirationUseCase.execute()
+            if (shouldLogout) {
+                clearAllLoginDataUseCase.execute()
+                // Navigation to the authorization screen will happen automatically
+                // via Flow IsAuthenticated in the RootContainer
+            }
+        }
+    }
+}
+
+private fun isAuthRoute(route: String): Boolean {
+    return route.contains(LaunchRoute::class.qualifiedName.toString()) ||
+        route.contains(OnboardingRoute::class.qualifiedName.toString()) ||
+        route.contains(AuthorizationRoute::class.qualifiedName.toString()) ||
+        route.contains(RegistrationRoute::class.qualifiedName.toString())
 }
 
 @Composable
@@ -79,6 +115,18 @@ fun RootContainer(
     val currentDestinationRoute = currentDestination?.route ?: ""
     val showBottomNav = NoBarsRoutes.showBottomBar(currentDestinationRoute)
     val showTopBar = NoBarsRoutes.showTopBar(currentDestinationRoute)
+
+    // Automatic navigation to the authorization screen during logout
+    val loginDataRepository: LoginDataRepository = koinInject()
+    val isAuthenticated by loginDataRepository.isAuthenticated.collectAsStateWithLifecycle()
+
+    LaunchedEffect(isAuthenticated) {
+        if (!isAuthenticated && !isAuthRoute(currentDestinationRoute)) {
+            navController.navigate(AuthorizationRoute) {
+                popUpTo(navController.graph.id) { inclusive = true }
+            }
+        }
+    }
 
     Surface(
         modifier = Modifier
