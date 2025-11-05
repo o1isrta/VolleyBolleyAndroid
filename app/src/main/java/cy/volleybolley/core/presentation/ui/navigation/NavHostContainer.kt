@@ -41,10 +41,12 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.JoinedPl
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGameDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
-import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
+import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.dataholder.TournamentDetailsDataHolder
 import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
+import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreen
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreen
@@ -63,6 +65,7 @@ import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenView
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreen
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -185,7 +188,16 @@ fun NavHostContainer(
             composable<MyTourneyRoute> { MyTourneyScreen(navController) }
 
             // upcoming games
-            composable<JoinedPlayersRoute> { JoinedPlayersScreen(navController) }
+            composable<JoinedPlayersRoute> { backStackEntry ->
+                val holderKey = backStackEntry.toRoute<JoinedPlayersRoute>().tournamentDetailsHolderKey
+                val holder: TournamentDetailsDataHolder = koinInject<TournamentDetailsDataHolder>()
+                val tournamentDetails = holder.get<TournamentDetails>(holderKey)
+                JoinedPlayersScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    tournamentDetails = tournamentDetails,
+                )
+            }
             composable<UpcomingGameDetailsRoute> { UpcomingGameDetailsScreen(navController) }
             composable<UpcomingGamesRoute> { UpcomingGamesScreen(navController) }
             composable<UpcomingTourneyDetailsRoute> { UpcomingTourneyDetailsScreen(navController) }
