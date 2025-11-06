@@ -131,7 +131,7 @@ val gamesModule = module {
     factory<InvitePlayersToTournamentUseCase> { InvitePlayersToTournamentUseCaseImpl(repository = get()) }
 
     // Класс для передачи TournamentDetails с экрана UpcomingTourneyDetails на экран JoinedPlayersScreen
-    single<TournamentDetailsDataHolder>{ TournamentDetailsDataHolder() }
+    single<TournamentDetailsDataHolder> { TournamentDetailsDataHolder() }
 
     // ViewModel
 }

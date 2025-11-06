@@ -96,7 +96,7 @@ private fun JoinedPlayersScreen(
 private fun PlayersRow(index: Int, player: PlayerShort) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         VolleyText.BodyRegular(
-            text = "${index}. ${player.name}",
+            text = "$index. ${player.name}",
             color = VolleyColor.White,
             modifier = Modifier
                 .weight(1f)

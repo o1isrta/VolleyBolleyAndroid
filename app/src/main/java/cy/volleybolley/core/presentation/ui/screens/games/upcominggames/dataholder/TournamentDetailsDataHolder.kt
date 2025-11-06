@@ -6,9 +6,9 @@ import java.util.UUID
 class TournamentDetailsDataHolder {
     private val tournamentDetailsMap = mutableMapOf<String, TournamentDetails>()
     fun put(data: TournamentDetails): String {
-        val id = UUID.randomUUID().toString()
-        tournamentDetailsMap[id] = data
-        return id
+        val mapId = UUID.randomUUID().toString()
+        tournamentDetailsMap[mapId] = data
+        return mapId
     }
 
     @Suppress("UNCHECKED_CAST")
