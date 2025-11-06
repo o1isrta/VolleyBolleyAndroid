@@ -19,7 +19,6 @@ object DiProvider {
         profileModule,
         playersModule,
         referenceDataModule,
-        profileModule,
         launchModule,
         authorizationModule,
         registrationModule,

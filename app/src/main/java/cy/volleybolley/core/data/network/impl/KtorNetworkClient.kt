@@ -35,7 +35,7 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
             )
         }.onFailure { error ->
             if (BuildConfig.DEBUG) {
-                Log.e(NETWORK_TAG, "error in getResponse() -> $error", error)
+                Log.e(NETWORK_CLIENT_TAG, "error in getResponse() -> $error", error)
             }
 
             if (error is CancellationException) {
@@ -49,7 +49,7 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
         httpResponse: HttpResponse
     ): Response<SealedResponse> {
         if (BuildConfig.DEBUG) {
-            Log.v(NETWORK_TAG, "Response body = ${httpResponse.bodyAsText()}")
+            Log.v(NETWORK_CLIENT_TAG, "Response body = ${httpResponse.bodyAsText()}")
         }
 
         return if (httpResponse.status.isSuccess()) {
@@ -74,7 +74,7 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
             val requestPath = path.removePrefix("/")
             encodedPath = "$basePath/$requestPath"
         }
-        Log.v(NETWORK_TAG, "→ FINAL URL = ${this.url.buildString()}")
+        Log.v(NETWORK_CLIENT_TAG, "→ FINAL URL = ${this.url.buildString()}")
         body?.let {
             contentType(ContentType.Application.Json)
             setBody(body)
@@ -89,6 +89,6 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
     ): SealedResponse
 
     companion object {
-        const val NETWORK_TAG = "NETWORK_TAG"
+        const val NETWORK_CLIENT_TAG = "NETWORK_TAG"
     }
 }

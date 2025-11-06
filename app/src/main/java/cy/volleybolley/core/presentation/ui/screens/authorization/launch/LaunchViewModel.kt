@@ -20,15 +20,10 @@ class LaunchViewModel(
 
     init {
         launchSafe(
-            onError = { throwable ->
-                uiStateMutable.update { it.copy(isLoading = false) }
-                sendUiEffect(LaunchScreenEffect.NavigateToOnboarding)
-            },
             getErrorLogMessage = { throwable ->
-                "Error during launch: ${throwable.message}"
+                "LaunchViewModel init block: ${throwable.message}"
             }
         ) {
-            uiStateMutable.update { it.copy(isLoading = true) }
             delay(LAUNCH_DELAY_MS)
             val refreshToken = getRefreshTokenUseCase.execute()
 
@@ -38,7 +33,6 @@ class LaunchViewModel(
                         sendUiEffect(LaunchScreenEffect.NavigateToHome)
                     }
                     .onFailure {
-                        // For now retry auth by clearAll
                         clearAllLoginDataUseCase.execute()
                         sendUiEffect(LaunchScreenEffect.NavigateToAuthorization)
                     }
