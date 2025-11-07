@@ -60,6 +60,12 @@ import cy.volleybolley.core.presentation.ui.navigation.model.TopLevelRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreen
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
+
+
+
+
+
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +76,7 @@ class MainActivity : ComponentActivity() {
                     NavHostContainer(
                         navController = navController,
                         modifier = Modifier.padding(innerPadding),
+                       // startDestination = BasicGameSetupRoute,/// для тестирования
                         activityFinisher = { finish() }
                     )
                 }
@@ -179,9 +186,9 @@ fun RootContainer(
     val showTopBar = NoBarsRoutes.showTopBar(currentDestinationRoute)
 
     // ВРЕМЕННЫЙ ПЕРЕХОД ДЛЯ ОТЛАДКИ:
-    LaunchedEffect(Unit) {
-        navController.navigate(BasicGameSetupRoute) //(GameEnteringConditionsRoute) // Или "basic_game_setup_route"
-    }
+   // LaunchedEffect(Unit) {
+    //    navController.navigate(BasicGameSetupRoute) //(GameEnteringConditionsRoute) // Или "basic_game_setup_route"
+   // }
 
     Surface(
         modifier = Modifier
@@ -400,7 +407,8 @@ fun Preview() {
             NavHostContainer(
                 navController = controller,
                 activityFinisher = {},
-                modifier = Modifier.padding(padding)
+                modifier = Modifier.padding(padding)//,
+             //   startDestination = BasicGameSetupRoute
             )
         }
     }

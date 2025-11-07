@@ -45,7 +45,7 @@ android {
             )
         }
         debug {
-            isMinifyEnabled = true
+            isMinifyEnabled = false     // ВАЖНО: Отключаем для debug, чтобы работал Layout Inspector
             isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

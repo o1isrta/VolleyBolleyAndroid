@@ -125,7 +125,7 @@ object VolleyContainersRootTransparent {
                     .clip(shape)
                     .blur(blurRadius.dp)
                     .border(
-                        width = VolleyDimens.DIMEN_4.dp,
+                        width = 0.dp,//VolleyDimens.DIMEN_4.dp,
                         color = VolleyColor.White.copy(alpha = 0.2f),
                         shape = shape
                     )

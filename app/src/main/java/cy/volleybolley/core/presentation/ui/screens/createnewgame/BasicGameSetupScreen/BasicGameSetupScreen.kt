@@ -348,7 +348,7 @@ fun BasicGameSetupScreen(navController: NavHostController,
                             .height(44.dp)
                             .align(Alignment.CenterHorizontally)
                             .fillMaxWidth(),
-                        text = stringResource(R.string.next_game),
+                        text = stringResource(R.string.next_step),
                         onClick = {
                             viewModel.obtainEvent(BasicGameSetupScreenEvent.OnNextStepClick)
                         }
