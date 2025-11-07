@@ -186,9 +186,10 @@ object VolleyButton {
     @Stable
     fun ActiveGradientButton(
         modifier: Modifier = Modifier,
-        text: String,
+        text: String = "",
         paddingValues: PaddingValues =  PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
-        content: @Composable () -> Unit = {},
+        //content: @Composable () -> Unit = {},
+        content: @Composable (() -> Unit)? = null,
         onClick: () -> Unit
     ) {
         Box(
@@ -225,17 +226,29 @@ object VolleyButton {
                     )
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center
-                ){
-                    Text(
-                        text = text,
-                        color = VolleyColor.TextDark,
-                        style = ButtonSText
-                    )
+                ) {
+//                    Text(
+//                        text = text,
+//                        color = VolleyColor.TextDark,
+//                        style = ButtonSText
+//                    )
+
+                    if (content == null) {
+                        Text(
+                            text = text,
+                            color = VolleyColor.TextDark,
+                            style = ButtonSText
+                        )
+                    } else {
+                        content()
+                    }
                 }
             }
         }
-
     }
+
+
+
     /**
      * градиентная кнопка без картинки
      */
@@ -243,9 +256,10 @@ object VolleyButton {
     @Stable
     fun ActiveGradientButtonMaxWidth(
         modifier: Modifier = Modifier,
-        text: String,
+        text: String = "",
         paddingValues: PaddingValues =  PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
-        content: @Composable () -> Unit = {},
+      //  content: @Composable () -> Unit = {},
+        content: @Composable (() -> Unit)? = null,
         onClick: () -> Unit
     ) {
         Box(
@@ -285,11 +299,15 @@ object VolleyButton {
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center
                 ){
-                    Text(
-                        text = text,
-                        color = VolleyColor.TextDark,
-                        style = ButtonSText
-                    )
+                    if (content == null) {
+                        Text(
+                            text = text,
+                            color = VolleyColor.TextDark,
+                            style = ButtonSText
+                        )
+                    } else {
+                        content()
+                    }
                 }
             }
         }
@@ -421,10 +439,11 @@ object VolleyButton {
     @Stable
     fun OutlinedGradientButton(
         modifier: Modifier = Modifier,
-        text: String,
+        text: String = "",
         paddingValues: PaddingValues =  //if(text.length > 4)
             PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
-        content: @Composable () -> Unit = {},
+       // content: @Composable () -> Unit = {},
+        content: @Composable (() -> Unit)? = null,
         onClick: () -> Unit
     ) {
         Box(
@@ -461,11 +480,20 @@ object VolleyButton {
                     contentAlignment = Alignment.Center
                     // contentPadding = paddingValues,
                 ) {
-                    Text(
-                        text = text,
-                        color = VolleyColor.White,
-                        style = ButtonSText
-                    )
+//                    Text(
+//                        text = text,
+//                        color = VolleyColor.White,
+//                        style = ButtonSText
+//                    )
+                    if (content == null) {
+                        Text(
+                            text = text,
+                            color = VolleyColor.White,
+                            style = ButtonSText
+                        )
+                    } else {
+                        content()
+                    }
                 }
             }
         }
@@ -478,10 +506,11 @@ object VolleyButton {
     @Stable
     fun OutlinedGradientButtonMaxWidth(
         modifier: Modifier = Modifier,
-        text: String,
+        text: String = "",
         paddingValues: PaddingValues =  //if(text.length > 4)
             PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
-        content: @Composable () -> Unit = {},
+        //content: @Composable () -> Unit = {},
+        content: @Composable (() -> Unit)? = null,
         onClick: () -> Unit
     ) {
         Box(
@@ -520,11 +549,15 @@ object VolleyButton {
                     contentAlignment = Alignment.Center
                     // contentPadding = paddingValues,
                 ) {
-                    Text(
-                        text = text,
-                        color = VolleyColor.White,
-                        style = ButtonSText
-                    )
+                    if (content == null) {
+                        Text(
+                            text = text,
+                            color = VolleyColor.White,
+                            style = ButtonSText
+                        )
+                    } else {
+                        content()
+                    }
                 }
             }
         }
