@@ -1,18 +1,14 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.launch
 
-import cy.volleybolley.auth.domain.api.usecase.ClearAllLoginDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetRefreshTokenUseCase
 import cy.volleybolley.auth.domain.api.usecase.RefreshAccessTokenUseCase
-import cy.volleybolley.core.domain.model.onFailure
-import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 
 class LaunchViewModel(
     private val getRefreshTokenUseCase: GetRefreshTokenUseCase,
-    private val refreshAccessTokenUseCase: RefreshAccessTokenUseCase,
-    private val clearAllLoginDataUseCase: ClearAllLoginDataUseCase
+    private val refreshAccessTokenUseCase: RefreshAccessTokenUseCase
 ) : BaseViewModel<LaunchScreenState, LaunchScreenEvent, LaunchScreenEffect>(
     initialState = LaunchScreenState()
 ) {
@@ -29,13 +25,7 @@ class LaunchViewModel(
 
             if (refreshToken != null) {
                 refreshAccessTokenUseCase.execute()
-                    .onSuccess {
-                        sendUiEffect(LaunchScreenEffect.NavigateToHome)
-                    }
-                    .onFailure {
-                        clearAllLoginDataUseCase.execute()
-                        sendUiEffect(LaunchScreenEffect.NavigateToAuthorization)
-                    }
+                sendUiEffect(LaunchScreenEffect.NavigateToHome)
             } else {
                 sendUiEffect(LaunchScreenEffect.NavigateToOnboarding)
             }

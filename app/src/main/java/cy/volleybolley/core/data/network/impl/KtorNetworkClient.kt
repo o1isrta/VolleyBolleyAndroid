@@ -11,7 +11,6 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.encodedPath
 import io.ktor.http.isSuccess
@@ -66,8 +65,7 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
         }
     }
 
-    protected fun HttpRequestBuilder.requestConfigure(path: String, accessToken: String?, body: Any? = null) {
-        accessToken?.let { headers.append(HttpHeaders.Authorization, it) }
+    protected fun HttpRequestBuilder.requestConfigure(path: String, body: Any? = null) {
         url {
             takeFrom(BuildConfig.BASE_URL)
             val basePath = encodedPath.removeSuffix("/")

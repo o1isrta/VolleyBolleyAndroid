@@ -65,7 +65,7 @@ val authorizationModule = module {
     single<ClearAllLoginDataUseCase> { ClearAllLoginDataUseCaseImpl(get()) }
 
     single<NetworkClient<AuthRequest, AuthResponse>>(HttpClientQualifier.AUTH.qualifier) {
-        AuthNetworkClient()
+        AuthNetworkClient(lazyHttpClient = inject(HttpClientQualifier.NO_ACCESS_TOKEN.qualifier))
     }
 
     single<AuthRepository> { AuthRepositoryImpl(get(named(HttpClientQualifier.AUTH.value))) }

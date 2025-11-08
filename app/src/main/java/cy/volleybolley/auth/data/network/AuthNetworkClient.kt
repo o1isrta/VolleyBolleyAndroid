@@ -1,32 +1,26 @@
 package cy.volleybolley.auth.data.network
 
-import cy.volleybolley.BuildConfig
 import cy.volleybolley.auth.data.network.model.AuthRequest
 import cy.volleybolley.auth.data.network.model.AuthResponse
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 
-class AuthNetworkClient : KtorNetworkClient<AuthRequest, AuthResponse>() {
+class AuthNetworkClient(
+    lazyHttpClient: Lazy<HttpClient>
+) : KtorNetworkClient<AuthRequest, AuthResponse>(lazyHttpClient) {
     override suspend fun sendRequestByType(request: AuthRequest): HttpResponse {
         return when (request) {
             is AuthRequest.Google -> {
-                httpClient.post(urlString = BuildConfig.BASE_URL) {
-                    requestConfigure(
-                        path = request.path,
-                        accessToken = null,
-                        body = request.body
-                    )
+                httpClient.post {
+                    requestConfigure(path = request.path, body = request.body)
                 }
             }
             is AuthRequest.RefreshAccessToken -> {
-                httpClient.post(urlString = BuildConfig.BASE_URL) {
-                    requestConfigure(
-                        path = request.path,
-                        accessToken = null,
-                        body = request.body
-                    )
+                httpClient.post {
+                    requestConfigure(path = request.path, body = request.body)
                 }
             }
         }
