@@ -761,38 +761,6 @@ object VolleyButton {
         onClick: () -> Unit
     ) {
         if (isChecked) {
-//            Button(
-//                onClick = onClick,
-//                modifier = modifier.defaultMinSize(51.dp),
-//                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-//                contentPadding = PaddingValues(0.dp),
-//                shape = RoundedCornerShape(size = 16.dp)
-//                ) {
-//                Box(
-//                    modifier = modifier.background(
-//                        Brush.linearGradient(
-//                            colors = listOf(
-//                                VolleyColor.YellowForGradient,
-//                                VolleyColor.GreenForGradient
-//                            ),
-//                            start = Offset(x = 0f, y = 0f),
-//                            end = Offset(x = 0f, y = 100f)
-//                        ),
-//                        shape = RoundedCornerShape(16.dp)
-//                    ) .border(
-//                        border = BorderStroke(
-//                            width = 1.dp,
-//                            brush = Brush.linearGradient(
-//                                colors = listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient),
-//                                start = Offset(x = 0f, y = 0f),
-//                                end = Offset(x = 0f, y = 100f)
-//                            ),
-//                        ),
-//                        shape = RoundedCornerShape(size = 16.dp)
-//                    )
-//                        .padding(paddingValues),
-//                    contentAlignment = Alignment.Center
-//                ){
             ActiveGradientButton(
                 onClick = onClick,
                 modifier = modifier,
@@ -815,54 +783,8 @@ object VolleyButton {
                     }
                 },
                 text = text
-            )//{
-//                    Row(
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//                        Text(
-//                            text = text,
-//                            color = VolleyColor.TextDark,
-//                            style = ButtonSText
-//                        )
-//                        Spacer(modifier = Modifier.size(size = 8.dp))
-//                        Image(
-//                            painter = painterResource(R.drawable.arrow_right_black),
-//                            contentDescription = null,
-//                            modifier = Modifier.size(width = 17.dp, height = 16.dp)
-//                        )
-//                    }
-               // }
-           // }
+            )
         } else {
-//            Button(
-//                onClick = onClick,
-//                modifier = modifier.defaultMinSize(51.dp),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = Color.Transparent,
-//                    contentColor = VolleyColor.White
-//                ),
-//                contentPadding = PaddingValues(0.dp),
-//                shape = RoundedCornerShape(size = 16.dp)
-//            ) {
-//                Box(
-//                    modifier = modifier
-//                        .background(
-//                            brush = Brush.horizontalGradient(colors = listOf(Color.Transparent, Color.Transparent)),
-//                        )
-//                        .border(
-//                            border = BorderStroke(
-//                                width = 1.dp,
-//                                brush = Brush.linearGradient(
-//                                    colors = listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient),
-//                                    start = Offset(x = 0f, y = 0f),
-//                                    end = Offset(x = 0f, y = 100f)
-//                                ),
-//                            ),
-//                            shape = RoundedCornerShape(size = 16.dp)
-//                        )
-//                        .padding(paddingValues)                    ,
-//                    contentAlignment = Alignment.Center
-//                ) {
             OutlinedGradientButton(
                 onClick = onClick,
                 modifier = modifier,
@@ -883,22 +805,7 @@ object VolleyButton {
                     }
                 },
                 text = text
-            )//{
-//                Row(verticalAlignment = Alignment.CenterVertically) {
-//                        Text(
-//                            text = text,
-//                            color = VolleyColor.White,
-//                            style = ButtonSText
-//                        )
-//                        Spacer(modifier = Modifier.size(size = 8.dp))
-//                        Image(
-//                            painter = painterResource(R.drawable.arrow_right_white),
-//                            contentDescription = null,
-//                            modifier = Modifier.size(width = 17.dp, height = 16.dp)
-//                        )
-//                    }
-//                }
-         //   }
+            )
         }
     }
 
@@ -998,6 +905,67 @@ object VolleyButton {
     @Composable
     @Stable
     fun CheckedGradientButtonTopImage(
+        modifier: Modifier = Modifier,
+        text: String,
+        isChecked: Boolean = false,
+        iconPainter: Painter,
+        paddingValues: PaddingValues = PaddingValues(12.dp, 8.dp, 12.dp, 8.dp),
+        onClick: () -> Unit
+    ) {
+        if (isChecked) {
+            ActiveGradientButton(
+                onClick = onClick,
+                modifier = modifier,
+                paddingValues = paddingValues,
+                content = {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            painter = iconPainter,
+                            contentDescription = null,
+                            modifier = modifier.size(width = 57.dp, height = 30.dp)
+                        )
+                        Text(
+                            text = text,
+                            color = VolleyColor.TextDark,
+                            style = ButtonXSText,
+                            fontSize = 14.sp
+                        )
+                    }
+                },
+                text = text
+            )
+        } else {
+            OutlinedGradientButton(
+                onClick = onClick,
+                modifier = modifier,
+                paddingValues = paddingValues,
+                content = {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Image(
+                            painter = iconPainter,
+                            contentDescription = null,
+                            modifier = modifier.size(width = 57.dp, height = 30.dp)
+                        )
+                        Text(
+                            text = text,
+                            color = VolleyColor.White,
+                            style = ButtonXSText
+                        )
+                    }
+                },
+                text = text
+            )
+        }
+    }
+
+    /**
+     * с картинкой наверху, вспомогательная функция для кнопок LevelUp, LevelDown, ConfirmLevel
+     */
+    @Composable
+    @Stable
+    fun CheckedGradientButtonTopImage1(
         modifier: Modifier = Modifier,
         text: String,
         isChecked: Boolean = false,
@@ -1418,7 +1386,6 @@ object VolleyButton {
         )
     }
 
-
     /**
      * группа кнопок выбора Level (из 4 кнопок: Light, Medium, Hard, Pro)
      */
@@ -1428,7 +1395,6 @@ object VolleyButton {
         checkedLevels: Set<Level> = setOf(Level.Light), // По умолчанию одна кнопка
         onSelected: (Set<Level>) -> Unit
     ) {
-      //  val paddingValues = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
         // Функция для получения номера кнопки по Level
         fun getPositionForLevel(level: Level): Int =
             when (level) {
@@ -1516,80 +1482,8 @@ object VolleyButton {
         )
     }
 
-   /* @Composable
-    fun GroupButtonsForLevel(
-        checkedIds: Set<Int> = setOf(1), // По умолчанию одна кнопка
-        modifier: Modifier,
-        onSelected: (Set<Int>) -> Unit
-    ) {
-        val paddingValues = PaddingValues(all = 10.dp)
-        ButtonsGroup(
-            listOf(
-                ButtonItem(
-                    position = 1,
-                    isChecked = checkedIds.contains(1),
-                    button = { _, isChecked, onClick ->
-                        CheckGradientButton(
-                            text = LIGHT_TEXT,
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-                ),
-                ButtonItem(
-                    position = 2,
-                    isChecked = checkedIds.contains(2),
-                    button = { _, isChecked, onClick ->
-                        CheckGradientButton(
-                            text = MEDIUM_TEXT,
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-                ),
-                ButtonItem(
-                    position = 3,
-                    isChecked = checkedIds.contains(3),
-                    button = { _, isChecked, onClick ->
-                        CheckGradientButton(
-                            text = HARD_TEXT,
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-                ),
-                ButtonItem(
-                    position = 4,
-                    isChecked = checkedIds.contains(4),
-                    button = { _, isChecked, onClick ->
-                        CheckGradientButton(
-                            text = PRO_TEXT,
-                            isChecked = isChecked,
-                            paddingValues = paddingValues,
-                            onClick = onClick
-                        )
-                    }
-                )
-            ),
-            modifier = modifier.height(height = 40.dp),
-            onSelected = { position ->
-                val newCheckedIds = checkedIds.toMutableSet()
-                if (newCheckedIds.contains(position)) {
-                    newCheckedIds.remove(position) // Снимаем отметку, если кнопка уже выбрана
-                } else {
-                    newCheckedIds.add(position) // Добавляем новую отметку
-                }
-                onSelected(newCheckedIds)
-            }
-        )
-    }*/
-
-    /*
     @Composable
-    fun GroupButtonsForLevel(
+    fun GroupButtonsForLevel1(
         checkId: Int = 1,
         modifier: Modifier,
         onSelected: (Int) -> Unit
@@ -1650,7 +1544,6 @@ object VolleyButton {
             onSelected = onSelected
         )
     }
-     */
 
     /**
      * группа кнопок выбора Tourney Type (из 2 кнопок: Individual, Team)
@@ -1661,22 +1554,18 @@ object VolleyButton {
             modifier = modifier.height(44.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-           // Box(modifier = Modifier.weight(1f)){
-                CheckGradientButtonMaxWidth(
-                    modifier = Modifier.weight(1f),
-                    text = INDIVIDUAL_TEXT,
-                    isChecked = checkId == 1,
-                    onClick = onClick
-                )
-           // }
-           // Box(modifier = Modifier.weight(1f)) {
-                CheckGradientButtonMaxWidth(
-                    modifier = Modifier.weight(1f),
-                    text = TEAM_TEXT,
-                    isChecked = checkId == 2,
-                    onClick = onClick
-                )
-          //  }
+            CheckGradientButtonMaxWidth(
+                modifier = Modifier.weight(1f),
+                text = INDIVIDUAL_TEXT,
+                isChecked = checkId == 1,
+                onClick = onClick
+            )
+            CheckGradientButtonMaxWidth(
+                modifier = Modifier.weight(1f),
+                text = TEAM_TEXT,
+                isChecked = checkId == 2,
+                onClick = onClick
+            )
         }
     }
 
@@ -1826,7 +1715,6 @@ object VolleyButton {
     /**
      * Группа кнопок для приглашения игроков (и поделить ссылкой для приглашения)
      */
-
     @Composable
     fun GroupInvitesButtons(
         modifier: Modifier = Modifier,
