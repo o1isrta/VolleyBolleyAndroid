@@ -21,6 +21,7 @@ fun AuthResponse.GoogleResponse.toDomain(): LoginData {
     return LoginData(
         accessToken = accessToken,
         refreshToken = refreshToken,
-        userPersonalData = playerUser.toPersonalData()
+        userPersonalData = playerUser.toPersonalData(),
+        isRegistered = playerUser.isRegistered
     )
 }

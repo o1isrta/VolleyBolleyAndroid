@@ -3,6 +3,7 @@ package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
 import cy.volleybolley.auth.data.AuthRepositoryImpl.Companion.TAG
 import cy.volleybolley.auth.domain.api.usecase.GoogleTokenAuthUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveAccessTokenUseCase
+import cy.volleybolley.auth.domain.api.usecase.SaveIsRegisteredUseCase
 import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenTimestampUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenUseCase
@@ -27,7 +28,8 @@ class AuthorizationViewModel(
     private val saveAccessTokenUseCase: SaveAccessTokenUseCase,
     private val saveRefreshTokenUseCase: SaveRefreshTokenUseCase,
     private val saveRefreshTokenTimestampUseCase: SaveRefreshTokenTimestampUseCase,
-    private val savePersonalDataUseCase: SavePersonalDataUseCase
+    private val savePersonalDataUseCase: SavePersonalDataUseCase,
+    private val saveIsRegisteredUseCase: SaveIsRegisteredUseCase
 ) : BaseViewModel<AuthorizationState, AuthorizationEvent, AuthorizationEffect>(
     AuthorizationState()
 ) {
@@ -56,6 +58,7 @@ class AuthorizationViewModel(
                             val user = loginData.userPersonalData
                             val accessToken = loginData.accessToken
                             val refreshToken = loginData.refreshToken
+                            val isRegistered = loginData.isRegistered
 
                             showUserDataLog(user)
 
@@ -63,6 +66,7 @@ class AuthorizationViewModel(
                             saveAccessTokenUseCase.execute(accessToken)
                             saveRefreshTokenTimestampUseCase.execute(System.currentTimeMillis())
                             savePersonalDataUseCase.execute(user)
+                            saveIsRegisteredUseCase.execute(isRegistered)
 
                             val userJson = Json.encodeToString(user)
                             sendUiEffect(NavigateToRegistration(userJson))

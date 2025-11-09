@@ -17,6 +17,7 @@ class LoginDataRepositoryImpl(
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
         private const val KEY_REFRESH_TOKEN_TIMESTAMP = "refresh_token_timestamp"
+        private const val KEY_IS_REGISTERED = "is_registered"
         private const val KEY_PERSONAL_DATA = "personal_data"
         private const val APP_PREFS = "app_prefs"
     }
@@ -72,6 +73,17 @@ class LoginDataRepositoryImpl(
         return if (timestamp == -1L) null else timestamp
     }
 
+    // Registration status
+    override suspend fun saveIsRegistered(isRegistered: Boolean) {
+        sharedPrefs.edit {
+            putBoolean(KEY_IS_REGISTERED, isRegistered)
+        }
+    }
+
+    override suspend fun getIsRegistered(): Boolean {
+        return sharedPrefs.getBoolean(KEY_IS_REGISTERED, false)
+    }
+
     // Personal Data
     override suspend fun savePersonalData(personalData: PersonalData) {
         val personalDataJson = json.encodeToString(personalData)
@@ -96,6 +108,7 @@ class LoginDataRepositoryImpl(
             remove(KEY_ACCESS_TOKEN)
             remove(KEY_REFRESH_TOKEN)
             remove(KEY_REFRESH_TOKEN_TIMESTAMP)
+            remove(KEY_IS_REGISTERED)
             remove(KEY_PERSONAL_DATA)
         }
         _isAuthenticated.value = false

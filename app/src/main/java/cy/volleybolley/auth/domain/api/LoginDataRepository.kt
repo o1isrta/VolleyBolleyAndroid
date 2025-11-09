@@ -18,6 +18,10 @@ interface LoginDataRepository {
     suspend fun saveRefreshTokenTimestamp(timestamp: Long)
     suspend fun getRefreshTokenTimestamp(): Long?
 
+    // Registration status
+    suspend fun saveIsRegistered(isRegistered: Boolean)
+    suspend fun getIsRegistered(): Boolean
+
     // Personal data
     suspend fun savePersonalData(personalData: PersonalData)
     suspend fun getPersonalData(): PersonalData?

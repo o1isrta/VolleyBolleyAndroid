@@ -6,4 +6,5 @@ class LoginData(
     val accessToken: String,
     val refreshToken: String,
     val userPersonalData: PersonalData,
+    val isRegistered: Boolean,
 )
