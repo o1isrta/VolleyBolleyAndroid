@@ -121,12 +121,9 @@ fun RootContainer(
     val isAuthenticated by loginDataRepository.isAuthenticated.collectAsStateWithLifecycle()
 
     LaunchedEffect(isAuthenticated) {
-        // Do not navigate if currentRoute is not already installed. This is a fix for the first launch.
-        if (currentDestinationRoute.isEmpty()) {
-            return@LaunchedEffect
-        }
-
-        if (!isAuthenticated && !isAuthRoute(currentDestinationRoute)) {
+        // Do not navigate if currentRoute is not already installed.
+        // This is a fix for the first launch.
+        if (currentDestinationRoute.isNotEmpty() && !isAuthenticated && !isAuthRoute(currentDestinationRoute)) {
             navController.navigate(AuthorizationRoute) {
                 popUpTo(navController.graph.id) { inclusive = true }
             }

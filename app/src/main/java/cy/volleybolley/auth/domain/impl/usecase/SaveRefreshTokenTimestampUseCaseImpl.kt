@@ -1,12 +1,12 @@
 package cy.volleybolley.auth.domain.impl.usecase
 
-import cy.volleybolley.auth.domain.api.LoginDataRepository
+import cy.volleybolley.auth.domain.api.RefreshTokenTimestampRepository
 import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenTimestampUseCase
 
 class SaveRefreshTokenTimestampUseCaseImpl(
-    private val loginDataRepository: LoginDataRepository
+    private val refreshTokenTimestampRepository: RefreshTokenTimestampRepository
 ) : SaveRefreshTokenTimestampUseCase {
     override suspend fun execute(timestamp: Long) {
-        loginDataRepository.saveRefreshTokenTimestamp(timestamp)
+        refreshTokenTimestampRepository.saveRefreshTokenTimestamp(timestamp)
     }
 }

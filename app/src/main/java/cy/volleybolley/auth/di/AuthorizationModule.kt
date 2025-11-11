@@ -2,11 +2,13 @@ package cy.volleybolley.auth.di
 
 import cy.volleybolley.auth.data.AuthRepositoryImpl
 import cy.volleybolley.auth.data.LoginDataRepositoryImpl
+import cy.volleybolley.auth.data.RefreshTokenTimestampRepositoryImpl
 import cy.volleybolley.auth.data.network.AuthNetworkClient
 import cy.volleybolley.auth.data.network.model.AuthRequest
 import cy.volleybolley.auth.data.network.model.AuthResponse
 import cy.volleybolley.auth.domain.api.AuthRepository
 import cy.volleybolley.auth.domain.api.LoginDataRepository
+import cy.volleybolley.auth.domain.api.RefreshTokenTimestampRepository
 import cy.volleybolley.auth.domain.api.usecase.CheckRefreshTokenExpirationUseCase
 import cy.volleybolley.auth.domain.api.usecase.ClearAllLoginDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.ClearTokensUseCase
@@ -47,13 +49,14 @@ import org.koin.dsl.module
 
 val authorizationModule = module {
     single<LoginDataRepository> { LoginDataRepositoryImpl(get(), get()) }
+    single<RefreshTokenTimestampRepository> { RefreshTokenTimestampRepositoryImpl(get()) }
 
     // Token Use Cases
     single<SaveAccessTokenUseCase> { SaveAccessTokenUseCaseImpl(get()) }
     single<SaveRefreshTokenUseCase> { SaveRefreshTokenUseCaseImpl(get()) }
     single<GetAccessTokenUseCase> { GetAccessTokenUseCaseImpl(get()) }
     single<GetRefreshTokenUseCase> { GetRefreshTokenUseCaseImpl(get()) }
-    single<ClearTokensUseCase> { ClearTokensUseCaseImpl(get()) }
+    single<ClearTokensUseCase> { ClearTokensUseCaseImpl(get(), get()) }
 
     // Timestamp Use Cases
     single<SaveRefreshTokenTimestampUseCase> { SaveRefreshTokenTimestampUseCaseImpl(get()) }
@@ -70,7 +73,7 @@ val authorizationModule = module {
     // PersonalData Use Cases
     single<SavePersonalDataUseCase> { SavePersonalDataUseCaseImpl(get()) }
     single<GetPersonalDataUseCase> { GetPersonalDataUseCaseImpl(get()) }
-    single<ClearAllLoginDataUseCase> { ClearAllLoginDataUseCaseImpl(get()) }
+    single<ClearAllLoginDataUseCase> { ClearAllLoginDataUseCaseImpl(get(), get()) }
 
     single<NetworkClient<AuthRequest, AuthResponse>>(HttpClientQualifier.AUTH.qualifier) {
         AuthNetworkClient(lazyHttpClient = inject(HttpClientQualifier.NO_ACCESS_TOKEN.qualifier))

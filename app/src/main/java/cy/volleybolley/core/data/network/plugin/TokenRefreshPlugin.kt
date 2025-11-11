@@ -24,8 +24,8 @@ class TokenRefreshPlugin(
 ) {
 
     class Config {
-        lateinit var loginDataRepository: LoginDataRepository
-        lateinit var refreshAccessTokenUseCase: RefreshAccessTokenUseCase
+        var loginDataRepository: LoginDataRepository? = null
+        var refreshAccessTokenUseCase: RefreshAccessTokenUseCase? = null
         var onUnauthorized: (suspend () -> Unit)? = null
     }
 
@@ -38,14 +38,22 @@ class TokenRefreshPlugin(
         override fun prepare(block: Config.() -> Unit): TokenRefreshPlugin {
             val config = Config().apply(block)
             return TokenRefreshPlugin(
-                loginDataRepository = config.loginDataRepository,
-                refreshAccessTokenUseCase = config.refreshAccessTokenUseCase,
+                loginDataRepository = requireNotNull(config.loginDataRepository) {
+                    "loginDataRepository must be provided"
+                },
+                refreshAccessTokenUseCase = requireNotNull(config.refreshAccessTokenUseCase) {
+                    "refreshAccessTokenUseCase must be provided"
+                },
                 onUnauthorized = config.onUnauthorized ?: {}
             )
         }
 
         override fun install(plugin: TokenRefreshPlugin, scope: HttpClient) {
-            // 1. We automatically add the token to all requests.
+            addAuthorizationHeader(plugin, scope)
+            handleUnauthorizedResponse(plugin, scope)
+        }
+
+        private fun addAuthorizationHeader(plugin: TokenRefreshPlugin, scope: HttpClient) {
             scope.requestPipeline.intercept(HttpRequestPipeline.State) {
                 val accessToken = plugin.loginDataRepository.getAccessToken()
                 accessToken?.let {
@@ -53,65 +61,63 @@ class TokenRefreshPlugin(
                 }
                 proceed()
             }
+        }
 
-            // 2. Intercepting 401 errors
+        private fun handleUnauthorizedResponse(plugin: TokenRefreshPlugin, scope: HttpClient) {
             scope.receivePipeline.intercept(HttpReceivePipeline.State) {
                 val response = subject
 
                 if (response.status == HttpStatusCode.Unauthorized && !isRefreshing) {
-                    // Protection against simultaneous refresh requests
                     refreshMutex.withLock {
-                        if (!isRefreshing) {
+                        if (isRefreshing) {
+                            proceed()
+                        } else {
                             isRefreshing = true
-
                             try {
-                                // Trying to update the token
                                 when (val result = plugin.refreshAccessTokenUseCase.execute()) {
                                     is VolleyResult.Success -> {
-                                        // The token was successfully updated
-                                        val newToken = result.data
-
-                                        // Creating a new request with an updated token
-                                        val originalRequest = response.call.request
-                                        val newResponse = scope.request {
-                                            method = originalRequest.method
-                                            url.takeFrom(originalRequest.url)
-                                            headers.appendAll(originalRequest.headers)
-                                            headers.remove(HttpHeaders.Authorization)
-                                            headers.append(HttpHeaders.Authorization, "Bearer $newToken")
-                                            setBody(originalRequest.content)
-                                        }
-
-                                        // We are returning a new successful response.
+                                        val newResponse = retryRequestWithNewToken(
+                                            scope,
+                                            response,
+                                            result.data
+                                        )
                                         proceedWith(newResponse)
-                                        return@withLock
                                     }
                                     is VolleyResult.Failure -> {
-                                        // Refresh failed
-                                        when (result.error) {
-                                            ErrorType.UNAUTHORIZED -> {
-                                                // Refresh token invalid → logout
-                                                plugin.onUnauthorized()
-                                            }
-                                            else -> {
-                                                // Network error or other → not logged
-                                            }
-                                        }
-                                        // Returning the original 401 error
+                                        handleRefreshFailure(plugin, result.error)
                                         proceed()
                                     }
                                 }
                             } finally {
                                 isRefreshing = false
                             }
-                        } else {
-                            // Another request is already updating the token → waiting
-                            proceed()
                         }
                     }
                 } else {
                     proceed()
                 }
+            }
+        }
+
+        private suspend fun retryRequestWithNewToken(
+            scope: HttpClient,
+            response: io.ktor.client.statement.HttpResponse,
+            newToken: String
+        ): io.ktor.client.statement.HttpResponse {
+            val originalRequest = response.call.request
+            return scope.request {
+                method = originalRequest.method
+                url.takeFrom(originalRequest.url)
+                headers.appendAll(originalRequest.headers)
+                headers.remove(HttpHeaders.Authorization)
+                headers.append(HttpHeaders.Authorization, "Bearer $newToken")
+                setBody(originalRequest.content)
+            }
+        }
+
+        private suspend fun handleRefreshFailure(plugin: TokenRefreshPlugin, error: ErrorType) {
+            if (error == ErrorType.UNAUTHORIZED) {
+                plugin.onUnauthorized()
             }
         }
     }

@@ -16,7 +16,6 @@ class LoginDataRepositoryImpl(
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
-        private const val KEY_REFRESH_TOKEN_TIMESTAMP = "refresh_token_timestamp"
         private const val KEY_IS_REGISTERED = "is_registered"
         private const val KEY_PERSONAL_DATA = "personal_data"
         private const val APP_PREFS = "app_prefs"
@@ -56,21 +55,8 @@ class LoginDataRepositoryImpl(
         sharedPrefs.edit {
             remove(KEY_ACCESS_TOKEN)
             remove(KEY_REFRESH_TOKEN)
-            remove(KEY_REFRESH_TOKEN_TIMESTAMP)
         }
         _isAuthenticated.value = false
-    }
-
-    // Timestamp
-    override suspend fun saveRefreshTokenTimestamp(timestamp: Long) {
-        sharedPrefs.edit {
-            putLong(KEY_REFRESH_TOKEN_TIMESTAMP, timestamp)
-        }
-    }
-
-    override suspend fun getRefreshTokenTimestamp(): Long? {
-        val timestamp = sharedPrefs.getLong(KEY_REFRESH_TOKEN_TIMESTAMP, -1L)
-        return if (timestamp == -1L) null else timestamp
     }
 
     // Registration status
@@ -107,7 +93,6 @@ class LoginDataRepositoryImpl(
         sharedPrefs.edit {
             remove(KEY_ACCESS_TOKEN)
             remove(KEY_REFRESH_TOKEN)
-            remove(KEY_REFRESH_TOKEN_TIMESTAMP)
             remove(KEY_IS_REGISTERED)
             remove(KEY_PERSONAL_DATA)
         }
