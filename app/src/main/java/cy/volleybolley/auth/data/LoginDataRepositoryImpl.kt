@@ -83,12 +83,6 @@ class LoginDataRepositoryImpl(
         return personalDataJson?.let { json.decodeFromString<PersonalData>(it) }
     }
 
-    override suspend fun clearPersonalData() {
-        sharedPrefs.edit {
-            remove(KEY_PERSONAL_DATA)
-        }
-    }
-
     override suspend fun clearAll() {
         sharedPrefs.edit {
             remove(KEY_ACCESS_TOKEN)

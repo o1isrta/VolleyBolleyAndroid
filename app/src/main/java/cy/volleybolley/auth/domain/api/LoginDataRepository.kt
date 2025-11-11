@@ -21,7 +21,6 @@ interface LoginDataRepository {
     // Personal data
     suspend fun savePersonalData(personalData: PersonalData)
     suspend fun getPersonalData(): PersonalData?
-    suspend fun clearPersonalData()
 
     suspend fun clearAll()
 }
