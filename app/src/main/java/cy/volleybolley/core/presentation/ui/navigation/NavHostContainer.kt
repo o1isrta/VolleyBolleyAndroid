@@ -14,6 +14,7 @@ import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationB
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.registration.RegistrationScreen
+import cy.volleybolley.core.presentation.ui.screens.authorization.registration.RegistrationViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
@@ -94,12 +95,14 @@ fun NavHostContainer(
             )
         }
         composable<RegistrationRoute> { backStackEntry ->
-            val route = backStackEntry.toRoute<RegistrationRoute>()
-            val user = route.user
+            val userData = backStackEntry.toRoute<RegistrationRoute>().user
+            val viewModel = koinViewModel<RegistrationViewModel> {
+                parametersOf(userData)
+            }
 
             RegistrationScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
-                user = user,
+                viewModel = viewModel,
                 onRegistrationSuccessEvent = {
                     navController.navigate(HomeRoute) {
                         popUpTo(LaunchRoute) { inclusive = false }

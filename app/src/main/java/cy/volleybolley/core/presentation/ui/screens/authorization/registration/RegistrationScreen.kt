@@ -36,31 +36,24 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsF
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.profile.domain.model.PersonalData
-import kotlinx.serialization.json.Json
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RegistrationScreen(
     paddingFromSystemUi: PaddingValues,
-    user: String,
-    viewModel: RegistrationViewModel = koinViewModel(),
+    viewModel: RegistrationViewModel,
     onRequestNavigateToAboutLevels: () -> Unit,
     onRegistrationSuccessEvent: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
-    val personalData: PersonalData = Json.decodeFromString(user)
-
-    LaunchedEffect(effect, personalData) {
-        viewModel.setUser(personalData)
-
+    LaunchedEffect(effect) {
         when (effect) {
             is RegistrationEffect.NavigateToHome -> onRegistrationSuccessEvent()
             null -> {}
         }
     }
+
     RegistrationScreen(
         paddingFromSystemUi = paddingFromSystemUi,
         state = state,

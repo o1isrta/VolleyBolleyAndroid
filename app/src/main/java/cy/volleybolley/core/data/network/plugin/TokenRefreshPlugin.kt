@@ -10,6 +10,7 @@ import io.ktor.client.request.HttpRequestPipeline
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpReceivePipeline
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.takeFrom
@@ -101,9 +102,9 @@ class TokenRefreshPlugin(
 
         private suspend fun retryRequestWithNewToken(
             scope: HttpClient,
-            response: io.ktor.client.statement.HttpResponse,
+            response: HttpResponse,
             newToken: String
-        ): io.ktor.client.statement.HttpResponse {
+        ): HttpResponse {
             val originalRequest = response.call.request
             return scope.request {
                 method = originalRequest.method

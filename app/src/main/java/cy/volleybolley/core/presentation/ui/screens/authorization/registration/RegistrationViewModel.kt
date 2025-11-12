@@ -3,18 +3,29 @@ package cy.volleybolley.core.presentation.ui.screens.authorization.registration
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.profile.domain.model.PersonalData
+import cy.volleybolley.referencedata.domain.api.GetCountriesUseCase
 import cy.volleybolley.referencedata.domain.model.Country
+import cy.volleybolley.registration.domain.UserRegistrationUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
+import kotlinx.serialization.json.Json
 
-class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(
+class RegistrationViewModel(
+    private val getCountriesUseCase: GetCountriesUseCase,
+    private val userRegistrationUseCase: UserRegistrationUseCase,
+    json: Json,
+    userData: String,
+) : BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(
     initialState = RegistrationState()
 ) {
-    override val tag = RegistrationViewModel::class.simpleName ?: ""
+    override val tag = RegistrationViewModel::class.simpleName ?: "RegistrationViewModel"
 
     init {
+        val personalData: PersonalData = json.decodeFromString(userData)
         uiStateMutable.update {
             it.copy(
+                name = personalData.firstName,
+                surname = personalData.lastName,
                 countryList = VolleyMocks.countries,
                 selectedCountry = VolleyMocks.countries.first(),
                 cityList = VolleyMocks.countries.first().cities
@@ -97,15 +108,4 @@ class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent
             newState.selectedCountry != null && newState.selectedCity != null &&
             newState.dateOfBirthMillis != null
     }
-
-    fun setUser(user: PersonalData) {
-        uiStateMutable.update {
-            it.copy(
-                user = user,
-                name = user.firstName,
-                surname = user.lastName,
-            )
-        }
-    }
-
 }
