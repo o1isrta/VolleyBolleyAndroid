@@ -7,10 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import cy.volleybolley.core.presentation.ui.screens.authorization.AboutLevelsScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.LaunchScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.OnboardingScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.RegistrationScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreen
@@ -48,20 +44,10 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.JoinedPl
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGameDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
-import cy.volleybolley.core.presentation.ui.screens.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.rateplayers.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.AboutScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.ChangePhotoScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.EnterPaymentDataScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.FaqScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.PaymentsScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.PersonalDataScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.PlayerProfileScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.PlayersScreen
-import cy.volleybolley.core.presentation.ui.screens.profile.ProfileScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
@@ -77,14 +63,16 @@ import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalData
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.BackAvatarHolder
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreen
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenViewModel
+import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreen
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenViewModel
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreen
 
 @Composable
 fun NavHostContainer(
     paddingFromSystemUi: PaddingValues,
     navController: NavHostController,
-    startDestination: NavMap = LaunchRoute,
+    startDestination: NavMap = HomeTopLevelRoute,//LaunchRoute,
     activityFinisher: () -> Unit,
 ) {
     NavHost(
@@ -140,7 +128,7 @@ fun NavHostContainer(
         }
 
         // Home nested graph
-        navigation<HomeTopLevelRoute>(startDestination = HomeRoute) {
+        navigation<HomeTopLevelRoute>(startDestination = BasicGameSetupRoute) {//(startDestination = HomeRoute) {
             // home
             composable<HomeRoute> {
                 HomeScreen(
@@ -174,15 +162,15 @@ fun NavHostContainer(
             // create game
             composable<BasicGameSetupRoute> {
                 val viewModel: BasicGameSetupScreenViewModel = koinViewModel()
-                BasicGameSetupScreen(navController = navController, viewModel = viewModel)
+                BasicGameSetupScreen(navController = navController, viewModel = viewModel, paddingFromSystemUi = paddingFromSystemUi,)
             }
             composable<GameEnteringConditionsRoute> {
                 val viewModel: GameEnteringConditionsScreenViewModel = koinViewModel()
-                GameEnteringConditionsScreen(navController = navController, viewModel = viewModel)
+                GameEnteringConditionsScreen(navController = navController, viewModel = viewModel, paddingFromSystemUi = paddingFromSystemUi,)
             }
             composable<PrivacyOptionsRoute> {
                 val viewModel: PrivacyOptionsScreenViewModel = koinViewModel()
-                PrivacyOptionsScreen(navController = navController, viewModel = viewModel)
+                PrivacyOptionsScreen(navController = navController, viewModel = viewModel, paddingFromSystemUi = paddingFromSystemUi,)
             }
 //            composable<BasicGameSetupRoute> { BasicGameSetupScreen(
 //                navController,

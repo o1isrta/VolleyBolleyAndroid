@@ -294,7 +294,7 @@ fun BasicTourneySetupScreenContent(
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
-        VolleyButton.GroupButtonsForLevel(
+        VolleyButton.GroupButtonsForLevelMulti(
             checkedLevels = setOf(Level.Hard),
             modifier = Modifier,
             onSelected = {}

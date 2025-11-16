@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,8 +41,9 @@ import kotlinx.serialization.json.Json
 
 @Composable
 fun PrivacyOptionsScreen(navController: NavHostController,
-                         viewModel: PrivacyOptionsScreenViewModel = viewModel()
-) {
+                         viewModel: PrivacyOptionsScreenViewModel = viewModel(),
+                         paddingFromSystemUi: PaddingValues
+                         ) {
     val scrollState = rememberScrollState() //Состояние скролла
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -73,22 +75,27 @@ fun PrivacyOptionsScreen(navController: NavHostController,
             CircularProgressIndicator() // Или другой индикатор загрузки
         }
     } else {  // Отображаем основной контент, только если не загружается
-        VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = VolleyDimens.DIMEN_32,
-            modifier = Modifier
-                .padding(VolleyDimens.DIMEN_8.dp)
+        Column (
+            modifier = Modifier.padding(paddingFromSystemUi)
+
         ) {
-            Column(
+            VolleyContainersRootTransparent.TransparentContainer(
+                cornerRadius = VolleyDimens.DIMEN_32,
                 modifier = Modifier
-                    .padding(horizontal = VolleyDimens.DIMEN_20.dp)
+                    .padding(VolleyDimens.DIMEN_8.dp)
             ) {
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = VolleyDimens.DIMEN_20.dp)
+                ) {
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
 
 //                TitleWithBackArrow(
 //                    title = stringResource(R.string.create_a_game),
 //                    modifier = Modifier.fillMaxWidth(),
 //                    onBackClick = { viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnBackClicked) }
 //                )
+                }
             }
         }
     }

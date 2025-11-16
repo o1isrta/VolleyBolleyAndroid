@@ -1394,10 +1394,10 @@ object VolleyButton {
     }
 
     /**
-     * группа кнопок выбора Level (из 4 кнопок: Light, Medium, Hard, Pro)
+     * группа кнопок выбора нескольких (1-4) Level (из 4 кнопок: Light, Medium, Hard, Pro)
      */
     @Composable
-    fun GroupButtonsForLevel(
+    fun GroupButtonsForLevelMulti(
         modifier: Modifier = Modifier,
         checkedLevels: Set<Level> = setOf(Level.Light), // По умолчанию одна кнопка
         onSelected: (Set<Level>) -> Unit
@@ -1490,7 +1490,7 @@ object VolleyButton {
     }
 
     @Composable
-    fun GroupButtonsForLevel1(
+    fun GroupButtonsForLevel(
         checkId: Int = 1,
         modifier: Modifier,
         onSelected: (Int) -> Unit
@@ -2168,7 +2168,7 @@ private fun PreviewGroupButtonsForGender2() {
 @Composable
 private fun PreviewGroupButtonsForLevel() {
     PreviewContainer(modifier = Modifier.fillMaxWidth()) {
-        VolleyButton.GroupButtonsForLevel(
+        VolleyButton.GroupButtonsForLevelMulti(
             checkedLevels = setOf(Level.Light, Level.Medium, Level.Pro), //checkId = 2,
             modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
@@ -2324,7 +2324,7 @@ private fun PreviewCombo() {
                         .align(Alignment.Start),
                     onSelected = {}
                 )*/
-                VolleyButton.GroupButtonsForLevel(
+                VolleyButton.GroupButtonsForLevelMulti(
                     checkedLevels = setOf(Level.Light, Level.Medium),
                     modifier = Modifier
                         .padding(vertical = 12.dp)
