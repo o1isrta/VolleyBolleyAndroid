@@ -8,8 +8,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
 import java.time.LocalDate
-import java.util.Calendar
-import java.util.Date
 
 data class BasicGameSetupScreenState @RequiresApi(Build.VERSION_CODES.O) constructor(
     val message: String = "",
@@ -32,7 +30,6 @@ data class BasicGameSetupScreenState @RequiresApi(Build.VERSION_CODES.O) constru
     val finishTime: VolleyTimeStamp? = VolleyTimeStamp(4,0, true), // val endTime: String  = "04:00",
     val gender: Gender  = Gender.Mix,
     val levels: Set<Level> = setOf(Level.Light, Level.Medium, Level.Hard), //    val levels: Array<Int>
-    //val errorMessage: String? = null,
     val isLoading : Boolean = false     // Для загрузки (если необходимо)
 )  : UiState
 
@@ -42,9 +39,3 @@ enum class Gender {
     Women
 }
 
-//enum class Level {
-//    Light,
-//    Medium,
-//    Hard,
-//    Pro
-//}

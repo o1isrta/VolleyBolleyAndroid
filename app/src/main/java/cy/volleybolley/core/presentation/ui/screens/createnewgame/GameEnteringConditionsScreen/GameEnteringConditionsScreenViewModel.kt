@@ -1,10 +1,19 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeCreateNewGameRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import java.time.LocalDate
 import kotlin.random.Random
 
-class GameEnteringConditionsScreenViewModel :
+open class GameEnteringConditionsScreenViewModel (private val gameRepository: CreateNewGameRepository) :
     BaseViewModel<GameEnteringConditionsScreenState, GameEnteringConditionsScreenEvent, GameEnteringConditionsScreenEffect>(
         GameEnteringConditionsScreenState()
     ) {
@@ -17,19 +26,19 @@ class GameEnteringConditionsScreenViewModel :
 
     override fun obtainEvent(event: GameEnteringConditionsScreenEvent) {
         when (event) {
-            is GameEnteringConditionsScreenEvent.PrivacySelected -> {
+            is GameEnteringConditionsScreenEvent.OnPublicSelected -> {
                 // Обработка выбора Public (Private через OpenPrivacyRequested)
-                uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = event.privacy)
+              //  uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = event.privacy)
+                uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = Privacy.Public)
             }
-            is GameEnteringConditionsScreenEvent.OpenPrivacyOptions -> {
+            is GameEnteringConditionsScreenEvent.OnPrivateSelected -> {
                 val current = uiStateMutable.value
                 val manageMode = current.selectedPrivacy == Privacy.Private
                 // отправляем эффект навигации (manageMode = true, если уже был private выбран до нажатия)
                 sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy(manageMode))
             }
-
             is GameEnteringConditionsScreenEvent.PlayersSelected -> {
-                // Пользователь вернулся с Privacy screen, нажав нажал Add
+                // Пользователь вернулся с Privacy screen, нажав Add
                 val current = uiStateMutable.value
                 uiStateMutable.value = current.copy(
                     selectedPrivacy = Privacy.Private,
@@ -90,3 +99,6 @@ class GameEnteringConditionsScreenViewModel :
         return if (Random.nextBoolean()) "123 45 6789" else null // для теста, заменить на получение номера из профиля
     }
 }
+// Специальный ViewModel для Preview
+class GameEnteringConditionsScreenViewModelPreview : GameEnteringConditionsScreenViewModel( FakeCreateNewGameRepository() ) {
+ }

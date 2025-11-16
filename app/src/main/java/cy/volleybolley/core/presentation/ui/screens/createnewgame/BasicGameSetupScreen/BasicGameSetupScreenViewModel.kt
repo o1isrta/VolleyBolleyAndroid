@@ -3,10 +3,13 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetu
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeCreateNewGameRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-open class BasicGameSetupScreenViewModel :
+open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGameRepository) :
     BaseViewModel<BasicGameSetupScreenState, BasicGameSetupScreenEvent, BasicGameSetupScreenEffect>(
         BasicGameSetupScreenState()
     ) {
@@ -149,22 +152,6 @@ open class BasicGameSetupScreenViewModel :
         return endTotalMinutes - startTotalMinutes
     }
 
-//    private fun validateTimes(start: VolleyTimeStamp, end: VolleyTimeStamp){
-//        if (end.compareTo(start) < 0) { // Если end меньше start
-//            viewModelScope.launch {
-//                _effectError.value = BasicGameSetupScreenEffect.ShowSnackbar("End time must be after start time")
-//            }
-//        } else {
-//            viewModelScope.launch {
-//                _effectError.value = BasicGameSetupScreenEffect.ClearSnackbar
-//            }
-//        }
-//    }
-
-//    public fun clearErrorEffect() {
-//        _effectError.value = null
-//    }
-
     /**
      * Ограничивает текст по длине, не разрубая суррогатные пары.
      * maxLength — ожидаемый максимальный размер в кодовых единицах (Int).
@@ -190,35 +177,13 @@ open class BasicGameSetupScreenViewModel :
     //Вспомогательная ф-ция для сравнения дней
     fun isSameDay(date1: LocalDate, date2: LocalDate): Boolean {
         return date1 == date2
-//        val calendar1 = Calendar.getInstance()
-//        calendar1.time = date1
-//        val calendar2 = Calendar.getInstance()
-//        calendar2.time = date2
-//
-//        return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
-//            calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) &&
-//            calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH)
     }
-
-    /**
-     * Возвращает "n / max" (сейчас используется для счётчика символов).
-     *//*
-    fun formatCounter(text: String, maxLength: Int): String =
-        "${text.length} / $maxLength"
-
-    *//**
-     * Сколько символов осталось до лимита (>=0).
-     *//*
-    fun remaining(text: String, maxLength: Int): Int =
-        (maxLength - text.length).coerceAtLeast(0)*/
 }
 
 // Специальный ViewModel для Preview
-class BasicGameSetupScreenViewModelPreview : BasicGameSetupScreenViewModel() {
+class BasicGameSetupScreenViewModelPreview : BasicGameSetupScreenViewModel( FakeCreateNewGameRepository() ) {
     @RequiresApi(Build.VERSION_CODES.O)
     private val _showCalendarPreview = MutableStateFlow(LocalDate.now() != LocalDate.of(2025, 10, 23))  // Пример
     @RequiresApi(Build.VERSION_CODES.O)
     override val showCalendar: StateFlow<Boolean> = _showCalendarPreview.asStateFlow()
-
-
 }

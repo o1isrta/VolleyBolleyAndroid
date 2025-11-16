@@ -7,7 +7,6 @@ private const val LEVEL_LIGHT = "L"
 private const val LEVEL_MEDIUM = "M"
 
 data class GameEnteringConditionsScreenState (
-    //val prevStateWasPublic: Boolean = true, // true - значит при нажатии на private переходин на экран privacy, false - ничего не делаем
     val maximumPlayers: Int = 8,
     val selectedPrivacy: Privacy = Privacy.Public,
     val perPerson: String = "5.0",

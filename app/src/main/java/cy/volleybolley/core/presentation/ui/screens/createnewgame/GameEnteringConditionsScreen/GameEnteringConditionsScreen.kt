@@ -48,6 +48,8 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.PaymentsRoute
 import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreenViewModelPreview
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGameType
 import cy.volleybolley.profile.domain.model.PaymentType
@@ -187,12 +189,12 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                             selectedPrivacy?.let { privacy ->
                                 when ( privacy ) {
                                     //viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PrivacySelected(it))
-                                    Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PrivacySelected(Privacy.Public))
+                                    Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected) //  Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected(Privacy.Public))
                                     Privacy.Private -> {
                                         // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
                                         state.selectedPrivacy?.let { privacy ->
                                             if (privacy == Privacy.Public)
-                                                viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OpenPrivacyOptions)
+                                                viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
                                         }
                                         // Если уже Private — ничего не делать
                                     }
@@ -222,7 +224,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                             text = stringResource(R.string.manage_players),
                             onClick = {
                                 // Управление игроками -> открываем Privacy screen в manageMode
-                                viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OpenPrivacyOptions)
+                                viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
                             }
                         )
                     }
@@ -362,6 +364,7 @@ private fun GameEnteringConditionsScreenPreview() {
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
-        GameEnteringConditionsScreen(navController = navController)
+       // GameEnteringConditionsScreen(navController = navController)
+        GameEnteringConditionsScreen(viewModel = GameEnteringConditionsScreenViewModelPreview(), navController = navController)
     }
 }

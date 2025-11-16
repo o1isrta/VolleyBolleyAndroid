@@ -2,7 +2,6 @@ package cy.volleybolley.core.presentation.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,6 +18,7 @@ import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetup
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen.PrivacyOptionsScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen.PrivacyOptionsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.findagame.JoinTheGameScreen
@@ -111,15 +111,27 @@ fun NavHostContainer(
             }
 
             // create game
-            composable<BasicGameSetupRoute> { BasicGameSetupScreen(
-                navController,
-                viewModel = BasicGameSetupScreenViewModel()
-            ) }
-            composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(
-                navController,
-                viewModel = GameEnteringConditionsScreenViewModel()
-            ) }
-            composable<PrivacyOptionsRoute> { PrivacyOptionsScreen(navController) }
+            composable<BasicGameSetupRoute> {
+                val viewModel: BasicGameSetupScreenViewModel = koinViewModel()
+                BasicGameSetupScreen(navController = navController, viewModel = viewModel)
+            }
+            composable<GameEnteringConditionsRoute> {
+                val viewModel: GameEnteringConditionsScreenViewModel = koinViewModel()
+                GameEnteringConditionsScreen(navController = navController, viewModel = viewModel)
+            }
+            composable<PrivacyOptionsRoute> {
+                val viewModel: PrivacyOptionsScreenViewModel = koinViewModel()
+                PrivacyOptionsScreen(navController = navController, viewModel = viewModel)
+            }
+//            composable<BasicGameSetupRoute> { BasicGameSetupScreen(
+//                navController,
+//                viewModel = BasicGameSetupScreenViewModel(get())
+//            ) }
+//            composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(
+//                navController,
+//                viewModel = GameEnteringConditionsScreenViewModel()
+//            ) }
+//            composable<PrivacyOptionsRoute> { PrivacyOptionsScreen(navController) }
 
             // create tourney
             composable<BasicTourneySetupRoute> { BasicTourneySetupScreen(navController) }
