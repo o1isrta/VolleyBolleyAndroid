@@ -23,6 +23,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -36,6 +37,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,6 +65,7 @@ import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonSText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonXSText
@@ -1808,6 +1815,72 @@ object VolleyButton {
             }
         }
     }
+
+    @Composable
+    @Stable
+    fun ActiveButtonWithLeadingIcon(
+        modifier: Modifier = Modifier,
+        backgroundColor: Color,
+        icon: Painter,
+        text: String,
+        textColor: Color,
+        onClick: () -> Unit
+    ) {
+        Button(
+            onClick = onClick,
+            modifier = modifier.height(VolleyDimens.DIMEN_56.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+            shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp),
+            contentPadding = PaddingValues(all = 16.dp)
+        ) {
+            Image(
+                painter = icon,
+                contentDescription = null,
+                modifier = Modifier.size(VolleyDimens.DIMEN_24.dp)
+            )
+            VolleyText.BodyBoldMedium(
+                modifier = Modifier.padding(start = 12.dp),
+                text = text,
+                color = textColor,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+
+    @Stable
+    @Composable
+    fun GradientTextButton(
+        modifier: Modifier = Modifier,
+        text: String,
+        isEnable: Boolean = true,
+        onClick: () -> Unit
+    ) {
+        TextButton(
+            modifier = modifier.height(18.dp),
+            enabled = isEnable,
+            onClick = onClick,
+            contentPadding = PaddingValues(0.dp)
+        ) {
+            Text(
+                text = buildAnnotatedString {
+                    if (isEnable) {
+                        withStyle(SpanStyle(
+                            brush = Brush.verticalGradient(
+                                listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient)
+                            ),
+                            textDecoration = TextDecoration.Underline
+                        )) {
+                            append(text)
+                        }
+                    } else {
+                        append(text)
+                    }
+                },
+                color = VolleyColor.White,
+                style = VolleyTypography.BodySmall
+            )
+        }
+    }
 }
 
 @Composable
@@ -2152,6 +2225,42 @@ fun PreviewInvitesButtons() {
             onInvitePlayersClick = {},
             onShareLinkClick = {}
         )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewButtonWithLeadingIcon() {
+    PreviewContainer(modifier = Modifier.width(300.dp)) {
+        VolleyButton.ActiveButtonWithLeadingIcon(
+            modifier = Modifier.fillMaxWidth(),
+            backgroundColor = VolleyColor.White,
+            icon = painterResource(id = R.drawable.ic_google_placeholder),
+            text = stringResource(id = R.string.continue_with_google),
+            textColor = VolleyColor.TextDark,
+            onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewGradientTextButton() {
+    PreviewContainer(modifier = Modifier.height(250.dp)) {
+        Column {
+            VolleyButton.GradientTextButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(R.string.resend_in, "00:30"),
+                isEnable = false,
+                onClick = {}
+            )
+            VolleyButton.GradientTextButton(
+                modifier = Modifier.padding(top = 20.dp).fillMaxWidth(),
+                text = stringResource(R.string.get_new_code),
+                isEnable = true,
+                onClick = {}
+            )
+        }
     }
 }
 

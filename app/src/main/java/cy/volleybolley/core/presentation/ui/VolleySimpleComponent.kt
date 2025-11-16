@@ -2,10 +2,8 @@ package cy.volleybolley.core.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,15 +13,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +28,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 
 object VolleySimpleComponent {
+    @Stable
     @Composable
     fun TitleWithBackArrow(
         modifier: Modifier = Modifier,
@@ -68,6 +64,38 @@ object VolleySimpleComponent {
             }
         }
     }
+    /*
+    fun TitleWithBackArrow(
+        modifier: Modifier = Modifier,
+        title: String,
+        onBackClick: () -> Unit = {}
+    ) {
+        Row(
+            modifier = modifier
+        ) {
+            IconButton(
+                onClick = onBackClick,
+                modifier = Modifier
+                    .size(VolleyDimens.DIMEN_24.dp)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_arrow_back),
+                    contentDescription = stringResource(R.string.back_arrow_button),
+                    tint = VolleyColor.White,
+                )
+            }
+
+            VolleyText.TitleLarge(
+                text = title,
+                color = VolleyColor.White,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+    * */
 
     @Composable
     fun DividerLine(
@@ -175,7 +203,7 @@ private fun PreviewTitleWithBackArrow() {
                     "L",
                     modifier = Modifier
                         .padding(VolleyDimens.DIMEN_20.dp)
-                 )
+                )
                 VolleySimpleComponent.LevelBadge(
                     "M",
                     modifier = Modifier
@@ -186,6 +214,25 @@ private fun PreviewTitleWithBackArrow() {
                     modifier = Modifier
                         .padding(VolleyDimens.DIMEN_20.dp)
                 )
+                /*
+                VolleySimpleComponent.TitleWithBackArrow(
+                    title = "Some long title",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(VolleyDimens.DIMEN_20.dp)
+                )
+                VolleySimpleComponent.TitleWithBackArrow(
+                    title = "Some long long long title",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(VolleyDimens.DIMEN_20.dp)
+                )
+                VolleySimpleComponent.DividerLine(
+                    modifier = Modifier
+                        .padding(VolleyDimens.DIMEN_20.dp)
+                        .fillMaxWidth()
+                )
+                * */
             }
         }
     }

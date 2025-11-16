@@ -33,6 +33,22 @@ android {
         val serverUrl = localProperties.getProperty("SERVER_URL")
             ?: error("You should add SERVER_URL property in local.properties")
         buildConfigField("String", "BASE_URL", "\"$serverUrl\"")
+
+        val mapsApiKey = localProperties.getProperty("MAPS_API_KEY")
+            ?: error("You should add MAPS_API_KEY property in local.properties")
+        buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
+
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+    }
+
+    signingConfigs {
+        // Debug configuration with common keystore
+        getByName("debug") {
+            storeFile = rootProject.file("keystore/team-debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
     }
 
     buildTypes {
@@ -45,7 +61,8 @@ android {
             )
         }
         debug {
-            isMinifyEnabled = false     // ВАЖНО: Отключаем для debug, чтобы работал Layout Inspector
+            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -80,7 +97,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.coil.compose)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

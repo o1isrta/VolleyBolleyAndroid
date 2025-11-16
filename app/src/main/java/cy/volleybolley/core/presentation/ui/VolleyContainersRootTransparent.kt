@@ -141,7 +141,7 @@ object VolleyContainersRootTransparent {
     @Composable
     private fun TransparentGradientContainer(
         modifier: Modifier = Modifier,
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
+        cornerRadius: Int = VolleyDimens.DIMEN_16, ///  cornerRadius: Int = VolleyDimens.DIMEN_32,
         mainContainerAlignment: Alignment = Alignment.TopStart,
         contentContainerAlignment: Alignment = Alignment.TopStart,
         content: @Composable BoxScope.() -> Unit

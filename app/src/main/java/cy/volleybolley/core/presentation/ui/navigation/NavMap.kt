@@ -23,13 +23,16 @@ object LaunchRoute : NavMap
 object OnboardingRoute : NavMap
 
 @Serializable
-object SignUpRoute : NavMap
+object AuthorizationRoute : NavMap
 
 @Serializable
 object RegistrationRoute : NavMap
 
 @Serializable
-object RegistrationByPhoneRoute : NavMap
+object AuthorizationByPhoneRoute : NavMap
+
+@Serializable
+object VerifyPhoneNumberRoute : NavMap
 
 @Serializable
 object AboutLevelsRoute : NavMap
@@ -148,7 +151,9 @@ data class SuccessRoute(
 object AboutRoute : NavMap
 
 @Serializable
-object ChangePhotoRoute : NavMap
+data class ChangePhotoRoute(
+    val avatarUrl: String?
+) : NavMap
 
 @Serializable
 object FaqRoute : NavMap
@@ -160,7 +165,9 @@ object PaymentsRoute : NavMap
 object PersonalDataRoute : NavMap
 
 @Serializable
-object PlayerProfileRoute : NavMap
+data class PlayerProfileRoute(
+    val playerId: Int
+) : NavMap
 
 @Serializable
 object PlayersRoute : NavMap
@@ -169,4 +176,7 @@ object PlayersRoute : NavMap
 object ProfileRoute : NavMap
 
 @Serializable
-object EnterPaymentDataRoute : NavMap
+data class EnterPaymentDataRoute(
+    val paymentTypeName: String,
+    val paymentsJsonString: String
+) : NavMap
