@@ -57,13 +57,13 @@ fun PrivacyOptionsScreen(navController: NavHostController,
 //                GameEnteringConditionsScreenEffect.NavigateToPayments -> {
 //                    navController.navigate(PaymentsRoute)
 //                }
-//                GameEnteringConditionsScreenEffect.NavigateBack -> {
-//                    navController.popBackStack()
-//                }
+                PrivacyOptionsScreenEffect.NavigateBack -> {
+                    navController.popBackStack()
+                }
                 //Обработка всех возможных случаев
                 else -> {
                     // Handle unexpected effect or do nothing.  Log it!
-                    Log.w("GameEnteringConditionsScreen", "Unhandled effect: $effect")
+                    Log.w("PrivacyOptionsScreen", "Unhandled effect: $effect")
                 }
             }
         }
@@ -90,11 +90,11 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                 ) {
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
 
-//                TitleWithBackArrow(
-//                    title = stringResource(R.string.create_a_game),
-//                    modifier = Modifier.fillMaxWidth(),
-//                    onBackClick = { viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnBackClicked) }
-//                )
+                TitleWithBackArrow(
+                    title = stringResource(R.string.private_game),
+                    modifier = Modifier.fillMaxWidth(),
+                    onBackClick = { viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnBackClicked) }
+                )
                 }
             }
         }

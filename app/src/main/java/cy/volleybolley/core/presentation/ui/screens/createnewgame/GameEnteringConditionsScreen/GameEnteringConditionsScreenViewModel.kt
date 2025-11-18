@@ -31,20 +31,31 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
               //  uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = event.privacy)
                 uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = Privacy.Public)
             }
+//            is GameEnteringConditionsScreenEvent.OnPrivateSelected -> {
+//                val current = uiStateMutable.value
+//                val manageMode = current.selectedPrivacy == Privacy.Private
+//                // отправляем эффект навигации (manageMode = true, если уже был private выбран до нажатия)
+//                sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy(manageMode))
+//            }
             is GameEnteringConditionsScreenEvent.OnPrivateSelected -> {
-                val current = uiStateMutable.value
-                val manageMode = current.selectedPrivacy == Privacy.Private
-                // отправляем эффект навигации (manageMode = true, если уже был private выбран до нажатия)
-                sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy(manageMode))
+                val current = uiStateMutable.value.selectedPrivacy
+                // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
+                if (current == Privacy.Public) {
+                    uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = Privacy.Private)
+                    //val manageMode = current.selectedPrivacy == Privacy.Private
+                    // отправляем эффект навигации (manageMode = true, если уже был private выбран до нажатия)
+                    sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy)//manageMode))
+                }
+                // Если уже Private — ничего не делать
             }
-            is GameEnteringConditionsScreenEvent.PlayersSelected -> {
-                // Пользователь вернулся с Privacy screen, нажав Add
-                val current = uiStateMutable.value
-                uiStateMutable.value = current.copy(
-                    selectedPrivacy = Privacy.Private,
-                    players = event.players
-                )
-            }
+//            is GameEnteringConditionsScreenEvent.PlayersSelected -> {
+//                // Пользователь вернулся с Privacy screen, нажав Add
+//                val current = uiStateMutable.value
+//                uiStateMutable.value = current.copy(
+//                    selectedPrivacy = Privacy.Private,
+//                    players = event.players
+//                )
+//            }
             is GameEnteringConditionsScreenEvent.PerPersonChanged -> {
                 uiStateMutable.value = uiStateMutable.value.copy(perPerson = event.perPerson)
             }

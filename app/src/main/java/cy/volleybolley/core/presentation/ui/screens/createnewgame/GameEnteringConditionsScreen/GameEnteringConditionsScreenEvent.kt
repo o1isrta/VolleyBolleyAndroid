@@ -5,7 +5,7 @@ import cy.volleybolley.core.presentation.base.UiEvent
 sealed class GameEnteringConditionsScreenEvent : UiEvent {
     object OnPublicSelected : GameEnteringConditionsScreenEvent() // нажатие на "Public" // data class OnPublicSelected(val privacy: Privacy) : GameEnteringConditionsScreenEvent() // нажатие на "Public"
     object OnPrivateSelected : GameEnteringConditionsScreenEvent() // нажатие на "Private" = запрос на открытие экрана Privacy
-    data class PlayersSelected(val players: List<PlayerUI>) : GameEnteringConditionsScreenEvent() // результат из Privacy screen
+    //data class PlayersSelected(val players: List<PlayerUI>) : GameEnteringConditionsScreenEvent() // результат из Privacy screen
     object CheckIfAccountExists : GameEnteringConditionsScreenEvent() // Проверка, существует ли аккаунт
     data class PerPersonChanged(val perPerson: String) : GameEnteringConditionsScreenEvent() // Изменение стоимости (per Person)
     class MaximumPlayersChanged(val maximumPersons: Int) : GameEnteringConditionsScreenEvent() // Увеличение или уменьшение maximumPlayers

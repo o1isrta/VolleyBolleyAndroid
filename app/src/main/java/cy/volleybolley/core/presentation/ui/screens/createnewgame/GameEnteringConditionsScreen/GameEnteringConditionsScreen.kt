@@ -48,6 +48,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.PaymentsRoute
+import cy.volleybolley.core.presentation.ui.navigation.PrivacyOptionsRoute
 import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreenViewModelPreview
@@ -104,7 +105,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                     // Передаём текущий список игроков как JSON, чтобы Privacy screen мог показать существующих
                    // val playersJson = gson.toJson(uiState.players)
                    // currentEntry?.savedStateHandle?.set("existing_players_json", playersJson)
-                    navController.navigate("privacy") // ваша route для экрана выбора игроков
+                    navController.navigate(PrivacyOptionsRoute) // ваша route для экрана выбора игроков
                 }
                 //Обработка всех возможных случаев
                 else -> {
@@ -196,13 +197,21 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                                         //viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PrivacySelected(it))
                                         Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected) //  Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected(Privacy.Public))
                                         Privacy.Private -> {
-                                            // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
-                                            state.selectedPrivacy?.let { privacy ->
-                                                if (privacy == Privacy.Public)
+                                            //// Если до этого было Public -> открыть Privacy screen (для первичного выбора)
+                                            //state.selectedPrivacy?.let { privacy ->
+                                             //   if (privacy == Privacy.Public)
                                                     viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
-                                            }
-                                            // Если уже Private — ничего не делать
+                                            //}
+                                            //// Если уже Private — ничего не делать
                                         }
+//                                        Privacy.Private -> {
+//                                            // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
+//                                            state.selectedPrivacy?.let { privacy ->
+//                                                if (privacy == Privacy.Public)
+//                                                    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
+//                                            }
+//                                            // Если уже Private — ничего не делать
+//                                        }
                                     }
                                 } ?: run {
                                     // Обработка нераспознанной позиции
