@@ -170,7 +170,7 @@ private fun PlayersListItem(
                 .weight(1f)
         )
         Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
-        FavoriteMark(isFavorite = player.isFavorite)
+        VolleySimpleComponent.FavoriteMark(isFavorite = player.isFavorite)
         Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
         LevelContainer(levelValue = player.level)
     }
@@ -183,20 +183,6 @@ private fun AvatarSmall(
     VolleyAvatar.CircularAvatar(
         avatar = avatarUrl,
         size = VolleyDimens.DIMEN_40.dp
-    )
-}
-
-@Composable
-private fun FavoriteMark(
-    isFavorite: Boolean,
-) {
-    val painter = painterResource(
-        if (isFavorite) R.drawable.ic_favorite_star_fill else R.drawable.ic_favorite_star_empty
-    )
-    Icon(
-        contentDescription = null,
-        painter = painter,
-        tint = VolleyColor.OrangeHard
     )
 }
 

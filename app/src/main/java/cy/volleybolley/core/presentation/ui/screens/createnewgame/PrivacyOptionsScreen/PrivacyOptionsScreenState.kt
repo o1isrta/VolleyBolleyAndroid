@@ -1,22 +1,22 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
 
 import cy.volleybolley.core.presentation.base.UiState
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.PlayerUI
+import cy.volleybolley.players.domain.model.Player
 
-private const val LEVEL_HIGH = "H"
-private const val LEVEL_LIGHT = "L"
-private const val LEVEL_MEDIUM = "M"
-private const val LEVEL_PRO = "P"
+//private const val LEVEL_HIGH = "H"
+//private const val LEVEL_LIGHT = "L"
+//private const val LEVEL_MEDIUM = "M"
+//private const val LEVEL_PRO = "P"
 
 data class PrivacyOptionsScreenState (
     val flagFavorites: Boolean = false, // флаг = true - искать игроков среди favorites, false - среди всех
     val errorMessage: String? = null,
     val isLoading : Boolean = false,     // Для загрузки (если необходимо)
-    val players: List<PlayerUI> = listOf(
-        PlayerUI("Kristina Popova", LEVEL_MEDIUM),
-        PlayerUI("Polina Vasylyeva", LEVEL_MEDIUM),
-        PlayerUI("Anton Ivanov", LEVEL_LIGHT),
-        PlayerUI("Aleksandr Abramov", LEVEL_HIGH),
-        PlayerUI("Maria Kuznetsova", LEVEL_PRO)
+    val players: List<Player> = listOf(
+        Player(1,"Kristina", "Popova", null, true, cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM),
+        Player(2, "Polina", "Vasylyeva", null,false, cy.volleybolley.core.presentation.ui.LEVEL_PRO),
+        Player(3, "Anton", "Ivanov", null, true, cy.volleybolley.core.presentation.ui.LEVEL_LIGHT),
+        Player(4, "Aleksandr", "Abramov", null, false, cy.volleybolley.core.presentation.ui.LEVEL_HIGH),
+        Player(4, "Maria", "Novak", null, false, cy.volleybolley.core.presentation.ui.LEVEL_PRO)
     )
 ) : UiState

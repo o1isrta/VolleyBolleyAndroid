@@ -2,22 +2,28 @@ package cy.volleybolley.core.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +32,12 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.players.domain.model.Player
+
+const val LEVEL_HIGH = "H"
+const val LEVEL_LIGHT = "L"
+const val LEVEL_MEDIUM = "M"
+const val LEVEL_PRO = "P"
 
 object VolleySimpleComponent {
     @Stable
@@ -168,12 +180,89 @@ object VolleySimpleComponent {
             }
         }
     }*/
+
+    @Composable
+    fun PlayerRowWithRemove(
+        player: Player,
+        onRemove: () -> Unit
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = VolleyDimens.DIMEN_23.dp)
+        ) {
+            VolleyText.BodyRegular(
+                text = player.firstName + " " + player.lastName,// ?: stringResource(R.string.free_spot),
+                color = VolleyColor.White,
+                modifier = Modifier.weight(1f)
+            )
+            // if (showActions) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End//Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+            ) {
+                player.level.let { LevelBadge(it) }
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                IconButton(
+                    onClick = onRemove,
+                    modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_remove),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+                    )
+                }
+            }
+            // }
+        }
+    }
+
+    @Composable
+    fun PlayerRowWithRemoveAndFavorite(
+        player: Player,
+        onRemove: () -> Unit
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = VolleyDimens.DIMEN_23.dp)
+        ) {
+            FavoriteMark(player.isFavorite)
+            Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_8.dp))
+            PlayerRowWithRemove(player, onRemove)
+        }
+    }
+
+    @Composable
+    fun FavoriteMark(
+        isFavorite: Boolean,
+    ) {
+        val painter = painterResource(
+            if (isFavorite) R.drawable.ic_favorite_star_fill else R.drawable.ic_favorite_star_empty
+        )
+        Icon(
+            modifier = Modifier.size(VolleyDimens.DIMEN_20.dp).padding(VolleyDimens.DIMEN_1.dp),
+            contentDescription = null,
+            painter = painter,
+            tint = VolleyColor.OrangeHard
+        )
+    }
 }
 
 
 @Preview
 @Composable
 private fun PreviewTitleWithBackArrow() {
+    val players: List<Player> = listOf(
+        Player(1,"Kristina", "Popova", null, true, LEVEL_MEDIUM),
+        Player(2, "Polina", "Vasylyeva", null,false, LEVEL_PRO),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH)
+    )
     VolleyContainersRootTransparent.Root {
         Box(
             contentAlignment = Alignment.Center,
@@ -214,6 +303,31 @@ private fun PreviewTitleWithBackArrow() {
                     modifier = Modifier
                         .padding(VolleyDimens.DIMEN_20.dp)
                 )
+                Column(
+                    modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp),
+                    verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp
+                    )) {
+                        players.forEachIndexed { index, player ->
+                        VolleySimpleComponent.PlayerRowWithRemove(
+                            player = player,
+                            //showActions = member.name != null,
+                            onRemove = { var s = index}
+                        )
+                    }
+                }
+                Column(
+                    modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp),
+                    verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp
+                    )) {
+                    players.forEachIndexed { index, player ->
+                        VolleySimpleComponent.PlayerRowWithRemoveAndFavorite(
+                            player = player,
+                            //showActions = member.name != null,
+                            onRemove = { var s = index}
+                        )
+                    }
+                }
+
                 /*
                 VolleySimpleComponent.TitleWithBackArrow(
                     title = "Some long title",
@@ -237,3 +351,4 @@ private fun PreviewTitleWithBackArrow() {
         }
     }
 }
+

@@ -223,7 +223,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                         if (state.selectedPrivacy == Privacy.Private) {
                             Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)) {
                                 state.players.forEachIndexed { index, player ->
-                                    PlayerRowWithRemove(
+                                    VolleySimpleComponent.PlayerRowWithRemove(
                                         player = player,
                                         //showActions = member.name != null,
                                         onRemove = {
@@ -336,44 +336,44 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
     }
 }
 
-@Composable
-private fun PlayerRowWithRemove(
-    player: PlayerUI,
-    onRemove: () -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = VolleyDimens.DIMEN_23.dp)
-    ) {
-        VolleyText.BodyRegular(
-            text = player.name,// ?: stringResource(R.string.free_spot),
-            color = VolleyColor.White,
-            modifier = Modifier.weight(1f)
-        )
-       // if (showActions) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End//Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
-            ) {
-                player.level.let { LevelBadge(it) }
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-                IconButton(
-                    onClick = onRemove,
-                    modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_remove),
-                        contentDescription = null,
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
-                    )
-                }
-            }
-       // }
-    }
-}
+//@Composable
+//private fun PlayerRowWithRemove(
+//    player: PlayerUI,
+//    onRemove: () -> Unit
+//) {
+//    Row(
+//        verticalAlignment = Alignment.CenterVertically,
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .heightIn(min = VolleyDimens.DIMEN_23.dp)
+//    ) {
+//        VolleyText.BodyRegular(
+//            text = player.name,// ?: stringResource(R.string.free_spot),
+//            color = VolleyColor.White,
+//            modifier = Modifier.weight(1f)
+//        )
+//       // if (showActions) {
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.End//Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+//            ) {
+//                player.level.let { LevelBadge(it) }
+//                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+//                IconButton(
+//                    onClick = onRemove,
+//                    modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+//                ) {
+//                    Icon(
+//                        painter = painterResource(R.drawable.ic_remove),
+//                        contentDescription = null,
+//                        tint = Color.Unspecified,
+//                        modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+//                    )
+//                }
+//            }
+//       // }
+//    }
+//}
 
 
 @Preview
