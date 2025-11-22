@@ -10,9 +10,9 @@ data class RegistrationRequestBody(
     @SerialName("last_name") val lastName: String,
     @SerialName("gender") val gender: String,
     @SerialName("date_of_birth") val birthDate: String,
+    @SerialName("country") val country: Int,
+    @SerialName("city") val city: Int,
     @SerialName("level") val level: String,
-    @SerialName("country_id") val countryId: Int,
-    @SerialName("city_id") val cityId: Int,
 )
 
 fun PersonalData.toRegistrationBody(): RegistrationRequestBody {
@@ -21,8 +21,8 @@ fun PersonalData.toRegistrationBody(): RegistrationRequestBody {
         lastName = lastName,
         gender = gender,
         birthDate = birthDate,
+        country = countryId,
+        city = cityId,
         level = level,
-        countryId = countryId,
-        cityId = cityId
     )
 }

@@ -13,6 +13,7 @@ import cy.volleybolley.auth.domain.api.usecase.CheckRefreshTokenExpirationUseCas
 import cy.volleybolley.auth.domain.api.usecase.ClearAllLoginDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.ClearTokensUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetAccessTokenUseCase
+import cy.volleybolley.auth.domain.api.usecase.GetAuthenticatedStatusUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetIsRegisteredUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetRefreshTokenTimestampUseCase
@@ -28,6 +29,7 @@ import cy.volleybolley.auth.domain.impl.usecase.CheckRefreshTokenExpirationUseCa
 import cy.volleybolley.auth.domain.impl.usecase.ClearAllLoginDataUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.ClearTokensUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.GetAccessTokenUseCaseImpl
+import cy.volleybolley.auth.domain.impl.usecase.GetAuthenticatedStatusUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.GetIsRegisteredUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.GetPersonalDataUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.GetRefreshTokenTimestampUseCaseImpl
@@ -50,6 +52,9 @@ import org.koin.dsl.module
 val authorizationModule = module {
     single<LoginDataRepository> { LoginDataRepositoryImpl(get(), get()) }
     single<RefreshTokenTimestampRepository> { RefreshTokenTimestampRepositoryImpl(get()) }
+
+    // Authenticated status
+    single<GetAuthenticatedStatusUseCase> { GetAuthenticatedStatusUseCaseImpl(get()) }
 
     // Token Use Cases
     single<SaveAccessTokenUseCase> { SaveAccessTokenUseCaseImpl(get()) }

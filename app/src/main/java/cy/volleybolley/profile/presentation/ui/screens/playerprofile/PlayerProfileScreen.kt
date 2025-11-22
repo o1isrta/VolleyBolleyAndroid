@@ -250,15 +250,6 @@ private fun FavoriteManagementButton(
     isFavorite: Boolean,
     onClick: () -> Unit,
 ) {
-    val gradientBrush = remember {
-        Brush.verticalGradient(
-            colors = listOf(
-                VolleyColor.YellowForGradient,
-                VolleyColor.GreenForGradient
-            )
-        )
-    }
-
     val buttonText = stringResource(
         if (isFavorite) R.string.unfavorite else R.string.add_to_favorites
     ).uppercase()
@@ -277,7 +268,7 @@ private fun FavoriteManagementButton(
             )
             .border(
                 width = VolleyDimens.DIMEN_1.dp,
-                brush = gradientBrush,
+                color = VolleyColor.YellowPro,
                 shape = shape
             )
             .clickable(

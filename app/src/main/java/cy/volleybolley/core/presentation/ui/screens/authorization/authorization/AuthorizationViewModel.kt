@@ -12,6 +12,7 @@ import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugLog
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.LaunchGoogleSignIn
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.NavigateToHome
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.NavigateToRegistration
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.ShowToast
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.ContinueWithFacebookClicked
@@ -68,9 +69,12 @@ class AuthorizationViewModel(
                             savePersonalDataUseCase.execute(user)
                             saveIsRegisteredUseCase.execute(isRegistered)
 
-                            val userJson = Json.encodeToString(user)
-                            sendUiEffect(NavigateToRegistration(userJson))
-
+                            if (isRegistered) {
+                                sendUiEffect(NavigateToHome)
+                            } else {
+                                val userJson = Json.encodeToString(user)
+                                sendUiEffect(NavigateToRegistration(userJson))
+                            }
                         }.onFailure { error ->
                             sendUiEffect(ShowToast(message = "Authorization error: $error"))
                         }

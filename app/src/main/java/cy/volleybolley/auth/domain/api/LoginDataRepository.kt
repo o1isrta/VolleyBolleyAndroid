@@ -7,6 +7,9 @@ interface LoginDataRepository {
     // Auth state
     val isAuthenticated: StateFlow<Boolean>
 
+    // PersonalData State
+    val personalData: StateFlow<PersonalData?>
+
     // Tokens
     suspend fun saveAccessToken(accessToken: String)
     suspend fun saveRefreshToken(refreshToken: String)
@@ -20,7 +23,7 @@ interface LoginDataRepository {
 
     // Personal data
     suspend fun savePersonalData(personalData: PersonalData)
-    suspend fun getPersonalData(): PersonalData?
+//    suspend fun getPersonalData(): PersonalData?
 
     suspend fun clearAll()
 }

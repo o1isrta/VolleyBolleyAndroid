@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.registration
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,10 +48,14 @@ fun RegistrationScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
+    val context = LocalContext.current
 
     LaunchedEffect(effect) {
-        when (effect) {
+        when (val currentEffect = effect) {
             is RegistrationEffect.NavigateToHome -> onRegistrationSuccessEvent()
+            is RegistrationEffect.ShowToast -> {
+                Toast.makeText(context, currentEffect.message, Toast.LENGTH_SHORT).show()
+            }
             null -> {}
         }
     }

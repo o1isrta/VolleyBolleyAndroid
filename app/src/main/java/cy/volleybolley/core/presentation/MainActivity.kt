@@ -41,13 +41,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
-import cy.volleybolley.auth.domain.api.LoginDataRepository
 import cy.volleybolley.auth.domain.api.usecase.CheckRefreshTokenExpirationUseCase
 import cy.volleybolley.auth.domain.api.usecase.ClearAllLoginDataUseCase
+import cy.volleybolley.auth.domain.api.usecase.GetAuthenticatedStatusUseCase
+import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
-import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite
@@ -61,6 +61,7 @@ import cy.volleybolley.core.presentation.ui.navigation.ProfileTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.RegistrationRoute
 import cy.volleybolley.core.presentation.ui.navigation.model.NoBarsRoutes
 import cy.volleybolley.core.presentation.ui.navigation.model.TopLevelRoute
+import cy.volleybolley.profile.domain.model.PersonalData
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -108,6 +109,8 @@ private fun isAuthRoute(route: String): Boolean {
 
 @Composable
 fun RootContainer(
+    getAuthenticatedStatusUseCase: GetAuthenticatedStatusUseCase = koinInject(),
+    getPersonalDataUseCase: GetPersonalDataUseCase = koinInject(),
     content: @Composable (PaddingValues, NavHostController) -> Unit
 ) {
     val navController = rememberNavController()
@@ -117,8 +120,10 @@ fun RootContainer(
     val showTopBar = NoBarsRoutes.showTopBar(currentDestinationRoute)
 
     // Automatic navigation to the authorization screen during logout
-    val loginDataRepository: LoginDataRepository = koinInject()
-    val isAuthenticated by loginDataRepository.isAuthenticated.collectAsStateWithLifecycle()
+    val isAuthenticated by getAuthenticatedStatusUseCase.execute().collectAsStateWithLifecycle()
+
+    // Observe user personal data
+    val personalData by getPersonalDataUseCase.execute().collectAsStateWithLifecycle()
 
     LaunchedEffect(isAuthenticated) {
         // Do not navigate if currentRoute is not already installed.
@@ -130,6 +135,25 @@ fun RootContainer(
         }
     }
 
+    RootContainer(
+        navController = navController,
+        currentDestination = currentDestination,
+        showBottomNav = showBottomNav,
+        showTopBar = showTopBar,
+        userData = personalData,
+        content = content
+    )
+}
+
+@Composable
+private fun RootContainer(
+    navController: NavHostController,
+    currentDestination: NavDestination?,
+    showBottomNav: Boolean,
+    showTopBar: Boolean,
+    userData: PersonalData?,
+    content: @Composable (PaddingValues, NavHostController) -> Unit
+) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -140,10 +164,20 @@ fun RootContainer(
             containerColor = VolleyColor.TurquoiseDark,
             topBar = {
                 if (showTopBar) {
+                    var name: String = stringResource(R.string.default_name)
+                    var avatar: String? = null
+                    var level: String = stringResource(R.string.default_level)
+
+                    userData?.let {
+                        name = it.firstName
+                        avatar = it.avatar
+                        level = it.level
+                    }
+
                     VolleyTopBar.TopBar(
-                        firstName = VolleyMocks.USER_NAME,
-                        avatar = VolleyMocks.USER_AVATAR,
-                        levelName = VolleyMocks.USER_LEVEL
+                        firstName = name,
+                        avatar = avatar,
+                        levelName = level
                     )
                 }
             },

@@ -1,18 +1,21 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.registration
 
+import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
+import cy.volleybolley.core.domain.model.onFailure
+import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.model.VolleyMocks
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugLog
 import cy.volleybolley.profile.domain.model.PersonalData
 import cy.volleybolley.referencedata.domain.api.GetCountriesUseCase
 import cy.volleybolley.referencedata.domain.model.Country
 import cy.volleybolley.registration.domain.UserRegistrationUseCase
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.Json
 
 class RegistrationViewModel(
     private val getCountriesUseCase: GetCountriesUseCase,
     private val userRegistrationUseCase: UserRegistrationUseCase,
+    private val savePersonalDataUseCase: SavePersonalDataUseCase,
     json: Json,
     userData: String,
 ) : BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(
@@ -22,14 +25,38 @@ class RegistrationViewModel(
 
     init {
         val personalData: PersonalData = json.decodeFromString(userData)
-        uiStateMutable.update {
-            it.copy(
-                name = personalData.firstName,
-                surname = personalData.lastName,
-                countryList = VolleyMocks.countries,
-                selectedCountry = VolleyMocks.countries.first(),
-                cityList = VolleyMocks.countries.first().cities
-            )
+
+        // Get countries
+        launchSafe(
+            onError = { throwable ->
+                sendUiEffect(RegistrationEffect.ShowToast("Failed to load countries"))
+            },
+            getErrorLogMessage = { throwable ->
+                "Error loading countries: ${throwable.message}"
+            }
+        ) {
+            getCountriesUseCase.execute()
+                .onSuccess { countries ->
+                    showDebugLog(tag, "RegistrationScreen >> GetCountries = $countries")
+                    uiStateMutable.update {
+                        it.copy(
+                            name = personalData.firstName,
+                            surname = personalData.lastName,
+                            countryList = countries,
+                            selectedCountry = countries.firstOrNull(),
+                            cityList = countries.firstOrNull()?.cities ?: emptyList()
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    sendUiEffect(RegistrationEffect.ShowToast("Failed to load countries"))
+                    uiStateMutable.update {
+                        it.copy(
+                            name = personalData.firstName,
+                            surname = personalData.lastName
+                        )
+                    }
+                }
         }
     }
 
@@ -90,17 +117,29 @@ class RegistrationViewModel(
 
     private fun sendRegistrationRequest() {
         launchSafe(
-            block = {
-                uiStateMutable.update { it.copy(isLoading = true) }
-                delay(timeMillis = 1000L)
-                uiEffectMutable.send(RegistrationEffect.NavigateToHome)
+            onError = { throwable ->
                 uiStateMutable.update { it.copy(isLoading = false) }
+                sendUiEffect(RegistrationEffect.ShowToast("Registration failed: ${throwable.message}"))
             },
-            onError = {
-                uiStateMutable.update { it.copy(isLoading = false) }
-            },
-            getErrorLogMessage = { "error in registration -> $it" }
-        )
+            getErrorLogMessage = { throwable ->
+                "Error in registration: ${throwable.message}"
+            }
+        ) {
+            uiStateMutable.update { it.copy(isLoading = true) }
+
+            val personalData = uiState.value.toPersonalData()
+            showDebugLog(tag, "RegistrationScreen >> UserData for registration = $personalData")
+            userRegistrationUseCase.execute(personalData)
+                .onSuccess {
+                    savePersonalDataUseCase.execute(personalData)
+                    uiStateMutable.update { it.copy(isLoading = false) }
+                    sendUiEffect(RegistrationEffect.NavigateToHome)
+                }
+                .onFailure { error ->
+                    uiStateMutable.update { it.copy(isLoading = false) }
+                    sendUiEffect(RegistrationEffect.ShowToast("Registration failed: $error"))
+                }
+        }
     }
 
     private fun isRegistrationButtonEnabled(newState: RegistrationState): Boolean {

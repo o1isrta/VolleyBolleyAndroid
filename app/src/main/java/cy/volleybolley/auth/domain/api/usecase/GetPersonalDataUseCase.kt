@@ -1,7 +1,8 @@
 package cy.volleybolley.auth.domain.api.usecase
 
 import cy.volleybolley.profile.domain.model.PersonalData
+import kotlinx.coroutines.flow.StateFlow
 
 interface GetPersonalDataUseCase {
-    suspend fun execute(): PersonalData?
+    fun execute(): StateFlow<PersonalData?>
 }

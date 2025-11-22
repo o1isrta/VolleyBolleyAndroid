@@ -32,6 +32,7 @@ val registrationModule = module {
         RegistrationViewModel(
             getCountriesUseCase = get(),
             userRegistrationUseCase = get(),
+            savePersonalDataUseCase = get(),
             json = get(),
             userData = userData
         )

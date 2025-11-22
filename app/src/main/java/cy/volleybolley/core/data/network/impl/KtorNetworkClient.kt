@@ -48,7 +48,11 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
         httpResponse: HttpResponse
     ): Response<SealedResponse> {
         if (BuildConfig.DEBUG) {
-            Log.v(NETWORK_CLIENT_TAG, "Response body = ${httpResponse.bodyAsText()}")
+            Log.v(
+                NETWORK_CLIENT_TAG,
+                "Response body = ${httpResponse.bodyAsText()}, Response status = ${httpResponse.status.value} " +
+                    httpResponse.status.description
+            )
         }
 
         return if (httpResponse.status.isSuccess()) {
@@ -69,8 +73,7 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
         url {
             takeFrom(BuildConfig.BASE_URL)
             val basePath = encodedPath.removeSuffix("/")
-            val requestPath = path.removePrefix("/")
-            encodedPath = "$basePath/$requestPath"
+            encodedPath = "$basePath$path"
         }
         Log.v(NETWORK_CLIENT_TAG, "→ FINAL URL = ${this.url.buildString()}")
         body?.let {

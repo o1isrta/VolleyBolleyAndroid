@@ -41,6 +41,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugLog
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.LaunchGoogleSignIn
+import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.NavigateToHome
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.NavigateToRegistration
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.ShowToast
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.ContinueWithFacebookClicked
@@ -50,7 +51,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AuthorizationScreen(
     onNavigateToRegisterByPhoneRequested: () -> Unit,
-    onSuccessRegisteredAction: (String) -> Unit,
+    onSuccessGetNotRegisterUser: (String) -> Unit,
+    onSuccessGetRegisterUser: () -> Unit,
     paddingFromSystemUi: PaddingValues,
     viewModel: AuthorizationViewModel = koinViewModel(),
 ) {
@@ -106,8 +108,10 @@ fun AuthorizationScreen(
             is NavigateToRegistration -> {
                 showDebugLog(screenTag, "Navigate to registration")
                 val user = (effect as NavigateToRegistration).user
-                onSuccessRegisteredAction(user)
+                onSuccessGetNotRegisterUser(user)
             }
+
+            is NavigateToHome -> { onSuccessGetRegisterUser() }
 
             is ShowToast -> {
                 Toast.makeText(context, (effect as ShowToast).message, Toast.LENGTH_SHORT).show()

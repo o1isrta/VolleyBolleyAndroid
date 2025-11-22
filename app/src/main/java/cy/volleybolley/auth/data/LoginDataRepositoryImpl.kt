@@ -29,6 +29,10 @@ class LoginDataRepositoryImpl(
     )
     override val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
 
+    // StateFlow for runtime access to user personal data
+    private val _personalData = MutableStateFlow(getPersonalData())
+    override val personalData: StateFlow<PersonalData?> = _personalData.asStateFlow()
+
     // Tokens
     override suspend fun saveAccessToken(accessToken: String) {
         sharedPrefs.edit {
@@ -76,9 +80,10 @@ class LoginDataRepositoryImpl(
         sharedPrefs.edit {
             putString(KEY_PERSONAL_DATA, personalDataJson)
         }
+        _personalData.value = personalData
     }
 
-    override suspend fun getPersonalData(): PersonalData? {
+    private fun getPersonalData(): PersonalData? {
         val personalDataJson = sharedPrefs.getString(KEY_PERSONAL_DATA, null)
         return personalDataJson?.let { json.decodeFromString<PersonalData>(it) }
     }
