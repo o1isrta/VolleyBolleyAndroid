@@ -2,6 +2,7 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOption
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,17 +23,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
+import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
+import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.navigation.PaymentsRoute
 import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenEffect
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenEvent
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenViewModelPreview
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.Privacy
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGameType
 import cy.volleybolley.profile.domain.model.PaymentType
@@ -90,13 +99,76 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                 ) {
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
 
-                TitleWithBackArrow(
-                    title = stringResource(R.string.private_game),
-                    modifier = Modifier.fillMaxWidth(),
-                    onBackClick = { viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnBackClicked) }
-                )
+                    TitleWithBackArrow(
+                        title = stringResource(R.string.private_game),
+                        modifier = Modifier.fillMaxWidth(),
+                        onBackClick = { viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnBackClicked) }
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                    VolleyTextFieldGradient.SearchField(
+                        modifier = Modifier,
+                        actionToTransferContent = {}
+                    ) { }
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                    VolleyButton.SliderButtonsPlayers(
+                        modifier = Modifier.fillMaxWidth(),
+                        checkId = when (state.flagFavorites) {
+                            false -> 1
+                            true -> 2
+                        },
+                        onSelected = {}
+                    )
+//                            { position ->
+//                        val selectedPrivacy = when (position) {
+//                            1 -> Privacy.Public
+//                            2 -> Privacy.Private
+//                            else -> null // Обработка некорректной позиции
+//                        }
+//                        selectedPrivacy?.let { privacy ->
+//                            when (privacy) {
+//                                //viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PrivacySelected(it))
+//                                Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected) //  Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected(Privacy.Public))
+//                                Privacy.Private -> {
+//                                    //// Если до этого было Public -> открыть Privacy screen (для первичного выбора)
+//                                    //state.selectedPrivacy?.let { privacy ->
+//                                    //   if (privacy == Privacy.Public)
+//                                    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
+//                                    //}
+//                                    //// Если уже Private — ничего не делать
+//                                }
+////                                        Privacy.Private -> {
+////                                            // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
+////                                            state.selectedPrivacy?.let { privacy ->
+////                                                if (privacy == Privacy.Public)
+////                                                    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
+////                                            }
+////                                            // Если уже Private — ничего не делать
+////                                        }
+//                            }
+//                        } ?: run {
+//                            // Обработка нераспознанной позиции
+//                            Log.e("GameEnteringConditionsScreen", "Нераспознанная позиция: $position")
+//                        }
+//                }
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PrivacyOptionsScreenPreview() {
+    val navController = rememberNavController() // Создаем моковый NavHostController
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(VolleyColor.TurquoiseDark)
+    ) {
+        // GameEnteringConditionsScreen(navController = navController)
+        PrivacyOptionsScreen(viewModel = PrivacyOptionsScreenViewModelPreview(),
+            navController = navController, paddingFromSystemUi = PaddingValues(0.dp))
     }
 }

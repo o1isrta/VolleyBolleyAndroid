@@ -262,7 +262,7 @@ fun BasicTourneySetupScreenContent(
 
         VolleyButton.GroupButtonsForTourneyType(
             modifier = Modifier,
-            onClick = {}
+            onSelected = {}
         )
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))

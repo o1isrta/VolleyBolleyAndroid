@@ -5,7 +5,7 @@ import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameR
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeCreateNewGameRepository
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenViewModel
 
-class PrivacyOptionsScreenViewModel( private val gameRepository: CreateNewGameRepository ) : BaseViewModel<PrivacyOptionsScreenState, PrivacyOptionsScreenEvent, PrivacyOptionsScreenEffect>(
+open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGameRepository ) : BaseViewModel<PrivacyOptionsScreenState, PrivacyOptionsScreenEvent, PrivacyOptionsScreenEffect>(
     PrivacyOptionsScreenState()
 ) {
     override val tag: String = "PrivacyOptionsScreenViewModel"
@@ -34,5 +34,5 @@ class PrivacyOptionsScreenViewModel( private val gameRepository: CreateNewGameRe
     }
 }
 // Специальный ViewModel для Preview
-class GameEnteringConditionsScreenViewModelPreview : GameEnteringConditionsScreenViewModel( FakeCreateNewGameRepository() ) {
+class PrivacyOptionsScreenViewModelPreview : PrivacyOptionsScreenViewModel( FakeCreateNewGameRepository() ) {
 }

@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,7 +27,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -275,14 +274,19 @@ object VolleyButton {
             Button(
                 onClick = onClick,
                 modifier = Modifier
-                        .fillMaxSize()
+                    //.defaultMinSize(minWidth = 0.dp, minHeight = 0.dp) // <-- Это важно!
+
+                    .fillMaxSize()
                         .padding(0.dp), // Важно: Сбрасываем padding по умолчанию
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 contentPadding = PaddingValues(0.dp),
                 shape = RoundedCornerShape(size = 16.dp)
             ){
                 Box(
-                    modifier = Modifier.fillMaxSize().background(
+                    modifier = Modifier
+                        // .defaultMinSize(minWidth = 0.dp, minHeight = 0.dp) // <-- Это важно!
+                        .fillMaxSize()
+                        .background(
                         Brush.linearGradient(
                             colors = listOf(
                                 VolleyColor.YellowForGradient,
@@ -526,7 +530,9 @@ object VolleyButton {
             Button(
                 onClick = onClick,
                 modifier = Modifier
-                    .fillMaxSize()
+                    .defaultMinSize(minWidth = 0.dp, minHeight = 0.dp) // <-- Это важно!
+
+                    //.fillMaxSize()
                     .padding(0.dp), // Важно: Сбрасываем padding по умолчанию
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
@@ -536,7 +542,8 @@ object VolleyButton {
                 shape = RoundedCornerShape(size = 16.dp)
             ){
                 Box(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .background(
                             brush = Brush.horizontalGradient(colors = listOf(Color.Transparent, Color.Transparent)),
                             //  shape = RoundedCornerShape(size = 16.dp)
@@ -1153,6 +1160,27 @@ object VolleyButton {
         }
     }
 
+//    /**
+//     * @param items список кнопок
+//     */
+//    @Composable
+//    fun ButtonsOfSameSizeGroup(
+//        items: List<ButtonItem>,
+//        modifier: Modifier = Modifier,
+//        onSelected: (Int) -> Unit
+//    ) {
+//        val groupWidth = constraints.maxWidth
+//        var size = ()/items.count()
+//        Row(modifier, horizontalArrangement = Arrangement.Start) {
+//            items.forEach { item ->
+//                item.button(Modifier.weight(1f), item.isChecked) {
+//                    onSelected(item.position)
+//                }
+//                Spacer(modifier = Modifier.size(8.dp))
+//            }
+//        }
+//    }
+
     @Composable
     fun GroupButtonsForChangeLevel(checkId: Int, modifier: Modifier, onSelected: (Int) -> Unit) {
         ButtonsGroup(
@@ -1556,7 +1584,40 @@ object VolleyButton {
      * группа кнопок выбора Tourney Type (из 2 кнопок: Individual, Team)
      */
     @Composable
-    fun GroupButtonsForTourneyType(checkId: Int = 1, modifier: Modifier, onClick: () -> Unit) {
+    fun GroupButtonsForTourneyType(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
+        Row(
+            modifier = modifier.height(44.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            CheckGradientButtonMaxWidth(
+                modifier = Modifier.weight(1f),
+                text = INDIVIDUAL_TEXT,
+                isChecked = checkId == 1
+                //onClick = onSelected
+            ){
+                onSelected(1)
+            }
+
+            CheckGradientButtonMaxWidth(
+                modifier = Modifier.weight(1f),
+                text = TEAM_TEXT,
+                isChecked = checkId == 2
+                //onClick = onSelected(2)
+            ){
+                onSelected(2)
+            }
+        }
+            //    modifier = modifier.height(44.dp),
+           // onSelected = onSelected
+
+
+    }
+
+    /**
+     * устаревший вариант. группа кнопок выбора Tourney Type (из 2 кнопок: Individual, Team)
+     */
+    @Composable
+    fun GroupButtonsForTourneyType1(checkId: Int = 1, modifier: Modifier, onClick: () -> Unit) {
         Row(
             modifier = modifier.height(44.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -1580,7 +1641,7 @@ object VolleyButton {
      * группа кнопок выбора Tourney Type (из 2 кнопок: Individual, Team)
      */
     @Composable
-    fun GroupButtonsForTourneyType1(checkId: Int = 1, modifier: Modifier, onClick: () -> Unit) {
+    fun GroupButtonsForTourneyType2(checkId: Int = 1, modifier: Modifier, onClick: () -> Unit) {
         Row(
             modifier = modifier.height(44.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -1617,7 +1678,7 @@ object VolleyButton {
             onClick = onClick,
             border = BorderStroke(1.dp, Color.Transparent),
             shape = RoundedCornerShape(16.dp),
-            modifier = modifier,
+            modifier =  modifier, // Растягиваем кнопку по высоте//modifier,
             contentPadding = paddingValues,
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = color, // Цвет фона
@@ -1630,12 +1691,61 @@ object VolleyButton {
             )
         }
     }
+    /**
+     * слайдер-группа кнопок выбора Map|List
+     */
+    @Composable
+    fun SliderButtonsMap(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = modifier
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            VolleyColor.YellowForGradient,
+                            VolleyColor.GreenForGradient
+                        ),
+                        start = Offset(x = 0f, y = 0f),
+                        end = Offset(x = 0f, y = 100f)
+                    ),
+                    shape = RoundedCornerShape(size = 16.dp),
+                )
+                .height(VolleyDimens.DIMEN_32.dp)
+                //.size(204.dp, 32.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(2.dp),//(horizontal = 2.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                // Вычисляем вес каждой кнопки (в данном случае поровну)
+                val buttonWeight = 1f
+
+                SliderButton(
+                    modifier = Modifier.weight(buttonWeight),//.size(100.dp, 28.dp),
+                    text = MAP_TEXT,
+                    isChecked = checkId == 1
+                ){
+                    onSelected(1)
+                }
+                SliderButton(
+                    modifier = Modifier.weight(buttonWeight),//size(100.dp, 28.dp),
+                    text = LIST_TEXT,
+                    isChecked = checkId == 2
+                ){
+                    onSelected(1)
+                }
+            }
+        }
+    }
 
     /**
      * слайдер-группа кнопок выбора Map|List
      */
     @Composable
-    fun SliderButtonsMap(checkId: Int = 1, modifier: Modifier, onClick: () -> Unit) {
+    fun SliderButtonsMap1(checkId: Int = 1, modifier: Modifier, onClick: () -> Unit) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
@@ -1679,7 +1789,72 @@ object VolleyButton {
      * слайдер-группа кнопок выбора All players|Favorites
      */
     @Composable
-    fun SliderButtonsPlayers(checkId: Int = 1, modifier: Modifier, onClick: () -> Unit) {
+    fun SliderButtonsPlayers(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
+        Column( // Меняем Box на Column, чтобы корректно работал fillMaxWidth
+            modifier = modifier
+                //.fillMaxWidth() // Занимаем всю доступную ширину
+                //.padding(horizontal = 16.dp, vertical = 8.dp), // Добавляем отступы слева и справа
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = //modifier
+                    Modifier
+                        .fillMaxWidth()
+                        .height(VolleyDimens.DIMEN_32.dp) // Оставляем фиксированную высоту
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                VolleyColor.YellowForGradient,
+                                VolleyColor.GreenForGradient
+                            ),
+                            start = Offset(x = 0f, y = 0f),
+                            end = Offset(x = 0f, y = 100f)
+                        ),
+                        shape = RoundedCornerShape(size = VolleyDimens.DIMEN_16.dp),
+                    )
+                    //.size(319.dp, 32.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(2.dp),//padding(horizontal = 2.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    // Вычисляем вес каждой кнопки (в данном случае поровну)
+                    val buttonWeight = 1f
+
+                    SliderButton(
+                        modifier = Modifier
+                            .weight(buttonWeight) // Каждая кнопка занимает половину доступного места в Row
+                            .fillMaxHeight(),  // Растягиваем по высоте//Modifier.size(166.dp, 28.dp),
+                        text = ALL_PLAYERS_TEXT,
+                        isChecked = checkId == 1
+                        //onClick = onClick
+                    ){
+                        onSelected(1)
+                    }
+                    SliderButton(
+                        modifier = Modifier
+                            .weight(buttonWeight) // Каждая кнопка занимает половину доступного места в Row
+                            .fillMaxHeight(),  // Растягиваем по высоте//Modifier.size(166.dp, 28.dp),
+                        text = FAVORITES_TEXT,
+                        isChecked = checkId == 2
+                        //onClick = onClick
+                    ){
+                        onSelected(2)
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * слайдер-группа кнопок выбора All players|Favorites
+     */
+    @Composable
+    fun SliderButtonsPlayers1(checkId: Int = 1, modifier: Modifier, onClick: () -> Unit) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
@@ -2183,7 +2358,7 @@ private fun PreviewGroupButtonsForTourneyType() {
         VolleyButton.GroupButtonsForTourneyType(
             modifier = Modifier
                 .padding(vertical = 12.dp),
-            onClick = {}
+            onSelected = {}
         )
     }
 }
@@ -2193,8 +2368,8 @@ private fun PreviewGroupButtonsForTourneyType() {
 fun PreviewSliderButtonsMap() {
     PreviewContainer {
         SliderButtonsMap(
-            modifier = Modifier,
-            onClick = {}
+            modifier = Modifier.width(204.dp),
+            onSelected = {}
         )
     }
 }
@@ -2208,7 +2383,7 @@ fun PreviewSliderButtonsPlayers() {
     ) {
         SliderButtonsPlayers(
             modifier = Modifier,
-            onClick = {}
+            onSelected = {}
         )
     }
 }
@@ -2336,7 +2511,7 @@ private fun PreviewCombo() {
                         .padding(vertical = 12.dp)
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth(),
-                    onClick = {}
+                    onSelected = {}
                 )
                 VolleyButton.OutlinedActiveButtonSmallText(
                     modifier = Modifier
