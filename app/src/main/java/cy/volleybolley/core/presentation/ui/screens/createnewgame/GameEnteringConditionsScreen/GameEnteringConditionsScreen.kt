@@ -12,23 +12,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,7 +35,6 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyCashField
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
-import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.LevelBadge
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -50,8 +44,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.PaymentsRoute
 import cy.volleybolley.core.presentation.ui.navigation.PrivacyOptionsRoute
 import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreenViewModelPreview
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.Privacy
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGameType
 import cy.volleybolley.profile.domain.model.PaymentType
@@ -219,20 +212,22 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                                 }
                             }
                         )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                         // список выбранных игроков и кнопка Manage players
                         if (state.selectedPrivacy == Privacy.Private) {
-                            Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)) {
+                            Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_24.dp)) {
                                 state.players.forEachIndexed { index, player ->
                                     VolleySimpleComponent.PlayerRowWithRemove(
                                         player = player,
                                         //showActions = member.name != null,
-                                        onRemove = {
+                                        onAction = {
                                             viewModel.obtainEvent(GameEnteringConditionsScreenEvent.RemovePlayer(index))
                                         }
                                     )
                                 }
                             }
-                            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+                            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_24.dp))
                             VolleyButton.OutlinedGradientButton(
                                 modifier = Modifier.height(44.dp),
                                 text = stringResource(R.string.manage_players),
@@ -241,9 +236,10 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                                     viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
                                 }
                             )
+                            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                         }
 
-                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+                       // Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
 
                         VolleySimpleComponent.DividerLine()
 
@@ -319,17 +315,21 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                         }
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-
                         VolleyButton.ActiveButton(
                             modifier = Modifier
-                                .padding(0.dp, VolleyDimens.DIMEN_8.dp, 0.dp, VolleyDimens.DIMEN_16.dp)
+                               // .padding(0.dp, VolleyDimens.DIMEN_8.dp, 0.dp, VolleyDimens.DIMEN_16.dp)
                                 .height(44.dp)
                                 .align(Alignment.CenterHorizontally)
                                 .fillMaxWidth(),
                             text = stringResource(R.string.save_game),
                             onClick = { viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnSaveGameClick) }
                         )
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                     }
+                }
+                // Индикатор загрузки, если isLoading = true
+                if (state.isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(48.dp))
                 }
             }
         }

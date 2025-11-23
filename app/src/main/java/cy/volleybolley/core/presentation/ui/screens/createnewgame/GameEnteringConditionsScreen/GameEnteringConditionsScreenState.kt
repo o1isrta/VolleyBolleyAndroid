@@ -1,6 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 
 import cy.volleybolley.core.presentation.base.UiState
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.Privacy
 import cy.volleybolley.players.domain.model.Player
 
 private const val LEVEL_HIGH = "H"
@@ -28,10 +29,10 @@ data class GameEnteringConditionsScreenState (
 //    )
 ) : UiState
 
-enum class Privacy {
-    Public,
-    Private
-}
+//enum class Privacy {
+//    Public,
+//    Private
+//}
 
 // по образу MemberUi из 62 ветки, из файла ChangeTeamScreen.kt
 //data class PlayerUI(

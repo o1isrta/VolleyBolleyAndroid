@@ -2,14 +2,21 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringC
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.CreateNewGameRepository
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeCreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.GameData
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.Privacy
+import cy.volleybolley.players.domain.model.Player
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import kotlin.random.Random
 
@@ -22,6 +29,24 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
     init {
         // проверяем, есть  ли аккаунт
         obtainEvent(GameEnteringConditionsScreenEvent.CheckIfAccountExists)
+        // !!! Ключевой момент: Подписка на изменения GameData из репозитория !!!
+        viewModelScope.launch {
+            gameRepository.gameData
+                .collectLatest { gameDataFromRepo ->
+                    // Когда GameData в репозитории меняется, обновляем соответствующие части UI State
+                    uiStateMutable.update { currentState ->
+                        currentState.copy(
+                            // Обновляем список игроков из репозитория
+                            players = gameDataFromRepo.players,
+                            // Обновляем остальные поля из GameData (если они нужны на этом экране)
+                            maximumPlayers = gameDataFromRepo.maximumPlayers,
+                            selectedPrivacy = gameDataFromRepo.selectedPrivacy,
+                            perPerson = gameDataFromRepo.perPerson,
+                            accountNumber = gameDataFromRepo.accountNumber // Это, возможно, будет приходить из другого источника или быть частью GameData
+                        )
+                    }
+                }
+        }
     }
 
     override fun obtainEvent(event: GameEnteringConditionsScreenEvent) {
@@ -89,9 +114,29 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
 
     private fun saveGame() {
         // какая-то логика по сохранению настроек ?
-
+        uiStateMutable.update { it.copy(isLoading = true, errorMessage = null) } // Начинаем загрузку, очищаем предыдущие ошибки
+        launchSafe(
+            dispatcher = Dispatchers.IO,
+            getErrorLogMessage = { "Error saving game: ${it.message ?: "Unknown error"}" },
+            onError = { er ->
+                uiStateMutable.update { it.copy(isLoading = false, errorMessage = er.message ?: "Failed to save game") }
+                sendUiEffect(GameEnteringConditionsScreenEffect.ShowError(er.message ?: "Failed to save game"))
+            }
+        ) {
+           // val currentUiState = uiStateMutable.value
+//            val gameDataToSave = GameData(
+//                players = gameRepository.gameData.value.players,
+//                maximumPlayers = currentUiState.maximumPlayers,
+//                selectedPrivacy = currentUiState.selectedPrivacy,
+//                perPerson = currentUiState.perPerson,
+//                accountNumber = currentUiState.accountNumber
+//            )
+            gameRepository.saveGameDataToServer()//gameDataToSave)
+            uiStateMutable.update { it.copy(isLoading = false) } // Завершаем загрузку
+            sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToSuccess)
+        }
         // и переход на экран Success
-        sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToSuccess)
+        //sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToSuccess)
     }
 
     private fun checkIfAccountExists() { // если accountNumber != Null, аккааунт существует
@@ -111,5 +156,5 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
     }
 }
 // Специальный ViewModel для Preview
-class GameEnteringConditionsScreenViewModelPreview : GameEnteringConditionsScreenViewModel( FakeCreateNewGameRepository() ) {
+class GameEnteringConditionsScreenViewModelPreview : GameEnteringConditionsScreenViewModel( FakeCreateNewGameRepository(MutableStateFlow(GameData())) ) {
  }

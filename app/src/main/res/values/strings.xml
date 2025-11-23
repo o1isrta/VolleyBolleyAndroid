@@ -68,7 +68,7 @@
     <string name="m">M</string>
     <string name="l">L</string>
     <string name="h">H</string>
-    <string name="ad_selected">ADD SELECTED</string>
+    <string name="add_selected">ADD SELECTED</string>
     <string name="manage_players">Manage players</string>
     <string name="game_created">Game created</string>
     <string name="starts_today">Starts today</string>

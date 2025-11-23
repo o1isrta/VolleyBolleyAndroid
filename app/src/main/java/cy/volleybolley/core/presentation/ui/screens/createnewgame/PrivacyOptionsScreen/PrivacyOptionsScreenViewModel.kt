@@ -3,7 +3,9 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOption
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.CreateNewGameRepository
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeCreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.GameData
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGameRepository ) : BaseViewModel<PrivacyOptionsScreenState, PrivacyOptionsScreenEvent, PrivacyOptionsScreenEffect>(
     PrivacyOptionsScreenState()
@@ -34,5 +36,9 @@ open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGa
     }
 }
 // Специальный ViewModel для Preview
-class PrivacyOptionsScreenViewModelPreview : PrivacyOptionsScreenViewModel( FakeCreateNewGameRepository() ) {
+class PrivacyOptionsScreenViewModelPreview : PrivacyOptionsScreenViewModel( FakeCreateNewGameRepository(
+    MutableStateFlow(
+        GameData()
+    )
+) ) {
 }

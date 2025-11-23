@@ -353,7 +353,7 @@ Column (
                         viewModel.obtainEvent(BasicGameSetupScreenEvent.PlayerLevelSelected(levels))
                     }
                 )
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
                 VolleyButton.ActiveButton(
                     modifier = Modifier
@@ -366,13 +366,15 @@ Column (
                         viewModel.obtainEvent(BasicGameSetupScreenEvent.OnNextStepClick)
                     }
                 )
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
             }
         }
+        // Индикатор загрузки, если isLoading = true
+        if (state.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.size(48.dp))
+        }
     }
-}
-    }
-}
+} }}
 
 @Preview
 @Composable

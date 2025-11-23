@@ -1,20 +1,19 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,23 +29,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
+import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
-import cy.volleybolley.core.presentation.ui.navigation.PaymentsRoute
-import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenEffect
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenEvent
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenViewModelPreview
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.Privacy
-import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
-import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGameType
-import cy.volleybolley.profile.domain.model.PaymentType
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.serialization.json.Json
 
 @Composable
 fun PrivacyOptionsScreen(navController: NavHostController,
@@ -118,40 +107,51 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                             false -> 1
                             true -> 2
                         },
-                        onSelected = {}
+                        onSelected =
+                        {
+                            position ->
+                            val isFavorite = when (position) {
+                                1 -> false
+                                2 -> true
+                                else -> null // Обработка некорректной позиции
+                            }
+                            isFavorite?.let {
+                                flag -> viewModel.obtainEvent(PrivacyOptionsScreenEvent.AllOrFavoritesSelected(flag))
+                            } ?: run {
+                                    // Обработка нераспознанной позиции
+                                    Log.e("PrivacyOptionsScreen", "Нераспознанная позиция: $position")
+                            }
+                        }
                     )
-//                            { position ->
-//                        val selectedPrivacy = when (position) {
-//                            1 -> Privacy.Public
-//                            2 -> Privacy.Private
-//                            else -> null // Обработка некорректной позиции
-//                        }
-//                        selectedPrivacy?.let { privacy ->
-//                            when (privacy) {
-//                                //viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PrivacySelected(it))
-//                                Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected) //  Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected(Privacy.Public))
-//                                Privacy.Private -> {
-//                                    //// Если до этого было Public -> открыть Privacy screen (для первичного выбора)
-//                                    //state.selectedPrivacy?.let { privacy ->
-//                                    //   if (privacy == Privacy.Public)
-//                                    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
-//                                    //}
-//                                    //// Если уже Private — ничего не делать
-//                                }
-////                                        Privacy.Private -> {
-////                                            // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
-////                                            state.selectedPrivacy?.let { privacy ->
-////                                                if (privacy == Privacy.Public)
-////                                                    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
-////                                            }
-////                                            // Если уже Private — ничего не делать
-////                                        }
-//                            }
-//                        } ?: run {
-//                            // Обработка нераспознанной позиции
-//                            Log.e("GameEnteringConditionsScreen", "Нераспознанная позиция: $position")
-//                        }
-//                }
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                    // список найденных игроков
+                    Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_24.dp)) {
+                        state.playersSearch.forEachIndexed { index, player ->
+                            VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
+                                player = player,
+                                onAction = {
+                                //    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.RemovePlayer(index))
+                                }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_24.dp))
+                    VolleyButton.ActiveButton(
+                        modifier = Modifier
+                           // .padding(0.dp, VolleyDimens.DIMEN_8.dp, 0.dp, VolleyDimens.DIMEN_16.dp)
+                            .height(44.dp)
+                            .align(Alignment.CenterHorizontally)
+                            .fillMaxWidth(),
+                        text = stringResource(R.string.add_selected),
+                        onClick = { viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnAddSelectedClick) }
+                    )
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+                }
+                // Индикатор загрузки, если isLoading = true
+                if (state.isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(48.dp))
                 }
             }
         }

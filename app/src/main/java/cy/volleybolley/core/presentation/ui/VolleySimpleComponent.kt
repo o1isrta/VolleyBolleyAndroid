@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -181,10 +182,14 @@ object VolleySimpleComponent {
         }
     }*/
 
+    /*
+    Строка игрока с кнопкой действия справа (удаление игрока или выбрать в команду)
+    * */
     @Composable
-    fun PlayerRowWithRemove(
+    private fun PlayerRowWithAction(
         player: Player,
-        onRemove: () -> Unit
+        icon: Painter, // иконка (удалить или выбрать игрока)
+        onAction: () -> Unit
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -205,11 +210,11 @@ object VolleySimpleComponent {
                 player.level.let { LevelBadge(it) }
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
                 IconButton(
-                    onClick = onRemove,
+                    onClick = onAction,
                     modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_remove),
+                        painter = icon,//painterResource(R.drawable.ic_remove),
                         contentDescription = null,
                         tint = Color.Unspecified,
                         modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
@@ -220,10 +225,26 @@ object VolleySimpleComponent {
         }
     }
 
+    /*
+    Строка игрока с кнопкой "удалить" справа
+     * */
     @Composable
-    fun PlayerRowWithRemoveAndFavorite(
+    fun PlayerRowWithRemove(
         player: Player,
-        onRemove: () -> Unit
+        onAction: () -> Unit
+    ) {
+        var icon = painterResource(R.drawable.ic_remove)
+        PlayerRowWithAction(player, icon, onAction)
+    }
+
+    /*
+    Строка игрока с кнопкой "выбрать" справа и значком isFavorite слева
+     * */
+    @Composable
+    fun PlayerRowWithSelectAndFavorite(
+        player: Player,
+        isSelected: Boolean, // флаг, выбран игрок или нет
+        onAction: () -> Unit
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -233,7 +254,12 @@ object VolleySimpleComponent {
         ) {
             FavoriteMark(player.isFavorite)
             Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_8.dp))
-            PlayerRowWithRemove(player, onRemove)
+            val icon = if (isSelected) {
+                painterResource(R.drawable.ic_payment_checkbox_fill) // Замените на вашу выбранную иконку
+            } else {
+                painterResource(R.drawable.ic_payment_checkbox_empty) // Замените на вашу невыбранную иконку
+            }
+            PlayerRowWithAction(player, icon, onAction)
         }
     }
 
@@ -253,16 +279,9 @@ object VolleySimpleComponent {
     }
 }
 
-
 @Preview
 @Composable
 private fun PreviewTitleWithBackArrow() {
-    val players: List<Player> = listOf(
-        Player(1,"Kristina", "Popova", null, true, LEVEL_MEDIUM),
-        Player(2, "Polina", "Vasylyeva", null,false, LEVEL_PRO),
-        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT),
-        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH)
-    )
     VolleyContainersRootTransparent.Root {
         Box(
             contentAlignment = Alignment.Center,
@@ -288,67 +307,119 @@ private fun PreviewTitleWithBackArrow() {
                         .padding(VolleyDimens.DIMEN_20.dp)
                         .fillMaxWidth()
                 )
-                VolleySimpleComponent.LevelBadge(
-                    "L",
-                    modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_20.dp)
-                )
-                VolleySimpleComponent.LevelBadge(
-                    "M",
-                    modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_20.dp)
-                )
-                VolleySimpleComponent.LevelBadge(
-                    "H",
-                    modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_20.dp)
-                )
-                Column(
-                    modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp),
-                    verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp
-                    )) {
-                        players.forEachIndexed { index, player ->
-                        VolleySimpleComponent.PlayerRowWithRemove(
-                            player = player,
-                            //showActions = member.name != null,
-                            onRemove = { var s = index}
-                        )
-                    }
-                }
-                Column(
-                    modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp),
-                    verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp
-                    )) {
-                    players.forEachIndexed { index, player ->
-                        VolleySimpleComponent.PlayerRowWithRemoveAndFavorite(
-                            player = player,
-                            //showActions = member.name != null,
-                            onRemove = { var s = index}
-                        )
-                    }
-                }
-
-                /*
-                VolleySimpleComponent.TitleWithBackArrow(
-                    title = "Some long title",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(VolleyDimens.DIMEN_20.dp)
-                )
-                VolleySimpleComponent.TitleWithBackArrow(
-                    title = "Some long long long title",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(VolleyDimens.DIMEN_20.dp)
-                )
-                VolleySimpleComponent.DividerLine(
-                    modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_20.dp)
-                        .fillMaxWidth()
-                )
-                * */
             }
         }
     }
 }
 
+@Preview
+@Composable
+private fun PreviewLevelBadge() {
+    VolleyContainersRootTransparent.Root {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.TurquoiseDark)
+        ) {
+            Column {
+                VolleySimpleComponent.LevelBadge(
+                    LEVEL_HIGH,
+                    modifier = Modifier
+                        .padding(VolleyDimens.DIMEN_20.dp)
+                )
+                VolleySimpleComponent.LevelBadge(
+                    LEVEL_MEDIUM,
+                    modifier = Modifier
+                        .padding(VolleyDimens.DIMEN_20.dp)
+                )
+                VolleySimpleComponent.LevelBadge(
+                    LEVEL_LIGHT,
+                    modifier = Modifier
+                        .padding(VolleyDimens.DIMEN_20.dp)
+                )
+                VolleySimpleComponent.LevelBadge(
+                    LEVEL_PRO,
+                    modifier = Modifier
+                        .padding(VolleyDimens.DIMEN_20.dp)
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewPlayerRowWithRemoveList() {
+    val players: List<Player> = listOf(
+        Player(1,"Kristina", "Popova", null, true, LEVEL_MEDIUM),
+        Player(2, "Polina", "Vasylyeva", null,false, LEVEL_PRO),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH)
+    )
+    VolleyContainersRootTransparent.Root {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.TurquoiseDark)
+        ) {
+            Column(
+                modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp),
+                verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
+            ) {
+                players.forEachIndexed { index, player ->
+                    VolleySimpleComponent.PlayerRowWithRemove(
+                        player = player,
+                        onAction = { }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewPlayerRowWithSelectAndFavoriteList() {
+    val players: List<Player> = listOf(
+        Player(1,"Kristina", "Popova", null, true, LEVEL_MEDIUM),
+        Player(2, "Polina", "Vasylyeva", null,false, LEVEL_PRO),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH)
+    )
+    VolleyContainersRootTransparent.Root {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.TurquoiseDark)
+        ) {
+            Column(
+                modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp),
+                verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
+            ) {
+                VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
+                    player = players[0],
+                    isSelected = true,
+                    onAction = { }
+                )
+                VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
+                    player = players[1],
+                    isSelected = false,
+                    onAction = { }
+                )
+                VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
+                    player = players[2],
+                    isSelected = true,
+                    onAction = { }
+                )
+                VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
+                    player = players[3],
+                    isSelected = true,
+                    onAction = { }
+                )
+            }
+        }
+    }
+}

@@ -4,12 +4,13 @@ import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.players.domain.model.Player
 import java.time.LocalDate
 
-private const val LEVEL_HIGH = "H"
-private const val LEVEL_LIGHT = "L"
-private const val LEVEL_MEDIUM = "M"
-private const val LEVEL_PRO = "P"
+//private const val LEVEL_HIGH = "H"
+//private const val LEVEL_LIGHT = "L"
+//private const val LEVEL_MEDIUM = "M"
+//private const val LEVEL_PRO = "P"
 
 data class GameData(
     // получаем с экрана BasicGameSetupScreen:
@@ -40,23 +41,24 @@ data class GameData(
     val accountNumber: String? = null,  // номер аккаунта, если есть
     // получаем с экрана PrivacyOptionsScreen, показываем на экране GameEnteringConditionsScreen,
     // редактируем на обоих экранах (на GameEnteringConditionsScreen можем удалять игроков, на PrivacyOptionsScreen - добавлять, удалять)
-    val players: List<PlayerUI> = listOf(
-        PlayerUI("Kristina Popova", LEVEL_MEDIUM),
-        PlayerUI("Polina Vasylyeva", LEVEL_MEDIUM),
-        PlayerUI("Anton Ivanov", LEVEL_LIGHT),
-        PlayerUI("Aleksandr Abramov", LEVEL_HIGH)
-    )
+    val players: List<Player> = emptyList()
+//        listOf(
+//        Player(1,"Kristina", "Popova", null, true, cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM),
+//        Player(2, "Polina", "Vasylyeva", null,false, cy.volleybolley.core.presentation.ui.LEVEL_PRO),
+//        Player(3, "Anton", "Ivanov", null, true, cy.volleybolley.core.presentation.ui.LEVEL_LIGHT),
+//        Player(4, "Aleksandr", "Abramov", null, false, cy.volleybolley.core.presentation.ui.LEVEL_HIGH)
+//)
 )
    enum class Privacy {
         Public,
         Private
     }
 
-// по образу MemberUi из 62 ветки, из файла ChangeTeamScreen.kt
-        data class PlayerUI(
-        val name: String,
-        val level: String
-    )
+//// по образу MemberUi из 62 ветки, из файла ChangeTeamScreen.kt
+//        data class PlayerUI(
+//        val name: String,
+//        val level: String
+//    )
 
 enum class Gender {
     Mix,

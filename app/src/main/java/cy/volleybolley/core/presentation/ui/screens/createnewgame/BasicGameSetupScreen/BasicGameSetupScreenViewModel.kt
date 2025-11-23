@@ -10,6 +10,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.CreateNewGameRepository
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeCreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.GameData
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -181,9 +182,12 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
 }
 
 // Специальный ViewModel для Preview
-class BasicGameSetupScreenViewModelPreview : BasicGameSetupScreenViewModel( FakeCreateNewGameRepository() ) {
+class BasicGameSetupScreenViewModelPreview : BasicGameSetupScreenViewModel( FakeCreateNewGameRepository(MutableStateFlow(
+    GameData()
+)) ) {
     @RequiresApi(Build.VERSION_CODES.O)
-    private val _showCalendarPreview = MutableStateFlow(LocalDate.now() != LocalDate.of(2025, 10, 23))  // Пример
+    private val _showCalendarPreview = MutableStateFlow(LocalDate.now() == LocalDate.of(2025, 11, 23)) // чтобы видно было календарь - поставить сегодняшнюю дату
+    //MutableStateFlow(LocalDate.now() != LocalDate.of(2025, 12, 23))  // Пример
     @RequiresApi(Build.VERSION_CODES.O)
     override val showCalendar: StateFlow<Boolean> = _showCalendarPreview.asStateFlow()
 }
