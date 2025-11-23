@@ -44,7 +44,7 @@ import cy.volleybolley.auth.domain.impl.usecase.SaveRefreshTokenUseCaseImpl
 import cy.volleybolley.auth.ui.GoogleSignInHelper
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.di.HttpClientQualifier
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationViewModel
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module

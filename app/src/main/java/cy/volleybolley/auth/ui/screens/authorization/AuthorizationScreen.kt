@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
+package cy.volleybolley.auth.ui.screens.authorization
 
 import android.app.Activity
 import android.widget.Toast
@@ -33,6 +33,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
 import cy.volleybolley.auth.ui.GoogleSignInHelper
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.LaunchGoogleSignIn
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.NavigateToHome
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.NavigateToRegistration
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.ShowToast
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.ContinueWithFacebookClicked
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.ContinueWithGoogleClicked
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleSignInCancelled
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleSignInFailed
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleTokenReceived
 import cy.volleybolley.core.domain.VolleyFeature
 import cy.volleybolley.core.presentation.RootContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -40,12 +49,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugLog
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.LaunchGoogleSignIn
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.NavigateToHome
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.NavigateToRegistration
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.ShowToast
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.ContinueWithFacebookClicked
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.ContinueWithGoogleClicked
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -70,15 +73,15 @@ fun AuthorizationScreen(
         when (result.resultCode) {
             Activity.RESULT_OK -> {
                 val idToken = googleSignInHelper.extractIdToken(result.data)
-                viewModel.obtainEvent(AuthorizationEvent.GoogleTokenReceived(idToken))
+                viewModel.obtainEvent(GoogleTokenReceived(idToken))
             }
 
             Activity.RESULT_CANCELED -> {
-                viewModel.obtainEvent(AuthorizationEvent.GoogleSignInCancelled)
+                viewModel.obtainEvent(GoogleSignInCancelled)
             }
 
             else -> {
-                viewModel.obtainEvent(AuthorizationEvent.GoogleSignInFailed)
+                viewModel.obtainEvent(GoogleSignInFailed)
             }
         }
     }

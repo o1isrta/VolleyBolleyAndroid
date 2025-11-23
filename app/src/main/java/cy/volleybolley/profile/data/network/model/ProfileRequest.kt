@@ -10,7 +10,7 @@ sealed interface ProfileRequest {
     ) : ProfileRequest
 
     class GetPayments(
-        val path: String = "$PLAYERS_ME/payments",
+        val path: String = "${PLAYERS_ME}payments/",
     ) : ProfileRequest
 
     class UpdatePersonalData(
@@ -19,12 +19,12 @@ sealed interface ProfileRequest {
     ) : ProfileRequest
 
     class UpdatePayments(
-        val path: String = "$PLAYERS_ME/payments",
+        val path: String = "${PLAYERS_ME}payments/",
         val body: PaymentsUpdateBodyDto,
     ) : ProfileRequest
 
     class UpdateProfileAvatar(
-        val path: String = "$PLAYERS_ME/avatar",
+        val path: String = "${PLAYERS_ME}avatar/",
         val body: AvatarDto,
     ) : ProfileRequest
 
@@ -33,4 +33,4 @@ sealed interface ProfileRequest {
     ) : ProfileRequest
 }
 
-private const val PLAYERS_ME = "players/me"
+private const val PLAYERS_ME = "/players/me/"

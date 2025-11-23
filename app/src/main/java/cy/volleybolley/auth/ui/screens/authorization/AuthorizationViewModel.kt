@@ -1,25 +1,23 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
+package cy.volleybolley.auth.ui.screens.authorization
 
-import cy.volleybolley.auth.data.AuthRepositoryImpl.Companion.TAG
+import cy.volleybolley.auth.data.AuthRepositoryImpl
 import cy.volleybolley.auth.domain.api.usecase.GoogleTokenAuthUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveAccessTokenUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveIsRegisteredUseCase
 import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenTimestampUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenUseCase
+import cy.volleybolley.auth.domain.models.LoginData
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.LaunchGoogleSignIn
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.NavigateToHome
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.NavigateToRegistration
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.ShowToast
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.ContinueWithGoogleClicked
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleTokenReceived
 import cy.volleybolley.core.domain.model.onFailure
 import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugLog
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.LaunchGoogleSignIn
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.NavigateToHome
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.NavigateToRegistration
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEffect.ShowToast
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.ContinueWithFacebookClicked
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.ContinueWithGoogleClicked
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.GoogleSignInCancelled
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.GoogleSignInFailed
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationEvent.GoogleTokenReceived
+import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.profile.domain.model.PersonalData
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.Json
@@ -56,23 +54,12 @@ class AuthorizationViewModel(
                         uiStateMutable.update { it.copy(isLoading = false) }
 
                         result.onSuccess { loginData ->
-                            val user = loginData.userPersonalData
-                            val accessToken = loginData.accessToken
-                            val refreshToken = loginData.refreshToken
-                            val isRegistered = loginData.isRegistered
+                            saveLoginData(loginData)
 
-                            showUserDataLog(user)
-
-                            saveRefreshTokenUseCase.execute(refreshToken)
-                            saveAccessTokenUseCase.execute(accessToken)
-                            saveRefreshTokenTimestampUseCase.execute(System.currentTimeMillis())
-                            savePersonalDataUseCase.execute(user)
-                            saveIsRegisteredUseCase.execute(isRegistered)
-
-                            if (isRegistered) {
+                            if (loginData.isRegistered) {
                                 sendUiEffect(NavigateToHome)
                             } else {
-                                val userJson = Json.encodeToString(user)
+                                val userJson = Json.Default.encodeToString(loginData.userPersonalData)
                                 sendUiEffect(NavigateToRegistration(userJson))
                             }
                         }.onFailure { error ->
@@ -87,28 +74,46 @@ class AuthorizationViewModel(
                 )
             }
 
-            GoogleSignInCancelled -> { /* user cancel auth - do nothing */ }
+            AuthorizationEvent.GoogleSignInCancelled -> { /* user cancel auth - do nothing */ }
 
-            GoogleSignInFailed -> {
+            AuthorizationEvent.GoogleSignInFailed -> {
                 sendUiEffect(ShowToast(message = "Google Sign-In error"))
             }
 
-            is ContinueWithFacebookClicked -> {
+            is AuthorizationEvent.ContinueWithFacebookClicked -> {
                 // Handle Facebook Auth
             }
         }
     }
 
+    private suspend inline fun saveLoginData(loginData: LoginData) {
+        showUserDataLog(loginData.userPersonalData)
+        saveRefreshTokenUseCase.execute(loginData.refreshToken)
+        saveAccessTokenUseCase.execute(loginData.accessToken)
+        saveRefreshTokenTimestampUseCase.execute(System.currentTimeMillis())
+        savePersonalDataUseCase.execute(loginData.userPersonalData)
+        saveIsRegisteredUseCase.execute(loginData.isRegistered)
+    }
+
     private fun showUserDataLog(user: PersonalData) {
-        showDebugLog(TAG, "USER section start =========================")
-        showDebugLog(TAG, "name = ${user.firstName}")
-        showDebugLog(TAG, "lastName = ${user.lastName}")
-        showDebugLog(TAG, "avatar = ${user.avatar}")
-        showDebugLog(TAG, "gender = ${user.gender}")
-        showDebugLog(TAG, "level = ${user.level}")
-        showDebugLog(TAG, "dateOfBirth = ${user.birthDate}")
-        showDebugLog(TAG, "country = ${user.countryId}")
-        showDebugLog(TAG, "city = ${user.cityId}")
-        showDebugLog(TAG, "USER section end =========================")
+        VolleyUiUtil.showDebugLog(
+            AuthRepositoryImpl.Companion.TAG,
+            "USER section start ========================="
+        )
+        VolleyUiUtil.showDebugLog(AuthRepositoryImpl.Companion.TAG, "name = ${user.firstName}")
+        VolleyUiUtil.showDebugLog(AuthRepositoryImpl.Companion.TAG, "lastName = ${user.lastName}")
+        VolleyUiUtil.showDebugLog(AuthRepositoryImpl.Companion.TAG, "avatar = ${user.avatar}")
+        VolleyUiUtil.showDebugLog(AuthRepositoryImpl.Companion.TAG, "gender = ${user.gender}")
+        VolleyUiUtil.showDebugLog(AuthRepositoryImpl.Companion.TAG, "level = ${user.level}")
+        VolleyUiUtil.showDebugLog(
+            AuthRepositoryImpl.Companion.TAG,
+            "dateOfBirth = ${user.birthDate}"
+        )
+        VolleyUiUtil.showDebugLog(AuthRepositoryImpl.Companion.TAG, "country = ${user.countryId}")
+        VolleyUiUtil.showDebugLog(AuthRepositoryImpl.Companion.TAG, "city = ${user.cityId}")
+        VolleyUiUtil.showDebugLog(
+            AuthRepositoryImpl.Companion.TAG,
+            "USER section end ========================="
+        )
     }
 }

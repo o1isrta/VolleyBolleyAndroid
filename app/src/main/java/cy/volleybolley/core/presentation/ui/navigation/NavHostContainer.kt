@@ -7,14 +7,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import cy.volleybolley.core.presentation.ui.screens.authorization.aboutlevels.AboutLevelsScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationScreen
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.AuthorizationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.VerifyPhoneNumberScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.registration.RegistrationScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.registration.RegistrationViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
@@ -63,6 +60,9 @@ import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreen
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenViewModel
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreen
+import cy.volleybolley.registration.presentation.ui.screens.aboutlevels.AboutLevelsScreen
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationScreen
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 

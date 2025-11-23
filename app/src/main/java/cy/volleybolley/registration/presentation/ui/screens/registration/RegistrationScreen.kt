@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.registration
+package cy.volleybolley.registration.presentation.ui.screens.registration
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -38,6 +38,16 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsF
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEffect.NavigateToHome
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEffect.ShowToast
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.CitySelected
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.CountrySelected
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.DateOfBirthChanged
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.GenderSelected
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.GetStartedClicked
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.LevelSelected
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.NameChanged
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.SurnameChanged
 
 @Composable
 fun RegistrationScreen(
@@ -52,8 +62,8 @@ fun RegistrationScreen(
 
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
-            is RegistrationEffect.NavigateToHome -> onRegistrationSuccessEvent()
-            is RegistrationEffect.ShowToast -> {
+            is NavigateToHome -> onRegistrationSuccessEvent()
+            is ShowToast -> {
                 Toast.makeText(context, currentEffect.message, Toast.LENGTH_SHORT).show()
             }
             null -> {}
@@ -114,7 +124,7 @@ fun RegistrationScreen(
                     .padding(bottom = 20.dp, start = 20.dp, end = 20.dp)
                     .fillMaxWidth()
                     .height(VolleyDimens.DIMEN_56.dp),
-                onClick = { eventCallback(RegistrationEvent.GetStartedClicked) }
+                onClick = { eventCallback(GetStartedClicked) }
             )
         }
     }
@@ -133,8 +143,8 @@ private fun FillRegistrationData(
             FillNameAndSurname(
                 name = state.name,
                 surname = state.surname,
-                onTypeName = { eventCallback(RegistrationEvent.NameChanged(it)) },
-                onTypeSurname = { eventCallback(RegistrationEvent.SurnameChanged(it)) }
+                onTypeName = { eventCallback(NameChanged(it)) },
+                onTypeSurname = { eventCallback(SurnameChanged(it)) }
             )
         }
 
@@ -142,7 +152,7 @@ private fun FillRegistrationData(
             GenderChooser(
                 modifier = Modifier.padding(top = 16.dp),
                 selectedGenderIndex = state.gender,
-                onGenderClick = { eventCallback(RegistrationEvent.GenderSelected(it)) }
+                onGenderClick = { eventCallback(GenderSelected(it)) }
             )
         }
 
@@ -150,7 +160,7 @@ private fun FillRegistrationData(
             FillDateOfBirth(
                 modifier = Modifier.padding(top = 16.dp),
                 dateOfBirthMillis = state.dateOfBirthMillis,
-                onSelectDateOfBirth = { eventCallback(RegistrationEvent.DateOfBirthChanged(it)) }
+                onSelectDateOfBirth = { eventCallback(DateOfBirthChanged(it)) }
             )
         }
 
@@ -158,7 +168,7 @@ private fun FillRegistrationData(
             LevelChooser(
                 modifier = Modifier.padding(top = 16.dp),
                 selectedLevelIndex = state.level,
-                onLevelClick = { eventCallback(RegistrationEvent.LevelSelected(it)) },
+                onLevelClick = { eventCallback(LevelSelected(it)) },
                 onRequestNavigateToAboutLevels = onRequestNavigateToAboutLevels
             )
         }
@@ -172,7 +182,7 @@ private fun FillRegistrationData(
                 itemList = state.countryList,
                 getTextByItem = { it?.name ?: "" },
                 hint = stringResource(id = R.string.your_country),
-                onItemSelect = { item, _ -> eventCallback(RegistrationEvent.CountrySelected(item!!)) }
+                onItemSelect = { item, _ -> eventCallback(CountrySelected(item!!)) }
             )
             HorizontalDivider(
                 modifier = Modifier.padding(top = 16.dp),
@@ -190,7 +200,7 @@ private fun FillRegistrationData(
                 itemList = state.cityList,
                 getTextByItem = { it?.name ?: "" },
                 hint = stringResource(id = R.string.your_city),
-                onItemSelect = { item, _ -> eventCallback(RegistrationEvent.CitySelected(item!!)) }
+                onItemSelect = { item, _ -> eventCallback(CitySelected(item!!)) }
             )
         }
     }

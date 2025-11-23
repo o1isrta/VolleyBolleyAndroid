@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.authorization
+package cy.volleybolley.auth.ui.screens.authorization
 
 import cy.volleybolley.core.presentation.base.UiEffect
 

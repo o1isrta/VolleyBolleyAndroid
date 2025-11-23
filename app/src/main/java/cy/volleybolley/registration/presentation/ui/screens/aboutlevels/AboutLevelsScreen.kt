@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.authorization.aboutlevels
+package cy.volleybolley.registration.presentation.ui.screens.aboutlevels
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
