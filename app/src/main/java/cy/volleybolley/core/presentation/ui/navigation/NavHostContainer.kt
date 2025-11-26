@@ -78,7 +78,7 @@ fun NavHostContainer(
         startDestination = startDestination
     ) {
         // authorization
-        composable<LaunchRoute> { LaunchScreen(navController) }
+        composable<LaunchRoute> { LaunchScreen(navController, paddingFromSystemUi) }
         composable<OnboardingRoute> {
             OnboardingScreen(
                 onNextScreenRequested = { navController.navigate(AuthorizationRoute) },
