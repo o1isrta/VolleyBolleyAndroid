@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class GetAuthenticatedStatusUseCaseImpl(
     private val loginDataRepository: LoginDataRepository
-) : GetAuthenticatedStatusUseCase{
+) : GetAuthenticatedStatusUseCase {
     override fun execute(): StateFlow<Boolean> {
         return loginDataRepository.isAuthenticated
     }

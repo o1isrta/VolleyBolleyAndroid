@@ -36,54 +36,45 @@ class AuthorizationViewModel(
 
     override fun obtainEvent(event: AuthorizationEvent) {
         when (event) {
-            ContinueWithGoogleClicked -> {
-                sendUiEffect(LaunchGoogleSignIn)
-            }
-
-            is GoogleTokenReceived -> {
-                val token = event.idToken
-                if (token == null) {
-                    sendUiEffect(ShowToast(message = "Couldn't get authorization token"))
-                    return
-                }
-
-                launchSafe(
-                    block = {
-                        uiStateMutable.update { it.copy(isLoading = true) }
-                        val result = googleTokenAuthUseCase.loginWithGoogle(token)
-                        uiStateMutable.update { it.copy(isLoading = false) }
-
-                        result.onSuccess { loginData ->
-                            saveLoginData(loginData)
-
-                            if (loginData.isRegistered) {
-                                sendUiEffect(NavigateToHome)
-                            } else {
-                                val userJson = Json.Default.encodeToString(loginData.userPersonalData)
-                                sendUiEffect(NavigateToRegistration(userJson))
-                            }
-                        }.onFailure { error ->
-                            sendUiEffect(ShowToast(message = "Authorization error: $error"))
-                        }
-                    },
-                    onError = {
-                        uiStateMutable.update { it.copy(isLoading = false) }
-                        sendUiEffect(ShowToast(message = "Unexpected error during authorization"))
-                    },
-                    getErrorLogMessage = { "GoogleTokenReceived: unexpected error -> ${it.message}" }
-                )
-            }
-
+            ContinueWithGoogleClicked -> sendUiEffect(LaunchGoogleSignIn)
+            is GoogleTokenReceived -> onGoogleTokenReceived(event.idToken)
             AuthorizationEvent.GoogleSignInCancelled -> { /* user cancel auth - do nothing */ }
-
-            AuthorizationEvent.GoogleSignInFailed -> {
-                sendUiEffect(ShowToast(message = "Google Sign-In error"))
-            }
-
-            is AuthorizationEvent.ContinueWithFacebookClicked -> {
-                // Handle Facebook Auth
-            }
+            AuthorizationEvent.GoogleSignInFailed -> sendUiEffect(ShowToast(message = "Google Sign-In error"))
+            is AuthorizationEvent.ContinueWithFacebookClicked -> { /* Handle Facebook Auth */ }
         }
+    }
+
+    private fun onGoogleTokenReceived(idToken: String?) {
+        if (idToken == null) {
+            sendUiEffect(ShowToast(message = "Couldn't get authorization token"))
+            return
+        }
+
+        launchSafe(
+            block = {
+                uiStateMutable.update { it.copy(isLoading = true) }
+                val result = googleTokenAuthUseCase.loginWithGoogle(idToken)
+                uiStateMutable.update { it.copy(isLoading = false) }
+
+                result.onSuccess { loginData ->
+                    saveLoginData(loginData)
+
+                    if (loginData.isRegistered) {
+                        sendUiEffect(NavigateToHome)
+                    } else {
+                        val userJson = Json.Default.encodeToString(loginData.userPersonalData)
+                        sendUiEffect(NavigateToRegistration(userJson))
+                    }
+                }.onFailure { error ->
+                    sendUiEffect(ShowToast(message = "Authorization error: $error"))
+                }
+            },
+            onError = {
+                uiStateMutable.update { it.copy(isLoading = false) }
+                sendUiEffect(ShowToast(message = "Unexpected error during authorization"))
+            },
+            getErrorLogMessage = { "GoogleTokenReceived: unexpected error -> ${it.message}" }
+        )
     }
 
     private suspend inline fun saveLoginData(loginData: LoginData) {

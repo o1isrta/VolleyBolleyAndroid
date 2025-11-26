@@ -12,7 +12,7 @@ import cy.volleybolley.registration.domain.api.RegistrationRepository
 
 class RegistrationRepositoryImpl(
     private val networkClient: NetworkClient<RegistrationRequest, RegistrationResponse>
-) : RegistrationRepository{
+) : RegistrationRepository {
     override suspend fun userRegistration(
         userData: PersonalData
     ): VolleyResult<Unit, ErrorType> {
