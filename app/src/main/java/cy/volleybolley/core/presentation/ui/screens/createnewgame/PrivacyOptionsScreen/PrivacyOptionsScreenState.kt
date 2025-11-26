@@ -12,13 +12,14 @@ data class PrivacyOptionsScreenState (
     val flagFavorites: Boolean = false, // флаг = true - искать игроков среди favorites, false - среди всех
     val errorMessage: String? = null,
     val isLoading : Boolean = false,     // Для загрузки
-    val playersSearch: List<Player> = listOf(
+    val playersSearchResult: List<Player> = listOf(
         Player(1,"Kristina", "Popova", null, true, cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM),
         Player(2, "Polina", "Vasylyeva", null,false, cy.volleybolley.core.presentation.ui.LEVEL_PRO),
         Player(3, "Anton", "Ivanov", null, true, cy.volleybolley.core.presentation.ui.LEVEL_LIGHT),
         Player(4, "Aleksandr", "Abramov", null, false, cy.volleybolley.core.presentation.ui.LEVEL_HIGH),
         Player(4, "Maria", "Novak", null, false, cy.volleybolley.core.presentation.ui.LEVEL_PRO)
-    ), // emptyList()
-    val query: String = "" // для отслеживания текущего поискового запроса
+    ), // emptyList() // Список игроков для отображения в поиске
+    val query: String = "", // для отслеживания текущего поискового запроса
+    val selectedPlayers: MutableSet<Player> = mutableSetOf() // Игроки, которых пользователь выбрал
 ) : UiState
 

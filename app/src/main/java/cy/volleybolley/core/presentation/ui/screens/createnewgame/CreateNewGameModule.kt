@@ -12,6 +12,6 @@ val createNewGameModule = module {
     single<CreateNewGameRepository> { CreateNewGameRepositoryImpl() }
     viewModel { BasicGameSetupScreenViewModel(get()) }
     viewModel { GameEnteringConditionsScreenViewModel(get()) }
-    viewModel { PrivacyOptionsScreenViewModel(get()) }
+    viewModel { PrivacyOptionsScreenViewModel(get(), get()) }
 }
 

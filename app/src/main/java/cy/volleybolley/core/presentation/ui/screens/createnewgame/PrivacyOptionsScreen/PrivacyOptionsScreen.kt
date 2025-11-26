@@ -127,11 +127,12 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                     // список найденных игроков
                     Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_24.dp)) {
-                        state.playersSearch.forEachIndexed { index, player ->
+                        state.playersSearchResult.forEachIndexed { index, player ->
                             VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
                                 player = player,
+                                isSelected = state.playersSearchResult[index].is,
                                 onAction = {
-                                //    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.RemovePlayer(index))
+                                    viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnPlayerClick(index))
                                 }
                             )
                         }
