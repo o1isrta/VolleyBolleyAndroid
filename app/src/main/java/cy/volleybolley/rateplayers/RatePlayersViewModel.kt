@@ -38,7 +38,8 @@ class RatePlayersViewModel(
                                     level = it.level,
                                     avatar = it.avatar
                                 )
-                            })
+                            }
+                        )
                     }
                 }
 

@@ -44,6 +44,7 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.Upcoming
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
+import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
 import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreen
@@ -63,9 +64,9 @@ import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenView
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreen
 import cy.volleybolley.rateplayers.RatePlayersScreen
+import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-
 
 @Composable
 fun NavHostContainer(
@@ -137,26 +138,6 @@ fun NavHostContainer(
                 )
             }
             composable<SearchCourtRoute> { SearchCourtScreen(navController) }
-            composable<RatePlayersRoute> { backStackEntry ->
-                val args = backStackEntry.toRoute<RatePlayersRoute>()
-                val eventId = args.eventId
-                val eventType = args.eventType
-                RatePlayersScreen(
-                    navController = navController,
-                    viewModel = koinViewModel {
-                        parametersOf(eventId, eventType)
-                    }
-                )
-            }
-            composable<SuccessRoute> { backStackEntry ->
-                val event = backStackEntry.toRoute<SuccessRoute>().succeedGame
-                SuccessScreen(
-                    navController = navController,
-                    viewModel = koinViewModel {
-                        parametersOf(event)
-                    }
-                )
-            }
 
             composable<RatePlayersRoute> { backStackEntry ->
                 val args = backStackEntry.toRoute<RatePlayersRoute>()
@@ -170,7 +151,9 @@ fun NavHostContainer(
                 )
             }
             composable<SuccessRoute> { backStackEntry ->
-                val event = backStackEntry.toRoute<SuccessRoute>().succeedGame
+                val event = Json.decodeFromString<SucceedGame>(
+                    backStackEntry.toRoute<SuccessRoute>().succeedGame
+                )
                 SuccessScreen(
                     navController = navController,
                     viewModel = koinViewModel {
