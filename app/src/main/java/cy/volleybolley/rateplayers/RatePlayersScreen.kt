@@ -97,11 +97,11 @@ private fun RatePlayersScreen(
                         itemsIndexed(state.players) { index, player ->
                             PlayerBox(
                                 player = player,
-                                onSelected = { position ->
+                                onSelected = { ratePosition ->
                                     eventCallback(
                                         RatePlayersEvent.RatePlayer(
-                                            player.playerId,
-                                            RatingType.entries[position - 1]
+                                            index,
+                                            ratePosition
                                         )
                                     )
                                 }
@@ -143,14 +143,14 @@ private fun Header() {
 @Composable
 private fun PlayerBox(
     player: PlayerShortUI,
-    onSelected: (Int) -> Unit
+    onSelected: (RatingType) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_12.dp)
     ) {
         PlayerInfo(player = player, modifier = Modifier.fillMaxWidth())
         GroupButtonsForChangeLevel(
-            checkId = player.rating.checkId,
+            current = player.rating,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             onSelected = onSelected
         )
@@ -226,7 +226,7 @@ private fun RatePlayersPreview() {
                         rating = RatingType.UP
                     ),
                     PlayerShortUI(
-                        playerId = 2,
+                        playerId = 3,
                         name = "John Smith",
                         level = LevelType.LIGHT,
                         avatar = null,

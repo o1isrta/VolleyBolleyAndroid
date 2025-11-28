@@ -58,7 +58,7 @@ class RatePlayersViewModel(
     override fun obtainEvent(event: RatePlayersEvent) {
         when (event) {
             RatePlayersEvent.ConfirmRate -> confirmRating()
-            is RatePlayersEvent.RatePlayer -> ratePlayer(event.playerId, event.rating)
+            is RatePlayersEvent.RatePlayer -> ratePlayer(event.index, event.rating)
         }
     }
 
@@ -84,16 +84,11 @@ class RatePlayersViewModel(
         }
     }
 
-    private fun ratePlayer(playerId: Int, newRating: RatingType) {
+    private fun ratePlayer(index: Int, newRating: RatingType) {
         uiStateMutable.update { currentState ->
+            val updatedPlayer = currentState.players[index].copy(rating = newRating)
             currentState.copy(
-                players = currentState.players.map { player ->
-                    if (player.playerId == playerId) {
-                        player.copy(rating = newRating)
-                    } else {
-                        player
-                    }
-                }
+                players = currentState.players.replaceForCompose(index, updatedPlayer)
             )
         }
     }
