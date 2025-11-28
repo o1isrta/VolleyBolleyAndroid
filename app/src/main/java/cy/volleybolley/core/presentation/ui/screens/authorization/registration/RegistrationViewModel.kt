@@ -1,7 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.registration
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.referencedata.domain.model.City
+import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.referencedata.domain.model.Country
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
@@ -13,18 +13,10 @@ class RegistrationViewModel : BaseViewModel<RegistrationState, RegistrationEvent
 
     init {
         uiStateMutable.update {
-            val countyList = listOf(Country(
-                id = 0,
-                name = "Thailand",
-                cities = listOf(
-                    City(id = 0, name = "Koh Phangan"),
-                    City(id = 1, name = "Koh Samui")
-                )
-            ))
             it.copy(
-                countryList = countyList,
-                selectedCountry = countyList.first(),
-                cityList = countyList.first().cities
+                countryList = VolleyMocks.countries,
+                selectedCountry = VolleyMocks.countries.first(),
+                cityList = VolleyMocks.countries.first().cities
             )
         }
     }

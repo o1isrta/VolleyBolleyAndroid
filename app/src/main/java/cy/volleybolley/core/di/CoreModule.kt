@@ -2,6 +2,10 @@ package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.presentation.ui.screens.findagame.JoinTheGameViewModel
+import cy.volleybolley.core.presentation.App
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
+import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -11,7 +15,10 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
+import org.koin.core.module.dsl.viewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -49,4 +56,15 @@ val coreModule = module {
     }
 
     viewModel { JoinTheGameViewModel() }
+
+    single<CoroutineScope> {
+        (androidContext() as App).applicationScope
+    }
+
+    viewModel { (event: SucceedGame) ->
+        SuccessViewModel(
+            createdEvent = event
+        )
+    }
+    viewModel { HomeScreenViewModel() }
 }
