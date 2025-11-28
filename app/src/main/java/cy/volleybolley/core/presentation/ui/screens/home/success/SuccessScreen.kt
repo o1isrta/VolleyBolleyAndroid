@@ -167,7 +167,8 @@ private fun SuccessScreen(
                         eventCallback(SuccessEvent.OnInvitePlayers)
                     },
                     onShareLinkClick = {
-                        shareEventLink(context, state.event)                    }
+                        shareEventLink(context, state.event)
+                    }
                 )
             }
         }

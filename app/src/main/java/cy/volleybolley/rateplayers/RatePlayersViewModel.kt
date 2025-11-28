@@ -74,7 +74,6 @@ class RatePlayersViewModel(
                 "$tag confirmRating ${throwable.message}"
             }
         ) {
-
             ratePlayersUseCase.ratePlayers(
                 id = eventId,
                 type = eventType,

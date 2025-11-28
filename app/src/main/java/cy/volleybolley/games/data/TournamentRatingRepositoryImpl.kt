@@ -41,7 +41,6 @@ class TournamentRatingRepositoryImpl(
         }
     }
 
-
     override suspend fun skipRating(tournamentId: Int): VolleyResult<Unit, ErrorType> {
         val response = networkClient.getResponse(TournamentsRequest.SkipRating(tournamentId = tournamentId))
 
