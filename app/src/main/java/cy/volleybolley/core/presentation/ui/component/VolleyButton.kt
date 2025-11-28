@@ -590,7 +590,6 @@ object VolleyButton {
         modifier: Modifier,
         onSelected: (RatingType) -> Unit
     ) {
-
         val items = listOf(
             RatingType.DOWN,
             RatingType.CONFIRM,
@@ -624,7 +623,7 @@ object VolleyButton {
             },
             modifier = modifier.height(63.dp),
             onSelected = { index ->
-                val type = items.getOrNull(index - 1) ?: return@ButtonsGroup
+                val type = items[index - 1]
                 onSelected(type)
             }
         )
