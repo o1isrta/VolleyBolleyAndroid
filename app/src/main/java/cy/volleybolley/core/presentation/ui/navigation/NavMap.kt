@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
+import cy.volleybolley.games.domain.model.event.EventType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -138,7 +139,7 @@ object SearchCourtRoute : NavMap
 @Serializable
 data class RatePlayersRoute(
     val eventId: Int,
-    val eventType: String,
+    val eventType: EventType,
 ) : NavMap
 
 @Serializable
