@@ -33,6 +33,22 @@ android {
         val serverUrl = localProperties.getProperty("SERVER_URL")
             ?: error("You should add SERVER_URL property in local.properties")
         buildConfigField("String", "BASE_URL", "\"$serverUrl\"")
+
+        val mapsApiKey = localProperties.getProperty("MAPS_API_KEY")
+            ?: error("You should add MAPS_API_KEY property in local.properties")
+        buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
+
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+    }
+
+    signingConfigs {
+        // Debug configuration with common keystore
+        getByName("debug") {
+            storeFile = rootProject.file("keystore/team-debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
     }
 
     buildTypes {
@@ -45,6 +61,7 @@ android {
             )
         }
         debug {
+            signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(
