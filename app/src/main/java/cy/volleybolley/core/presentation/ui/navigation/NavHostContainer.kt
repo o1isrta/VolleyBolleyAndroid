@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import cy.volleybolley.core.presentation.ui.screens.authorization.aboutlevels.AboutLevelsScreen
@@ -41,10 +42,10 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.JoinedPl
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGameDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
-import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
-import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
-import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
+import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
+import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreen
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreen
@@ -62,6 +63,8 @@ import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreen
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenViewModel
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreen
+import cy.volleybolley.rateplayers.RatePlayersScreen
+import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -135,9 +138,29 @@ fun NavHostContainer(
                 )
             }
             composable<SearchCourtRoute> { SearchCourtScreen(navController) }
-            composable<RatePlayersRoute> { RatePlayersScreen(navController) }
-            composable<SuccessRoute> { SuccessScreen(navController) }
 
+            composable<RatePlayersRoute> { backStackEntry ->
+                val args = backStackEntry.toRoute<RatePlayersRoute>()
+                val eventId = args.eventId
+                val eventType = args.eventType
+                RatePlayersScreen(
+                    navController = navController,
+                    viewModel = koinViewModel {
+                        parametersOf(eventId, eventType)
+                    }
+                )
+            }
+            composable<SuccessRoute> { backStackEntry ->
+                val event = Json.decodeFromString<SucceedGame>(
+                    backStackEntry.toRoute<SuccessRoute>().succeedGame
+                )
+                SuccessScreen(
+                    navController = navController,
+                    viewModel = koinViewModel {
+                        parametersOf(event)
+                    }
+                )
+            }
             // create game
             composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }
             composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(navController) }
@@ -195,8 +218,8 @@ fun NavHostContainer(
         navigation<ProfileTopLevelRoute>(startDestination = ProfileRoute) {
             composable<ProfileRoute> {
                 ProfileScreen(
-                    paddingFromSystemUi = paddingFromSystemUi,
                     navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi,
                     finisher = activityFinisher,
                 )
             }
@@ -280,6 +303,17 @@ fun NavHostContainer(
                     paddingFromSystemUi = paddingFromSystemUi
                 )
             }
+        }
+
+        composable<ShareLinkRoute>(
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "volleybolley://invite/{type}/{id}" }
+            )
+        ) { backStackEntry ->
+            val route = backStackEntry.toRoute<ShareLinkRoute>()
+            JoinTheGameScreen(
+                navController = navController
+            )
         }
     }
 }
