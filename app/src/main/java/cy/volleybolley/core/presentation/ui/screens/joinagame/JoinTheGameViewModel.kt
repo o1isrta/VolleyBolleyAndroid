@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.findagame
+package cy.volleybolley.core.presentation.ui.screens.joinagame
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel

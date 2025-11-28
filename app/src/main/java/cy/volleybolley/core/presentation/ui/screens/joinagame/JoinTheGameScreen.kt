@@ -1,11 +1,10 @@
-package cy.volleybolley.core.presentation.ui.screens.findagame
+package cy.volleybolley.core.presentation.ui.screens.joinagame
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,6 +47,7 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Tran
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButtonMap
+import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBarWithBackButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -56,6 +56,7 @@ import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.referencedata.domain.model.CurrencyType
 import cy.volleybolley.ui.theme.VolleybolleyTheme
+import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -92,12 +93,15 @@ private fun JoinTheGameScreen(
     navigationAction: (NavMap?) -> Unit,
     eventCallback: (JoinTheGameEvent) -> Unit,
 ) {
-    val scroll = rememberScrollState()
     val context = LocalContext.current
 
     LaunchedEffect(effect) {
         when (effect) {
-            JoinTheGameEffect.JoinGame -> navigationAction(SuccessRoute)
+            JoinTheGameEffect.JoinGame -> {
+                val jsonGame = Json.encodeToString(state.details)
+                navigationAction(SuccessRoute(jsonGame))
+            }
+
             JoinTheGameEffect.NavigateBack -> navigationAction(null)
             is JoinTheGameEffect.OpenMap -> openMap(context = context, location = effect.location)
             null -> Unit
@@ -111,9 +115,10 @@ private fun JoinTheGameScreen(
         GlassCard(
             modifier = Modifier.padding(VolleyDimens.DIMEN_8.dp),
             minHeight = VolleyDimens.DIMEN_380.dp,
-            scroll = scroll
+            scroll = rememberScrollState()
         ) {
-            CardHeader(
+            TopBarWithBackButton(
+                modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.join_the_game)
             ) {
                 eventCallback(JoinTheGameEvent.OnBack)
@@ -123,29 +128,33 @@ private fun JoinTheGameScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
             ) {
-                VolleyText.TitleMedium(stringResource(R.string.game_host), color = VolleyColor.White)
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
-                    modifier = Modifier.fillMaxWidth()
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
                 ) {
-                    CircularAvatar(avatar = state.details.host.avatar, size = VolleyDimens.DIMEN_32.dp)
-                    VolleyText.BodyBold(state.details.host.name, color = VolleyColor.White)
-                    Spacer(Modifier.weight(1f))
-                    LevelBadge(level = state.details.host.level)
-                }
+                    VolleyText.TitleMedium(stringResource(R.string.game_host), color = VolleyColor.White)
 
-                TransparentContainer(
-                    cornerRadius = VolleyDimens.DIMEN_16
-                ) {
-                    VolleyText.BodyRegular(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(VolleyDimens.DIMEN_16.dp),
-                        text = state.details.message,
-                        color = VolleyColor.White
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        CircularAvatar(avatar = state.details.host.avatar, size = VolleyDimens.DIMEN_40.dp)
+                        VolleyText.BodyRegular(state.details.host.name, color = VolleyColor.White)
+                        Spacer(Modifier.weight(1f))
+                        LevelBadge(level = state.details.host.level)
+                    }
+
+                    TransparentContainer(
+                        cornerRadius = VolleyDimens.DIMEN_16
+                    ) {
+                        VolleyText.BodyRegular(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(VolleyDimens.DIMEN_16.dp),
+                            text = state.details.message,
+                            color = VolleyColor.White
+                        )
+                    }
                 }
 
                 DividerGlass()
@@ -159,7 +168,7 @@ private fun JoinTheGameScreen(
                         painter = painterResource(R.drawable.ic_geo),
                         contentDescription = null,
                         tint = VolleyColor.YellowPro,
-                        modifier = Modifier.size(VolleyDimens.DIMEN_18.dp)
+                        modifier = Modifier.size(VolleyDimens.DIMEN_16.dp)
                     )
                     Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
                     Column(
@@ -233,40 +242,6 @@ private fun JoinTheGameScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun CardHeader(
-    title: String,
-    onBack: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .size(VolleyDimens.DIMEN_24.dp)
-                .clickable(onClick = onBack),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_back_icon_white),
-                contentDescription = null,
-                tint = VolleyColor.White,
-                modifier = Modifier.size(
-                    width = VolleyDimens.DIMEN_18.dp,
-                    height = VolleyDimens.DIMEN_24.dp
-                )
-            )
-        }
-        VolleyText.TitleLarge(
-            text = title,
-            color = VolleyColor.White,
-            modifier = Modifier.align(Alignment.Center)
-        )
     }
 }
 
@@ -383,11 +358,7 @@ private fun PlayersList(
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        items.forEachIndexed { index, pair ->
-            val name = pair.first
-            val level = pair.second
-            val occupied = !name.isNullOrBlank()
-
+        players.forEachIndexed { index, item ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -395,19 +366,24 @@ private fun PlayersList(
                     .heightIn(min = VolleyDimens.DIMEN_23.dp)
             ) {
                 VolleyText.BodyRegular(
-                    text = "${index + 1}. " + (name ?: stringResource(R.string.free_spot)),
+                    text = "${index + 1}. ${item.name}",
                     color = VolleyColor.White,
                     modifier = Modifier.weight(1f)
                 )
-
-                if (occupied) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_2.dp)
-                    ) {
-                        level?.let { LevelBadge(it) }
-                    }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_2.dp)
+                ) {
+                    LevelBadge(item.level)
                 }
+            }
+        }
+        if (players.size < capacity) {
+            repeat(capacity - players.size) {
+                VolleyText.BodyRegular(
+                    text = "${it + players.size + 1}. ${stringResource(R.string.free_spot)}",
+                    color = VolleyColor.White
+                )
             }
         }
     }

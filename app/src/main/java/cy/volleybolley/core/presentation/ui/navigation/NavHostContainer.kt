@@ -2,6 +2,7 @@ package cy.volleybolley.core.presentation.ui.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,8 +21,8 @@ import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringCo
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
-import cy.volleybolley.core.presentation.ui.screens.findagame.JoinTheGameScreen
-import cy.volleybolley.core.presentation.ui.screens.findagame.JoinTheGameViewModel
+import cy.volleybolley.core.presentation.ui.screens.joinagame.JoinTheGameScreen
+import cy.volleybolley.core.presentation.ui.screens.joinagame.JoinTheGameViewModel
 import cy.volleybolley.core.presentation.ui.screens.findatourney.ChooseTeamScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.IndividualPlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.InvitePlayersScreen
@@ -317,8 +318,10 @@ fun NavHostContainer(
             )
         ) { backStackEntry ->
             val route = backStackEntry.toRoute<ShareLinkRoute>()
+            val viewModel = koinViewModel<JoinTheGameViewModel>()
             JoinTheGameScreen(
-                navController = navController
+                navController = navController,
+                viewModel = viewModel
             )
         }
     }

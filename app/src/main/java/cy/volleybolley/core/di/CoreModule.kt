@@ -1,7 +1,7 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
-import cy.volleybolley.core.presentation.ui.screens.findagame.JoinTheGameViewModel
+import cy.volleybolley.core.presentation.ui.screens.joinagame.JoinTheGameViewModel
 import cy.volleybolley.core.presentation.App
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
@@ -19,7 +19,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 const val TIMEOUT_MILLIS = 30_000L
