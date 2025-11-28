@@ -349,11 +349,6 @@ private fun PlayersList(
     players: List<PlayerShort>,
     capacity: Int,
 ) {
-    val items = buildList {
-        addAll(players.map { it.name to it.level })
-        repeat((capacity - players.size).coerceAtLeast(0)) { add(null to null) }
-    }.take(capacity.coerceAtLeast(0))
-
     Column(
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
         modifier = Modifier.fillMaxWidth()

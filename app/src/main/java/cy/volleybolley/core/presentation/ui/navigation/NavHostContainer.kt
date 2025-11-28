@@ -2,7 +2,6 @@ package cy.volleybolley.core.presentation.ui.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,8 +20,6 @@ import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringCo
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
-import cy.volleybolley.core.presentation.ui.screens.joinagame.JoinTheGameScreen
-import cy.volleybolley.core.presentation.ui.screens.joinagame.JoinTheGameViewModel
 import cy.volleybolley.core.presentation.ui.screens.findatourney.ChooseTeamScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.IndividualPlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.InvitePlayersScreen
@@ -48,6 +45,8 @@ import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
 import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
+import cy.volleybolley.core.presentation.ui.screens.joinagame.JoinTheGameScreen
+import cy.volleybolley.core.presentation.ui.screens.joinagame.JoinTheGameViewModel
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreen
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreen
