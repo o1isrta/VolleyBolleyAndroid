@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.joinagame
+package cy.volleybolley.joinagame
 
 import cy.volleybolley.core.presentation.base.UiEvent
 
