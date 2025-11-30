@@ -4,8 +4,8 @@ import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.presentation.ui.screens.joinagame.JoinTheGameViewModel
 import cy.volleybolley.core.presentation.App
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenViewModel
-import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
-import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessViewModel
+import cy.volleybolley.success.SucceedGame
+import cy.volleybolley.success.SuccessViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout

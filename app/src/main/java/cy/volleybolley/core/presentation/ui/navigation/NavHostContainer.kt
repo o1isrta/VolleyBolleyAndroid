@@ -43,8 +43,8 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.Upcoming
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
-import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
-import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
+import cy.volleybolley.success.SucceedGame
+import cy.volleybolley.success.SuccessScreen
 import cy.volleybolley.core.presentation.ui.screens.joinagame.JoinTheGameScreen
 import cy.volleybolley.core.presentation.ui.screens.joinagame.JoinTheGameViewModel
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
