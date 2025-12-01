@@ -8,6 +8,7 @@ import cy.volleybolley.core.presentation.ui.screens.authorization.launch.di.laun
 import cy.volleybolley.core.presentation.ui.screens.authorization.registration.di.registrationModule
 import cy.volleybolley.courts.di.courtsModule
 import cy.volleybolley.games.di.gamesModule
+import cy.volleybolley.jointhegame.di.joinTheGameModule
 import cy.volleybolley.players.di.playersModule
 import cy.volleybolley.profile.di.profileModule
 import cy.volleybolley.rateplayers.di.ratePlayersModule
@@ -28,5 +29,6 @@ object DiProvider {
         registrationModule,
         authorizationByPhoneModule,
         ratePlayersModule,
+        joinTheGameModule,
     )
 }

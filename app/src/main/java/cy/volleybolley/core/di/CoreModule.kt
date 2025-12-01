@@ -1,7 +1,6 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
-import cy.volleybolley.joinagame.JoinTheGameViewModel
 import cy.volleybolley.core.presentation.App
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenViewModel
 import cy.volleybolley.success.SucceedGame
@@ -53,8 +52,6 @@ val coreModule = module {
             }
         }
     }
-
-    viewModel { JoinTheGameViewModel() }
 
     single<CoroutineScope> {
         (androidContext() as App).applicationScope

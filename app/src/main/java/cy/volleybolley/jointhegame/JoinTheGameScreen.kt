@@ -1,4 +1,4 @@
-package cy.volleybolley.joinagame
+package cy.volleybolley.jointhegame
 
 import android.content.Context
 import android.content.Intent
@@ -43,6 +43,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cy.volleybolley.R
+import cy.volleybolley.core.domain.model.LevelType
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
@@ -53,6 +54,10 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
+import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.games.domain.model.entity.Host
+import cy.volleybolley.games.domain.model.entity.PlayerShort
+import cy.volleybolley.games.domain.model.event.game.GameDetails
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.referencedata.domain.model.CurrencyType
 import cy.volleybolley.ui.theme.VolleybolleyTheme
@@ -412,12 +417,11 @@ private fun JoinTheGameScreenPreview() {
                     isRefreshing = false,
                     GameDetails(
                         gameId = 1,
-                        gameType = "",
                         host = Host(
                             id = 1,
                             name = "Artem Ivanov",
                             avatar = null,
-                            level = "L"
+                            level = LevelType.LIGHT
                         ),
                         message = "Hi! Just old friends meet at the court.",
                         courtLocation = Location(
@@ -426,7 +430,6 @@ private fun JoinTheGameScreenPreview() {
                             courtName = "Karon Beach Club",
                             locationName = "Ratak Rd, Mueng Phuket"
                         ),
-                        time = "10 October, 6:00-8:00",
                         gender = "Mix",
                         levels = listOf("Light"),
                         pricePerPerson = "5",
@@ -438,10 +441,13 @@ private fun JoinTheGameScreenPreview() {
                             PlayerShort(
                                 playerId = 1,
                                 name = "Artem Ivanov",
-                                level = "L",
+                                level = LevelType.LIGHT,
                                 avatar = null
                             )
-                        )
+                        ),
+                        isPrivate = false,
+                        startTime = "10 October, 6:00-8:00",
+                        endTime = "10 October, 6:00-8:00"
                     )
                 ),
                 effect = null,

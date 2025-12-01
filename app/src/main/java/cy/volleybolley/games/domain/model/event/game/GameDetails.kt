@@ -1,9 +1,10 @@
 package cy.volleybolley.games.domain.model.event.game
 
-import cy.volleybolley.core.domain.model.PaymentType
 import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.games.domain.model.entity.Host
 import cy.volleybolley.games.domain.model.entity.PlayerShort
+import cy.volleybolley.profile.domain.model.PaymentType
+import cy.volleybolley.referencedata.domain.model.CurrencyType
 
 data class GameDetails(
     val gameId: Int,
@@ -19,6 +20,6 @@ data class GameDetails(
     val maximumPlayers: Int,
     val paymentType: PaymentType,
     val paymentAccount: String,
-    val currencyType: String,
+    val currencyType: CurrencyType,
     val players: List<PlayerShort>,
 )
