@@ -18,6 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,9 +45,11 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                          viewModel: PrivacyOptionsScreenViewModel = viewModel(),
                          paddingFromSystemUi: PaddingValues
                          ) {
-    val scrollState = rememberScrollState() //Состояние скролла
+    val scrollState = rememberScrollState()             //Состояние скролла
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+
+    var searchText by remember { mutableStateOf("")}     // Состояние для поискового запроса
 
     LaunchedEffect(viewModel.uiEffect) { // подписываемся на Effect
         viewModel.uiEffect.collectLatest { effect ->
@@ -97,7 +102,12 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                     VolleyTextFieldGradient.SearchField(
                         modifier = Modifier,
-                        actionToTransferContent = {}
+                        /*actionToTransferContent = { newText ->
+                            searchText = newText
+                            viewModel.onSearchTextChanged(newText)}*/
+                        actionToTransferContent = { newQuery ->
+                            viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnQueryChanged(newQuery))
+                        }
                     ) { }
 
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
@@ -107,9 +117,7 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                             false -> 1
                             true -> 2
                         },
-                        onSelected =
-                        {
-                            position ->
+                        onSelected = { position ->
                             val isFavorite = when (position) {
                                 1 -> false
                                 2 -> true
@@ -125,14 +133,15 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                     )
 
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-                    // список найденных игроков
+                    // список найденных игроков + выбранных
+                    val allPlayers = state.selectedPlayers + state.playersSearchResult
                     Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_24.dp)) {
-                        state.playersSearchResult.forEachIndexed { index, player ->
+                        allPlayers.toList().forEach {player ->
                             VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
                                 player = player,
-                                isSelected = state.playersSearchResult[index].is,
+                                isSelected = viewModel.isPlayerSelected(player),
                                 onAction = {
-                                    viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnPlayerClick(index))
+                                    viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnPlayerSelectionClick(player))
                                 }
                             )
                         }
@@ -149,10 +158,6 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                         onClick = { viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnAddSelectedClick) }
                     )
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-                }
-                // Индикатор загрузки, если isLoading = true
-                if (state.isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(48.dp))
                 }
             }
         }

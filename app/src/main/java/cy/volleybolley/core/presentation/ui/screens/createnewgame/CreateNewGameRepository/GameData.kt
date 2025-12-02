@@ -41,7 +41,7 @@ data class GameData(
     val accountNumber: String? = null,  // номер аккаунта, если есть
     // получаем с экрана PrivacyOptionsScreen, показываем на экране GameEnteringConditionsScreen,
     // редактируем на обоих экранах (на GameEnteringConditionsScreen можем удалять игроков, на PrivacyOptionsScreen - добавлять, удалять)
-    val players: List<Player> = emptyList()
+    val players: List<Player> = emptyList() // игроки, выбранные для игры
 //        listOf(
 //        Player(1,"Kristina", "Popova", null, true, cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM),
 //        Player(2, "Polina", "Vasylyeva", null,false, cy.volleybolley.core.presentation.ui.LEVEL_PRO),

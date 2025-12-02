@@ -156,5 +156,5 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
     }
 }
 // Специальный ViewModel для Preview
-class GameEnteringConditionsScreenViewModelPreview : GameEnteringConditionsScreenViewModel( FakeCreateNewGameRepository(MutableStateFlow(GameData())) ) {
+class GameEnteringConditionsScreenViewModelPreview : GameEnteringConditionsScreenViewModel( FakeCreateNewGameRepository(GameData()/*MutableStateFlow(GameData())*/) ) {
  }

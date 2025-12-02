@@ -182,9 +182,9 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
 }
 
 // Специальный ViewModel для Preview
-class BasicGameSetupScreenViewModelPreview : BasicGameSetupScreenViewModel( FakeCreateNewGameRepository(MutableStateFlow(
+class BasicGameSetupScreenViewModelPreview : BasicGameSetupScreenViewModel( FakeCreateNewGameRepository(/*MutableStateFlow(
     GameData()
-)) ) {
+)*/ GameData()) ) {
     @RequiresApi(Build.VERSION_CODES.O)
     private val _showCalendarPreview = MutableStateFlow(LocalDate.now() == LocalDate.of(2025, 11, 23)) // чтобы видно было календарь - поставить сегодняшнюю дату
     //MutableStateFlow(LocalDate.now() != LocalDate.of(2025, 12, 23))  // Пример

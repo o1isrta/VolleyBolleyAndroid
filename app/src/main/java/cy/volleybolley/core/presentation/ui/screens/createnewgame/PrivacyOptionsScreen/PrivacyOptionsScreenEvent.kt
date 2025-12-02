@@ -8,6 +8,5 @@ sealed class PrivacyOptionsScreenEvent  : UiEvent {
     data class OnQueryChanged(val text: String) : PrivacyOptionsScreenEvent() // изменение текста в поисковом поле
     object OnAddSelectedClick  : PrivacyOptionsScreenEvent()     // нажатие на кнопку "ADD SELECTED"
     data class AllOrFavoritesSelected(val isFavorites: Boolean) : PrivacyOptionsScreenEvent()
-    data class OnPlayerSelectionChange(val player: Player, val isSelected: Boolean) : PrivacyOptionsScreenEvent()     // нажатие на кнопку в строке игрока (выбор или удаление игрока из команды)
-    object LoadPlayers : PrivacyOptionsScreenEvent()
+    data class OnPlayerSelectionClick(val player: Player) : PrivacyOptionsScreenEvent()     // нажатие на кнопку в строке игрока (выбор или удаление игрока из команды)
 }
