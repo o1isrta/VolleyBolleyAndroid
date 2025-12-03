@@ -1,5 +1,7 @@
 package cy.volleybolley.jointhegame
 
+import cy.volleybolley.R
+import cy.volleybolley.core.ResourceProvider
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.games.domain.api.game.GetGameDetailsUseCase
@@ -10,6 +12,7 @@ class JoinTheGameViewModel(
     private val gameId: Int,
     private val getGameDetailsUseCase: GetGameDetailsUseCase,
     private val joinGameUseCase: JoinGameUseCase,
+    private val resourceProvider: ResourceProvider,
 ) : BaseViewModel<JoinTheGameState, JoinTheGameEvent, JoinTheGameEffect>(
     JoinTheGameState()
 ) {
@@ -17,7 +20,8 @@ class JoinTheGameViewModel(
     override val tag: String = JoinTheGameViewModel::class.simpleName ?: ""
 
     init {
-        getGameDetails()/*
+        getGameDetails()
+        /*
         uiStateMutable.update {
             it.copy(
                 isRefreshing = false,
@@ -87,7 +91,7 @@ class JoinTheGameViewModel(
                     uiStateMutable.update { current ->
                         current.copy(
                             isRefreshing = false,
-                            details = result.data.toUi,
+                            details = result.data.toUi(),
                             errorMessage = ""
                         )
                     }
@@ -98,7 +102,7 @@ class JoinTheGameViewModel(
                         current.copy(
                             isRefreshing = false,
                             details = null,
-                            errorMessage = "Something went wrong"
+                            errorMessage = resourceProvider.getString(R.string.error_message_standard)
                         )
                     }
                 }
@@ -122,7 +126,7 @@ class JoinTheGameViewModel(
 
                 is VolleyResult.Failure -> {
                     uiStateMutable.update {
-                        it.copy(errorMessage = "Failed to join")
+                        it.copy(errorMessage = resourceProvider.getString(R.string.error_message_fail_to_join))
                     }
                 }
             }

@@ -57,7 +57,9 @@ object TourneyEnteringConditionsRoute : NavMap
 
 // --- find a game flow ---
 @Serializable
-object JoinTheGameRoute : NavMap
+data class JoinTheGameRoute(
+    val gameId: Int
+) : NavMap
 
 // --- find a tourney flow ---
 @Serializable

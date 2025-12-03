@@ -3,6 +3,7 @@ package cy.volleybolley.jointhegame
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +44,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cy.volleybolley.R
-import cy.volleybolley.core.domain.model.LevelType
+import cy.volleybolley.core.domain.model.PaymentType
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
@@ -55,10 +56,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
 import cy.volleybolley.courts.domain.model.Location
-import cy.volleybolley.games.domain.model.entity.Host
-import cy.volleybolley.games.domain.model.entity.PlayerShort
-import cy.volleybolley.games.domain.model.event.game.GameDetails
-import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.referencedata.domain.model.CurrencyType
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import kotlinx.serialization.json.Json
@@ -129,25 +126,114 @@ private fun JoinTheGameScreen(
                 eventCallback(JoinTheGameEvent.OnBack)
             }
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+            if (state.details == null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = VolleyDimens.DIMEN_32.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    VolleyText.TitleMedium(stringResource(R.string.game_host), color = VolleyColor.White)
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.iv_error),
+                            contentDescription = state.errorMessage
+                        )
+                        VolleyText.TitleMedium(text = state.errorMessage, color = VolleyColor.White)
+                    }
+                }
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+                    ) {
+                        VolleyText.TitleMedium(stringResource(R.string.game_host), color = VolleyColor.White)
 
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            CircularAvatar(avatar = state.details.host.avatar, size = VolleyDimens.DIMEN_40.dp)
+                            VolleyText.BodyRegular(state.details.host.name, color = VolleyColor.White)
+                            Spacer(Modifier.weight(1f))
+                            LevelBadge(level = state.details.host.level)
+                        }
+
+                        TransparentContainer(
+                            cornerRadius = VolleyDimens.DIMEN_16
+                        ) {
+                            VolleyText.BodyRegular(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(VolleyDimens.DIMEN_16.dp),
+                                text = state.details.message,
+                                color = VolleyColor.White
+                            )
+                        }
+                    }
+
+                    DividerGlass()
+
+                    SectionTitle(stringResource(R.string.about_game))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        CircularAvatar(avatar = state.details.host.avatar, size = VolleyDimens.DIMEN_40.dp)
-                        VolleyText.BodyRegular(state.details.host.name, color = VolleyColor.White)
-                        Spacer(Modifier.weight(1f))
-                        LevelBadge(level = state.details.host.level)
+                        Icon(
+                            painter = painterResource(R.drawable.ic_geo),
+                            contentDescription = null,
+                            tint = VolleyColor.YellowPro,
+                            modifier = Modifier.size(VolleyDimens.DIMEN_16.dp)
+                        )
+                        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = VolleyDimens.DIMEN_12.dp)
+                        ) {
+                            VolleyText.BodyBold(
+                                state.details.courtLocation.courtName,
+                                color = VolleyColor.White
+                            )
+                            VolleyText.BodyLight(
+                                state.details.courtLocation.locationName,
+                                color = VolleyColor.White
+                            )
+                        }
+                        MapChip { eventCallback(JoinTheGameEvent.OnMap(state.details.courtLocation)) }
                     }
+
+                    LabeledInlineRow(stringResource(R.string.`when`), state.details.time)
+
+                    val levelText = state.details.levels.joinToString(", ")
+                    LabeledInlineRow(stringResource(R.string.level) + ":", levelText.ifBlank { "-" })
+
+                    LabeledInlineRow(stringResource(R.string.gender) + ":", state.details.gender)
+
+                    DividerGlass()
+
+                    SectionTitle(stringResource(R.string.payment))
+
+                    val paymentAccount = if (state.details.paymentAccount == null) {
+                        PaymentType.CASH.name.lowercase()
+                            .replaceFirstChar { it.uppercaseChar() }
+                    } else {
+                        "${
+                            state.details.paymentType.name.lowercase()
+                                .replaceFirstChar { it.uppercaseChar() }
+                        } · ${state.details.paymentAccount}"
+                    }
+
+                    VolleyText.BodyRegular(
+                        text = paymentAccount,
+                        color = VolleyColor.White
+                    )
 
                     TransparentContainer(
                         cornerRadius = VolleyDimens.DIMEN_16
@@ -156,94 +242,31 @@ private fun JoinTheGameScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(VolleyDimens.DIMEN_16.dp),
-                            text = state.details.message,
+                            text = "${stringResource(R.string.per_person)} " +
+                                state.details.pricePerPerson +
+                                state.details.currencyType.currencyValue,
                             color = VolleyColor.White
                         )
                     }
-                }
 
-                DividerGlass()
+                    DividerGlass()
 
-                SectionTitle(stringResource(R.string.about_game))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_geo),
-                        contentDescription = null,
-                        tint = VolleyColor.YellowPro,
-                        modifier = Modifier.size(VolleyDimens.DIMEN_16.dp)
+                    SectionTitle(stringResource(R.string.joined_players))
+                    PlayersList(
+                        players = state.details.players,
+                        capacity = state.details.maximumPlayers,
                     )
-                    Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = VolleyDimens.DIMEN_12.dp)
-                    ) {
-                        VolleyText.BodyBold(state.details.courtLocation.courtName, color = VolleyColor.White)
-                        VolleyText.BodyLight(state.details.courtLocation.locationName, color = VolleyColor.White)
-                    }
-                    MapChip { eventCallback(JoinTheGameEvent.OnMap(state.details.courtLocation)) }
-                }
 
-                LabeledInlineRow(stringResource(R.string.`when`), state.details.time)
-
-                val levelText = state.details.levels.joinToString(", ")
-                LabeledInlineRow(stringResource(R.string.level) + ":", levelText.ifBlank { "-" })
-
-                LabeledInlineRow(stringResource(R.string.gender) + ":", state.details.gender)
-
-                DividerGlass()
-
-                SectionTitle(stringResource(R.string.payment))
-
-                val paymentAccount = if (state.details.paymentAccount == null) {
-                    PaymentType.CASH.nameValue.lowercase()
-                        .replaceFirstChar { it.uppercaseChar() }
-                } else {
-                    "${
-                        state.details.paymentType.nameValue.lowercase()
-                            .replaceFirstChar { it.uppercaseChar() }
-                    } · ${state.details.paymentAccount}"
-                }
-
-                VolleyText.BodyRegular(
-                    text = paymentAccount,
-                    color = VolleyColor.White
-                )
-
-                TransparentContainer(
-                    cornerRadius = VolleyDimens.DIMEN_16
-                ) {
-                    VolleyText.BodyRegular(
+                    ActiveButton(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(VolleyDimens.DIMEN_16.dp),
-                        text = "${stringResource(R.string.per_person)} " +
-                            state.details.pricePerPerson +
-                            state.details.currencyType.currencyValue,
-                        color = VolleyColor.White
-                    )
-                }
-
-                DividerGlass()
-
-                SectionTitle(stringResource(R.string.joined_players))
-                PlayersList(
-                    players = state.details.players,
-                    capacity = state.details.maximumPlayers,
-                )
-
-                ActiveButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            top = VolleyDimens.DIMEN_16.dp,
-                        ),
-                    text = stringResource(R.string.join_the_game),
-                ) {
-                    eventCallback(JoinTheGameEvent.OnJoinGame)
+                            .padding(
+                                top = VolleyDimens.DIMEN_16.dp,
+                            ),
+                        text = stringResource(R.string.join_the_game),
+                    ) {
+                        eventCallback(JoinTheGameEvent.OnJoinGame)
+                    }
                 }
             }
         }
@@ -274,7 +297,7 @@ private fun GlassCard(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(gap),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -351,7 +374,7 @@ private fun DividerGlass() {
 
 @Composable
 private fun PlayersList(
-    players: List<PlayerShort>,
+    players: List<PlayerShortUi>,
     capacity: Int,
 ) {
     Column(
@@ -389,13 +412,15 @@ private fun PlayersList(
     }
 }
 
-private fun openMap(context: Context, location: Location) {
-    val uri = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}(${
-        Uri.encode(location.courtName)
-    })".toUri()
-    val intent = Intent(Intent.ACTION_VIEW, uri)
-    val chooser = Intent.createChooser(intent, context.getString(R.string.open_with))
-    context.startActivity(chooser)
+private fun openMap(context: Context, location: Location?) {
+    location?.let {
+        val uri = "geo:${location.latitude},${location.longitude}?q=${location.latitude},${location.longitude}(${
+            Uri.encode(location.courtName)
+        })".toUri()
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        val chooser = Intent.createChooser(intent, context.getString(R.string.open_with))
+        context.startActivity(chooser)
+    }
 }
 
 @Preview(
@@ -415,13 +440,14 @@ private fun JoinTheGameScreenPreview() {
             JoinTheGameScreen(
                 state = JoinTheGameState(
                     isRefreshing = false,
-                    GameDetails(
+                    errorMessage = stringResource(R.string.error_message_standard),
+                    details = GameDetailsUi(
                         gameId = 1,
-                        host = Host(
+                        host = HostUi(
                             id = 1,
                             name = "Artem Ivanov",
                             avatar = null,
-                            level = LevelType.LIGHT
+                            level = "L"
                         ),
                         message = "Hi! Just old friends meet at the court.",
                         courtLocation = Location(
@@ -438,16 +464,15 @@ private fun JoinTheGameScreenPreview() {
                         paymentAccount = "988 016 7890",
                         currencyType = CurrencyType.EUR,
                         players = listOf(
-                            PlayerShort(
-                                playerId = 1,
+                            PlayerShortUi(
+                                id = 1,
                                 name = "Artem Ivanov",
-                                level = LevelType.LIGHT,
+                                level = "L",
                                 avatar = null
                             )
                         ),
                         isPrivate = false,
-                        startTime = "10 October, 6:00-8:00",
-                        endTime = "10 October, 6:00-8:00"
+                        time = "10 October, 6:00-8:00",
                     )
                 ),
                 effect = null,

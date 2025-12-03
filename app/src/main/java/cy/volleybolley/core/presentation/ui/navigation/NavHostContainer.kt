@@ -172,10 +172,13 @@ fun NavHostContainer(
             composable<TourneyEnteringConditionsRoute> { TourneyEnteringConditionsScreen(navController) }
 
             // find game
-            composable<JoinTheGameRoute> {
+            composable<JoinTheGameRoute> { backStackEntry ->
+                val gameId = backStackEntry.toRoute<JoinTheGameRoute>().gameId
                 JoinTheGameScreen(
                     navController = navController,
-                    viewModel = koinViewModel<JoinTheGameViewModel>()
+                    viewModel = koinViewModel<JoinTheGameViewModel> {
+                        parametersOf(gameId)
+                    }
                 )
             }
 

@@ -1,5 +1,6 @@
 [versions]
 # Config
+desugar_jdk_libs = "2.1.5"
 firebaseAuth = "23.2.1"
 firebaseBom = "33.16.0"
 koinAndroid = "4.1.0"
@@ -35,6 +36,7 @@ detektTwitterComposeRules = "0.0.26"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 google-firebase-auth = { module = "com.google.firebase:firebase-auth" }

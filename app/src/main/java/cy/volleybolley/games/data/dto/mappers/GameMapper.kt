@@ -11,6 +11,7 @@ import cy.volleybolley.games.domain.model.event.game.CreateGame
 import cy.volleybolley.games.domain.model.event.game.CreatedGame
 import cy.volleybolley.games.domain.model.event.game.GameDetails
 import cy.volleybolley.games.domain.model.event.game.JoinedGame
+import cy.volleybolley.referencedata.domain.model.CurrencyType
 
 fun CreateGame.toData(): CreateGameDto = CreateGameDto(
     courtId = courtId,
@@ -55,7 +56,7 @@ fun GamesResponse.GetGameDetails.toDomain(): GameDetails = GameDetails(
     levels = levels,
     gender = gender,
     pricePerPerson = pricePerPerson,
-    currencyType = currencyType,
+    currencyType = enumValues<CurrencyType>().firstOrNull { it.name == currencyType } ?: CurrencyType.UNKNOWN,
     paymentType = enumValues<PaymentType>().firstOrNull { it.name == paymentType } ?: PaymentType.CASH,
     paymentAccount = paymentAccount,
     maximumPlayers = maximumPlayers,
