@@ -12,13 +12,13 @@ object DateFormatter {
     private val timeFormatterHhMm = DateTimeFormatter.ofPattern("hh:mm")
 
     fun formatRangeToDayAndPeriodTime(startIso: String, endIso: String): String {
-        val start = Instant.parse(startIso).atZone(zone)
-        val end = Instant.parse(endIso).atZone(zone)
+        val startDate = Instant.parse(startIso).atZone(zone)
+        val endDate = Instant.parse(endIso).atZone(zone)
 
-        val date = start.format(dateFormatterDayMonth)
-        val from = start.format(timeFormatterHhMm)
-        val to = end.format(timeFormatterHhMm)
+        val date = startDate.format(dateFormatterDayMonth)
+        val startRange = startDate.format(timeFormatterHhMm)
+        val endRange = endDate.format(timeFormatterHhMm)
 
-        return "$date, $from-$to"
+        return "$date, $startRange-$endRange"
     }
 }
