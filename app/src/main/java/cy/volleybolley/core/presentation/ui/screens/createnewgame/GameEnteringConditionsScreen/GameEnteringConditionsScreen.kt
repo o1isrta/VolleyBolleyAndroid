@@ -214,7 +214,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                         // список выбранных игроков и кнопка Manage players
                         //if (state.selectedPrivacy == Privacy.Private) {
-                        if(state.players.isNotEmpty())
+                        if(state.players.isNotEmpty()) {
                             Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_24.dp)) {
                                 state.players.forEachIndexed { index, player ->
                                     VolleySimpleComponent.PlayerRowWithRemove(
@@ -237,6 +237,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                             )
                             Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                         }
+                    }
 
                        // Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
 
@@ -324,15 +325,15 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                             onClick = { viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnSaveGameClick) }
                         )
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-                    }
                 }
-                // Индикатор загрузки, если isLoading = true
-                if (state.isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(48.dp))
-                }
+            }
+            // Индикатор загрузки, если isLoading = true
+            if (state.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.size(48.dp))
             }
         }
     }
+}
 
 
 //@Composable

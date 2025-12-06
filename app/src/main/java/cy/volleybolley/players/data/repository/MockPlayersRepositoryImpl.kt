@@ -25,6 +25,7 @@ class MockPlayersRepositoryImpl : PlayersRepository {
         VolleyResult.Success(mockPlayers)
 
     override suspend fun searchPlayers(query: String): VolleyResult<List<Player>, ErrorType> {
+        if(query.isNullOrEmpty()) return VolleyResult.Success(emptyList())
         val filteredPlayers = mockPlayers.filter {
             it.firstName.contains(query, ignoreCase = true) ||
                 it.lastName.contains(query, ignoreCase = true)

@@ -70,21 +70,15 @@ open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGa
     }
 
     private fun onQueryChange(queryText: String) {
-        Log.d("Search", "onQueryChange: $queryText")
          // Отменяем предыдущий Job, если он существует
         searchJob?.cancel()
         // Запускаем новый Job с задержкой
         searchJob = viewModelScope.launch {
-            Log.d("Search", "Before withcontext: $queryText")
-
             withContext(Dispatchers.Main){
                 uiStateMutable.value = uiStateMutable.value.copy(query = queryText)
             }
-            Log.d("Search", "Before delay: $queryText")
-            delay(500) // Задержка в 500 миллисекунд (0.5 секунды)
-            Log.d("Search", "After delay: $queryText")
+            delay(300)
             searchPlayers(uiStateMutable.value.query)
-            Log.d("Search", "After searchPlayers: $queryText")
         }
 //        uiStateMutable.update { it.copy(query = query) }
 //        debouncedSearch(query)

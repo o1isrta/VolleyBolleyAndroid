@@ -105,9 +105,6 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                     VolleyTextFieldGradient.SearchField(
                         modifier = Modifier,
                         text = state.query,
-                        /*actionToTransferContent = { newText ->
-                            searchText = newText
-                            viewModel.onSearchTextChanged(newText)}*/
                         actionToTransferContent = { newQuery ->
                             viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnQueryChanged(newQuery))
                         }
