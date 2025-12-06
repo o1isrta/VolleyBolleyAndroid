@@ -1,6 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,9 +55,10 @@ fun PrivacyOptionsScreen(navController: NavHostController,
     LaunchedEffect(viewModel.uiEffect) { // подписываемся на Effect
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
-//                is GameEnteringConditionsScreenEffect.ShowError -> {
-//                    Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_SHORT).show()
-//                }
+                is PrivacyOptionsScreenEffect.ShowError -> {
+                    Log.d("GameEnteringConditionsScreen", "ShowError effect triggered: ${effect.message}")
+                    Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_LONG).show()
+                }
 //                GameEnteringConditionsScreenEffect.NavigateToPayments -> {
 //                    navController.navigate(PaymentsRoute)
 //                }
@@ -135,8 +137,13 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                     // список найденных игроков + выбранных
                     val allPlayers = state.selectedPlayers + state.playersSearchResult
+                    val filteredPlayers = if (state.flagFavorites) {
+                        allPlayers.filter { it.isFavorite }
+                    } else {
+                       allPlayers // Отображаем всех игроков, если "только избранные" не выбрано
+                    }
                     Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_24.dp)) {
-                        allPlayers.toList().forEach {player ->
+                        filteredPlayers.toList().forEach { player ->
                             VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
                                 player = player,
                                 isSelected = viewModel.isPlayerSelected(player),

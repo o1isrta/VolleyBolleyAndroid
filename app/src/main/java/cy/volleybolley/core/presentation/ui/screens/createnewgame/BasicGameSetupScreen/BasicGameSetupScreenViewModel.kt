@@ -6,16 +6,24 @@ import androidx.annotation.RequiresApi
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.CreateNewGameRepository
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeCreateNewGameRepository
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.GameData
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenEffect
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenEvent
+import cy.volleybolley.courts.domain.model.Court
+import cy.volleybolley.courts.domain.model.Location
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -32,12 +40,25 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     private val _showCalendar = MutableStateFlow( !isSameDay(uiStateMutable.value.date, LocalDate.now()))
     open val showCalendar: StateFlow<Boolean> = _showCalendar.asStateFlow()
 
-//    private val _effectError = MutableStateFlow<BasicGameSetupScreenEffect?>(null)
-//    val effectError: StateFlow<BasicGameSetupScreenEffect?> = _effectError
-
     init {
         // проверяем, есть  ли аккаунт
-        //obtainEvent(BasicGameSetupScreenEvent.)
+        //obtainEvent(GameEnteringConditionsScreenEvent.CheckIfAccountExists)
+        // Подписка на изменения GameData из репозитория
+        viewModelScope.launch {
+            gameRepository.gameData.collectLatest { gameDataFromRepo ->
+                // Когда GameData в репозитории меняется, обновляем соответствующие части UI State
+                uiStateMutable.update { currentState ->
+                    currentState.copy( // Обновляем нужные поля из GameData
+                        placeCourt = gameDataFromRepo.placeCourt,
+                        date = gameDataFromRepo.date,
+                        startTime = gameDataFromRepo.startTime,
+                        finishTime = gameDataFromRepo.finishTime,
+                        gender = gameDataFromRepo.gender,
+                        levels = gameDataFromRepo.levels
+                    )
+                }
+            }
+        }
     }
 
     override fun obtainEvent(event: BasicGameSetupScreenEvent) {
@@ -76,39 +97,26 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
             }
             is BasicGameSetupScreenEvent.StartTimeChanged -> {
                 timeChangeJob?.cancel()
-                timeChangeJob = viewModelScope.launch {
+                viewModelScope.launch {
                     Log.d("TimePicker", "ViewModel: Received OnEndTimeChanged event: ${event.time}")
                     delay(300) // Дебаунс 300ms
                     val newState = uiStateMutable.value.copy(
                         startTime = event.time//,
-                       // errorMessage = validateTimes(event.time, uiStateMutable.value.endTime)
                     )
                     uiStateMutable.value = newState
                     Log.d("TimePicker", "ViewModel: New UI State: ${uiStateMutable.value}")
-                    // validateTimes(newState.startTime, newState.endTime)
                 }
             }
             is BasicGameSetupScreenEvent.FinishTimeChanged -> {
                 timeChangeJob?.cancel()
-                timeChangeJob = viewModelScope.launch {
+                viewModelScope.launch {
                     Log.d("TimePicker", "ViewModel: Received OnEndTimeChanged event: ${event.time}")
                     delay(300) // Дебаунс 300ms
                     val newState = uiStateMutable.value.copy(
                         finishTime = event.time//,
-                     //   errorMessage = validateTimes(uiStateMutable.value.startTime, event.time)
-                    )
+                      )
                     uiStateMutable.value = newState
                     Log.d("TimePicker", "ViewModel: New UI State: ${uiStateMutable.value}")
-                    //  validateTimes(newState.startTime, newState.endTime)
-                }
-            }
-            is BasicGameSetupScreenEvent.OnNextStepClick -> {
-                val message: String = validateData()
-                if (message.isEmpty()) {
-                    sendUiEffect(BasicGameSetupScreenEffect.NavigateNextStep)
-                }
-                else {
-                    sendUiEffect(BasicGameSetupScreenEffect.ShowError(message = message))
                 }
             }
             is BasicGameSetupScreenEvent.GenderSelected -> {
@@ -120,6 +128,36 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
                 else
                     uiStateMutable.value = uiStateMutable.value.copy(levels = event.levels)
             }
+            is BasicGameSetupScreenEvent.OnNextStepClick -> {
+                val message: String = validateData()
+                if (message.isEmpty()) {
+                    nextStep()
+                }
+                else {
+                    sendUiEffect(BasicGameSetupScreenEffect.ShowError(message = message))
+                }
+            }
+        }
+    }
+
+    private fun nextStep() { // если accountNumber != Null, аккааунт существует
+        launchSafe(
+            dispatcher = Dispatchers.IO,
+            getErrorLogMessage = { "Error: ${it.message ?: "Unknown error"}" },
+            onError = { er -> sendUiEffect(BasicGameSetupScreenEffect.ShowError(er.message ?: "Failed to check account"))
+            }
+        ){
+            gameRepository.updateGameData { gameData ->
+                gameData.copy(
+                    placeCourt = uiState.value.placeCourt,
+                    date = uiState.value.date,
+                    startTime = uiState.value.startTime,
+                    finishTime = uiState.value.finishTime,
+                    gender = uiState.value.gender,
+                    levels = uiState.value.levels
+                )
+            }
+            sendUiEffect(BasicGameSetupScreenEffect.NavigateNextStep)
         }
     }
 

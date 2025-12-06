@@ -5,5 +5,5 @@ import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.players.domain.model.Player
 
 fun interface SearchPlayersUseCase {
-    suspend operator fun invoke(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType>
+    suspend operator fun invoke(query: String): VolleyResult<List<Player>, ErrorType>
 }

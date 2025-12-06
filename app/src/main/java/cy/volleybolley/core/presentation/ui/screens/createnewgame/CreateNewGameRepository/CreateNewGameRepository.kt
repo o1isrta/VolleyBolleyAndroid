@@ -18,7 +18,7 @@ interface CreateNewGameRepository {
      //suspend fun updateGameData(gameData: GameData)
     fun addPlayersToGame(players: List<Player>)
     fun removePlayerFromGame(playerIndex: Int)
-    suspend fun searchPlayers(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType>
+   // suspend fun searchPlayers(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType>
     suspend fun saveGameDataToServer(): VolleyResult<Unit, ErrorType>
     suspend fun getGameDataFromServer(): VolleyResult<GameData, ErrorType>
     suspend fun loadGameData(): VolleyResult<Unit, ErrorType>
@@ -60,21 +60,21 @@ class FakeCreateNewGameRepository(initialGameData: GameData = GameData() // Во
         }
     }
 
-    override suspend fun searchPlayers(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType> {
-        // Заглушка для поиска: возвращаем список тестовых игроков, соответствующих запросу
-        val samplePlayers = listOf(
-            Player(1,"Kristina", "Popova", null, true, cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM),
-            Player(2, "Polina", "Vasylyeva", null,false, cy.volleybolley.core.presentation.ui.LEVEL_PRO),
-            Player(3, "Anton", "Ivanov", null, true, cy.volleybolley.core.presentation.ui.LEVEL_LIGHT),
-            Player(4, "Aleksandr", "Abramov", null, false, cy.volleybolley.core.presentation.ui.LEVEL_HIGH),
-            Player(4, "Maria", "Novak", null, false, cy.volleybolley.core.presentation.ui.LEVEL_PRO)
-        )
-        val filteredPlayers = samplePlayers.filter { player ->
-            player.lastName.contains(query, ignoreCase = true) && (!favoritesOnly || player.isFavorite)
-           /* it.lastName.contains(query, ignoreCase = true) && (!favoritesOnly || it.isFavorite)*/
-        }
-        return VolleyResult.Success(filteredPlayers)
-    }
+//    override suspend fun searchPlayers(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType> {
+//        // Заглушка для поиска: возвращаем список тестовых игроков, соответствующих запросу
+//        val samplePlayers = listOf(
+//            Player(1,"Kristina", "Popova", null, true, cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM),
+//            Player(2, "Polina", "Vasylyeva", null,false, cy.volleybolley.core.presentation.ui.LEVEL_PRO),
+//            Player(3, "Anton", "Ivanov", null, true, cy.volleybolley.core.presentation.ui.LEVEL_LIGHT),
+//            Player(4, "Aleksandr", "Abramov", null, false, cy.volleybolley.core.presentation.ui.LEVEL_HIGH),
+//            Player(4, "Maria", "Novak", null, false, cy.volleybolley.core.presentation.ui.LEVEL_PRO)
+//        )
+//        val filteredPlayers = samplePlayers.filter { player ->
+//            player.lastName.contains(query, ignoreCase = true) && (!favoritesOnly || player.isFavorite)
+//           /* it.lastName.contains(query, ignoreCase = true) && (!favoritesOnly || it.isFavorite)*/
+//        }
+//        return VolleyResult.Success(filteredPlayers)
+//    }
 
     override suspend fun saveGameDataToServer(): VolleyResult<Unit, ErrorType> {
         // Просто имитируем успешное сохранение
@@ -104,7 +104,7 @@ class FakeCreateNewGameRepository(initialGameData: GameData = GameData() // Во
 }
 
 class FakeSearchPlayersUseCase : SearchPlayersUseCase {
-    override suspend fun invoke(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType> {
+    override suspend fun invoke(query: String/*, favoritesOnly: Boolean*/): VolleyResult<List<Player>, ErrorType> {
         // Возвращаем тестовые данные
         val samplePlayers = listOf(
             Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM),
@@ -115,7 +115,7 @@ class FakeSearchPlayersUseCase : SearchPlayersUseCase {
         )
 
         val filteredPlayers = samplePlayers.filter {player ->
-            player.lastName.contains(query, ignoreCase = true) && ( !favoritesOnly || player.isFavorite)
+            player.lastName.contains(query, ignoreCase = true) && (/* !favoritesOnly*|| */player.isFavorite)
         }
         return VolleyResult.Success(filteredPlayers)
     }

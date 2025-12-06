@@ -13,7 +13,7 @@ sealed class GameEnteringConditionsScreenEvent : UiEvent {
     object OnAddPaymentClick : GameEnteringConditionsScreenEvent() // Нажатие на кнопку "Add Payment"
     object OnSaveGameClick : GameEnteringConditionsScreenEvent() // Нажатие на кнопку "Save game"
     class RemovePlayer(val index: Int) : GameEnteringConditionsScreenEvent() // нажатие на кнопку "Удалить игрока из игры"
-
+    class OnManagePlayersClick : GameEnteringConditionsScreenEvent() // Нажатие на кнопку Manage Players
      /*
         data class PrivacySelected(val privacy: Privacy) : GameEnteringConditionsScreenEvent()
     object CheckIfAccountExists : GameEnteringConditionsScreenEvent() // Проверка, существует ли аккаунт

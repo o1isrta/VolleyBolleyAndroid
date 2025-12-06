@@ -174,9 +174,13 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
                         VolleyButton.GroupButtonsForPrivacy(
-                            checkId = when (state.selectedPrivacy) {
-                                Privacy.Public -> 1
-                                Privacy.Private -> 2
+//                            checkId = when (state.selectedPrivacy) {
+//                                Privacy.Public -> 1
+//                                Privacy.Private -> 2
+//                            },
+                            checkId = when  {
+                                state.players.isNotEmpty() -> 2 // Privacy.Private
+                                else -> 1                       // Privacy.Public
                             },
                             modifier = Modifier.padding(vertical = 12.dp),
                             onSelected = { position ->
@@ -189,13 +193,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                                     when (privacy) {
                                         //viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PrivacySelected(it))
                                         Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected) //  Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected(Privacy.Public))
-                                        Privacy.Private -> {
-                                            //// Если до этого было Public -> открыть Privacy screen (для первичного выбора)
-                                            //state.selectedPrivacy?.let { privacy ->
-                                             //   if (privacy == Privacy.Public)
-                                                    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
-                                            //}
-                                            //// Если уже Private — ничего не делать
+                                        Privacy.Private -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
                                         }
 //                                        Privacy.Private -> {
 //                                            // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
@@ -205,7 +203,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
 //                                            }
 //                                            // Если уже Private — ничего не делать
 //                                        }
-                                    }
+                                    //}
                                 } ?: run {
                                     // Обработка нераспознанной позиции
                                     Log.e("GameEnteringConditionsScreen", "Нераспознанная позиция: $position")
@@ -215,7 +213,8 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                         // список выбранных игроков и кнопка Manage players
-                        if (state.selectedPrivacy == Privacy.Private) {
+                        //if (state.selectedPrivacy == Privacy.Private) {
+                        if(state.players.isNotEmpty())
                             Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_24.dp)) {
                                 state.players.forEachIndexed { index, player ->
                                     VolleySimpleComponent.PlayerRowWithRemove(
@@ -233,7 +232,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                                 text = stringResource(R.string.manage_players),
                                 onClick = {
                                     // Управление игроками -> открываем Privacy screen в manageMode
-                                    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
+                                    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnManagePlayersClick())
                                 }
                             )
                             Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
@@ -334,7 +333,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
             }
         }
     }
-}
+
 
 //@Composable
 //private fun PlayerRowWithRemove(

@@ -29,7 +29,7 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
     init {
         // проверяем, есть  ли аккаунт
         obtainEvent(GameEnteringConditionsScreenEvent.CheckIfAccountExists)
-        // !!! Ключевой момент: Подписка на изменения GameData из репозитория !!!
+        // Подписка на изменения GameData из репозитория
         viewModelScope.launch {
             gameRepository.gameData
                 .collectLatest { gameDataFromRepo ->
@@ -40,7 +40,7 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
                             players = gameDataFromRepo.players,
                             // Обновляем остальные поля из GameData (если они нужны на этом экране)
                             maximumPlayers = gameDataFromRepo.maximumPlayers,
-                            selectedPrivacy = gameDataFromRepo.selectedPrivacy,
+                            //selectedPrivacy = gameDataFromRepo.selectedPrivacy,
                             perPerson = gameDataFromRepo.perPerson,
                             accountNumber = gameDataFromRepo.accountNumber // Это, возможно, будет приходить из другого источника или быть частью GameData
                         )
@@ -53,25 +53,31 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
         when (event) {
             is GameEnteringConditionsScreenEvent.OnPublicSelected -> {
                 // Обработка выбора Public (Private через OpenPrivacyRequested)
-              //  uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = event.privacy)
-                uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = Privacy.Public)
-            }
-//            is GameEnteringConditionsScreenEvent.OnPrivateSelected -> {
-//                val current = uiStateMutable.value
-//                val manageMode = current.selectedPrivacy == Privacy.Private
-//                // отправляем эффект навигации (manageMode = true, если уже был private выбран до нажатия)
-//                sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy(manageMode))
-//            }
-            is GameEnteringConditionsScreenEvent.OnPrivateSelected -> {
-                val current = uiStateMutable.value.selectedPrivacy
-                // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
-                if (current == Privacy.Public) {
-                    uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = Privacy.Private)
-                    //val manageMode = current.selectedPrivacy == Privacy.Private
-                    // отправляем эффект навигации (manageMode = true, если уже был private выбран до нажатия)
-                    sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy)//manageMode))
+                //uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = Privacy.Public)
+                //uiStateMutable.value = uiStateMutable.value.copy(players = emptyList())
+                viewModelScope.launch {
+                    gameRepository.updateGameData { gameData ->
+                        gameData.copy(
+                            players = emptyList()
+                        )
+                    }
                 }
-                // Если уже Private — ничего не делать
+            }
+            is GameEnteringConditionsScreenEvent.OnPrivateSelected -> {
+//                val current = uiStateMutable.value.selectedPrivacy
+//                // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
+//                if (current == Privacy.Public) {
+//                    uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = Privacy.Private)
+//                    // отправляем эффект навигации (manageMode = true, если уже был private выбран до нажатия)
+//                    sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy)//manageMode))
+//                }
+//                // Если уже Private — ничего не делать
+                if(uiStateMutable.value.players.isEmpty())
+                   gotoPrivacyOptions()
+                // список не пустой — ничего не делать (переход на экран Privacy Option по нажатию на Manage...)
+            }
+            is GameEnteringConditionsScreenEvent.OnManagePlayersClick -> {
+               gotoPrivacyOptions()
             }
 //            is GameEnteringConditionsScreenEvent.PlayersSelected -> {
 //                // Пользователь вернулся с Privacy screen, нажав Add
@@ -112,9 +118,23 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
         }
     }
 
+    private fun gotoPrivacyOptions(){
+        viewModelScope.launch {
+            gameRepository.updateGameData { gameData ->
+                gameData.copy(
+                    maximumPlayers = uiState.value.maximumPlayers,
+                    accountNumber = uiState.value.accountNumber,
+                    perPerson = uiState.value.perPerson,
+                    players = uiState.value.players
+                )
+            }
+        }
+        sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy)
+    }
+
     private fun saveGame() {
-        // какая-то логика по сохранению настроек ?
         uiStateMutable.update { it.copy(isLoading = true, errorMessage = null) } // Начинаем загрузку, очищаем предыдущие ошибки
+
         launchSafe(
             dispatcher = Dispatchers.IO,
             getErrorLogMessage = { "Error saving game: ${it.message ?: "Unknown error"}" },
@@ -123,20 +143,18 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
                 sendUiEffect(GameEnteringConditionsScreenEffect.ShowError(er.message ?: "Failed to save game"))
             }
         ) {
-           // val currentUiState = uiStateMutable.value
-//            val gameDataToSave = GameData(
-//                players = gameRepository.gameData.value.players,
-//                maximumPlayers = currentUiState.maximumPlayers,
-//                selectedPrivacy = currentUiState.selectedPrivacy,
-//                perPerson = currentUiState.perPerson,
-//                accountNumber = currentUiState.accountNumber
-//            )
-            gameRepository.saveGameDataToServer()//gameDataToSave)
+            gameRepository.updateGameData { gameData ->
+                gameData.copy(
+                    maximumPlayers = uiState.value.maximumPlayers,
+                    accountNumber = uiState.value.accountNumber,
+                    perPerson = uiState.value.perPerson,
+                    players = uiState.value.players
+                )
+            }
+            gameRepository.saveGameDataToServer()
             uiStateMutable.update { it.copy(isLoading = false) } // Завершаем загрузку
             sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToSuccess)
         }
-        // и переход на экран Success
-        //sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToSuccess)
     }
 
     private fun checkIfAccountExists() { // если accountNumber != Null, аккааунт существует

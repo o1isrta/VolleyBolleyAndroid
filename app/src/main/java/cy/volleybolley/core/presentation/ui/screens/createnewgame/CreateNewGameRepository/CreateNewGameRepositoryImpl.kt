@@ -39,25 +39,31 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
         }
     }
 
-    override suspend fun searchPlayers(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType>/*List<Player>*/ {
-        // Имитация запроса к серверу
-        delay(500)
-        //TODO Здесь должен быть реальный запрос к API с использованием query и favoritesOnly
-        // return try {
-        //    val result = apiService.searchPlayers(query, favoritesOnly)
-        //   VolleyResult.Success(result)
-        // } catch (e: Exception) {
-        //    Log.e("SearchPlayersError", "Error fetching players: ${e.message}", e)
-        //  VolleyResult.Failure(ErrorType.SERVER_ERROR)
-        // }
-        val mockPlayers = listOf(
-            Player(1,"Kristina", "Popova", null, true, LEVEL_MEDIUM),
-            Player(2, "Polina", "Vasylyeva", null,false, cy.volleybolley.core.presentation.ui.LEVEL_PRO),
-            Player(3, "Anton", "Ivanov", null, true, cy.volleybolley.core.presentation.ui.LEVEL_LIGHT),
-            Player(4, "Aleksandr", "Abramov", null, false, cy.volleybolley.core.presentation.ui.LEVEL_HIGH)
-        )
-        return VolleyResult.Success(mockPlayers)
-    }
+//    override suspend fun searchPlayers(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType>/*List<Player>*/ {
+//        // Имитация запроса к серверу
+//        delay(500)
+//        //TODO Здесь должен быть реальный запрос к API с использованием query и favoritesOnly
+//        // return try {
+//        //    val result = apiService.searchPlayers(query, favoritesOnly)
+//        //   VolleyResult.Success(result)
+//        // } catch (e: Exception) {
+//        //    Log.e("SearchPlayersError", "Error fetching players: ${e.message}", e)
+//        //  VolleyResult.Failure(ErrorType.SERVER_ERROR)
+//        // }
+//        // Заглушка для поиска: возвращаем список тестовых игроков, соответствующих запросу
+//        val samplePlayers = listOf(
+//            Player(1,"Kristina", "Popova", null, true, cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM),
+//            Player(2, "Polina", "Vasylyeva", null,false, cy.volleybolley.core.presentation.ui.LEVEL_PRO),
+//            Player(3, "Anton", "Ivanov", null, true, cy.volleybolley.core.presentation.ui.LEVEL_LIGHT),
+//            Player(4, "Aleksandr", "Abramov", null, false, cy.volleybolley.core.presentation.ui.LEVEL_HIGH),
+//            Player(5, "Maria", "Novak", null, false, cy.volleybolley.core.presentation.ui.LEVEL_PRO)
+//        )
+//        val filteredPlayers = samplePlayers.filter { player ->
+//            /*player.lastName.contains(query, ignoreCase = true) &&*/ (!favoritesOnly || player.isFavorite)
+//            /* it.lastName.contains(query, ignoreCase = true) && (!favoritesOnly || it.isFavorite)*/
+//        }
+//        return VolleyResult.Success(filteredPlayers)
+//    }
 
     override suspend fun saveGameDataToServer() : VolleyResult<Unit, ErrorType> {
         // Имитация сохранения на сервер

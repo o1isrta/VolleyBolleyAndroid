@@ -49,6 +49,7 @@ import kotlinx.coroutines.flow.collectLatest
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
 import cy.volleybolley.core.presentation.ui.navigation.GameEnteringConditionsRoute
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.Gender
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)

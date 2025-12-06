@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
@@ -10,23 +11,38 @@ import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameR
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.GameData
 import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.players.domain.usecase.SearchPlayersUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-open class PrivacyOptionsScreenViewModel(private val createNewGameRepository: CreateNewGameRepository,
+open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGameRepository,
                                          private val searchPlayersUseCase: SearchPlayersUseCase) : BaseViewModel<PrivacyOptionsScreenState, PrivacyOptionsScreenEvent, PrivacyOptionsScreenEffect>(
     PrivacyOptionsScreenState()
 ) {
     override val tag: String = "PrivacyOptionsScreenViewModel"
     private var searchJob: Job? = null
-//    init {
-//        // Загружаем игроков при инициализации ViewModel
-//        //obtainEvent(PrivacyOptionsScreenEvent.LoadPlayers)
-//        loadPlayers()
-//    }
+
+    init {
+        viewModelScope.launch {
+            gameRepository.gameData
+                .collectLatest { gameDataFromRepo ->
+                    // Когда GameData в репозитории меняется, обновляем соответствующие части UI State
+                    uiStateMutable.update { currentState ->
+                        currentState.copy(
+                            // Обновляем список игроков из репозитория
+                            flagFavorites = false,
+                            playersSearchResult = emptyList(),
+                            //query = "",
+                            selectedPlayers = gameDataFromRepo.players.toMutableSet()
+                        )
+                    }
+                }
+        }
+    }
 
     override fun obtainEvent(event: PrivacyOptionsScreenEvent) {
         when (event) {
@@ -36,6 +52,7 @@ open class PrivacyOptionsScreenViewModel(private val createNewGameRepository: Cr
 
             is PrivacyOptionsScreenEvent.OnAddSelectedClick -> {
                 onAddSelectedPlayersClick()
+                sendUiEffect(PrivacyOptionsScreenEffect.NavigateBack)
             }
 
             is PrivacyOptionsScreenEvent.OnPlayerSelectionClick -> {
@@ -52,19 +69,79 @@ open class PrivacyOptionsScreenViewModel(private val createNewGameRepository: Cr
         }
     }
 
-//    fun onSearchTextChanged(text: String) {
-//        searchJob?.cancel()
-//        searchJob = viewModelScope.launch {
-//            delay(500) // Задержка 500ms
-//            performSearch(text)
-//        }
-//    }
-//
-//    private fun performSearch(query: String) {
-//        // Выполните здесь логику поиска, например, запрос к базе данных или API
-//        // Обновите _uiState с результатами поиска
-//        val searchResults = searchPlayers(query) //  метод с логикой поиска
-//        uiStateMutable.update { it.copy(playersSearchResult = searchResults) }
+    private fun onQueryChange(queryText: String) {
+        Log.d("Search", "onQueryChange: $queryText")
+         // Отменяем предыдущий Job, если он существует
+        searchJob?.cancel()
+        // Запускаем новый Job с задержкой
+        searchJob = viewModelScope.launch {
+            Log.d("Search", "Before withcontext: $queryText")
+
+            withContext(Dispatchers.Main){
+                uiStateMutable.value = uiStateMutable.value.copy(query = queryText)
+            }
+            Log.d("Search", "Before delay: $queryText")
+            delay(500) // Задержка в 500 миллисекунд (0.5 секунды)
+            Log.d("Search", "After delay: $queryText")
+            searchPlayers(uiStateMutable.value.query)
+            Log.d("Search", "After searchPlayers: $queryText")
+        }
+//        uiStateMutable.update { it.copy(query = query) }
+//        debouncedSearch(query)
+    }
+
+    //Вызов performSearch по нажатию enter
+    fun onEnterPressed() {
+        searchJob?.cancel()
+        searchPlayers(uiStateMutable.value.query)
+    }
+
+    private fun searchPlayers(query: String) {
+        launchSafe(
+            onError = { throwable ->
+                sendUiEffect(PrivacyOptionsScreenEffect.ShowError(throwable.localizedMessage ?: "Unknown error"))
+                uiStateMutable.update {
+                    it.copy(
+                        isLoading = false,
+                        playersSearchResult = emptyList()
+                    )
+                }
+            },
+            getErrorLogMessage = { "Error searching players for query: $query - $it" }
+        ) {
+            uiStateMutable.update { it.copy(isLoading = true) }
+            delay(500) // Имитируем задержку сети
+
+            // Вызываем UseCase
+            when (val result = searchPlayersUseCase(query)) {
+                is VolleyResult.Success -> {
+                    uiStateMutable.update { it.copy(playersSearchResult = result.data, isLoading = false) }
+                }
+                is VolleyResult.Failure -> {
+                    val errorMessage = when (result.error) {
+                        ErrorType.UNAUTHORIZED -> "Authentication required"
+                        ErrorType.NO_CONNECTION -> "Network unavailable, please check your connection."
+                        ErrorType.SERVER_ERROR -> "Server is busy, please try again later."
+                        ErrorType.NOT_FOUND -> "No players found."
+                        ErrorType.UNKNOWN_ERROR -> "An unexpected error occurred."
+                        ErrorType.BAD_REQUEST -> "Bad request"
+                    }
+                    sendUiEffect(PrivacyOptionsScreenEffect.ShowError(errorMessage))
+                    uiStateMutable.update {
+                        it.copy(
+                            isLoading = false,
+                            playersSearchResult = emptyList()
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
+//    // Debounce функция для поиска
+//    private fun debouncedSearch(query: String) {
+//        searchPlayers(query)
 //    }
 //
 //    private fun searchPlayers(query: String) {
@@ -81,10 +158,18 @@ open class PrivacyOptionsScreenViewModel(private val createNewGameRepository: Cr
 //            getErrorLogMessage = { "Error searching players for query: $query - $it" }
 //        ) {
 //            uiStateMutable.update { it.copy(isLoading = true) }
+//            // Имитация запроса к серверу
+//            delay(500)
 //
 //            when (val result = searchPlayersUseCase(query)) {
 //                is VolleyResult.Success -> {
-//                    uiStateMutable.update { it.copy(playersSearchResult = result.data, isLoading = false) }
+////                    val filteredPlayers = if (uiStateMutable.value.flagFavorites) {
+////                        result.data.filter { it.isFavorite }
+////                    } else {
+////                        result.data // Отображаем всех игроков, если "только избранные" не выбрано
+////                    }
+////                    uiStateMutable.update { it.copy(playersSearchResult = filteredPlayers, isLoading = false) }
+//                     uiStateMutable.update { it.copy(playersSearchResult = result.data, isLoading = false) }
 //                }
 //
 //                is VolleyResult.Failure -> {
@@ -108,70 +193,14 @@ open class PrivacyOptionsScreenViewModel(private val createNewGameRepository: Cr
 //        }
 //    }
 
-    private fun onQueryChange(query: String) {
-        uiStateMutable.update { it.copy(query = query) }
-            //searchPlayers(query)
-        debouncedSearch(query)
-    }
-
-    // Debounce функция для поиска
-    private fun debouncedSearch(query: String) {
-        searchPlayers(query)
-    }
-
-   /* private fun performSearch(query: String) {
-        val searchResults = searchPlayers(query) //  метод с логикой поиска
-        uiStateMutable.update { it.copy(playersSearchResult = searchResults) }
-    }*/
-
-    private fun searchPlayers(query: String) {
-        launchSafe(
-            onError = { throwable ->
-                sendUiEffect(PrivacyOptionsScreenEffect.ShowError(throwable.localizedMessage ?: "Unknown error"))
-                uiStateMutable.update {
-                    it.copy(
-                        isLoading = false,
-                        playersSearchResult = emptyList()
-                    )
-                } // Сбросить загрузку и очистить/обновить игроков
-            },
-            getErrorLogMessage = { "Error searching players for query: $query - $it" }
-        ) {
-            uiStateMutable.update { it.copy(isLoading = true) }
-
-            when (val result = searchPlayersUseCase(query)) {
-                is VolleyResult.Success -> {
-                    uiStateMutable.update { it.copy(playersSearchResult = result.data, isLoading = false) }
-                }
-
-                is VolleyResult.Failure -> {
-                    val errorMessage = when (result.error) {
-                        ErrorType.UNAUTHORIZED -> "Authentication required"
-                        ErrorType.NO_CONNECTION -> "Network unavailable, please check your connection."
-                        ErrorType.SERVER_ERROR -> "Server is busy, please try again later."
-                        ErrorType.NOT_FOUND -> "No players found."
-                        ErrorType.UNKNOWN_ERROR -> "An unexpected error occurred."
-                        ErrorType.BAD_REQUEST -> "Bad request"// Добавьте другие ErrorType по мере необходимости
-                    }
-                    sendUiEffect(PrivacyOptionsScreenEffect.ShowError(errorMessage))
-                    uiStateMutable.update {
-                        it.copy(
-                            isLoading = false,
-                            playersSearchResult = emptyList()
-                        )
-                    } // Сбросить или очистить игроков при ошибке
-                }
-            }
-        }
-    }
-
     private fun onPlayerSelectionChange(player: Player) {
         uiStateMutable.update { currentState ->
             val updatedSelectedPlayers = currentState.selectedPlayers.toMutableSet()
             if (isPlayerSelected(player)) { // если был выбран, то при нажатии, становится не выбран. и наоборот
                 updatedSelectedPlayers.remove(player)  // снимаем выбор
             } else {
-                updatedSelectedPlayers.add(player) // выбираем
+                if (updatedSelectedPlayers.size < gameRepository.gameData.value.maximumPlayers)
+                    updatedSelectedPlayers.add(player) // выбираем
             }
             currentState.copy(selectedPlayers = updatedSelectedPlayers)
         }
@@ -179,7 +208,7 @@ open class PrivacyOptionsScreenViewModel(private val createNewGameRepository: Cr
 
     private fun onAddSelectedPlayersClick() {
         viewModelScope.launch {
-            createNewGameRepository.updateGameData { currentData ->
+            gameRepository.updateGameData { currentData ->
                 currentData.copy(players = uiState.value.selectedPlayers.toList())
             }
         }.invokeOnCompletion { //вызывается когда корутина завершилась

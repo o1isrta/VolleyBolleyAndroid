@@ -3,6 +3,7 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetu
 import cy.volleybolley.core.presentation.base.UiEvent
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.Gender
 import java.time.LocalDate
 
 sealed class BasicGameSetupScreenEvent  : UiEvent {

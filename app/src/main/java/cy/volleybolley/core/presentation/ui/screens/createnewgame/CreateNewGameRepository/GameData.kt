@@ -36,7 +36,7 @@ data class GameData(
     val levels: Set<Level> = setOf(Level.Light, Level.Medium, Level.Hard),
     // получаем с экрана GameEnteringConditionsScreen:
     val maximumPlayers: Int = 8,
-    val selectedPrivacy: Privacy = Privacy.Public,
+   // val selectedPrivacy: Privacy = Privacy.Public,
     val perPerson: String = "5.0",
     val accountNumber: String? = null,  // номер аккаунта, если есть
     // получаем с экрана PrivacyOptionsScreen, показываем на экране GameEnteringConditionsScreen,
