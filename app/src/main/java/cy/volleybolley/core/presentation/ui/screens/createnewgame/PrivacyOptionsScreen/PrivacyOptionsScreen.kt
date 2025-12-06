@@ -104,6 +104,7 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                     VolleyTextFieldGradient.SearchField(
                         modifier = Modifier,
+                        text = state.query,
                         /*actionToTransferContent = { newText ->
                             searchText = newText
                             viewModel.onSearchTextChanged(newText)}*/
