@@ -51,6 +51,8 @@ import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
 import cy.volleybolley.core.presentation.ui.navigation.GameEnteringConditionsRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.Gender
 import java.time.LocalDate
+import java.time.YearMonth
+import java.time.temporal.ChronoUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -243,7 +245,7 @@ Column (
 
                 // Календарь показывается только если выбрана кнопка "Pick Date"
                 if (showCalendar) {  // Используем флаг из ViewModel
-                    VolleyCalendar.CalendarSection(
+                    VolleyCalendar.GameCalendar(
                         selectedDate = state.date,
                         onDateSelected = { selectedDate ->
                             viewModel.obtainEvent(
@@ -253,8 +255,38 @@ Column (
                             )
                         }
                     )
+//                    val today = LocalDate.now()
+//                    VolleyCalendar.CalendarSection(
+//                        selectedDate = state.date,
+//                        onDateSelected = { selectedDate ->
+//                            viewModel.obtainEvent(
+//                                BasicGameSetupScreenEvent.DateSelected(
+//                                    selectedDate
+//                                )
+//                            )
+//                        },
+//                        startMonth = YearMonth.now(),
+//                        endMonth = YearMonth.now().plusMonths(1), // Только на 1 месяц вперед
+//                        isDaySelectable = { date ->
+//                            // Можно выбрать дни от сегодня до месяца вперед (включительно)
+//                            date >= today && date <= today.plus(1, ChronoUnit.MONTHS)
+//                        }
+//                    )
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
                 }
+//                if (showCalendar) {  // Используем флаг из ViewModel
+//                    VolleyCalendar.CalendarSection(
+//                        selectedDate = state.date,
+//                        onDateSelected = { selectedDate ->
+//                            viewModel.obtainEvent(
+//                                BasicGameSetupScreenEvent.DateSelected(
+//                                    selectedDate
+//                                )
+//                            )
+//                        }
+//                    )
+//                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+//                }
 
                 VolleyText.BodyBold(
                     text = stringResource(R.string.game_duration),

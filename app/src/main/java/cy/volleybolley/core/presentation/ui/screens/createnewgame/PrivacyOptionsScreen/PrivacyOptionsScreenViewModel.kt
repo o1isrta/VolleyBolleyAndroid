@@ -109,7 +109,22 @@ open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGa
             // Вызываем UseCase
             when (val result = searchPlayersUseCase(query)) {
                 is VolleyResult.Success -> {
-                    uiStateMutable.update { it.copy(playersSearchResult = result.data, isLoading = false) }
+                    val filteredPlayers = if (query.isBlank()) {
+                        result.data // Возвращаем все игроки при пустом запросе
+                    } else {
+                        result.data.filter { player ->
+                            player.firstName.contains(query, ignoreCase = true) ||
+                                player.lastName.contains(query, ignoreCase = true)
+                        }
+                    }
+
+                    uiStateMutable.update {
+                        it.copy(
+                            playersSearchResult = filteredPlayers,
+                            isLoading = false
+                        )
+                    }
+            //        uiStateMutable.update { it.copy(playersSearchResult = result.data, isLoading = false) }
                 }
                 is VolleyResult.Failure -> {
                     val errorMessage = when (result.error) {
