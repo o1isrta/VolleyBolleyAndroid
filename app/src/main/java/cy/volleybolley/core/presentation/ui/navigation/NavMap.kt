@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
+import cy.volleybolley.games.domain.model.event.EventType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -66,7 +67,9 @@ object ChooseTeamRoute : NavMap
 object IndividualPlayersRoute : NavMap
 
 @Serializable
-object InvitePlayersRoute : NavMap
+data class InvitePlayersRoute(
+    val id: Int
+) : NavMap
 
 @Serializable
 object JoinIndividualRoute : NavMap
@@ -134,10 +137,15 @@ object HomeRoute : NavMap
 object SearchCourtRoute : NavMap
 
 @Serializable
-object RatePlayersRoute : NavMap
+data class RatePlayersRoute(
+    val eventId: Int,
+    val eventType: EventType,
+) : NavMap
 
 @Serializable
-object SuccessRoute : NavMap
+data class SuccessRoute(
+    val succeedGame: String
+) : NavMap
 
 // --- profile flow ---
 @Serializable
@@ -173,3 +181,6 @@ data class EnterPaymentDataRoute(
     val paymentTypeName: String,
     val paymentsJsonString: String
 ) : NavMap
+
+@Serializable
+data class ShareLinkRoute(val id: String, val type: String) : NavMap

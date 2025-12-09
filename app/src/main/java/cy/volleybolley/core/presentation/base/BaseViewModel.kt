@@ -74,4 +74,13 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
             }
         }
     }
+
+    /**
+     * Функция для изменения списка по индексу
+     */
+    protected fun<T> List<T>.replaceForCompose(index: Int, newElement: T): List<T> {
+        return this.toMutableList().apply {
+            this[index] = newElement
+        }
+    }
 }
