@@ -1,6 +1,5 @@
 package cy.volleybolley.players.data.network
 
-import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
 import cy.volleybolley.players.data.dto.PlayerDto
 import io.ktor.client.call.body
@@ -15,33 +14,33 @@ class PlayersNetworkClient : KtorNetworkClient<PlayerRequest, PlayerResponse>() 
     override suspend fun sendRequestByType(request: PlayerRequest): HttpResponse {
         return when (request) {
             is PlayerRequest.GetAllPlayers -> {
-                httpClient.get(BuildConfig.BASE_URL) {
-                    requestConfigure(path = request.path, accessToken = request.authToken)
+                httpClient.get {
+                    requestConfigure(path = request.path)
                 }
             }
 
             is PlayerRequest.SearchPlayers -> {
-                httpClient.get(BuildConfig.BASE_URL) {
-                    requestConfigure(path = request.path, accessToken = request.authToken)
+                httpClient.get {
+                    requestConfigure(path = request.path)
                     parameter("search", request.name)
                 }
             }
 
             is PlayerRequest.GetPlayerDetail -> {
-                httpClient.get(BuildConfig.BASE_URL) {
-                    requestConfigure(path = request.path, accessToken = request.authToken)
+                httpClient.get {
+                    requestConfigure(path = request.path)
                 }
             }
 
             is PlayerRequest.AddToFavorites -> {
-                httpClient.post(BuildConfig.BASE_URL) {
-                    requestConfigure(path = request.path, accessToken = request.authToken)
+                httpClient.post {
+                    requestConfigure(path = request.path)
                 }
             }
 
             is PlayerRequest.RemoveFromFavorites -> {
-                httpClient.delete(BuildConfig.BASE_URL) {
-                    requestConfigure(path = request.path, accessToken = request.authToken)
+                httpClient.delete {
+                    requestConfigure(path = request.path)
                 }
             }
         }

@@ -1,6 +1,8 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
+import cy.volleybolley.auth.domain.api.LoginDataRepository
+import cy.volleybolley.core.data.network.plugin.TokenRefreshPlugin
 import cy.volleybolley.core.presentation.App
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
@@ -32,7 +34,38 @@ val coreModule = module {
         }
     }
 
+    // Main HttpClient with TokenRefreshPlugin (for all modules except Auth)
     single<HttpClient> {
+        HttpClient(OkHttp) {
+            install(HttpTimeout) {
+                connectTimeoutMillis = TIMEOUT_MILLIS
+                requestTimeoutMillis = TIMEOUT_MILLIS
+                socketTimeoutMillis = TIMEOUT_MILLIS
+            }
+
+            if (BuildConfig.DEBUG) {
+                install(Logging) {
+                    logger = Logger.DEFAULT
+                    level = LogLevel.ALL
+                }
+            }
+
+            install(ContentNegotiation) {
+                json(get())
+            }
+
+            install(TokenRefreshPlugin) {
+                loginDataRepository = get()
+                refreshAccessTokenUseCase = get()
+                onUnauthorized = {
+                    get<LoginDataRepository>().clearAll()
+                }
+            }
+        }
+    }
+
+    // HttpClient WITHOUT TokenRefreshPlugin (for Auth and ReferenceData modules)
+    single<HttpClient>(HttpClientQualifier.NO_ACCESS_TOKEN.qualifier) {
         HttpClient(OkHttp) {
             install(HttpTimeout) {
                 connectTimeoutMillis = TIMEOUT_MILLIS

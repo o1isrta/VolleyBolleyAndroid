@@ -1,19 +1,18 @@
 package cy.volleybolley.referencedata.data.network
 
-import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.path
 
-class ReferenceDataNetworkClient : KtorNetworkClient<ReferenceDataRequest, ReferenceDataResponse>() {
+class ReferenceDataNetworkClient(
+    lazyHttpClient: Lazy<HttpClient>
+) : KtorNetworkClient<ReferenceDataRequest, ReferenceDataResponse>(lazyHttpClient) {
 
     override suspend fun sendRequestByType(request: ReferenceDataRequest): HttpResponse {
-        return httpClient.get(BuildConfig.BASE_URL) {
-            url {
-                path(request.path)
-            }
+        return httpClient.get {
+            requestConfigure(request.path)
         }
     }
 

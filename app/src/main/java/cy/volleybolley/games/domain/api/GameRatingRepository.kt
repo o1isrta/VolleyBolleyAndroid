@@ -13,4 +13,3 @@ interface GameRatingRepository {
         players: List<RatePlayer>,
     )
 }
-

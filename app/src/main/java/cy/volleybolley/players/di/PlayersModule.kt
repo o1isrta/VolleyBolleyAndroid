@@ -26,8 +26,7 @@ val playersModule = module {
 
     single<PlayersRepository> {
         PlayersRepositoryImpl(
-            networkClient = get(qualifier = HttpClientQualifier.PLAYERS.qualifier),
-            tokenProvider = { null } // заменить на реальную реализацию при появлении
+            networkClient = get(qualifier = HttpClientQualifier.PLAYERS.qualifier)
         )
     }
 

@@ -1,30 +1,52 @@
 package cy.volleybolley.core.presentation.ui.screens.authorization.launch
 
-import androidx.lifecycle.viewModelScope
+import cy.volleybolley.auth.domain.api.usecase.GetIsRegisteredUseCase
+import cy.volleybolley.auth.domain.api.usecase.GetRefreshTokenUseCase
+import cy.volleybolley.auth.domain.api.usecase.RefreshAccessTokenUseCase
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
-class LaunchViewModel : BaseViewModel<LaunchState, LaunchEvent, LaunchEffect>(
-    initialState = LaunchState()
+class LaunchViewModel(
+    private val getRefreshTokenUseCase: GetRefreshTokenUseCase,
+    private val refreshAccessTokenUseCase: RefreshAccessTokenUseCase,
+    private val getIsRegisteredUseCase: GetIsRegisteredUseCase
+) : BaseViewModel<LaunchScreenState, LaunchScreenEvent, LaunchScreenEffect>(
+    initialState = LaunchScreenState()
 ) {
     override val tag: String = "LaunchViewModel"
 
     init {
-        viewModelScope.launch {
-            uiStateMutable.update { it.copy(isLoading = true) }
+        launchSafe(
+            getErrorLogMessage = { throwable ->
+                "LaunchViewModel init block: ${throwable.message}"
+            }
+        ) {
             delay(LAUNCH_DELAY_MS)
-            sendUiEffect(LaunchEffect.NavigateToOnboarding)
+            val refreshToken = getRefreshTokenUseCase.execute()
+
+            if (refreshToken != null) {
+                val isRegistered = getIsRegisteredUseCase.execute()
+
+                if (isRegistered) {
+                    refreshAccessTokenUseCase.execute()
+                    sendUiEffect(LaunchScreenEffect.NavigateToHome)
+                } else {
+                    sendUiEffect(LaunchScreenEffect.NavigateToOnboarding)
+                }
+            } else {
+                sendUiEffect(LaunchScreenEffect.NavigateToOnboarding)
+            }
+
             uiStateMutable.update { it.copy(isLoading = false) }
         }
     }
 
-    override fun obtainEvent(event: LaunchEvent) {
+    override fun obtainEvent(event: LaunchScreenEvent) {
         // No events
     }
 
     private companion object {
-        const val LAUNCH_DELAY_MS = 3_000L
+        const val LAUNCH_DELAY_MS = 2_000L
     }
 }
