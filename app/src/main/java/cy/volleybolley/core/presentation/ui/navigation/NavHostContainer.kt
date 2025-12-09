@@ -40,10 +40,7 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.JoinedPl
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGameDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
-import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
-import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
-import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
 import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
@@ -323,7 +320,7 @@ fun NavHostContainer(
                 navDeepLink { uriPattern = "volleybolley://invite/{type}/{id}" }
             )
         ) { backStackEntry ->
-            val route = backStackEntry.toRoute<ShareLinkRoute>()
+//            val route = backStackEntry.toRoute<ShareLinkRoute>()
             JoinTheGameScreen(
                 navController = navController
             )
