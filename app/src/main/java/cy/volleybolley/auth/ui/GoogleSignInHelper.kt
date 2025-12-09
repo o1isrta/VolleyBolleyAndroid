@@ -48,7 +48,7 @@ class GoogleSignInHelper(
         .setAutoSelectEnabled(false)
         .build()
 
-    suspend fun launch(): IntentSender? {
+    suspend fun signIn(): IntentSender? {
         var intentSender: IntentSender? = null
 
         try {
@@ -75,7 +75,7 @@ class GoogleSignInHelper(
         return intentSender
     }
 
-    fun extractIdToken(intent: Intent?): String? = try {
+    fun extractGoogleIdToken(intent: Intent?): String? = try {
         showDebugLog(TAG, "📥 Extracting ID token from intent...")
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)
         val token = credential.googleIdToken

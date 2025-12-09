@@ -67,13 +67,13 @@ fun AuthorizationScreen(
     val context = LocalContext.current
     val googleSignInHelper = GoogleSignInHelper(context)
 
-    val launcher = rememberLauncherForActivityResult(
+    val googleSignInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
         when (result.resultCode) {
             Activity.RESULT_OK -> {
-                val idToken = googleSignInHelper.extractIdToken(result.data)
-                viewModel.obtainEvent(GoogleTokenReceived(idToken))
+                val googleIdToken = googleSignInHelper.extractGoogleIdToken(result.data)
+                viewModel.obtainEvent(GoogleTokenReceived(googleIdToken))
             }
 
             Activity.RESULT_CANCELED -> {
@@ -92,13 +92,13 @@ fun AuthorizationScreen(
         when (effect) {
             is LaunchGoogleSignIn -> {
                 showDebugLog(screenTag, "🚀 Starting Google Sign-In flow")
-                val intentSender = googleSignInHelper.launch()
+                val intentSender = googleSignInHelper.signIn()
 
                 showDebugLog(screenTag, "IntentSender: $intentSender")
 
                 if (intentSender != null) {
                     showDebugLog(screenTag, "✅ Launching intent...")
-                    launcher.launch(IntentSenderRequest.Builder(intentSender).build())
+                    googleSignInLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
                 } else {
                     showDebugLog(screenTag, "❌ IntentSender is null!")
                     Toast.makeText(context, errorTitle, Toast.LENGTH_SHORT).show()

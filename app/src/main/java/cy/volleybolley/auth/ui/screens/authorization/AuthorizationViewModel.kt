@@ -37,15 +37,15 @@ class AuthorizationViewModel(
     override fun obtainEvent(event: AuthorizationEvent) {
         when (event) {
             ContinueWithGoogleClicked -> sendUiEffect(LaunchGoogleSignIn)
-            is GoogleTokenReceived -> onGoogleTokenReceived(event.idToken)
+            is GoogleTokenReceived -> onGoogleTokenReceived(event.googleIdToken)
             AuthorizationEvent.GoogleSignInCancelled -> { /* user cancel auth - do nothing */ }
             AuthorizationEvent.GoogleSignInFailed -> sendUiEffect(ShowToast(message = "Google Sign-In error"))
             is AuthorizationEvent.ContinueWithFacebookClicked -> { /* Handle Facebook Auth */ }
         }
     }
 
-    private fun onGoogleTokenReceived(idToken: String?) {
-        if (idToken == null) {
+    private fun onGoogleTokenReceived(googleIdToken: String?) {
+        if (googleIdToken == null) {
             sendUiEffect(ShowToast(message = "Couldn't get authorization token"))
             return
         }
@@ -53,7 +53,7 @@ class AuthorizationViewModel(
         launchSafe(
             block = {
                 uiStateMutable.update { it.copy(isLoading = true) }
-                val result = googleTokenAuthUseCase.loginWithGoogle(idToken)
+                val result = googleTokenAuthUseCase.loginWithGoogle(googleIdToken)
                 uiStateMutable.update { it.copy(isLoading = false) }
 
                 result.onSuccess { loginData ->
