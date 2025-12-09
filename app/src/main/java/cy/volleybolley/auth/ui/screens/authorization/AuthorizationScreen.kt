@@ -62,7 +62,7 @@ fun AuthorizationScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     val screenTag: String = stringResource(R.string.auth_screen_log_tag)
-    val errorTitle: String = stringResource(R.string.auth_error)
+    val errorTitle: String = stringResource(R.string.auth_error_no_google_acc_on_device)
 
     val context = LocalContext.current
     val googleSignInHelper = GoogleSignInHelper(context)
