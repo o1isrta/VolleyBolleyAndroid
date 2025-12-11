@@ -51,15 +51,14 @@ import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
 import cy.volleybolley.core.presentation.ui.navigation.GameEnteringConditionsRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.Gender
 import java.time.LocalDate
-import java.time.YearMonth
-import java.time.temporal.ChronoUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BasicGameSetupScreen(navController: NavHostController,
-                         viewModel: BasicGameSetupScreenViewModel = viewModel(),
-                         paddingFromSystemUi: PaddingValues
-) { // = BasicGameSetupScreenViewModel ()
+fun BasicGameSetupScreen(
+    navController: NavHostController,
+    viewModel: BasicGameSetupScreenViewModel = viewModel(),
+    paddingFromSystemUi: PaddingValues
+) {
     val scrollState = rememberScrollState() //Состояние скролла
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -69,358 +68,294 @@ fun BasicGameSetupScreen(navController: NavHostController,
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
                 is BasicGameSetupScreenEffect.NavigateToCreatePlace -> {
-                   // Toast.makeText(context, "Нажали на Create", Toast.LENGTH_SHORT).show()
-                   navController.navigate(SearchCourtRoute)
+                    navController.navigate(SearchCourtRoute)
                 }
+
                 BasicGameSetupScreenEffect.NavigateBack -> {
                     navController.popBackStack()
                 }
-                is BasicGameSetupScreenEffect.NavigateNextStep-> {
+
+                is BasicGameSetupScreenEffect.NavigateNextStep -> {
                     navController.navigate(GameEnteringConditionsRoute)
                 }
+
                 is BasicGameSetupScreenEffect.ShowError -> {
                     Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_SHORT).show()
                 }
-                //Обработка всех возможных случаев
-                else -> {
-                    // Handle unexpected effect or do nothing.  Log it!
+
+                else -> { //Обработка всех возможных случаев
                     Log.w("BasicGameSetupScreen", "Unhandled effect: $effect")
                 }
             }
-            viewModel.clearEffect() // Очистка Effect после обработки
         }
     }
-// Overlay для отображения индикатора загрузки
-    if (state.isLoading) {
+    if (state.isLoading) { // Overlay для отображения индикатора загрузки
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator() // Или другой индикатор загрузки
         }
-    } else {  // Отображаем основной контент, только если не загружается
-Column (
-    modifier = Modifier.padding(paddingFromSystemUi)
-
-) {
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
-        modifier = Modifier
-            .padding(
-                VolleyDimens.DIMEN_8.dp,
-                VolleyDimens.DIMEN_8.dp,
-                VolleyDimens.DIMEN_8.dp,
-                VolleyDimens.DIMEN_16.dp
-            )
-    ) {
+    } else { // Отображаем основной контент, только если не загружается
         Column(
-            modifier = Modifier
-                .padding(horizontal = VolleyDimens.DIMEN_20.dp)
+            modifier = Modifier.padding(paddingFromSystemUi)
         ) {
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-
-            TitleWithBackArrow(
-                title = stringResource(R.string.create_a_game),
-                modifier = Modifier.fillMaxWidth(),
-                onBackClick = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnBackClicked) }
-            )
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-            Column(
+            VolleyContainersRootTransparent.TransparentContainer(
+                cornerRadius = VolleyDimens.DIMEN_32,
                 modifier = Modifier
-                    .verticalScroll(scrollState)
-
+                    .padding(
+                        VolleyDimens.DIMEN_8.dp,
+                        VolleyDimens.DIMEN_8.dp,
+                        VolleyDimens.DIMEN_8.dp,
+                        VolleyDimens.DIMEN_16.dp
+                    )
             ) {
-                VolleyText.TitleMedium(
-                    text = stringResource(R.string.your_message),
-                    modifier = Modifier.fillMaxWidth(),
-                    color = VolleyColor.White
-                )
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-                VolleyMessageTextField.MessageField(
-                    hint = stringResource(R.string.leave_a_note_for_players),
-                    textInput = state.message,
-                    modifier = Modifier.height(106.dp),
-                    actionToTransferContent = { newMessage ->
-                        viewModel.obtainEvent(BasicGameSetupScreenEvent.MessageChanged(newMessage))
-                    }
-                )
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-                VolleySimpleComponent.DividerLine()// HorizontalLine()
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-                VolleyText.TitleMedium(
-                    text = stringResource(R.string.place),
-                    modifier = Modifier.fillMaxWidth(),
-                    color = VolleyColor.White
-                )
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .height(VolleyDimens.DIMEN_44.dp)
-                        .fillMaxWidth()
+                Column(
+                    modifier = Modifier.padding(horizontal = VolleyDimens.DIMEN_20.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .weight(1f), // Важно!  Занимает только часть доступного пространства,
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.ic_mark_yellow),
-                            contentDescription = null,
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+                    TitleWithBackArrow(
+                        title = stringResource(R.string.create_a_game),
+                        modifier = Modifier.fillMaxWidth(),
+                        onBackClick = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnBackClicked) }
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                    Column(modifier = Modifier.verticalScroll(scrollState)) {
+                        VolleyText.TitleMedium(
+                            text = stringResource(R.string.your_message),
+                            modifier = Modifier.fillMaxWidth(),
+                            color = VolleyColor.White
                         )
-                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-                        Column(
-                            horizontalAlignment = Alignment.Start
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                        VolleyMessageTextField.MessageField(
+                            hint = stringResource(R.string.leave_a_note_for_players),
+                            textInput = state.message,
+                            modifier = Modifier.height(106.dp),
+                            actionToTransferContent = { newMessage ->
+                                viewModel.obtainEvent(BasicGameSetupScreenEvent.MessageChanged(newMessage))
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                        VolleySimpleComponent.DividerLine()
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                        VolleyText.TitleMedium(
+                            text = stringResource(R.string.place),
+                            modifier = Modifier.fillMaxWidth(),
+                            color = VolleyColor.White
+                        )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier
+                                .height(VolleyDimens.DIMEN_44.dp)
+                                .fillMaxWidth()
                         ) {
-                            VolleyText.BodyBold(
-                                text = state.placeCourt.location.courtName,
-                                modifier = Modifier,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                color = VolleyColor.White
-                            )
-                            VolleyText.BodyLight(
-                                text = state.placeCourt.location.locationName,
-                                modifier = Modifier,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                color = VolleyColor.White
-                            )
-                        }
-                    }
-
-                    VolleyButton.ActiveGradientButton(
-                        modifier = Modifier,//.height(VolleyDimens.DIMEN_44.dp),
-                        text = "Create",
-                        onClick = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnChangeClick) }
-                    )
-                }
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-                VolleySimpleComponent.DividerLine() //HorizontalLine()
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-                VolleyText.TitleMedium(
-                    text = stringResource(R.string.date),
-                    modifier = Modifier.fillMaxWidth(),
-                    color = VolleyColor.White
-                )
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-                //val todayDate: Date = Date()
-
-                VolleyButton.GroupButtonsForDate2(
-                    checkId = if (viewModel.isSameDay(state.date, LocalDate.now())) 1 else 2,
-                    modifier = Modifier,
-                    onSelected = { position ->
-                        when (position) {
-                            1 -> {
-                                // Сегодня
-                                viewModel.obtainEvent(BasicGameSetupScreenEvent.OnTodayClicked)
-                            }
-
-                            2 -> {
-                                //Выбрать Дату (Pick Date)
-                                viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked)
-                            }
-
-                            else -> {
-                                // Обработка нераспознанной позиции
-                                Log.e("BasicGameSetupScreen", "Нераспознанная позиция кнопки даты: $position")
-                            }
-                        }
-                    }
-                )
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
-
-                // Календарь показывается только если выбрана кнопка "Pick Date"
-                if (showCalendar) {  // Используем флаг из ViewModel
-                    VolleyCalendar.GameCalendar(
-                        selectedDate = state.date,
-                        onDateSelected = { selectedDate ->
-                            viewModel.obtainEvent(
-                                BasicGameSetupScreenEvent.DateSelected(
-                                    selectedDate
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.weight(1f), // Важно!  Занимает только часть доступного пространства,
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.ic_mark_yellow),
+                                    contentDescription = null
                                 )
+
+                                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                                Column(horizontalAlignment = Alignment.Start) {
+                                    VolleyText.BodyBold(
+                                        text = state.placeCourt.location.courtName,
+                                        modifier = Modifier,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        color = VolleyColor.White
+                                    )
+                                    VolleyText.BodyLight(
+                                        text = state.placeCourt.location.locationName,
+                                        modifier = Modifier,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        color = VolleyColor.White
+                                    )
+                                }
+                            }
+
+                            VolleyButton.ActiveGradientButton(
+                                modifier = Modifier,
+                                text = "Create",
+                                onClick = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnChangeClick) }
                             )
                         }
-                    )
-//                    val today = LocalDate.now()
-//                    VolleyCalendar.CalendarSection(
-//                        selectedDate = state.date,
-//                        onDateSelected = { selectedDate ->
-//                            viewModel.obtainEvent(
-//                                BasicGameSetupScreenEvent.DateSelected(
-//                                    selectedDate
-//                                )
-//                            )
-//                        },
-//                        startMonth = YearMonth.now(),
-//                        endMonth = YearMonth.now().plusMonths(1), // Только на 1 месяц вперед
-//                        isDaySelectable = { date ->
-//                            // Можно выбрать дни от сегодня до месяца вперед (включительно)
-//                            date >= today && date <= today.plus(1, ChronoUnit.MONTHS)
-//                        }
-//                    )
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-                }
-//                if (showCalendar) {  // Используем флаг из ViewModel
-//                    VolleyCalendar.CalendarSection(
-//                        selectedDate = state.date,
-//                        onDateSelected = { selectedDate ->
-//                            viewModel.obtainEvent(
-//                                BasicGameSetupScreenEvent.DateSelected(
-//                                    selectedDate
-//                                )
-//                            )
-//                        }
-//                    )
-//                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-//                }
 
-                VolleyText.BodyBold(
-                    text = stringResource(R.string.game_duration),
-                    modifier = Modifier,
-                    color = VolleyColor.White
-                )
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                        VolleySimpleComponent.DividerLine()
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                        VolleyText.TitleMedium(
+                            text = stringResource(R.string.date),
+                            modifier = Modifier.fillMaxWidth(),
+                            color = VolleyColor.White
+                        )
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    VolleyText.BodyRegular(
-                        text = stringResource(R.string.from),
-                        modifier = Modifier,
-                        color = VolleyColor.White
-                    )
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+                        VolleyButton.GroupButtonsForDate2(
+                            checkId = if (viewModel.isSameDay(state.date, LocalDate.now())) 1 else 2,
+                            modifier = Modifier,
+                            onSelected = { position ->
+                                when (position) {
+                                    1 -> { // Сегодня
+                                        viewModel.obtainEvent(BasicGameSetupScreenEvent.OnTodayClicked)
+                                    }
 
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                                    2 -> {  //Выбрать Дату (Pick Date)
+                                        viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked)
+                                    }
 
-                    VolleyTextFieldAttribute.DurationFieldWithArrows(
-                        inputTime = state.startTime
-                    ) { time ->
-                        viewModel.obtainEvent(BasicGameSetupScreenEvent.StartTimeChanged(time))
-                    }
+                                    else -> { // Обработка нераспознанной позиции
+                                        Log.e("BasicGameSetupScreen", "Нераспознанная позиция кнопки даты: $position")
+                                    }
+                                }
+                            }
+                        )
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
 
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-
-                    VolleyText.BodyRegular(
-                        text = stringResource(R.string.to),
-                        modifier = Modifier,
-                        color = VolleyColor.White
-                    )
-
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-
-                    VolleyTextFieldAttribute.DurationFieldWithArrows(
-                        inputTime = state.finishTime
-                    ) { time ->
-                        viewModel.obtainEvent(BasicGameSetupScreenEvent.FinishTimeChanged(time))
-                    }
-                }
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-                VolleySimpleComponent.DividerLine() //HorizontalLine()
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-                VolleyText.TitleMedium(
-                    text = stringResource(R.string.gender),
-                    modifier = Modifier.fillMaxWidth(),
-                    color = VolleyColor.White
-                )
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-                VolleyButton.GroupButtonsForGender3(
-                    checkId = when (state.gender) {
-                        Gender.Mix -> 1
-                        Gender.Men -> 2
-                        Gender.Women -> 3
-                    },
-                    modifier = Modifier,
-                    onSelected = { position ->
-                        val selectedGender = when (position) {
-                            1 -> Gender.Mix
-                            2 -> Gender.Men
-                            3 -> Gender.Women
-                            else -> null // Обработка некорректной позиции
+                        // Календарь показывается только если выбрана кнопка "Pick Date"
+                        if (showCalendar) {  // Используем флаг из ViewModel
+                            VolleyCalendar.GameCalendar(
+                                selectedDate = state.date,
+                                onDateSelected = { selectedDate ->
+                                    viewModel.obtainEvent(
+                                        BasicGameSetupScreenEvent.DateSelected(
+                                            selectedDate
+                                        )
+                                    )
+                                }
+                            )
+                            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
                         }
-                        selectedGender?.let { gender ->
-                            viewModel.obtainEvent(BasicGameSetupScreenEvent.GenderSelected(gender))
-                        } ?: run {
-                            // Обработка нераспознанной позиции
-                            Log.e("BasicGameSetupScreen", "Нераспознанная позиция: $position")
+
+                        VolleyText.BodyBold(
+                            text = stringResource(R.string.game_duration),
+                            modifier = Modifier,
+                            color = VolleyColor.White
+                        )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            VolleyText.BodyRegular(
+                                text = stringResource(R.string.from),
+                                modifier = Modifier,
+                                color = VolleyColor.White
+                            )
+
+                            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                            VolleyTextFieldAttribute.DurationFieldWithArrows(
+                                inputTime = state.startTime
+                            ) { time -> viewModel.obtainEvent(BasicGameSetupScreenEvent.StartTimeChanged(time)) }
+
+                            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                            VolleyText.BodyRegular(
+                                text = stringResource(R.string.to),
+                                modifier = Modifier,
+                                color = VolleyColor.White
+                            )
+
+                            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                            VolleyTextFieldAttribute.DurationFieldWithArrows(
+                                inputTime = state.finishTime
+                            ) { time -> viewModel.obtainEvent(BasicGameSetupScreenEvent.FinishTimeChanged(time)) }
                         }
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                        VolleySimpleComponent.DividerLine()
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                        VolleyText.TitleMedium(
+                            text = stringResource(R.string.gender),
+                            modifier = Modifier.fillMaxWidth(),
+                            color = VolleyColor.White
+                        )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+                        VolleyButton.GroupButtonsForGender3(
+                            checkId = when (state.gender) {
+                                Gender.Mix -> 1
+                                Gender.Men -> 2
+                                Gender.Women -> 3
+                            },
+                            modifier = Modifier,
+                            onSelected = { position ->
+                                val selectedGender = when (position) {
+                                    1 -> Gender.Mix
+                                    2 -> Gender.Men
+                                    3 -> Gender.Women
+                                    else -> null // Обработка некорректной позиции
+                                }
+                                selectedGender?.let { gender ->
+                                    viewModel.obtainEvent(BasicGameSetupScreenEvent.GenderSelected(gender))
+                                } ?: run { // Обработка нераспознанной позиции
+                                    Log.e("BasicGameSetupScreen", "Нераспознанная позиция: $position")
+                                }
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                        VolleySimpleComponent.DividerLine() //HorizontalLine()
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                        VolleyText.TitleMedium(
+                            text = stringResource(R.string.player_level),
+                            modifier = Modifier.fillMaxWidth(),
+                            color = VolleyColor.White
+                        )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+                        VolleyButton.GroupButtonsForLevelMulti(
+                            modifier = Modifier,
+                            checkedLevels = state.levels,
+                            onSelected = { levels ->
+                                viewModel.obtainEvent(BasicGameSetupScreenEvent.PlayerLevelSelected(levels))
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                        VolleyButton.ActiveButton(
+                            modifier = Modifier
+                                .height(44.dp)
+                                .align(Alignment.CenterHorizontally)
+                                .fillMaxWidth(),
+                            text = stringResource(R.string.next_step),
+                            onClick = {
+                                viewModel.obtainEvent(BasicGameSetupScreenEvent.OnNextStepClick)
+                            }
+                        )
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                     }
-                )
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-                VolleySimpleComponent.DividerLine() //HorizontalLine()
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-                VolleyText.TitleMedium(
-                    text = stringResource(R.string.player_level),
-                    modifier = Modifier.fillMaxWidth(),
-                    color = VolleyColor.White
-                )
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-                VolleyButton.GroupButtonsForLevelMulti(
-                    modifier = Modifier,
-                    checkedLevels = state.levels,
-                    onSelected = { levels ->
-                        viewModel.obtainEvent(BasicGameSetupScreenEvent.PlayerLevelSelected(levels))
-                    }
-                )
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-                VolleyButton.ActiveButton(
-                    modifier = Modifier
-                        // .padding(VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_16.dp)
-                        .height(44.dp)
-                        .align(Alignment.CenterHorizontally)
-                        .fillMaxWidth(),
-                    text = stringResource(R.string.next_step),
-                    onClick = {
-                        viewModel.obtainEvent(BasicGameSetupScreenEvent.OnNextStepClick)
-                    }
-                )
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                }
             }
         }
-        // Индикатор загрузки, если isLoading = true
-        if (state.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.size(48.dp))
-        }
     }
-} }}
+}
 
 @Preview
 @Composable
 private fun BasicGameSetupScreenPreview() {
-    val navController = rememberNavController() // Создаем моковый NavHostController
+    val navController = rememberNavController()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
-        BasicGameSetupScreen(viewModel = BasicGameSetupScreenViewModelPreview(),
-            navController = navController, paddingFromSystemUi = PaddingValues(0.dp))
-        // BasicGameSetupScreen(navController = navController)
+        BasicGameSetupScreen(
+            viewModel = BasicGameSetupScreenViewModelPreview(),
+            navController = navController, paddingFromSystemUi = PaddingValues(0.dp)
+        )
     }
 }
 
