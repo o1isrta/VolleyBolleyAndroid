@@ -2,6 +2,8 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGame
 
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
+import cy.volleybolley.core.presentation.ui.GENDER_FEMALE
+import cy.volleybolley.core.presentation.ui.GENDER_MALE
 import cy.volleybolley.core.presentation.ui.LEVEL_HIGH
 import cy.volleybolley.core.presentation.ui.LEVEL_LIGHT
 import cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM
@@ -107,11 +109,11 @@ class FakeSearchPlayersUseCase : SearchPlayersUseCase {
     override suspend fun invoke(query: String/*, favoritesOnly: Boolean*/): VolleyResult<List<Player>, ErrorType> {
         // Возвращаем тестовые данные
         val samplePlayers = listOf(
-            Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM),
-            Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO),
-            Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT),
-            Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH),
-            Player(5, "Maria", "Novak", null, false, LEVEL_PRO)
+            Player(1, "Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
+            Player(2, "Polina", "Vasylyeva", null, false, GENDER_FEMALE, LEVEL_PRO),
+            Player(3, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
+            Player(4, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH),
+            Player(5, "Maria", "Novak", null, false, GENDER_FEMALE, LEVEL_PRO)
         )
 
         val filteredPlayers = samplePlayers.filter {player ->

@@ -40,6 +40,9 @@ const val LEVEL_LIGHT = "L"
 const val LEVEL_MEDIUM = "M"
 const val LEVEL_PRO = "P"
 
+const val GENDER_MALE = "MALE"
+const val GENDER_FEMALE = "FEMALE"
+
 object VolleySimpleComponent {
     @Stable
     @Composable
@@ -352,10 +355,10 @@ private fun PreviewLevelBadge() {
 @Composable
 private fun PreviewPlayerRowWithRemoveList() {
     val players: List<Player> = listOf(
-        Player(1,"Kristina", "Popova", null, true, LEVEL_MEDIUM),
-        Player(2, "Polina", "Vasylyeva", null,false, LEVEL_PRO),
-        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT),
-        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH)
+        Player(1,"Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
+        Player(2, "Polina", "Vasylyeva", null,false, GENDER_FEMALE, LEVEL_PRO),
+        Player(3, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
+        Player(4, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH)
     )
     VolleyContainersRootTransparent.Root {
         Box(
@@ -383,10 +386,10 @@ private fun PreviewPlayerRowWithRemoveList() {
 @Composable
 private fun PreviewPlayerRowWithSelectAndFavoriteList() {
     val players: List<Player> = listOf(
-        Player(1,"Kristina", "Popova", null, true, LEVEL_MEDIUM),
-        Player(2, "Polina", "Vasylyeva", null,false, LEVEL_PRO),
-        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT),
-        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH)
+        Player(1,"Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
+        Player(2, "Polina", "Vasylyeva", null,false, GENDER_FEMALE, LEVEL_PRO),
+        Player(3, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
+        Player(4, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH)
     )
     VolleyContainersRootTransparent.Root {
         Box(

@@ -1,6 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 
 import cy.volleybolley.core.presentation.base.UiState
+import cy.volleybolley.core.presentation.ui.GENDER_FEMALE
+import cy.volleybolley.core.presentation.ui.GENDER_MALE
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.Privacy
 import cy.volleybolley.players.domain.model.Player
 
@@ -16,10 +18,10 @@ data class GameEnteringConditionsScreenState (
     val errorMessage: String? = null,
     val isLoading : Boolean = false,     // Для загрузки (если необходимо)
     val players: List<Player> = listOf(
-        Player(1,"Kristina", "Popova", null, true, LEVEL_MEDIUM),
-        Player(2, "Polina", "Vasylyeva", null,false, LEVEL_MEDIUM),
-        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT),
-        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH)
+        Player(1,"Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
+        Player(2, "Polina", "Vasylyeva", null,false, GENDER_FEMALE, LEVEL_MEDIUM),
+        Player(3, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
+        Player(4, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH)
     )
 //    val players: List<PlayerUI> = listOf(
 //        PlayerUI("Kristina Popova", LEVEL_MEDIUM),
