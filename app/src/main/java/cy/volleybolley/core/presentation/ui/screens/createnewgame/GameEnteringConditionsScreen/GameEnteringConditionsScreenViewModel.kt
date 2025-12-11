@@ -1,23 +1,14 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.CreateNewGameRepository
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeCreateNewGameRepository
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.GameData
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.Privacy
-import cy.volleybolley.players.domain.model.Player
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import kotlin.random.Random
 
 open class GameEnteringConditionsScreenViewModel (private val gameRepository: CreateNewGameRepository) :
@@ -53,8 +44,6 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
         when (event) {
             is GameEnteringConditionsScreenEvent.OnPublicSelected -> {
                 // Обработка выбора Public (Private через OpenPrivacyRequested)
-                //uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = Privacy.Public)
-                //uiStateMutable.value = uiStateMutable.value.copy(players = emptyList())
                 viewModelScope.launch {
                     gameRepository.updateGameData { gameData ->
                         gameData.copy(
@@ -64,14 +53,7 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
                 }
             }
             is GameEnteringConditionsScreenEvent.OnPrivateSelected -> {
-//                val current = uiStateMutable.value.selectedPrivacy
-//                // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
-//                if (current == Privacy.Public) {
-//                    uiStateMutable.value = uiStateMutable.value.copy(selectedPrivacy = Privacy.Private)
-//                    // отправляем эффект навигации (manageMode = true, если уже был private выбран до нажатия)
-//                    sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy)//manageMode))
-//                }
-//                // Если уже Private — ничего не делать
+                // Если уже Private — ничего не делать
                 if(uiStateMutable.value.players.isEmpty())
                    gotoPrivacyOptions()
                 // список не пустой — ничего не делать (переход на экран Privacy Option по нажатию на Manage...)
@@ -79,14 +61,6 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
             is GameEnteringConditionsScreenEvent.OnManagePlayersClick -> {
                gotoPrivacyOptions()
             }
-//            is GameEnteringConditionsScreenEvent.PlayersSelected -> {
-//                // Пользователь вернулся с Privacy screen, нажав Add
-//                val current = uiStateMutable.value
-//                uiStateMutable.value = current.copy(
-//                    selectedPrivacy = Privacy.Private,
-//                    players = event.players
-//                )
-//            }
             is GameEnteringConditionsScreenEvent.PerPersonChanged -> {
                 uiStateMutable.value = uiStateMutable.value.copy(perPerson = event.perPerson)
             }

@@ -91,14 +91,7 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                     val succeedJson = Json.encodeToString(succeed)
                     navController.navigate(SuccessRoute(succeedGame = succeedJson))
                 }
-                is GameEnteringConditionsScreenEffect.NavigateToPrivacy -> {
-                    // Передадим manageMode и текущий список игроков в savedStateHandle
-                    //val currentEntry = navController.currentBackStackEntry
-                    //currentEntry?.savedStateHandle?.set("manage_mode", effect.manageMode)
-                    // Передаём текущий список игроков как JSON, чтобы Privacy screen мог показать существующих
-                   // val playersJson = gson.toJson(uiState.players)
-                   // currentEntry?.savedStateHandle?.set("existing_players_json", playersJson)
-                    navController.navigate(PrivacyOptionsRoute) // ваша route для экрана выбора игроков
+                is GameEnteringConditionsScreenEffect.NavigateToPrivacy -> { navController.navigate(PrivacyOptionsRoute) // ваша route для экрана выбора игроков
                 }
                 //Обработка всех возможных случаев
                 else -> {
@@ -174,10 +167,6 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
 
                         VolleyButton.GroupButtonsForPrivacy(
-//                            checkId = when (state.selectedPrivacy) {
-//                                Privacy.Public -> 1
-//                                Privacy.Private -> 2
-//                            },
                             checkId = when  {
                                 state.players.isNotEmpty() -> 2 // Privacy.Private
                                 else -> 1                       // Privacy.Public
@@ -191,19 +180,9 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                                 }
                                 selectedPrivacy?.let { privacy ->
                                     when (privacy) {
-                                        //viewModel.obtainEvent(GameEnteringConditionsScreenEvent.PrivacySelected(it))
                                         Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected) //  Privacy.Public -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPublicSelected(Privacy.Public))
                                         Privacy.Private -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
                                         }
-//                                        Privacy.Private -> {
-//                                            // Если до этого было Public -> открыть Privacy screen (для первичного выбора)
-//                                            state.selectedPrivacy?.let { privacy ->
-//                                                if (privacy == Privacy.Public)
-//                                                    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
-//                                            }
-//                                            // Если уже Private — ничего не делать
-//                                        }
-                                    //}
                                 } ?: run {
                                     // Обработка нераспознанной позиции
                                     Log.e("GameEnteringConditionsScreen", "Нераспознанная позиция: $position")
@@ -213,13 +192,11 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                         // список выбранных игроков и кнопка Manage players
-                        //if (state.selectedPrivacy == Privacy.Private) {
                         if(state.players.isNotEmpty()) {
                             Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_24.dp)) {
                                 state.players.forEachIndexed { index, player ->
                                     VolleySimpleComponent.PlayerRowWithRemove(
                                         player = player,
-                                        //showActions = member.name != null,
                                         onAction = {
                                             viewModel.obtainEvent(GameEnteringConditionsScreenEvent.RemovePlayer(index))
                                         }
@@ -232,15 +209,12 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
                                 text = stringResource(R.string.manage_players),
                                 onClick = {
                                     // Управление игроками -> открываем Privacy screen в manageMode
-                                    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnManagePlayersClick())
+                                    viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnManagePlayersClick)
                                 }
                             )
                             Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                         }
                     }
-
-                       // Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-
                         VolleySimpleComponent.DividerLine()
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
@@ -334,47 +308,6 @@ fun GameEnteringConditionsScreen(navController: NavHostController,
         }
     }
 }
-
-
-//@Composable
-//private fun PlayerRowWithRemove(
-//    player: PlayerUI,
-//    onRemove: () -> Unit
-//) {
-//    Row(
-//        verticalAlignment = Alignment.CenterVertically,
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .heightIn(min = VolleyDimens.DIMEN_23.dp)
-//    ) {
-//        VolleyText.BodyRegular(
-//            text = player.name,// ?: stringResource(R.string.free_spot),
-//            color = VolleyColor.White,
-//            modifier = Modifier.weight(1f)
-//        )
-//       // if (showActions) {
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.End//Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
-//            ) {
-//                player.level.let { LevelBadge(it) }
-//                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-//                IconButton(
-//                    onClick = onRemove,
-//                    modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
-//                ) {
-//                    Icon(
-//                        painter = painterResource(R.drawable.ic_remove),
-//                        contentDescription = null,
-//                        tint = Color.Unspecified,
-//                        modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
-//                    )
-//                }
-//            }
-//       // }
-//    }
-//}
-
 
 @Preview
 @Composable

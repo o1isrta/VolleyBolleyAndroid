@@ -62,22 +62,6 @@ class FakeCreateNewGameRepository(initialGameData: GameData = GameData() // Во
         }
     }
 
-//    override suspend fun searchPlayers(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType> {
-//        // Заглушка для поиска: возвращаем список тестовых игроков, соответствующих запросу
-//        val samplePlayers = listOf(
-//            Player(1,"Kristina", "Popova", null, true, cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM),
-//            Player(2, "Polina", "Vasylyeva", null,false, cy.volleybolley.core.presentation.ui.LEVEL_PRO),
-//            Player(3, "Anton", "Ivanov", null, true, cy.volleybolley.core.presentation.ui.LEVEL_LIGHT),
-//            Player(4, "Aleksandr", "Abramov", null, false, cy.volleybolley.core.presentation.ui.LEVEL_HIGH),
-//            Player(4, "Maria", "Novak", null, false, cy.volleybolley.core.presentation.ui.LEVEL_PRO)
-//        )
-//        val filteredPlayers = samplePlayers.filter { player ->
-//            player.lastName.contains(query, ignoreCase = true) && (!favoritesOnly || player.isFavorite)
-//           /* it.lastName.contains(query, ignoreCase = true) && (!favoritesOnly || it.isFavorite)*/
-//        }
-//        return VolleyResult.Success(filteredPlayers)
-//    }
-
     override suspend fun saveGameDataToServer(): VolleyResult<Unit, ErrorType> {
         // Просто имитируем успешное сохранение
         return VolleyResult.Success(Unit)
@@ -121,13 +105,5 @@ class FakeSearchPlayersUseCase : SearchPlayersUseCase {
         }
         return VolleyResult.Success(filteredPlayers)
     }
-//        return VolleyResult.Success(
-//            listOf(
-//            Player(1,"Kristina", "Popova", null, true, cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM),
-//            Player(2, "Polina", "Vasylyeva", null,false, cy.volleybolley.core.presentation.ui.LEVEL_PRO),
-//            Player(3, "Anton", "Ivanov", null, true, cy.volleybolley.core.presentation.ui.LEVEL_LIGHT),
-//            Player(4, "Aleksandr", "Abramov", null, false, cy.volleybolley.core.presentation.ui.LEVEL_HIGH),
-//            Player(5, "Maria", "Novak", null, false, cy.volleybolley.core.presentation.ui.LEVEL_PRO)
-//        ))
-
+//
 }

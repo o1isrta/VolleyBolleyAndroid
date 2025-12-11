@@ -46,11 +46,8 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                          viewModel: PrivacyOptionsScreenViewModel = viewModel(),
                          paddingFromSystemUi: PaddingValues
                          ) {
-    val scrollState = rememberScrollState()             //Состояние скролла
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-
-    var searchText by remember { mutableStateOf("")}     // Состояние для поискового запроса
 
     LaunchedEffect(viewModel.uiEffect) { // подписываемся на Effect
         viewModel.uiEffect.collectLatest { effect ->
@@ -59,9 +56,6 @@ fun PrivacyOptionsScreen(navController: NavHostController,
                     Log.d("GameEnteringConditionsScreen", "ShowError effect triggered: ${effect.message}")
                     Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_LONG).show()
                 }
-//                GameEnteringConditionsScreenEffect.NavigateToPayments -> {
-//                    navController.navigate(PaymentsRoute)
-//                }
                 PrivacyOptionsScreenEffect.NavigateBack -> {
                     navController.popBackStack()
                 }
