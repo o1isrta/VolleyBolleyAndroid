@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cy.volleybolley.R
+import cy.volleybolley.core.domain.model.LevelType
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
@@ -34,6 +35,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsF
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.games.domain.model.entity.RatingType
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 @Composable
@@ -98,7 +100,8 @@ private fun RatePlayersScreen(
                                     eventCallback(
                                         RatePlayersEvent.RatePlayer(
                                             player.playerId,
-                                            RatingType.entries[position - 1]
+                                            position
+                                            //RatingType.entries[position - 1]
                                         )
                                     )
                                 }
@@ -138,14 +141,15 @@ private fun Header() {
 @Composable
 private fun PlayerBox(
     player: PlayerShortUI,
-    onSelected: (Int) -> Unit
+    onSelected: (RatingType) -> Unit
+    //onSelected: (Int) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_12.dp)
     ) {
         PlayerInfo(player = player)
         GroupButtonsForChangeLevel(
-            checkId = player.rating.checkId,
+            current = player.rating,//.checkId,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             onSelected = onSelected
         )

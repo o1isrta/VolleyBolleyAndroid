@@ -228,10 +228,6 @@
     <string name="set_privacy_if_you_want_to_play_with_particular_players">Set privacy if you want to play with particular players</string>
     <string name="enter_the_participation_fee_per_person">Enter the participation fee per person</string>
     <string name="dollar">$</string>
-    <string name="share_link_chooser_title">Share link</string>
-    <string name="share_text_game">Join the game in VolleyBolley: %1$s</string>
-    <string name="share_text_tournament">Join the tourney in VolleyBolley: %1$s</string>
-
     <string name="about_levels">About levels</string>
     <string name="back">Back</string>
     <string name="level_light_prefix">Light:</string>

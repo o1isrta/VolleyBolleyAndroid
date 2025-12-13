@@ -129,6 +129,7 @@ open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGa
                         ErrorType.NOT_FOUND -> "No players found."
                         ErrorType.UNKNOWN_ERROR -> "An unexpected error occurred."
                         ErrorType.BAD_REQUEST -> "Bad request"
+                        ErrorType.NO_REFRESH_TOKEN -> "No refresh token"
                     }
                     sendUiEffect(PrivacyOptionsScreenEffect.ShowError(errorMessage))
                     uiStateMutable.update {

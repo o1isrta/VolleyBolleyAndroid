@@ -1,7 +1,9 @@
 package cy.volleybolley.profile.domain.model
 
 import cy.volleybolley.R
+import kotlinx.serialization.Serializable
 
+@Serializable
 enum class PaymentType(val nameValue: String) {
     REVOLUT("REVOLUT"),
     CASH("CASH"),

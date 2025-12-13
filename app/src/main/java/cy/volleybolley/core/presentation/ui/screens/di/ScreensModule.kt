@@ -18,11 +18,17 @@ import org.koin.dsl.module
 //    }
 //}
 val screensModule = module {
-    viewModel { (succeedGameJson: String) ->
-        val json = get<Json>()
-        // Десериализуем JSON-строку обратно в объект SucceedGame
-        val succeedGame = json.decodeFromString(SucceedGame.serializer(), succeedGameJson)
-        // Передаем десериализованный объект в SuccessViewModel
+    viewModel { (succeedGame: SucceedGame) ->
         SuccessViewModel(createdEvent = succeedGame)
     }
 }
+
+//val screensModule = module {
+//    viewModel { (succeedGameJson: String) ->
+//        val json = get<Json>()
+//        // Десериализуем JSON-строку обратно в объект SucceedGame
+//        val succeedGame = json.decodeFromString(SucceedGame.serializer(), succeedGameJson)
+//        // Передаем десериализованный объект в SuccessViewModel
+//        SuccessViewModel(createdEvent = succeedGame)
+//    }
+//}

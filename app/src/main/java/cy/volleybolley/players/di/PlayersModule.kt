@@ -32,7 +32,7 @@ val playersModule = module {
         } else {
             PlayersRepositoryImpl(
                 networkClient = get(qualifier = HttpClientQualifier.PLAYERS.qualifier),
-                tokenProvider = { null } // заменить на реальную реализацию при появлении
+               // tokenProvider = { null } // заменить на реальную реализацию при появлении
             )
         }
     } /*       PlayersRepositoryImpl(

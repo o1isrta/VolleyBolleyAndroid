@@ -2,6 +2,7 @@ package cy.volleybolley.core.presentation.ui.screens.home.success
 
 import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.profile.domain.model.PaymentType
+import kotlinx.serialization.SerialName
 //import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.net.URLEncoder
@@ -27,26 +28,37 @@ data class SucceedGame(
 )
 
 fun SucceedGame.toDeepLink(): String {
-    val encodedType = URLEncoder.encode(type.toString(), StandardCharsets.UTF_8.toString())
+    val encodedType = URLEncoder.encode(type.serialName, StandardCharsets.UTF_8.toString())
     val encodedId = URLEncoder.encode(id.toString(), StandardCharsets.UTF_8.toString())
     return "volleybolley://invite/$encodedType/$encodedId"
+//    val encodedType = URLEncoder.encode(type.toString(), StandardCharsets.UTF_8.toString())
+//    val encodedId = URLEncoder.encode(id.toString(), StandardCharsets.UTF_8.toString())
+//    return "volleybolley://invite/$encodedType/$encodedId"
 }
 
-//@Serializable
-sealed interface SucceedGameType {
-//    @Serializable
-//    @SerialName("CreatedGame") // SerialName обязателен для sealed классов
-    object CreatedGame : SucceedGameType
+@Serializable
+sealed class SucceedGameType {
+    @Serializable
+    @SerialName("CreatedGame")
+    data object CreatedGame : SucceedGameType()
 
-//    @Serializable
-//    @SerialName("CreatedTournament")
-    object CreatedTournament : SucceedGameType
+    @Serializable
+    @SerialName("CreatedTournament")
+    data object CreatedTournament : SucceedGameType()
 
-//    @Serializable
-//    @SerialName("JoinedGame")
-    object JoinedGame : SucceedGameType
+    @Serializable
+    @SerialName("JoinedGame")
+    data object JoinedGame : SucceedGameType()
 
-//    @Serializable
-//    @SerialName("JoinedTournament")
-    object JoinedTournament : SucceedGameType
+    @Serializable
+    @SerialName("JoinedTournament")
+    data object JoinedTournament : SucceedGameType()
+
+    val serialName: String
+        get() = when (this) {
+            is CreatedGame -> "CreatedGame"
+            is CreatedTournament -> "CreatedTournament"
+            is JoinedGame -> "JoinedGame"
+            is JoinedTournament -> "JoinedTournament"
+        }
 }

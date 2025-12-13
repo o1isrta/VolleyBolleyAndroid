@@ -1183,8 +1183,53 @@ object VolleyButton {
 //    }
 
     @Composable
-    fun GroupButtonsForChangeLevel(
+    fun GroupButtonsForChangeLevel1(
         current: RatingType?,
+        modifier: Modifier,
+        onSelected: (RatingType) -> Unit
+    ) {
+        val items = listOf(
+            RatingType.DOWN,
+            RatingType.CONFIRM,
+            RatingType.UP
+        )
+
+        ButtonsGroup(
+            items.mapIndexed { index, type ->
+                ButtonItem(
+                    position = index + 1,
+                    isChecked = current?.checkId == type.checkId,
+                    button = { _, isChecked, onClick ->
+                        when (type) {
+                            RatingType.DOWN -> ButtonLevelDown(
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+
+                            RatingType.CONFIRM -> ButtonConfirmLevel(
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+
+                            RatingType.UP -> ButtonLevelUp(
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
+                    }
+                )
+            },
+            modifier = modifier.height(63.dp),
+            onSelected = { index ->
+                val type = items[index - 1]
+                onSelected(type)
+            }
+        )
+    }
+
+    @Composable
+    fun GroupButtonsForChangeLevel(
+        current: RatingType,
         modifier: Modifier,
         onSelected: (RatingType) -> Unit
     ) {

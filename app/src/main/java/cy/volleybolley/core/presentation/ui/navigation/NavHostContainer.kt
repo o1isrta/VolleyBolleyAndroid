@@ -11,7 +11,7 @@ import androidx.navigation.toRoute
 //import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
 //import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 //import cy.volleybolley.core.presentation.ui.screens.home.rateplayers.RatePlayersScreen
-import cy.volleybolley.auth.ui.screens.authoization.AuthorizationScreen
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.AuthorizationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.VerifyPhoneNumberScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
@@ -79,8 +79,8 @@ import org.koin.core.parameter.parametersOf
 fun NavHostContainer(
     paddingFromSystemUi: PaddingValues,
     navController: NavHostController,
-    startDestination: NavMap = LaunchRoute,
-    //startDestination: NavMap = HomeTopLevelRoute,
+    //startDestination: NavMap = LaunchRoute,
+    startDestination: NavMap = HomeTopLevelRoute,
     activityFinisher: () -> Unit,
 ) {
     NavHost(
@@ -191,15 +191,6 @@ fun NavHostContainer(
                 val viewModel: PrivacyOptionsScreenViewModel = koinViewModel()
                 PrivacyOptionsScreen(navController = navController, viewModel = viewModel, paddingFromSystemUi = paddingFromSystemUi,)
             }
-//            composable<BasicGameSetupRoute> { BasicGameSetupScreen(
-//                navController,
-//                viewModel = BasicGameSetupScreenViewModel(get())
-//            ) }
-//            composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(
-//                navController,
-//                viewModel = GameEnteringConditionsScreenViewModel()
-//            ) }
-//            composable<PrivacyOptionsRoute> { PrivacyOptionsScreen(navController) }
 
             // create tourney
             composable<BasicTourneySetupRoute> { BasicTourneySetupScreen(navController) }

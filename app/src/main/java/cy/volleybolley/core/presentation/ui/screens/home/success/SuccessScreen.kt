@@ -88,7 +88,6 @@ private fun SuccessScreen(
                 InvitePlayersRoute(id = state.event.id)
             )
 
-            //SuccessEffect.ShareLink -> shareEventLink(context, state)
             null -> Unit
         }
     }
