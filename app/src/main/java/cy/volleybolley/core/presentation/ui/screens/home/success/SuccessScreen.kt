@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -87,7 +88,7 @@ private fun SuccessScreen(
                 InvitePlayersRoute(id = state.event.id)
             )
 
-            SuccessEffect.ShareLink -> shareEventLink(context, state)
+            //SuccessEffect.ShareLink -> shareEventLink(context, state)
             null -> Unit
         }
     }
@@ -98,7 +99,8 @@ private fun SuccessScreen(
                 modifier = Modifier.padding(
                     start = VolleyDimens.DIMEN_8.dp,
                     end = VolleyDimens.DIMEN_8.dp,
-                    top = VolleyDimens.DIMEN_116.dp
+                    top = VolleyDimens.DIMEN_8.dp
+                    //top = VolleyDimens.DIMEN_116.dp
                 ),
                 cornerRadius = VolleyDimens.DIMEN_32,
             ) {
@@ -126,7 +128,9 @@ private fun SuccessScreen(
                     RowIconText(
                         painterResource = R.drawable.ic_geo,
                         title = state.event.locationName,
-                        text = state.event.locationPlace
+                        //text = state.event.locationPlace
+                        text = state.event.locationPlace,
+                        iconSize = VolleyDimens.DIMEN_16.dp
                     )
                     RowIconText(
                         painterResource = R.drawable.ic_clock,
@@ -166,7 +170,8 @@ private fun SuccessScreen(
                         eventCallback(SuccessEvent.OnInvitePlayers)
                     },
                     onShareLinkClick = {
-                        eventCallback(SuccessEvent.OnShareLink)
+                       // eventCallback(SuccessEvent.OnShareLink)
+                        shareEventLink(context, state.event)
                     }
                 )
             }
@@ -191,16 +196,29 @@ private fun RowIconText(
     @DrawableRes painterResource: Int,
     title: String,
     text: String,
+    modifier: Modifier = Modifier,
+    iconSize: Dp = VolleyDimens.DIMEN_24.dp,
 ) {
     Row(
-        modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+       // modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+        modifier = modifier.padding(top = VolleyDimens.DIMEN_16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
+    /*    Image(
             painter = painterResource(painterResource),
-            modifier = Modifier.size(VolleyDimens.DIMEN_24.dp),
+          //  modifier = Modifier.size(VolleyDimens.DIMEN_24.dp),
             contentDescription = null
-        )
+        )*/
+        Box(
+            modifier = Modifier.size(VolleyDimens.DIMEN_24.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(painterResource),
+                modifier = Modifier.size(iconSize),
+                contentDescription = null
+            )
+        }
         Column(
             modifier = Modifier.padding(start = VolleyDimens.DIMEN_8.dp)
         ) {
@@ -210,9 +228,9 @@ private fun RowIconText(
     }
 }
 
-private fun shareEventLink(context: Context, state: SuccessState) {
-    val deepLink = state.event.toDeepLink()
-    val shareText = when (state.event.type) {
+private fun shareEventLink(context: Context, event: SucceedGame) {
+    val deepLink = event.toDeepLink()
+    val shareText = when (event.type) {
         SucceedGameType.CreatedGame, SucceedGameType.JoinedGame ->
             context.getString(R.string.share_text_game, deepLink)
 

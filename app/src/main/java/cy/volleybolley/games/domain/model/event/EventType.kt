@@ -4,4 +4,3 @@ enum class EventType {
     GAME,
     TOURNAMENT
 }
-

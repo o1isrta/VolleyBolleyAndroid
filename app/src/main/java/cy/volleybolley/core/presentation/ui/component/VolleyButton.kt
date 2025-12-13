@@ -68,6 +68,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonSText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonXSText
+import cy.volleybolley.games.domain.model.entity.RatingType
 
 @UiLibraryMarker
 object VolleyButton {
@@ -1182,42 +1183,47 @@ object VolleyButton {
 //    }
 
     @Composable
-    fun GroupButtonsForChangeLevel(checkId: Int, modifier: Modifier, onSelected: (Int) -> Unit) {
+    fun GroupButtonsForChangeLevel(
+        current: RatingType?,
+        modifier: Modifier,
+        onSelected: (RatingType) -> Unit
+    ) {
+        val items = listOf(
+            RatingType.DOWN,
+            RatingType.CONFIRM,
+            RatingType.UP
+        )
+
         ButtonsGroup(
-            listOf(
+            items.mapIndexed { index, type ->
                 ButtonItem(
-                    position = 1,
-                    isChecked = checkId == 1,
+                    position = index + 1,
+                    isChecked = current?.checkId == type.checkId,
                     button = { _, isChecked, onClick ->
-                        ButtonLevelDown(
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-                ),
-                ButtonItem(
-                    position = 2,
-                    isChecked = checkId == 2,
-                    button = { _, isChecked, onClick ->
-                        ButtonConfirmLevel(
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
-                    }
-                ),
-                ButtonItem(
-                    position = 3,
-                    isChecked = checkId == 3,
-                    button = { _, isChecked, onClick ->
-                        ButtonLevelUp(
-                            isChecked = isChecked,
-                            onClick = onClick
-                        )
+                        when (type) {
+                            RatingType.DOWN -> ButtonLevelDown(
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+
+                            RatingType.CONFIRM -> ButtonConfirmLevel(
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+
+                            RatingType.UP -> ButtonLevelUp(
+                                isChecked = isChecked,
+                                onClick = onClick
+                            )
+                        }
                     }
                 )
-            ),
-            modifier = modifier.height(height = 63.dp),
-            onSelected = onSelected
+            },
+            modifier = modifier.height(63.dp),
+            onSelected = { index ->
+                val type = items[index - 1]
+                onSelected(type)
+            }
         )
     }
 
@@ -2039,12 +2045,14 @@ object VolleyButton {
             Text(
                 text = buildAnnotatedString {
                     if (isEnable) {
-                        withStyle(SpanStyle(
-                            brush = Brush.verticalGradient(
-                                listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient)
-                            ),
-                            textDecoration = TextDecoration.Underline
-                        )) {
+                        withStyle(
+                            SpanStyle(
+                                brush = Brush.verticalGradient(
+                                    listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient)
+                                ),
+                                textDecoration = TextDecoration.Underline
+                            )
+                        ) {
                             append(text)
                         }
                     } else {
@@ -2275,7 +2283,7 @@ private fun PreviewGroupButtonsForChangeLevel() {
             .height(200.dp)
     ) {
         VolleyButton.GroupButtonsForChangeLevel(
-            checkId = 1,
+            current = RatingType.UP,
             modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
         )
@@ -2430,7 +2438,9 @@ fun PreviewGradientTextButton() {
                 onClick = {}
             )
             VolleyButton.GradientTextButton(
-                modifier = Modifier.padding(top = 20.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .fillMaxWidth(),
                 text = stringResource(R.string.get_new_code),
                 isEnable = true,
                 onClick = {}
@@ -2462,7 +2472,7 @@ private fun PreviewCombo() {
                     onClick = {}
                 )
                 VolleyButton.GroupButtonsForChangeLevel(
-                    1,
+                    RatingType.UP,
                     modifier = Modifier
                          .padding(vertical = 12.dp)
                         .align(Alignment.CenterHorizontally),

@@ -47,9 +47,7 @@ fun PersonalData.toUpdateBody(): PersonalDataUpdateBody {
     return PersonalDataUpdateBody(
         firstName = checkStringDataField(firstName),
         lastName = checkStringDataField(lastName),
-        gender = checkStringDataField(gender),
         birthDate = checkStringDataField(birthDate),
-        level = checkStringDataField(level),
         countryId = checkIntDataField(countryId),
         cityId = checkIntDataField(cityId)
     )

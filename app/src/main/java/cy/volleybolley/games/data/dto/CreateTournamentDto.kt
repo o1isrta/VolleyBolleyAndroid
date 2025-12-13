@@ -18,4 +18,3 @@ class CreateTournamentDto(
     @SerialName("payment_type") val paymentType: String,
     @SerialName("teams") val teams: List<PlayersDto>,
 )
-

@@ -77,7 +77,10 @@ val gamesModule = module {
         GameFeedRepositoryImpl(networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier))
     }
     single<GameRatingRepository> {
-        GameRatingRepositoryImpl(networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier))
+        GameRatingRepositoryImpl(
+            networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier),
+            applicationScope = get()
+        )
     }
 
     single<TournamentsRepository> {
@@ -87,7 +90,10 @@ val gamesModule = module {
         TournamentParticipationRepositoryImpl(networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier))
     }
     single<TournamentRatingRepository> {
-        TournamentRatingRepositoryImpl(networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier))
+        TournamentRatingRepositoryImpl(
+            networkClient = get(qualifier = HttpClientQualifier.GAMES.qualifier),
+            applicationScope = get()
+        )
     }
 
     // Domain

@@ -43,4 +43,3 @@ inline fun <Data, Error, E2> VolleyResult<Data, Error>.mapFailure(
         is VolleyResult.Failure -> VolleyResult.Failure(transform(error))
     }
 }
-

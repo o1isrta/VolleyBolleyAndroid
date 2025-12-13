@@ -47,7 +47,6 @@ import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.On
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnDonateClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnFindGameClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.model.DigitIcon
-import cy.volleybolley.courts.domain.model.Location
 import org.koin.androidx.compose.koinViewModel
 
 const val HOME_FIND_GAME_TEXT_WEIGHT = 0.6f

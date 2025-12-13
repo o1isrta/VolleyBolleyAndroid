@@ -2,7 +2,7 @@ package cy.volleybolley.core.presentation.ui.screens.home.success
 
 import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.profile.domain.model.PaymentType
-import kotlinx.serialization.SerialName
+//import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -32,21 +32,21 @@ fun SucceedGame.toDeepLink(): String {
     return "volleybolley://invite/$encodedType/$encodedId"
 }
 
-@Serializable
+//@Serializable
 sealed interface SucceedGameType {
-    @Serializable
-    @SerialName("CreatedGame") // SerialName обязателен для sealed классов
+//    @Serializable
+//    @SerialName("CreatedGame") // SerialName обязателен для sealed классов
     object CreatedGame : SucceedGameType
 
-    @Serializable
-    @SerialName("CreatedTournament")
+//    @Serializable
+//    @SerialName("CreatedTournament")
     object CreatedTournament : SucceedGameType
 
-    @Serializable
-    @SerialName("JoinedGame")
+//    @Serializable
+//    @SerialName("JoinedGame")
     object JoinedGame : SucceedGameType
 
-    @Serializable
-    @SerialName("JoinedTournament")
+//    @Serializable
+//    @SerialName("JoinedTournament")
     object JoinedTournament : SucceedGameType
 }

@@ -6,5 +6,6 @@ enum class ErrorType {
     BAD_REQUEST,
     SERVER_ERROR,
     UNAUTHORIZED,
+    NO_REFRESH_TOKEN,
     UNKNOWN_ERROR
 }
