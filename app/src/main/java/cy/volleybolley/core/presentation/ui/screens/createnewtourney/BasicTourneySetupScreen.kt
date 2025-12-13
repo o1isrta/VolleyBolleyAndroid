@@ -46,7 +46,7 @@ fun BasicTourneySetupScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .verticalScroll(scrollState)
-    ){
+    ) {
 
         VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = VolleyDimens.DIMEN_32,
@@ -57,7 +57,12 @@ fun BasicTourneySetupScreen(navController: NavHostController) {
         }
         VolleyButton.ActiveButton(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_8.dp, VolleyDimens.DIMEN_16.dp)
+                .padding(
+                    VolleyDimens.DIMEN_8.dp,
+                    VolleyDimens.DIMEN_8.dp,
+                    VolleyDimens.DIMEN_8.dp,
+                    VolleyDimens.DIMEN_16.dp
+                )
                 .height(44.dp)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),

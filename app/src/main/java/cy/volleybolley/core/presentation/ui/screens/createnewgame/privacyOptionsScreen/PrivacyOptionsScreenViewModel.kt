@@ -1,13 +1,13 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.CreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeCreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeSearchPlayersUseCase
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.GameData
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.FakeCreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.FakeSearchPlayersUseCase
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.GameData
 import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.players.domain.usecase.SearchPlayersUseCase
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +18,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGameRepository,
-                                         private val searchPlayersUseCase: SearchPlayersUseCase) : BaseViewModel<PrivacyOptionsScreenState, PrivacyOptionsScreenEvent, PrivacyOptionsScreenEffect>(
+open class PrivacyOptionsScreenViewModel(
+    private val gameRepository: CreateNewGameRepository,
+    private val searchPlayersUseCase: SearchPlayersUseCase
+) : BaseViewModel<PrivacyOptionsScreenState, PrivacyOptionsScreenEvent, PrivacyOptionsScreenEffect>(
     PrivacyOptionsScreenState()
 ) {
     override val tag: String = "PrivacyOptionsScreenViewModel"
@@ -68,19 +70,20 @@ open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGa
     }
 
     private fun onQueryChange(queryText: String) {
-         // Отменяем предыдущий Job, если он существует
+        // Отменяем предыдущий Job, если он существует
         searchJob?.cancel()
         // Запускаем новый Job с задержкой
         searchJob = viewModelScope.launch {
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 uiStateMutable.value = uiStateMutable.value.copy(query = queryText)
             }
-            delay(300)
+            val debounce : Long = 300
+            delay(debounce)
             searchPlayers(uiStateMutable.value.query)
         }
     }
 
-    //Вызов performSearch по нажатию enter
+    // Вызов performSearch по нажатию enter
     fun onEnterPressed() {
         searchJob?.cancel()
         searchPlayers(uiStateMutable.value.query)
@@ -100,7 +103,8 @@ open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGa
             getErrorLogMessage = { "Error searching players for query: $query - $it" }
         ) {
             uiStateMutable.update { it.copy(isLoading = true) }
-            delay(500) // Имитируем задержку сети
+            val debounce : Long = 500
+            delay(debounce) // Имитируем задержку сети
 
             // Вызываем UseCase
             when (val result = searchPlayersUseCase(query)) {
@@ -121,6 +125,7 @@ open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGa
                         )
                     }
                 }
+
                 is VolleyResult.Failure -> {
                     val errorMessage = when (result.error) {
                         ErrorType.UNAUTHORIZED -> "Authentication required"
@@ -149,8 +154,9 @@ open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGa
             if (isPlayerSelected(player)) { // если был выбран, то при нажатии, становится не выбран. и наоборот
                 updatedSelectedPlayers.remove(player)  // снимаем выбор
             } else {
-                if (updatedSelectedPlayers.size < gameRepository.gameData.value.maximumPlayers)
+                if (updatedSelectedPlayers.size < gameRepository.gameData.value.maximumPlayers) {
                     updatedSelectedPlayers.add(player) // выбираем
+                }
             }
             currentState.copy(selectedPlayers = updatedSelectedPlayers)
         }
@@ -161,7 +167,7 @@ open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGa
             gameRepository.updateGameData { currentData ->
                 currentData.copy(players = uiState.value.selectedPlayers.toList())
             }
-        }.invokeOnCompletion { //вызывается когда корутина завершилась
+        }.invokeOnCompletion { // вызывается, когда корутина завершилась
             clearSearchResults() // Очищаем результаты поиска после завершения
         }
     }
@@ -173,7 +179,7 @@ open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGa
         }
     }
 
-    fun isPlayerSelected(player: Player): Boolean{
+    fun isPlayerSelected(player: Player): Boolean {
         return uiStateMutable.value.selectedPlayers.contains(player)
     }
 
@@ -182,5 +188,4 @@ open class PrivacyOptionsScreenViewModel(private val gameRepository: CreateNewGa
 // Специальный ViewModel для Preview
 class PrivacyOptionsScreenViewModelPreview : PrivacyOptionsScreenViewModel(
     FakeCreateNewGameRepository(GameData()), FakeSearchPlayersUseCase()
-) {
-}
+)

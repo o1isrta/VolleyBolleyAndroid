@@ -63,14 +63,18 @@ fun AuthorizationByPhoneScreen(
             .padding(top = paddingFromSystemUi.calculateTopPadding() + 8.dp, start = 8.dp, end = 8.dp)
             .fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(20.dp).fillMaxWidth()) {
+        Column(modifier = Modifier
+            .padding(20.dp)
+            .fillMaxWidth()) {
             VolleyTopBar.TopBarWithBackButton(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.registration),
                 onBackNavigationRequested = onBackNavigationRequested
             )
             VolleyTextFieldGradient.PhoneTextField(
-                modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth(),
                 text = state.phoneNumber,
                 alertMessage = if (state.isPhoneNumberInputError) {
                     stringResource(R.string.valid_phone_number)
@@ -80,7 +84,9 @@ fun AuthorizationByPhoneScreen(
                 actionToTransferContent = { eventCallback(AuthorizationByPhoneEvent.TypePhoneNumber(it)) }
             )
             VolleyButton.ActiveButton(
-                modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth(),
                 enabled = state.isBtnSendCodeEnabled && !state.isLoading,
                 text = stringResource(R.string.send_code),
                 onClick = { eventCallback(AuthorizationByPhoneEvent.SendCodeButtonClicked) }

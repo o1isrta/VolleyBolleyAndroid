@@ -53,9 +53,9 @@ object VolleyMessageTextField {
         actionToTransferContent: (String) -> Unit,
     ) {
         val limitedText = VolleyUiUtil.getLimitedText(maxLength, textInput)
-        Box (
-           // modifier = modifier //
-        ){
+        Box(
+            // modifier = modifier //
+        ) {
             MessageContainer(
                 //modifier = modifier
                 modifier = modifier
@@ -64,52 +64,53 @@ object VolleyMessageTextField {
                 // Внутренний Box содержит и текстовое поле, и счётчик,
                 // чтобы backgroundHeight учитывал их обеих
                 Box(
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
                         .fillMaxSize()
                 ) {
-                MessageTextField(
-                    textInput = limitedText,
-                    maxLength = maxLength,
-                    hint = hint,
-                    actionToTransferContent = { text ->
-                        actionToTransferContent(text)
-                    },
-                    modifier = Modifier
-                        .padding(
-                           // start = VolleyDimens.DIMEN_16.dp,
-                            top = VolleyDimens.DIMEN_16.dp,
-                           // end = VolleyDimens.DIMEN_16.dp,
-                            bottom = VolleyDimens.DIMEN_34.dp
-                        )
-                        .fillMaxWidth()
-                )
-            //}
-
-            /*Box(
-                contentAlignment = Alignment.BottomEnd,
-                modifier = Modifier//modifier
-                    .padding(
-                        start = VolleyDimens.DIMEN_16.dp,
-                        top = 0.dp,
-                        end = VolleyDimens.DIMEN_16.dp,
-                        bottom = VolleyDimens.DIMEN_16.dp
+                    MessageTextField(
+                        textInput = limitedText,
+                        maxLength = maxLength,
+                        hint = hint,
+                        actionToTransferContent = { text ->
+                            actionToTransferContent(text)
+                        },
+                        modifier = Modifier
+                            .padding(
+                                // start = VolleyDimens.DIMEN_16.dp,
+                                top = VolleyDimens.DIMEN_16.dp,
+                                // end = VolleyDimens.DIMEN_16.dp,
+                                bottom = VolleyDimens.DIMEN_34.dp
+                            )
+                            .fillMaxWidth()
                     )
-                  //  .fillMaxWidth()
-                  //  .align(Alignment.BottomEnd)
-            ) {*/
-                VolleyText.BodyLight(
-                    text = "${limitedText.length}/$maxLength",
-                    maxLines = 1,
-                    color = VolleyColor.White,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(
-                           // end = VolleyDimens.DIMEN_16.dp,
-                            bottom = VolleyDimens.DIMEN_16.dp
-                        )
-                )
+                    //}
+
+                    /*Box(
+                        contentAlignment = Alignment.BottomEnd,
+                        modifier = Modifier//modifier
+                            .padding(
+                                start = VolleyDimens.DIMEN_16.dp,
+                                top = 0.dp,
+                                end = VolleyDimens.DIMEN_16.dp,
+                                bottom = VolleyDimens.DIMEN_16.dp
+                            )
+                          //  .fillMaxWidth()
+                          //  .align(Alignment.BottomEnd)
+                    ) {*/
+                    VolleyText.BodyLight(
+                        text = "${limitedText.length}/$maxLength",
+                        maxLines = 1,
+                        color = VolleyColor.White,
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(
+                                // end = VolleyDimens.DIMEN_16.dp,
+                                bottom = VolleyDimens.DIMEN_16.dp
+                            )
+                    )
+                }
             }
-        }
         }
 
 
@@ -191,9 +192,9 @@ object VolleyMessageTextField {
         contentContainerAlignment: Alignment = Alignment.TopStart,
         content: @Composable BoxScope.() -> Unit
     ) {
-      //  val density = LocalDensity.current
+        //  val density = LocalDensity.current
         val shape = RoundedCornerShape(cornerRadius.dp)
-       // var backgroundHeight: Dp by remember { mutableStateOf(0.dp) }
+        // var backgroundHeight: Dp by remember { mutableStateOf(0.dp) }
         var containerSize by remember { mutableStateOf(IntSize.Zero) } //
 
 
@@ -208,10 +209,10 @@ object VolleyMessageTextField {
             Box(
                 modifier = Modifier
                     .matchParentSize()//
-                  //  .height(backgroundHeight)
-                 //   .fillMaxWidth()
+                    //  .height(backgroundHeight)
+                    //   .fillMaxWidth()
                     .background(VolleyColor.White.copy(alpha = 0.08f))
-                  //  .clip(shape)
+                    //  .clip(shape)
                     .blur(blurRadius.dp)
                     .border(
                         width = VolleyDimens.DIMEN_4.dp,
@@ -226,7 +227,7 @@ object VolleyMessageTextField {
                 screenDensity = LocalDensity.current,
                 contentContainerAlignment = contentContainerAlignment,
                 content = content,
-               // setBackgroundHeightCallback = { height -> backgroundHeight = height }
+                // setBackgroundHeightCallback = { height -> backgroundHeight = height }
                 // можно оставить пустым callback'ом, если он больше не нужен
                 setBackgroundHeightCallback = {}
             )
@@ -241,10 +242,10 @@ object VolleyMessageTextField {
         contentContainerAlignment: Alignment = Alignment.TopStart,
         content: @Composable BoxScope.() -> Unit
     ) {
-       // val density = LocalDensity.current
+        // val density = LocalDensity.current
         val shape = RoundedCornerShape(cornerRadius.dp)
 
-     //   var backgroundHeight: Dp by remember { mutableStateOf(0.dp) }
+        //   var backgroundHeight: Dp by remember { mutableStateOf(0.dp) }
         var containerSize by remember { mutableStateOf(IntSize.Zero) }
         var gradientRadius = VolleyUiUtil.getGradientRadiusByContainerSize(containerSize)
 
@@ -347,7 +348,8 @@ private fun PreviewMessageField() {
             VolleyMessageTextField.MessageField(
                 hint = "Some hint...",
                 textInput = "",
-                modifier = Modifier.height(106.dp)
+                modifier = Modifier
+                    .height(106.dp)
                     .padding(VolleyDimens.DIMEN_20.dp, 0.dp)
             ) { }
 

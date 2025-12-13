@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository
 
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
@@ -25,8 +25,8 @@ data class GameData(
         tags = listOf()
     ),
     val date: LocalDate = LocalDate.now(),
-    val startTime: VolleyTimeStamp? = VolleyTimeStamp(2,0, true),
-    val finishTime: VolleyTimeStamp? = VolleyTimeStamp(4,0, true),
+    val startTime: VolleyTimeStamp? = VolleyTimeStamp(2, 0, true),
+    val finishTime: VolleyTimeStamp? = VolleyTimeStamp(4, 0, true),
     val gender: Gender = Gender.Mix,
     val levels: Set<Level> = setOf(Level.Light, Level.Medium, Level.Hard),
     // получаем с экрана GameEnteringConditionsScreen:
@@ -38,10 +38,10 @@ data class GameData(
     val players: List<Player> = emptyList() // игроки, выбранные для игры
 )
 
-   enum class Privacy {
-        Public,
-        Private
-    }
+enum class Privacy {
+    Public,
+    Private
+}
 
 enum class Gender {
     Mix,

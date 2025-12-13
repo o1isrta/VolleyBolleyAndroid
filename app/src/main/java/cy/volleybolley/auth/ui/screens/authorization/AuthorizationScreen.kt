@@ -114,7 +114,9 @@ fun AuthorizationScreen(
                 onSuccessGetNotRegisterUser(user)
             }
 
-            is NavigateToHome -> { onSuccessGetRegisterUser() }
+            is NavigateToHome -> {
+                onSuccessGetRegisterUser()
+            }
 
             is ShowToast -> {
                 Toast.makeText(context, (effect as ShowToast).message, Toast.LENGTH_SHORT).show()

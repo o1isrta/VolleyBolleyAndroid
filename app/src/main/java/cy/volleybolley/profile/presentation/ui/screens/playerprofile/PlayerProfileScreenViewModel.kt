@@ -47,7 +47,8 @@ class PlayerProfileScreenViewModel(
                 }
             )
 
-            ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/ }
+            ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/
+            }
 
             is ClickOnFavoriteManagementButton -> uiStateMutable.update {
                 it.copy(

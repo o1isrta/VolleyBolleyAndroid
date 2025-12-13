@@ -68,7 +68,7 @@ object VolleyCalendar {   // Calendar Section
         startMonth: YearMonth = YearMonth.now(),                            // Дефолтное значение: текущий месяц
         endMonth: YearMonth = YearMonth.now().plusYears(2),      // Дефолтное значение: 2 года вперед
         isDaySelectable: ((LocalDate) -> Boolean)? = null                   // Предикат, который определяет, можно ли выбрать день.
-                                                                            // True - можно выбрать, False - нельзя.
+        // True - можно выбрать, False - нельзя.
     ) {
         val today = LocalDate.now()
         // Если isDaySelectable не задан, используем дефолтное поведение
@@ -97,7 +97,7 @@ object VolleyCalendar {   // Calendar Section
                 .fillMaxWidth()
                 .aspectRatio(319f / 266f) // Сохраняем пропорции
                 .background(VolleyColor.White, RoundedCornerShape(32.dp))
-                .padding(12.dp,12.dp,12.dp, 12.dp)
+                .padding(12.dp, 12.dp, 12.dp, 12.dp)
         ) {
             // Заголовок месяца
             MonthHeader(month = calendarState.firstVisibleMonth, calendarState = calendarState)
@@ -116,7 +116,7 @@ object VolleyCalendar {   // Calendar Section
                         // Также проверяем, что день относится к текущему месяцу.
                         isSelectable = actualIsDaySelectable(day.date) /*&& day.position == DayPosition.MonthDate*/,
                         //isSelectable = day.date >= today,
-                        onDateSelected = {onDateSelected(it) }
+                        onDateSelected = { onDateSelected(it) }
                     )
                 },
                 modifier = Modifier.weight(1f)
@@ -243,8 +243,10 @@ fun MonthHeader(month: CalendarMonth, calendarState: CalendarState) {
     val coroutineScope = rememberCoroutineScope()
 
     // Проверяем, достигнуты ли границы
-    val isPreviousMonthDisabled = month.yearMonth <= calendarState.startMonth //month.yearMonth.year <= currentYear && month.yearMonth <= currentYearMonth
-    val isNextMonthDisabled = month.yearMonth >= calendarState.endMonth//month.yearMonth.year >= currentYear && month.yearMonth >= currentYearMonth
+    val isPreviousMonthDisabled =
+        month.yearMonth <= calendarState.startMonth //month.yearMonth.year <= currentYear && month.yearMonth <= currentYearMonth
+    val isNextMonthDisabled =
+        month.yearMonth >= calendarState.endMonth//month.yearMonth.year >= currentYear && month.yearMonth >= currentYearMonth
     val isNextYearDisabled = month.yearMonth.plusYears(1) >= calendarState.endMonth
 
     val monthName = month.yearMonth.month.name.lowercase(Locale.ENGLISH).let {
@@ -267,7 +269,7 @@ fun MonthHeader(month: CalendarMonth, calendarState: CalendarState) {
                         calendarState.scrollToMonth(month.yearMonth.minusMonths(1))
                     }
                 }
-                      },
+            },
             enabled = !isPreviousMonthDisabled
         ) {
             Image(
@@ -282,25 +284,25 @@ fun MonthHeader(month: CalendarMonth, calendarState: CalendarState) {
             modifier = Modifier,
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             VolleyText.ButtonText(
                 text = "$monthName, ", // Используем отформатированное имя месяца
                 color = VolleyColor.TextCalendarDark
             )
             Row(
                 modifier = Modifier
-                     .clickable {
-                         if (!isNextYearDisabled) {
-                             coroutineScope.launch {
-                                 calendarState.scrollToMonth(month.yearMonth.plusYears(1))
-                             }
+                    .clickable {
+                        if (!isNextYearDisabled) {
+                            coroutineScope.launch {
+                                calendarState.scrollToMonth(month.yearMonth.plusYears(1))
+                            }
                         }
                     },
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 VolleyText.ButtonText(
                     text = "${month.yearMonth.year}", // Используем отформатированное имя месяца
-                  )
+                )
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_5.dp))
 
                 Image(
@@ -309,7 +311,7 @@ fun MonthHeader(month: CalendarMonth, calendarState: CalendarState) {
                     modifier = Modifier
                         .size(width = 14.dp, height = 7.dp),
                     colorFilter = ColorFilter.tint(if (isNextYearDisabled) VolleyColor.GreyDisabled else VolleyColor.Black /*LocalContentColor.current*/)
-                    )
+                )
             }
         }
 
@@ -339,14 +341,18 @@ fun DaysOfWeekHeader() {
     val daysOfWeek = remember {
         DateFormatSymbols.getInstance(Locale.ENGLISH).shortWeekdays.toList().let {
             it.subList(1, it.size).let { // отбрасываем первый пустой элемент
-                it.subList(1, it.size) + it.subList(0, 1) // Перемещаем воскресенье в конец, чтобы начиналось с понедельника
+                it.subList(1, it.size) + it.subList(
+                    0,
+                    1
+                ) // Перемещаем воскресенье в конец, чтобы начиналось с понедельника
             }
         }
     }
 
     Row(modifier = Modifier) {
         daysOfWeek.forEach { dayOfWeek ->
-            val formattedDayOfWeek = dayOfWeek.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            val formattedDayOfWeek =
+                dayOfWeek.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
             Box(
                 modifier = Modifier
                     .weight(1f)

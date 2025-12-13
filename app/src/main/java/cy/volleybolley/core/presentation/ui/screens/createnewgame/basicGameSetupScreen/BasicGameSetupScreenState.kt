@@ -1,9 +1,9 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen
 
 import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.Gender
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Gender
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
 import java.time.LocalDate

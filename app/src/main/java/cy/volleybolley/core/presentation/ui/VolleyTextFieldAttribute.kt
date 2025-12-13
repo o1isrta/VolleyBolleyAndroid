@@ -230,8 +230,8 @@ object VolleyTextFieldAttribute {
                         modifier = Modifier
                             .clickable(null, null) {
                                 actionToTransferCount(inputCount - 1)
-                               // val newCount = inputCount - 1
-                               // actionToTransferCount(newCount)
+                                // val newCount = inputCount - 1
+                                // actionToTransferCount(newCount)
                             }
                     )
                     Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
@@ -248,8 +248,8 @@ object VolleyTextFieldAttribute {
                         modifier = Modifier
                             .clickable(null, null) {
                                 actionToTransferCount(inputCount + 1)
-                               // val newCount = inputCount + 1
-                               // actionToTransferCount(newCount)
+                                // val newCount = inputCount + 1
+                                // actionToTransferCount(newCount)
                             }
                     )
                 }
@@ -375,7 +375,7 @@ object VolleyTextFieldAttribute {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(16.dp,6.dp)
+                    .padding(16.dp, 6.dp)
                     .clickable {
                         showTimePicker = true
                     }
@@ -431,19 +431,19 @@ object VolleyTextFieldAttribute {
         }
     }
 
-  /*  @Composable
-    fun PaymentField(
-        modifier: Modifier = Modifier,
-        width: Int = VolleyDimens.DIMEN_75,
-        height: Int = VolleyDimens.DIMEN_30,
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
-        inputPayment: Double = 5.0
-    ) {
-        VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = cornerRadius,
-            modifier = modifier //modifier.height(height.dp).width(width.dp),
-        ) {
-              DecimalInputMask(*//*modifier,*//* width, height, inputPayment)
+    /*  @Composable
+      fun PaymentField(
+          modifier: Modifier = Modifier,
+          width: Int = VolleyDimens.DIMEN_75,
+          height: Int = VolleyDimens.DIMEN_30,
+          cornerRadius: Int = VolleyDimens.DIMEN_16,
+          inputPayment: Double = 5.0
+      ) {
+          VolleyContainersRootTransparent.TransparentContainer(
+              cornerRadius = cornerRadius,
+              modifier = modifier //modifier.height(height.dp).width(width.dp),
+          ) {
+                DecimalInputMask(*//*modifier,*//* width, height, inputPayment)
         }
     }
 

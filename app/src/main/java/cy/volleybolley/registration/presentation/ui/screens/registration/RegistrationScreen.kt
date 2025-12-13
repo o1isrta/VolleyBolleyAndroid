@@ -66,6 +66,7 @@ fun RegistrationScreen(
             is ShowToast -> {
                 Toast.makeText(context, currentEffect.message, Toast.LENGTH_SHORT).show()
             }
+
             null -> {}
         }
     }

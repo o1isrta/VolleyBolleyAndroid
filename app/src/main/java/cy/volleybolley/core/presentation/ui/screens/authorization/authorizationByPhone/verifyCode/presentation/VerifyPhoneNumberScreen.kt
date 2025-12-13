@@ -62,14 +62,18 @@ fun VerifyPhoneNumberScreen(
             .padding(top = paddingFromSystemUi.calculateTopPadding() + 8.dp, start = 8.dp, end = 8.dp)
             .fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(20.dp).fillMaxWidth()) {
+        Column(modifier = Modifier
+            .padding(20.dp)
+            .fillMaxWidth()) {
             VolleyTopBar.TopBarWithBackButton(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.registration),
                 onBackNavigationRequested = onBackNavigationRequested
             )
             VolleyTextFieldGradient.PhoneCodeTextField(
-                modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth(),
                 text = state.code,
                 alertMessage = if (state.isCodeInputError) {
                     stringResource(R.string.invalid_code)
@@ -79,7 +83,9 @@ fun VerifyPhoneNumberScreen(
                 actionToTransferContent = { eventCallback(VerifyPhoneNumberEvent.TypeCode(it)) }
             )
             AnimatedVisibility(
-                modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .align(Alignment.CenterHorizontally),
                 visible = state.isBtnNewCodeVisible
             ) {
                 VolleyButton.GradientTextButton(
@@ -93,7 +99,9 @@ fun VerifyPhoneNumberScreen(
                 )
             }
             VolleyButton.ActiveButton(
-                modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth(),
                 enabled = state.isBtnVerifyEnabled && !state.isLoading,
                 text = stringResource(R.string.send_code),
                 onClick = { eventCallback(VerifyPhoneNumberEvent.VerifyCodeButtonClicked) }

@@ -16,18 +16,48 @@ import cy.volleybolley.players.domain.repository.PlayersRepository
 class MockPlayersRepositoryImpl : PlayersRepository {
 
     private val mockPlayers = listOf(
-        Player(1, "Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
-        Player(2, "Polina", "Vasylyeva", null, false, GENDER_FEMALE, LEVEL_PRO),
-        Player(3, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
-        Player(4, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH),
-        Player(5, "Maria", "Novak", null, false, GENDER_FEMALE, LEVEL_PRO)
+        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE),
+        Player(5, "Maria", "Novak", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE),
+        Player(5, "Maria", "Novak", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE),
+        Player(5, "Maria", "Novak", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE),
+        Player(5, "Maria", "Novak", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE),
+        Player(5, "Maria", "Novak", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE),
+        Player(5, "Maria", "Novak", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE),
+        Player(5, "Maria", "Novak", null, false, LEVEL_PRO, GENDER_FEMALE)
     )
 
     override suspend fun getAllPlayers(): VolleyResult<List<Player>, ErrorType> =
         VolleyResult.Success(mockPlayers)
 
     override suspend fun searchPlayers(query: String): VolleyResult<List<Player>, ErrorType> {
-        if(query.isNullOrEmpty()) return VolleyResult.Success(emptyList())
+        if (query.isNullOrEmpty()) return VolleyResult.Success(emptyList())
         val filteredPlayers = mockPlayers.filter {
             it.firstName.contains(query, ignoreCase = true) ||
                 it.lastName.contains(query, ignoreCase = true)

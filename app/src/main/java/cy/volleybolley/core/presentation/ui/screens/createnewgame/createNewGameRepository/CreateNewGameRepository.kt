@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository
 
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
@@ -17,13 +17,16 @@ import kotlinx.coroutines.flow.update
 
 interface CreateNewGameRepository {
     val gameData: StateFlow<GameData>
-     //suspend fun updateGameData(gameData: GameData)
+
+    //suspend fun updateGameData(gameData: GameData)
     fun addPlayersToGame(players: List<Player>)
     fun removePlayerFromGame(playerIndex: Int)
-   // suspend fun searchPlayers(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType>
+
+    // suspend fun searchPlayers(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType>
     suspend fun saveGameDataToServer(): VolleyResult<Unit, ErrorType>
     suspend fun getGameDataFromServer(): VolleyResult<GameData, ErrorType>
     suspend fun loadGameData(): VolleyResult<Unit, ErrorType>
+
     // Новый, более общий метод для обновления GameData
     // Он принимает лямбду, которая получает текущую GameData и возвращает измененную.
     // Это позволяет точечно изменять GameData, не передавая весь объект.
@@ -31,7 +34,8 @@ interface CreateNewGameRepository {
 }
 
 // заглушка для preview
-class FakeCreateNewGameRepository(initialGameData: GameData = GameData() // Возможность задать начальное состояние для предпросмотра
+class FakeCreateNewGameRepository(
+    initialGameData: GameData = GameData() // Возможность задать начальное состояние для предпросмотра
 ) : CreateNewGameRepository {
     // Для имитации StateFlow в репозитории
     private val _gameData = MutableStateFlow(initialGameData)
@@ -50,6 +54,7 @@ class FakeCreateNewGameRepository(initialGameData: GameData = GameData() // Во
             current.copy(players = current.players + players)
         }
     }
+
     // можно через updateGameData
     override fun removePlayerFromGame(playerIndex: Int) {
         _gameData.update { current ->
@@ -77,11 +82,12 @@ class FakeCreateNewGameRepository(initialGameData: GameData = GameData() // Во
 //        val loadedData = GameData()
 //        _gameData.value = loadedData
 //        return VolleyResult.Success(loadedData)
-        return when (val result = getGameDataFromServer()){
+        return when (val result = getGameDataFromServer()) {
             is VolleyResult.Success -> {
                 _gameData.value = result.data
                 VolleyResult.Success(Unit)
             }
+
             is VolleyResult.Failure -> {
                 VolleyResult.Failure(result.error) // Пробросить ошибку дальше
             }
@@ -100,7 +106,7 @@ class FakeSearchPlayersUseCase : SearchPlayersUseCase {
             Player(5, "Maria", "Novak", null, false, GENDER_FEMALE, LEVEL_PRO)
         )
 
-        val filteredPlayers = samplePlayers.filter {player ->
+        val filteredPlayers = samplePlayers.filter { player ->
             player.lastName.contains(query, ignoreCase = true) && (/* !favoritesOnly*|| */player.isFavorite)
         }
         return VolleyResult.Success(filteredPlayers)

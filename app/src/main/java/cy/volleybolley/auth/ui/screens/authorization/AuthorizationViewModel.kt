@@ -38,9 +38,12 @@ class AuthorizationViewModel(
         when (event) {
             ContinueWithGoogleClicked -> sendUiEffect(LaunchGoogleSignIn)
             is GoogleTokenReceived -> onGoogleTokenReceived(event.googleIdToken)
-            AuthorizationEvent.GoogleSignInCancelled -> { /* user cancel auth - do nothing */ }
+            AuthorizationEvent.GoogleSignInCancelled -> { /* user cancel auth - do nothing */
+            }
+
             AuthorizationEvent.GoogleSignInFailed -> sendUiEffect(ShowToast(message = "Google Sign-In error"))
-            is AuthorizationEvent.ContinueWithFacebookClicked -> { /* Handle Facebook Auth */ }
+            is AuthorizationEvent.ContinueWithFacebookClicked -> { /* Handle Facebook Auth */
+            }
         }
     }
 

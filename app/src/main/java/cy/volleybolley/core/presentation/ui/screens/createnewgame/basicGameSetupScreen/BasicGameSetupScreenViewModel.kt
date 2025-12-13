@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen
 
 import android.os.Build
 import android.util.Log
@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.CreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeCreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.GameData
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.FakeCreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.GameData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -100,7 +100,8 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
                 timeChangeJob?.cancel()
                 viewModelScope.launch {
                     Log.d("TimePicker", "ViewModel: Received OnEndTimeChanged event: ${event.time}")
-                    delay(300) // Дебаунс 300ms
+                    val debounce: Long = 300
+                    delay(debounce) // Дебаунс 300ms
                     val newState = uiStateMutable.value.copy(
                         startTime = event.time//,
                     )
@@ -113,7 +114,8 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
                 timeChangeJob?.cancel()
                 viewModelScope.launch {
                     Log.d("TimePicker", "ViewModel: Received OnEndTimeChanged event: ${event.time}")
-                    delay(300) // Дебаунс 300ms
+                    val debounce: Long = 300
+                    delay(debounce) // Дебаунс 300ms
                     val newState = uiStateMutable.value.copy(
                         finishTime = event.time//,
                     )
@@ -127,10 +129,11 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
             }
 
             is BasicGameSetupScreenEvent.PlayerLevelSelected -> {
-                if (event.levels.isEmpty())
+                if (event.levels.isEmpty()) {
                     sendUiEffect(BasicGameSetupScreenEffect.ShowError(message = "Please, select player level!"))
-                else
+                } else {
                     uiStateMutable.value = uiStateMutable.value.copy(levels = event.levels)
+                }
             }
 
             is BasicGameSetupScreenEvent.OnNextStepClick -> {
@@ -149,7 +152,11 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
             dispatcher = Dispatchers.IO,
             getErrorLogMessage = { "Error: ${it.message ?: "Unknown error"}" },
             onError = { er ->
-                sendUiEffect(BasicGameSetupScreenEffect.ShowError(er.message ?: "Failed to check account"))
+                sendUiEffect(
+                    BasicGameSetupScreenEffect.ShowError(
+                        er.message ?: "Failed to check account"
+                    )
+                )
             }
         ) {
             gameRepository.updateGameData { gameData ->
@@ -167,10 +174,12 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     }
 
     /** Проверяет собранные на экране данные
-    * */
+     * */
     private fun validateData(): String {
         val startTime = uiStateMutable.value.startTime
         val finishTime = uiStateMutable.value.finishTime
+        val hour1: Int = 60
+        val hour2: Int = 240
 
         if (startTime == null || finishTime == null) {
             return "Please select both start and end times." // Или другое сообщение об ошибке
@@ -182,10 +191,10 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
         val durationMinutes = calculateDurationMinutes(startTime, finishTime)
 
         // Проверяем, чтобы длительность игры была не меньше часа (60 минут) и не больше 4 часов (240 минут)
-        if (durationMinutes < 60) {
+        if (durationMinutes < hour1) {
             return "The game duration must be at least one hour."
         }
-        if (durationMinutes > 240) {
+        if (durationMinutes > hour2) {
             return "The game duration must be no more than 4 hours."
         }
         return ""
@@ -195,10 +204,11 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
      *
      */
     private fun calculateDurationMinutes(startTime: VolleyTimeStamp, endTime: VolleyTimeStamp): Int {
+        val hour: Int = 60
         val startTotalMinutes =
-            (startTime.hour + if (startTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * 60 + startTime.minutes
+            (startTime.hour + if (startTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * hour + startTime.minutes
         val endTotalMinutes =
-            (endTime.hour + if (endTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * 60 + endTime.minutes
+            (endTime.hour + if (endTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * hour + endTime.minutes
         return endTotalMinutes - startTotalMinutes
     }
 
@@ -228,14 +238,10 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
 class BasicGameSetupScreenViewModelPreview : BasicGameSetupScreenViewModel(FakeCreateNewGameRepository(GameData())) {
     @RequiresApi(Build.VERSION_CODES.O)
     private val _showCalendarPreview = MutableStateFlow(
-        LocalDate.now() == LocalDate.of(
-            2025,
-            11,
-            23
-        )
+        true
+        //LocalDate.now() == LocalDate.of(2025,11,23)
     ) // чтобы видно было календарь - поставить сегодняшнюю дату
 
-    //MutableStateFlow(LocalDate.now() != LocalDate.of(2025, 12, 23))  // Пример
     @RequiresApi(Build.VERSION_CODES.O)
     override val showCalendar: StateFlow<Boolean> = _showCalendarPreview.asStateFlow()
 }

@@ -16,12 +16,12 @@ import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationB
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.VerifyPhoneNumberScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen.BasicGameSetupScreenViewModel
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen.GameEnteringConditionsScreenViewModel
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen.PrivacyOptionsScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen.PrivacyOptionsScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen.BasicGameSetupScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen.BasicGameSetupScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.gameEnteringConditionsScreen.GameEnteringConditionsScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.gameEnteringConditionsScreen.GameEnteringConditionsScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen.PrivacyOptionsScreen
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen.PrivacyOptionsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.findagame.JoinTheGameScreen
@@ -181,15 +181,27 @@ fun NavHostContainer(
             // create game
             composable<BasicGameSetupRoute> {
                 val viewModel: BasicGameSetupScreenViewModel = koinViewModel()
-                BasicGameSetupScreen(navController = navController, viewModel = viewModel, paddingFromSystemUi = paddingFromSystemUi,)
+                BasicGameSetupScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi,
+                )
             }
             composable<GameEnteringConditionsRoute> {
                 val viewModel: GameEnteringConditionsScreenViewModel = koinViewModel()
-                GameEnteringConditionsScreen(navController = navController, viewModel = viewModel, paddingFromSystemUi = paddingFromSystemUi,)
+                GameEnteringConditionsScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi,
+                )
             }
             composable<PrivacyOptionsRoute> {
                 val viewModel: PrivacyOptionsScreenViewModel = koinViewModel()
-                PrivacyOptionsScreen(navController = navController, viewModel = viewModel, paddingFromSystemUi = paddingFromSystemUi,)
+                PrivacyOptionsScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingFromSystemUi = paddingFromSystemUi,
+                )
             }
 
             // create tourney

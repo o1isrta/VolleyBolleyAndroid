@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository
 
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
@@ -18,7 +18,7 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
     override val gameData: StateFlow<GameData> = _gameData // Expose as immutable StateFlow
 
     override fun addPlayersToGame(players: List<Player>) {
-        if(players.size < _gameData.value.maximumPlayers)
+        if (players.size < _gameData.value.maximumPlayers)
             _gameData.value = _gameData.value.copy(players = _gameData.value.players + players)
     }
 
@@ -30,7 +30,7 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
         }
     }
 
-    override suspend fun saveGameDataToServer() : VolleyResult<Unit, ErrorType> {
+    override suspend fun saveGameDataToServer(): VolleyResult<Unit, ErrorType> {
         // Имитация сохранения на сервер
         delay(1000)
         return VolleyResult.Success(Unit)
@@ -38,7 +38,7 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
 
     /* Получение данных игры с сервера
 * */
-    override suspend fun getGameDataFromServer(): VolleyResult<GameData, ErrorType>  {
+    override suspend fun getGameDataFromServer(): VolleyResult<GameData, ErrorType> {
         // Имитация загрузки с сервера
         delay(500) // Имитация задержки при получении данных с сервера
         //try {
@@ -48,24 +48,27 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
         //}
 
         // Mock Data
-        val mockGameData = GameData(players = listOf(
-            Player(1,"Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
-            Player(2, "Polina", "Vasylyeva", null,false, GENDER_FEMALE, LEVEL_PRO),
-            Player(3, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
-            Player(4, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH)
-        ))
+        val mockGameData = GameData(
+            players = listOf(
+                Player(1, "Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
+                Player(2, "Polina", "Vasylyeva", null, false, GENDER_FEMALE, LEVEL_PRO),
+                Player(3, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
+                Player(4, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH)
+            )
+        )
         return VolleyResult.Success(mockGameData)
     }
 
     /* Загрузить данные игры
     * */
-       override suspend fun loadGameData() : VolleyResult<Unit, ErrorType> {
+    override suspend fun loadGameData(): VolleyResult<Unit, ErrorType> {
         //  уже возвращает VolleyResult.
         return when (val result = getGameDataFromServer()) {
             is VolleyResult.Success -> {
                 _gameData.value = result.data
                 VolleyResult.Success(Unit)
             }
+
             is VolleyResult.Failure -> {
                 VolleyResult.Failure(result.error) // Пробросить ошибку дальше
             }

@@ -1,17 +1,17 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
+package cy.volleybolley.core.presentation.ui.screens.createnewgame.gameEnteringConditionsScreen
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.CreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.FakeCreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.CreateNewGameRepository.GameData
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.FakeCreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.GameData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-open class GameEnteringConditionsScreenViewModel (private val gameRepository: CreateNewGameRepository) :
+open class GameEnteringConditionsScreenViewModel(private val gameRepository: CreateNewGameRepository) :
     BaseViewModel<GameEnteringConditionsScreenState, GameEnteringConditionsScreenEvent, GameEnteringConditionsScreenEffect>(
         GameEnteringConditionsScreenState()
     ) {
@@ -31,7 +31,6 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
                             players = gameDataFromRepo.players,
                             // Обновляем остальные поля из GameData (если они нужны на этом экране)
                             maximumPlayers = gameDataFromRepo.maximumPlayers,
-                            //selectedPrivacy = gameDataFromRepo.selectedPrivacy,
                             perPerson = gameDataFromRepo.perPerson,
                             accountNumber = gameDataFromRepo.accountNumber // Это, возможно, будет приходить из другого источника или быть частью GameData
                         )
@@ -42,57 +41,47 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
 
     override fun obtainEvent(event: GameEnteringConditionsScreenEvent) {
         when (event) {
-            is GameEnteringConditionsScreenEvent.OnPublicSelected -> {
-                // Обработка выбора Public (Private через OpenPrivacyRequested)
-                viewModelScope.launch {
-                    gameRepository.updateGameData { gameData ->
-                        gameData.copy(
-                            players = emptyList()
-                        )
-                    }
-                }
-            }
-            is GameEnteringConditionsScreenEvent.OnPrivateSelected -> {
-                // Если уже Private — ничего не делать
-                if(uiStateMutable.value.players.isEmpty())
-                   gotoPrivacyOptions()
-                // список не пустой — ничего не делать (переход на экран Privacy Option по нажатию на Manage...)
-            }
-            is GameEnteringConditionsScreenEvent.OnManagePlayersClick -> {
-               gotoPrivacyOptions()
-            }
+            is GameEnteringConditionsScreenEvent.OnPublicSelected -> onPublicSelected()
+            is GameEnteringConditionsScreenEvent.OnPrivateSelected -> onPrivateSelected()
+            is GameEnteringConditionsScreenEvent.RemovePlayer -> onRemovePlayer(event.index)
+            is GameEnteringConditionsScreenEvent.OnSaveGameClick -> saveGame()
+            is GameEnteringConditionsScreenEvent.CheckIfAccountExists -> checkIfAccountExists()
+            is GameEnteringConditionsScreenEvent.OnManagePlayersClick -> gotoPrivacyOptions()
             is GameEnteringConditionsScreenEvent.PerPersonChanged -> {
                 uiStateMutable.value = uiStateMutable.value.copy(perPerson = event.perPerson)
             }
-            GameEnteringConditionsScreenEvent.CheckIfAccountExists -> {
-                checkIfAccountExists()
-            }
+
             is GameEnteringConditionsScreenEvent.MaximumPlayersChanged -> {
                 uiStateMutable.value = uiStateMutable.value.copy(maximumPlayers = event.maximumPersons)
             }
-            GameEnteringConditionsScreenEvent.OnBackClicked -> {
+
+            is GameEnteringConditionsScreenEvent.OnBackClicked -> {
                 sendUiEffect(GameEnteringConditionsScreenEffect.NavigateBack)
             }
-            GameEnteringConditionsScreenEvent.OnAddPaymentClick -> {
+
+            is GameEnteringConditionsScreenEvent.OnAddPaymentClick -> {
                 sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPayments)
-            }
-            GameEnteringConditionsScreenEvent.OnSaveGameClick -> {
-                saveGame()
-            }
-            is GameEnteringConditionsScreenEvent.RemovePlayer -> {
-                val current = uiStateMutable.value
-                if (event.index in current.players.indices) {
-                    val newPlayers = current.players.toMutableList().apply { removeAt(event.index) }
-                    uiStateMutable.value = current.copy(players = newPlayers)
-                } else {
-                    // опционально: логируем или показываем ошибку
-                    uiStateMutable.value = current.copy(errorMessage = "Invalid player index: ${event.index}")
-                }
             }
         }
     }
 
-    private fun gotoPrivacyOptions(){
+    private fun onPublicSelected() {
+        viewModelScope.launch {
+            gameRepository.updateGameData { gameData ->
+                gameData.copy(
+                    players = emptyList()
+                )
+            }
+        }
+    }
+
+    private fun onPrivateSelected() {
+        if (uiStateMutable.value.players.isEmpty()) {
+            gotoPrivacyOptions()
+        }
+    }
+
+    private fun gotoPrivacyOptions() {
         viewModelScope.launch {
             gameRepository.updateGameData { gameData ->
                 gameData.copy(
@@ -106,8 +95,23 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
         sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy)
     }
 
+    private fun onRemovePlayer(index: Int) {
+        val current = uiStateMutable.value
+        if (index in current.players.indices) {
+            val newPlayers = current.players.toMutableList().apply { removeAt(index) }
+            uiStateMutable.value = current.copy(players = newPlayers)
+        } else {
+            uiStateMutable.value = current.copy(errorMessage = "Invalid player index: $index")
+        }
+    }
+
     private fun saveGame() {
-        uiStateMutable.update { it.copy(isLoading = true, errorMessage = null) } // Начинаем загрузку, очищаем предыдущие ошибки
+        uiStateMutable.update {
+            it.copy(
+                isLoading = true,
+                errorMessage = null
+            )
+        } // Начинаем загрузку, очищаем предыдущие ошибки
 
         launchSafe(
             dispatcher = Dispatchers.IO,
@@ -135,11 +139,12 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
         launchSafe(
             dispatcher = Dispatchers.IO,
             getErrorLogMessage = { "Error checking account existence: ${it.message ?: "Unknown error"}" },
-            onError = { er -> sendUiEffect(GameEnteringConditionsScreenEffect.ShowError(er.message ?: "Failed to check account"))
+            onError = { er ->
+                sendUiEffect(GameEnteringConditionsScreenEffect.ShowError(er.message ?: "Failed to check account"))
             }
-        ){
+        ) {
             val accountNumber = getAccountNumber() // Получение номера счета (аккаунта), если он есть
-            uiStateMutable.value = uiStateMutable.value.copy( accountNumber = accountNumber )
+            uiStateMutable.value = uiStateMutable.value.copy(accountNumber = accountNumber)
         }
     }
 
@@ -147,6 +152,6 @@ open class GameEnteringConditionsScreenViewModel (private val gameRepository: Cr
         return if (Random.nextBoolean()) "123 45 6789" else null // для теста, заменить на получение номера из профиля
     }
 }
-// Специальный ViewModel для Preview
-class GameEnteringConditionsScreenViewModelPreview : GameEnteringConditionsScreenViewModel( FakeCreateNewGameRepository(GameData()/*MutableStateFlow(GameData())*/) ) {
- }
+
+class GameEnteringConditionsScreenViewModelPreview :
+    GameEnteringConditionsScreenViewModel(FakeCreateNewGameRepository(GameData()))

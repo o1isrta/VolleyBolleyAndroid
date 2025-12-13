@@ -84,6 +84,7 @@ class TokenRefreshPlugin(
                                         )
                                         proceedWith(newResponse)
                                     }
+
                                     is VolleyResult.Failure -> {
                                         handleRefreshFailure(plugin, result.error)
                                         proceed()

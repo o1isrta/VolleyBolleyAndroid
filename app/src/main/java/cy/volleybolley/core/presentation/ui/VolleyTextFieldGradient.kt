@@ -133,7 +133,9 @@ object VolleyTextFieldGradient {
                 color = VolleyColor.White
             )
             SimpleGradientTextField(
-                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
                 text = text,
                 hint = hint,
                 isReadOnly = isReadOnly,
@@ -170,7 +172,9 @@ object VolleyTextFieldGradient {
                 isReadOnly = true,
                 trailingComposable = {
                     Icon(
-                        modifier = Modifier.padding(start = 8.dp).rotate(dropDownIconAngle),
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .rotate(dropDownIconAngle),
                         painter = painterResource(R.drawable.ic_dropdown),
                         tint = VolleyColor.TextDark,
                         contentDescription = null
@@ -232,7 +236,9 @@ object VolleyTextFieldGradient {
                 color = VolleyColor.White
             )
             TextFieldBaseGradient(
-                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
                 textInputValue = text,
                 fieldTextStyle = GradientFieldMedium,
                 hint = hint,
@@ -269,7 +275,9 @@ object VolleyTextFieldGradient {
                 color = VolleyColor.White
             )
             TextFieldBaseGradient(
-                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
                 textInputValue = text,
                 maxTextLength = 6,
                 fieldTextStyle = CodeField,
@@ -445,7 +453,9 @@ object VolleyTextFieldGradient {
 @Composable
 private fun PreviewGradientTextFields() {
     Root {
-        Column(modifier = Modifier.fillMaxSize().background(VolleyColor.TurquoiseDark)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(VolleyColor.TurquoiseDark)) {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 
             VolleyTextFieldGradient.SearchField(

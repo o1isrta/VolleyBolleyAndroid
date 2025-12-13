@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -80,38 +81,6 @@ object VolleySimpleComponent {
             }
         }
     }
-    /*
-    fun TitleWithBackArrow(
-        modifier: Modifier = Modifier,
-        title: String,
-        onBackClick: () -> Unit = {}
-    ) {
-        Row(
-            modifier = modifier
-        ) {
-            IconButton(
-                onClick = onBackClick,
-                modifier = Modifier
-                    .size(VolleyDimens.DIMEN_24.dp)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_arrow_back),
-                    contentDescription = stringResource(R.string.back_arrow_button),
-                    tint = VolleyColor.White,
-                )
-            }
-
-            VolleyText.TitleLarge(
-                text = title,
-                color = VolleyColor.White,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
-        }
-    }
-    * */
 
     @Composable
     fun DividerLine(
@@ -132,58 +101,12 @@ object VolleySimpleComponent {
             modifier = modifier
                 .clip(RoundedCornerShape(VolleyDimens.DIMEN_10.dp))
                 .background(VolleyColor.GreyDark)
-                //.padding(
-                //    start = VolleyDimens.DIMEN_10.dp,
-                //    end = VolleyDimens.DIMEN_10.dp,
-                //    top = VolleyDimens.DIMEN_2.dp,
-                //    bottom = VolleyDimens.DIMEN_2.dp
-                //)
                 .height(VolleyDimens.DIMEN_23.dp)
                 .width(VolleyDimens.DIMEN_30.dp)
         ) {
             VolleyText.BodyRegular(level, color = VolleyColor.White)
         }
     }
-
-    // элемент для выбора игроков. Отличается PlayerRow из СрфтпуеeamScreen порядком элементов
-   /* @Composable
-    @Stable
-    fun PlayerCheckRow (
-        member: MemberUi,
-        showActions: Boolean,
-        onRemove: () -> Unit
-        Row(
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier
-    .fillMaxWidth()
-    .heightIn(min = VolleyDimens.DIMEN_23.dp)
-    ) {
-        VolleyText.BodyRegular(
-            text = member.name ?: stringResource(R.string.free_spot),
-            color = VolleyColor.White,
-            modifier = Modifier.weight(1f)
-        )
-
-        if (showActions) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
-            ) {
-                IconButton(
-                    onClick = onRemove,
-                    modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_remove),
-                        contentDescription = null,
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
-                    )
-                }
-                member.level?.let { LevelBadge(it) }
-            }
-        }
-    }*/
 
     /*
     Строка игрока с кнопкой действия справа (удаление игрока или выбрать в команду)
@@ -205,7 +128,6 @@ object VolleySimpleComponent {
                 color = VolleyColor.White,
                 modifier = Modifier.weight(1f)
             )
-            // if (showActions) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End//Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
@@ -224,7 +146,6 @@ object VolleySimpleComponent {
                     )
                 }
             }
-            // }
         }
     }
 
@@ -274,11 +195,20 @@ object VolleySimpleComponent {
             if (isFavorite) R.drawable.ic_favorite_star_fill else R.drawable.ic_favorite_star_empty
         )
         Icon(
-            modifier = Modifier.size(VolleyDimens.DIMEN_20.dp).padding(VolleyDimens.DIMEN_1.dp),
+            modifier = Modifier
+                .size(VolleyDimens.DIMEN_20.dp)
+                .padding(VolleyDimens.DIMEN_1.dp),
             contentDescription = null,
             painter = painter,
             tint = VolleyColor.OrangeHard
         )
+    }
+
+    @Composable
+    fun LoadingIndicator() {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(modifier = Modifier.size(48.dp))
+        }
     }
 }
 
@@ -355,10 +285,10 @@ private fun PreviewLevelBadge() {
 @Composable
 private fun PreviewPlayerRowWithRemoveList() {
     val players: List<Player> = listOf(
-        Player(1,"Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
-        Player(2, "Polina", "Vasylyeva", null,false, GENDER_FEMALE, LEVEL_PRO),
-        Player(3, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
-        Player(4, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH)
+        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE)
     )
     VolleyContainersRootTransparent.Root {
         Box(
@@ -386,10 +316,10 @@ private fun PreviewPlayerRowWithRemoveList() {
 @Composable
 private fun PreviewPlayerRowWithSelectAndFavoriteList() {
     val players: List<Player> = listOf(
-        Player(1,"Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
-        Player(2, "Polina", "Vasylyeva", null,false, GENDER_FEMALE, LEVEL_PRO),
-        Player(3, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
-        Player(4, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH)
+        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE)
     )
     VolleyContainersRootTransparent.Root {
         Box(

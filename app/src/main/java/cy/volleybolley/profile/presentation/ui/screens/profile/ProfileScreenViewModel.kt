@@ -60,9 +60,13 @@ class ProfileScreenViewModel(
                 )
             )
 
-            OnLogoutClick -> { onLogoutClick() }
+            OnLogoutClick -> {
+                onLogoutClick()
+            }
 
-            OnDeleteAccountClick -> { onDeleteAccountClick() }
+            OnDeleteAccountClick -> {
+                onDeleteAccountClick()
+            }
         }
     }
 

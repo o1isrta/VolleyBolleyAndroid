@@ -169,7 +169,7 @@ private fun SuccessScreen(
                         eventCallback(SuccessEvent.OnInvitePlayers)
                     },
                     onShareLinkClick = {
-                       // eventCallback(SuccessEvent.OnShareLink)
+                        // eventCallback(SuccessEvent.OnShareLink)
                         shareEventLink(context, state.event)
                     }
                 )
@@ -199,15 +199,15 @@ private fun RowIconText(
     iconSize: Dp = VolleyDimens.DIMEN_24.dp,
 ) {
     Row(
-       // modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+        // modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
         modifier = modifier.padding(top = VolleyDimens.DIMEN_16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-    /*    Image(
-            painter = painterResource(painterResource),
-          //  modifier = Modifier.size(VolleyDimens.DIMEN_24.dp),
-            contentDescription = null
-        )*/
+        /*    Image(
+                painter = painterResource(painterResource),
+              //  modifier = Modifier.size(VolleyDimens.DIMEN_24.dp),
+                contentDescription = null
+            )*/
         Box(
             modifier = Modifier.size(VolleyDimens.DIMEN_24.dp),
             contentAlignment = Alignment.Center

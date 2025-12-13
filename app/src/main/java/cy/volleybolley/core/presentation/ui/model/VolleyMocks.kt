@@ -58,14 +58,16 @@ object VolleyMocks {
         avatar = USER_AVATAR
     )
 
-    val countries = listOf(Country(
-        id = 0,
-        name = "Thailand",
-        cities = listOf(
-            City(id = 0, name = "Koh Phangan"),
-            City(id = 1, name = "Koh Samui")
+    val countries = listOf(
+        Country(
+            id = 0,
+            name = "Thailand",
+            cities = listOf(
+                City(id = 0, name = "Koh Phangan"),
+                City(id = 1, name = "Koh Samui")
+            )
         )
-    ))
+    )
 
     val mockLocation = Location(
         longitude = 7.866269,
