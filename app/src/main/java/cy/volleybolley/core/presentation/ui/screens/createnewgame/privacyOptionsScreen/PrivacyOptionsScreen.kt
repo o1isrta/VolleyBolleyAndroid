@@ -139,7 +139,7 @@ fun PrivacyOptionsContent(
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                 // передаем список найденных игроков + выбранных
                 val filteredPlayers =
-                    filterPlayers(state.selectedPlayers.toList() + state.playersSearchResult, state.flagFavorites)
+                    filterPlayers((state.selectedPlayers + state.playersSearchResult.toSet()).toList(), state.flagFavorites)
                 val scrollState = rememberScrollState()
 
                 Column(

@@ -28,7 +28,11 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     override val tag: String = "BasicGameSetupScreenViewModel"
 
     companion object {
-        val MAX_LENGTH = VolleyDimens.DIMEN_160
+        const val MAX_LENGTH = VolleyDimens.DIMEN_160
+        const val DEBOUNCE_DELAY_300MS = 300L
+        const val HOUR1 = 60
+        const val HOUR2 = 240
+        const val HOUR = 60
     }
 
     // флаг для показа календаря
@@ -36,8 +40,6 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     open val showCalendar: StateFlow<Boolean> = _showCalendar.asStateFlow()
 
     init {
-        // проверяем, есть  ли аккаунт
-        //obtainEvent(GameEnteringConditionsScreenEvent.CheckIfAccountExists)
         // Подписка на изменения GameData из репозитория
         viewModelScope.launch {
             gameRepository.gameData.collectLatest { gameDataFromRepo ->
@@ -100,10 +102,9 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
                 timeChangeJob?.cancel()
                 viewModelScope.launch {
                     Log.d("TimePicker", "ViewModel: Received OnEndTimeChanged event: ${event.time}")
-                    val debounce: Long = 300
-                    delay(debounce) // Дебаунс 300ms
+                    delay(DEBOUNCE_DELAY_300MS) // Дебаунс 300ms
                     val newState = uiStateMutable.value.copy(
-                        startTime = event.time//,
+                        startTime = event.time
                     )
                     uiStateMutable.value = newState
                     Log.d("TimePicker", "ViewModel: New UI State: ${uiStateMutable.value}")
@@ -114,10 +115,9 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
                 timeChangeJob?.cancel()
                 viewModelScope.launch {
                     Log.d("TimePicker", "ViewModel: Received OnEndTimeChanged event: ${event.time}")
-                    val debounce: Long = 300
-                    delay(debounce) // Дебаунс 300ms
+                    delay(DEBOUNCE_DELAY_300MS) // Дебаунс 300ms
                     val newState = uiStateMutable.value.copy(
-                        finishTime = event.time//,
+                        finishTime = event.time
                     )
                     uiStateMutable.value = newState
                     Log.d("TimePicker", "ViewModel: New UI State: ${uiStateMutable.value}")
@@ -178,8 +178,6 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     private fun validateData(): String {
         val startTime = uiStateMutable.value.startTime
         val finishTime = uiStateMutable.value.finishTime
-        val hour1: Int = 60
-        val hour2: Int = 240
 
         if (startTime == null || finishTime == null) {
             return "Please select both start and end times." // Или другое сообщение об ошибке
@@ -191,10 +189,10 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
         val durationMinutes = calculateDurationMinutes(startTime, finishTime)
 
         // Проверяем, чтобы длительность игры была не меньше часа (60 минут) и не больше 4 часов (240 минут)
-        if (durationMinutes < hour1) {
+        if (durationMinutes < HOUR1) {
             return "The game duration must be at least one hour."
         }
-        if (durationMinutes > hour2) {
+        if (durationMinutes > HOUR2) {
             return "The game duration must be no more than 4 hours."
         }
         return ""
@@ -204,11 +202,18 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
      *
      */
     private fun calculateDurationMinutes(startTime: VolleyTimeStamp, endTime: VolleyTimeStamp): Int {
-        val hour: Int = 60
-        val startTotalMinutes =
-            (startTime.hour + if (startTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * hour + startTime.minutes
-        val endTotalMinutes =
-            (endTime.hour + if (endTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * hour + endTime.minutes
+        val startTotalMinutes = (startTime.hour +
+            if (startTime.isAfternoon)
+                VolleyTimeStamp.AFTERNOON_VALUE
+            else 0) * HOUR +
+            startTime.minutes
+
+        val endTotalMinutes = (endTime.hour +
+            if (endTime.isAfternoon)
+                VolleyTimeStamp.AFTERNOON_VALUE
+            else 0) * HOUR +
+            endTime.minutes
+
         return endTotalMinutes - startTotalMinutes
     }
 

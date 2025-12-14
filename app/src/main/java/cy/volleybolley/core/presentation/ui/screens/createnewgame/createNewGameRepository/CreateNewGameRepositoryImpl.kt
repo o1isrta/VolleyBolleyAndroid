@@ -8,6 +8,7 @@ import cy.volleybolley.core.presentation.ui.LEVEL_HIGH
 import cy.volleybolley.core.presentation.ui.LEVEL_LIGHT
 import cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM
 import cy.volleybolley.core.presentation.ui.LEVEL_PRO
+import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.players.domain.model.Player
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,10 @@ import kotlinx.coroutines.flow.StateFlow
 class CreateNewGameRepositoryImpl : CreateNewGameRepository {
     private val _gameData = MutableStateFlow(GameData())
     override val gameData: StateFlow<GameData> = _gameData // Expose as immutable StateFlow
+
+    companion object {
+        val DEBOUNCE_DELAY_500MS = 500L
+    }
 
     override fun addPlayersToGame(players: List<Player>) {
         if (players.size < _gameData.value.maximumPlayers)
@@ -40,7 +45,7 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
 * */
     override suspend fun getGameDataFromServer(): VolleyResult<GameData, ErrorType> {
         // Имитация загрузки с сервера
-        delay(500) // Имитация задержки при получении данных с сервера
+        delay(DEBOUNCE_DELAY_500MS) // Имитация задержки при получении данных с сервера
         //try {
         // return VolleyResult.Success(apiService.getGameData())
         // } catch (e: Exception) {

@@ -27,6 +27,11 @@ open class PrivacyOptionsScreenViewModel(
     override val tag: String = "PrivacyOptionsScreenViewModel"
     private var searchJob: Job? = null
 
+    companion object {
+        val DEBOUNCE_DELAY_300MS = 300L
+        val DEBOUNCE_DELAY_500MS = 500L
+    }
+
     init {
         viewModelScope.launch {
             gameRepository.gameData
@@ -77,8 +82,7 @@ open class PrivacyOptionsScreenViewModel(
             withContext(Dispatchers.Main) {
                 uiStateMutable.value = uiStateMutable.value.copy(query = queryText)
             }
-            val debounce : Long = 300
-            delay(debounce)
+            delay(DEBOUNCE_DELAY_300MS)
             searchPlayers(uiStateMutable.value.query)
         }
     }
@@ -92,59 +96,70 @@ open class PrivacyOptionsScreenViewModel(
     private fun searchPlayers(query: String) {
         launchSafe(
             onError = { throwable ->
-                sendUiEffect(PrivacyOptionsScreenEffect.ShowError(throwable.localizedMessage ?: "Unknown error"))
-                uiStateMutable.update {
-                    it.copy(
-                        isLoading = false,
-                        playersSearchResult = emptyList()
-                    )
-                }
+                handleSearchError(throwable, query)
             },
             getErrorLogMessage = { "Error searching players for query: $query - $it" }
         ) {
             uiStateMutable.update { it.copy(isLoading = true) }
-            val debounce : Long = 500
-            delay(debounce) // Имитируем задержку сети
+            delay(DEBOUNCE_DELAY_500MS) // Имитируем задержку сети
 
-            // Вызываем UseCase
-            when (val result = searchPlayersUseCase(query)) {
-                is VolleyResult.Success -> {
-                    val filteredPlayers = if (query.isBlank()) {
-                        result.data // Возвращаем все игроки при пустом запросе
-                    } else {
-                        result.data.filter { player ->
-                            player.firstName.contains(query, ignoreCase = true) ||
-                                player.lastName.contains(query, ignoreCase = true)
-                        }
-                    }
+            val result = searchPlayersUseCase(query)
+            processSearchResult(result, query)
+        }
+    }
 
-                    uiStateMutable.update {
-                        it.copy(
-                            playersSearchResult = filteredPlayers,
-                            isLoading = false
-                        )
-                    }
-                }
+    private fun handleSearchError(throwable: Throwable, query: String) {
+        sendUiEffect(PrivacyOptionsScreenEffect.ShowError(throwable.localizedMessage ?: "Unknown error"))
+        uiStateMutable.update {
+            it.copy(
+                isLoading = false,
+                playersSearchResult = emptyList()
+            )
+        }
+    }
 
-                is VolleyResult.Failure -> {
-                    val errorMessage = when (result.error) {
-                        ErrorType.UNAUTHORIZED -> "Authentication required"
-                        ErrorType.NO_CONNECTION -> "Network unavailable, please check your connection."
-                        ErrorType.SERVER_ERROR -> "Server is busy, please try again later."
-                        ErrorType.NOT_FOUND -> "No players found."
-                        ErrorType.UNKNOWN_ERROR -> "An unexpected error occurred."
-                        ErrorType.BAD_REQUEST -> "Bad request"
-                        ErrorType.NO_REFRESH_TOKEN -> "No refresh token"
-                    }
-                    sendUiEffect(PrivacyOptionsScreenEffect.ShowError(errorMessage))
-                    uiStateMutable.update {
-                        it.copy(
-                            isLoading = false,
-                            playersSearchResult = emptyList()
-                        )
-                    }
-                }
+    private fun processSearchResult(result: VolleyResult<List<Player>, ErrorType>, query: String) {
+        when (result) {
+            is VolleyResult.Success -> handleSuccess(result.data, query)
+            is VolleyResult.Failure -> handleFailure(result.error)
+        }
+    }
+
+    private fun handleSuccess(players: List<Player>, query: String) {
+        val filteredPlayers = if (query.isBlank()) {
+            players
+        } else {
+            players.filter { player ->
+                player.firstName.contains(query, ignoreCase = true) ||
+                    player.lastName.contains(query, ignoreCase = true)
             }
+        }
+
+        uiStateMutable.update {
+            it.copy(
+                playersSearchResult = filteredPlayers,
+                isLoading = false
+            )
+        }
+    }
+
+    private fun handleFailure(error: ErrorType) {
+        val errorMessage = when (error) {
+            ErrorType.UNAUTHORIZED -> "Authentication required"
+            ErrorType.NO_CONNECTION -> "Network unavailable, please check your connection."
+            ErrorType.SERVER_ERROR -> "Server is busy, please try again later."
+            ErrorType.NOT_FOUND -> "No players found."
+            ErrorType.UNKNOWN_ERROR -> "An unexpected error occurred."
+            ErrorType.BAD_REQUEST -> "Bad request"
+            ErrorType.NO_REFRESH_TOKEN -> "No refresh token"
+        }
+
+        sendUiEffect(PrivacyOptionsScreenEffect.ShowError(errorMessage))
+        uiStateMutable.update {
+            it.copy(
+                isLoading = false,
+                playersSearchResult = emptyList()
+            )
         }
     }
 
