@@ -203,15 +203,21 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
      */
     private fun calculateDurationMinutes(startTime: VolleyTimeStamp, endTime: VolleyTimeStamp): Int {
         val startTotalMinutes = (startTime.hour +
-            if (startTime.isAfternoon)
+            (if (startTime.isAfternoon) {
                 VolleyTimeStamp.AFTERNOON_VALUE
-            else 0) * HOUR +
+            } else {
+                0
+            })
+            ) * HOUR +
             startTime.minutes
 
         val endTotalMinutes = (endTime.hour +
-            if (endTime.isAfternoon)
+            (if (endTime.isAfternoon) {
                 VolleyTimeStamp.AFTERNOON_VALUE
-            else 0) * HOUR +
+            } else {
+                0
+            })
+            ) * HOUR +
             endTime.minutes
 
         return endTotalMinutes - startTotalMinutes

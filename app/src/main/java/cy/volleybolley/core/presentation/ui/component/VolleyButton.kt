@@ -339,7 +339,7 @@ object VolleyButton {
                         start = Offset(x = 0f, y = 0f),
                         end = Offset(x = 0f, y = 100f)
                     ),
-                    shape = RoundedCornerShape(size = 16.dp)  // И shape тоже
+                    shape = RoundedCornerShape(size = 16.dp)
                 ),
 
             colors = ButtonDefaults.buttonColors(
@@ -1240,6 +1240,14 @@ object VolleyButton {
         )
     }
 
+
+    private object ButtonPositions {
+        const val POSITION_LIGHT = 1
+        const val POSITION_MEDIUM = 2
+        const val POSITION_HARD = 3
+        const val POSITION_PRO = 4
+    }
+
     /**
      * группа кнопок выбора нескольких (1-4) Level (из 4 кнопок: Light, Medium, Hard, Pro)
      */
@@ -1252,19 +1260,19 @@ object VolleyButton {
         // Функция для получения номера кнопки по Level
         fun getPositionForLevel(level: Level): Int =
             when (level) {
-                Level.Light -> 1
-                Level.Medium -> 2
-                Level.Hard -> 3
-                Level.Pro -> 4
+                Level.Light -> ButtonPositions.POSITION_LIGHT
+                Level.Medium -> ButtonPositions.POSITION_MEDIUM
+                Level.Hard -> ButtonPositions.POSITION_HARD
+                Level.Pro -> ButtonPositions.POSITION_PRO
             }
 
         // Функция для получения Level по номеру кнопки
         fun getLevelForPosition(position: Int): Level? =
             when (position) {
-                1 -> Level.Light
-                2 -> Level.Medium
-                3 -> Level.Hard
-                4 -> Level.Pro
+                ButtonPositions.POSITION_LIGHT -> Level.Light
+                ButtonPositions.POSITION_MEDIUM -> Level.Medium
+                ButtonPositions.POSITION_HARD -> Level.Hard
+                ButtonPositions.POSITION_PRO -> Level.Pro
                 else -> null // Или можно выбросить исключение, если не ожидается других значений
             }
 
@@ -1277,7 +1285,7 @@ object VolleyButton {
                         CheckGradientButton(
                             text = LIGHT_TEXT,
                             isChecked = isChecked,
-                            paddingValues = PaddingValues(horizontal = 10.dp, vertical = 10.dp),//paddingValues
+                            paddingValues = PaddingValues(horizontal = 10.dp, vertical = 10.dp),
                             onClick = onClick
                         )
                     }
@@ -1289,7 +1297,7 @@ object VolleyButton {
                         CheckGradientButton(
                             text = MEDIUM_TEXT,
                             isChecked = isChecked,
-                            paddingValues = PaddingValues(horizontal = 10.dp, vertical = 10.dp),//paddingValues
+                            paddingValues = PaddingValues(horizontal = 10.dp, vertical = 10.dp),
                             onClick = onClick
                         )
                     }
@@ -1301,7 +1309,7 @@ object VolleyButton {
                         CheckGradientButton(
                             text = HARD_TEXT,
                             isChecked = isChecked,
-                            paddingValues = PaddingValues(horizontal = 10.dp, vertical = 10.dp),//paddingValues
+                            paddingValues = PaddingValues(horizontal = 10.dp, vertical = 10.dp),
                             onClick = onClick
                         )
                     }
@@ -1313,7 +1321,7 @@ object VolleyButton {
                         CheckGradientButton(
                             text = PRO_TEXT,
                             isChecked = isChecked,
-                            paddingValues = PaddingValues(horizontal = 13.dp, vertical = 10.dp),//paddingValues
+                            paddingValues = PaddingValues(horizontal = 13.dp, vertical = 10.dp),
                             onClick = onClick
                         )
                     }
@@ -1412,7 +1420,6 @@ object VolleyButton {
                 modifier = Modifier.weight(1f),
                 text = INDIVIDUAL_TEXT,
                 isChecked = checkId == 1
-                //onClick = onSelected
             ) {
                 onSelected(1)
             }
@@ -1421,7 +1428,6 @@ object VolleyButton {
                 modifier = Modifier.weight(1f),
                 text = TEAM_TEXT,
                 isChecked = checkId == 2
-                //onClick = onSelected(2)
             ) {
                 onSelected(2)
             }
@@ -1610,21 +1616,20 @@ object VolleyButton {
         ) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = //modifier
-                    Modifier
-                        .fillMaxWidth()
-                        .height(VolleyDimens.DIMEN_32.dp) // Оставляем фиксированную высоту
-                        .background(
-                            brush = Brush.linearGradient(
-                                colors = listOf(
-                                    VolleyColor.YellowForGradient,
-                                    VolleyColor.GreenForGradient
-                                ),
-                                start = Offset(x = 0f, y = 0f),
-                                end = Offset(x = 0f, y = 100f)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(VolleyDimens.DIMEN_32.dp) // Оставляем фиксированную высоту
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                VolleyColor.YellowForGradient,
+                                VolleyColor.GreenForGradient
                             ),
-                            shape = RoundedCornerShape(size = VolleyDimens.DIMEN_16.dp),
-                        )
+                            start = Offset(x = 0f, y = 0f),
+                            end = Offset(x = 0f, y = 100f)
+                        ),
+                        shape = RoundedCornerShape(size = VolleyDimens.DIMEN_16.dp),
+                    )
             ) {
                 Row(
                     modifier = Modifier
@@ -2133,7 +2138,7 @@ private fun PreviewGroupButtonsForPrivacy() {
 private fun PreviewGroupButtonsForGender3() {
     PreviewContainer(modifier = Modifier.width(300.dp)) {
         VolleyButton.GroupButtonsForGender3(
-            modifier = Modifier,//.padding(vertical = 12.dp),
+            modifier = Modifier,
             onSelected = {}
         )
     }
@@ -2144,7 +2149,7 @@ private fun PreviewGroupButtonsForGender3() {
 private fun PreviewGroupButtonsForGender2() {
     PreviewContainer {
         VolleyButton.GroupButtonsForGender2(
-            modifier = Modifier,//.padding(vertical = 12.dp),
+            modifier = Modifier,
             onSelected = {}
         )
     }
@@ -2155,7 +2160,7 @@ private fun PreviewGroupButtonsForGender2() {
 private fun PreviewGroupButtonsForLevel() {
     PreviewContainer(modifier = Modifier.fillMaxWidth()) {
         VolleyButton.GroupButtonsForLevelMulti(
-            checkedLevels = setOf(Level.Light, Level.Medium, Level.Pro), //checkId = 2,
+            checkedLevels = setOf(Level.Light, Level.Medium, Level.Pro),
             modifier = Modifier.padding(vertical = 12.dp),
             onSelected = {}
         )
