@@ -195,7 +195,6 @@ object VolleyButton {
         modifier: Modifier = Modifier,
         text: String = "",
         paddingValues: PaddingValues = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
-        //content: @Composable () -> Unit = {},
         content: @Composable (() -> Unit)? = null,
         onClick: () -> Unit
     ) {
@@ -236,12 +235,6 @@ object VolleyButton {
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center
                 ) {
-//                    Text(
-//                        text = text,
-//                        color = VolleyColor.TextDark,
-//                        style = ButtonSText
-//                    )
-
                     if (content == null) {
                         Text(
                             text = text,
@@ -256,7 +249,6 @@ object VolleyButton {
         }
     }
 
-
     /**
      * градиентная кнопка без картинки
      */
@@ -266,7 +258,6 @@ object VolleyButton {
         modifier: Modifier = Modifier,
         text: String = "",
         paddingValues: PaddingValues = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
-        //  content: @Composable () -> Unit = {},
         content: @Composable (() -> Unit)? = null,
         onClick: () -> Unit
     ) {
@@ -276,17 +267,14 @@ object VolleyButton {
             Button(
                 onClick = onClick,
                 modifier = Modifier
-                    //.defaultMinSize(minWidth = 0.dp, minHeight = 0.dp) // <-- Это важно!
-
                     .fillMaxSize()
-                    .padding(0.dp), // Важно: Сбрасываем padding по умолчанию
+                    .padding(0.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 contentPadding = PaddingValues(0.dp),
                 shape = RoundedCornerShape(size = 16.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        // .defaultMinSize(minWidth = 0.dp, minHeight = 0.dp) // <-- Это важно!
                         .fillMaxSize()
                         .background(
                             Brush.linearGradient(
@@ -335,17 +323,10 @@ object VolleyButton {
     fun ActiveGradientButton1(
         modifier: Modifier = Modifier,
         text: String,
-        paddingValues: PaddingValues =  //if(text.length > 4)
+        paddingValues: PaddingValues =
             PaddingValues(start = 12.dp, top = 10.dp, end = 12.dp, bottom = 10.dp),
-        // else
-        //     PaddingValues(start = 16.dp, top = 10.dp, end = 16.dp, bottom = 10.dp),
         onClick: () -> Unit
     ) {
-//        var paddingValues: PaddingValues
-//        if(text.length > 4)
-//            paddingValues = PaddingValues(start = 12.dp, top = 10.dp, end = 12.dp, bottom = 10.dp)
-//        else
-//            paddingValues = PaddingValues(start = 16.dp, top = 10.dp, end = 16.dp, bottom = 10.dp)
         Button(
             onClick = onClick,
             modifier = modifier
@@ -368,83 +349,13 @@ object VolleyButton {
             contentPadding = paddingValues,
             shape = RoundedCornerShape(size = 16.dp)
         ) {
-//            Box(
-//                modifier = Modifier
-//                    .background(
-//                        Brush.linearGradient(
-//                            colors = listOf(
-//                                VolleyColor.YellowForGradient,
-//                                VolleyColor.GreenForGradient
-//                            ),
-//                            start = Offset(x = 0f, y = 0f),
-//                            end = Offset(x = 0f, y = 100f)
-//                        )
-//                    ),
-//                   // .padding(paddingValues),
-//                contentAlignment = Alignment.Center
-//            ) {
             Text(
                 text = text,
                 color = VolleyColor.TextDark,
                 style = ButtonSText
             )
-            // }
         }
     }
-
-//    /**
-//     * градиентная кнопка без картинки
-//     */
-//    @Composable
-//    @Stable
-//    fun ActiveGradientButton(
-//        modifier: Modifier = Modifier,
-//        text: String,
-//        paddingValues: PaddingValues =  if(text.length > 4)
-//            PaddingValues(start = 12.dp, top = 10.dp, end = 12.dp, bottom = 10.dp)
-//        else
-//            PaddingValues(start = 16.dp, top = 10.dp, end = 16.dp, bottom = 10.dp),
-//        // = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
-//        onClick: () -> Unit
-//    ) {
-////        var paddingValues: PaddingValues
-////        if(text.length > 4)
-////            paddingValues = PaddingValues(start = 12.dp, top = 10.dp, end = 12.dp, bottom = 10.dp)
-////        else
-////            paddingValues = PaddingValues(start = 16.dp, top = 10.dp, end = 16.dp, bottom = 10.dp)
-//        Button(
-//            onClick = onClick,
-//            modifier = modifier,
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = Color.Transparent,
-//                contentColor = VolleyColor.TextDark
-//            ),
-//            contentPadding = PaddingValues(0.dp),
-//            shape = RoundedCornerShape(size = 16.dp)
-//        ) {
-//            Box(
-//                modifier = modifier
-//                    .background(
-//                        Brush.linearGradient(
-//                            colors = listOf(
-//                                VolleyColor.YellowForGradient,
-//                                VolleyColor.GreenForGradient
-//                            ),
-//                            start = Offset(x = 0f, y = 0f),
-//                            end = Offset(x = 0f, y = 100f)
-//                        )
-//                    )
-//                    .padding(paddingValues),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Text(
-//                    text = text,
-//                    color = VolleyColor.TextDark,
-//                    style = ButtonSText
-//                )
-//            }
-//        }
-//    }
 
     /**
      * outlined градиентная кнопка без картинки
@@ -454,9 +365,8 @@ object VolleyButton {
     fun OutlinedGradientButton(
         modifier: Modifier = Modifier,
         text: String = "",
-        paddingValues: PaddingValues =  //if(text.length > 4)
+        paddingValues: PaddingValues =
             PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
-        // content: @Composable () -> Unit = {},
         content: @Composable (() -> Unit)? = null,
         onClick: () -> Unit
     ) {
@@ -477,7 +387,6 @@ object VolleyButton {
                     modifier = Modifier
                         .background(
                             brush = Brush.horizontalGradient(colors = listOf(Color.Transparent, Color.Transparent)),
-                            //  shape = RoundedCornerShape(size = 16.dp)
                         )
                         .border(
                             border = BorderStroke(
@@ -492,13 +401,7 @@ object VolleyButton {
                         )
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center
-                    // contentPadding = paddingValues,
                 ) {
-//                    Text(
-//                        text = text,
-//                        color = VolleyColor.White,
-//                        style = ButtonSText
-//                    )
                     if (content == null) {
                         Text(
                             text = text,
@@ -521,9 +424,8 @@ object VolleyButton {
     fun OutlinedGradientButtonMaxWidth(
         modifier: Modifier = Modifier,
         text: String = "",
-        paddingValues: PaddingValues =  //if(text.length > 4)
+        paddingValues: PaddingValues =
             PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
-        //content: @Composable () -> Unit = {},
         content: @Composable (() -> Unit)? = null,
         onClick: () -> Unit
     ) {
@@ -533,10 +435,8 @@ object VolleyButton {
             Button(
                 onClick = onClick,
                 modifier = Modifier
-                    .defaultMinSize(minWidth = 0.dp, minHeight = 0.dp) // <-- Это важно!
-
-                    //.fillMaxSize()
-                    .padding(0.dp), // Важно: Сбрасываем padding по умолчанию
+                    .defaultMinSize(minWidth = 0.dp, minHeight = 0.dp)
+                    .padding(0.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
                     contentColor = VolleyColor.White
@@ -549,7 +449,6 @@ object VolleyButton {
                         .fillMaxSize()
                         .background(
                             brush = Brush.horizontalGradient(colors = listOf(Color.Transparent, Color.Transparent)),
-                            //  shape = RoundedCornerShape(size = 16.dp)
                         )
                         .border(
                             border = BorderStroke(
@@ -564,7 +463,6 @@ object VolleyButton {
                         )
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center
-                    // contentPadding = paddingValues,
                 ) {
                     if (content == null) {
                         Text(
@@ -579,116 +477,6 @@ object VolleyButton {
             }
         }
     }
-
-
-//        OutlinedButton1(
-//            onClick = onClick,
-//            border = BorderStroke(
-//                width = 1.dp,
-//                brush = Brush.linearGradient(
-//                    colors = listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient),
-//                    start = Offset(x = 0f, y = 0f),
-//                    end = Offset(x = 0f, y = 100f)
-//                )
-//            ),
-//            shape = RoundedCornerShape(size = 16.dp),
-//            modifier = modifier,
-//            contentPadding = paddingValues
-//        ) {
-//            Text(
-//                text = text,
-//                color = VolleyColor.White,
-//                style = ButtonSText
-//            )
-//        }
-//    }
-
-
-//    /**
-//     * outlined градиентная кнопка без картинки
-//     */
-//    @Composable
-//    @Stable
-//    fun OutlinedGradientButton(
-//        modifier: Modifier = Modifier,
-//        text: String,
-//        paddingValues: PaddingValues =  //if(text.length > 4)
-//            PaddingValues(start = 12.dp, top = 10.dp, end = 12.dp, bottom = 10.dp),
-//       // else
-//       //     PaddingValues(start = 16.dp, top = 10.dp, end = 16.dp, bottom = 10.dp),
-//         onClick: () -> Unit
-//    ) {
-////        var paddingValues: PaddingValues
-////        if(text.length > 4)
-////            paddingValues = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp)
-////        else
-////            paddingValues = PaddingValues(start = 20.dp, top = 12.dp, end = 20.dp, bottom = 12.dp)
-//
-//
-//        OutlinedButton(
-//            onClick = onClick,
-//            border = BorderStroke(
-//                width = 1.dp,
-//                brush = Brush.linearGradient(
-//                    colors = listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient),
-//                    start = Offset(x = 0f, y = 0f),
-//                    end = Offset(x = 0f, y = 100f)
-//                )
-//            ),
-//            shape = RoundedCornerShape(size = 16.dp),
-//            modifier = modifier,
-//            contentPadding = paddingValues
-//        ) {
-//            Text(
-//                text = text,
-//                color = VolleyColor.White,
-//                style = ButtonSText
-//            )
-//        }
-//    }
-
-
-//    /**
-//     * outlined градиентная кнопка без картинки
-//     */
-//    @Composable
-//    @Stable
-//    fun OutlinedGradientButton(
-//        modifier: Modifier = Modifier,
-//        text: String,
-//        paddingValues: PaddingValues =  if(text.length > 4)
-//            PaddingValues(start = 12.dp, top = 10.dp, end = 12.dp, bottom = 10.dp)
-//        else
-//            PaddingValues(start = 16.dp, top = 10.dp, end = 16.dp, bottom = 10.dp),
-//                // = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp),
-//        onClick: () -> Unit
-//    ) {
-////        var paddingValues: PaddingValues
-////        if(text.length > 4)
-////            paddingValues = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp)
-////        else
-////            paddingValues = PaddingValues(start = 20.dp, top = 12.dp, end = 20.dp, bottom = 12.dp)
-//        OutlinedButton(
-//            onClick = onClick,
-//            border = BorderStroke(
-//                width = 1.dp,
-//                brush = Brush.linearGradient(
-//                    colors = listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient),
-//                    start = Offset(x = 0f, y = 0f),
-//                    end = Offset(x = 0f, y = 100f)
-//                )
-//            ),
-//            shape = RoundedCornerShape(size = 16.dp),
-//            modifier = modifier,
-//            contentPadding = paddingValues
-//        ) {
-//            Text(
-//                text = text,
-//                color = VolleyColor.White,
-//                style = ButtonSText
-//            )
-//        }
-//    }
 
     /**
      * такую кнопку только одну нашла: с текстом "Add payment"
@@ -1161,27 +949,6 @@ object VolleyButton {
             }
         }
     }
-
-//    /**
-//     * @param items список кнопок
-//     */
-//    @Composable
-//    fun ButtonsOfSameSizeGroup(
-//        items: List<ButtonItem>,
-//        modifier: Modifier = Modifier,
-//        onSelected: (Int) -> Unit
-//    ) {
-//        val groupWidth = constraints.maxWidth
-//        var size = ()/items.count()
-//        Row(modifier, horizontalArrangement = Arrangement.Start) {
-//            items.forEach { item ->
-//                item.button(Modifier.weight(1f), item.isChecked) {
-//                    onSelected(item.position)
-//                }
-//                Spacer(modifier = Modifier.size(8.dp))
-//            }
-//        }
-//    }
 
     @Composable
     fun GroupButtonsForChangeLevel1(
@@ -1659,10 +1426,6 @@ object VolleyButton {
                 onSelected(2)
             }
         }
-        //    modifier = modifier.height(44.dp),
-        // onSelected = onSelected
-
-
     }
 
     /**
@@ -1764,12 +1527,11 @@ object VolleyButton {
                     shape = RoundedCornerShape(size = 16.dp),
                 )
                 .height(VolleyDimens.DIMEN_32.dp)
-            //.size(204.dp, 32.dp)
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(2.dp),//(horizontal = 2.dp),
+                    .padding(2.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -1777,14 +1539,14 @@ object VolleyButton {
                 val buttonWeight = 1f
 
                 SliderButton(
-                    modifier = Modifier.weight(buttonWeight),//.size(100.dp, 28.dp),
+                    modifier = Modifier.weight(buttonWeight),
                     text = MAP_TEXT,
                     isChecked = checkId == 1
                 ) {
                     onSelected(1)
                 }
                 SliderButton(
-                    modifier = Modifier.weight(buttonWeight),//size(100.dp, 28.dp),
+                    modifier = Modifier.weight(buttonWeight),
                     text = LIST_TEXT,
                     isChecked = checkId == 2
                 ) {
@@ -1845,8 +1607,6 @@ object VolleyButton {
     fun SliderButtonsPlayers(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
         Column( // Меняем Box на Column, чтобы корректно работал fillMaxWidth
             modifier = modifier
-            //.fillMaxWidth() // Занимаем всю доступную ширину
-            //.padding(horizontal = 16.dp, vertical = 8.dp), // Добавляем отступы слева и справа
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -1865,12 +1625,11 @@ object VolleyButton {
                             ),
                             shape = RoundedCornerShape(size = VolleyDimens.DIMEN_16.dp),
                         )
-                //.size(319.dp, 32.dp)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(2.dp),//padding(horizontal = 2.dp),
+                        .padding(2.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -1880,20 +1639,18 @@ object VolleyButton {
                     SliderButton(
                         modifier = Modifier
                             .weight(buttonWeight) // Каждая кнопка занимает половину доступного места в Row
-                            .fillMaxHeight(),  // Растягиваем по высоте//Modifier.size(166.dp, 28.dp),
+                            .fillMaxHeight(),
                         text = ALL_PLAYERS_TEXT,
                         isChecked = checkId == 1
-                        //onClick = onClick
                     ) {
                         onSelected(1)
                     }
                     SliderButton(
                         modifier = Modifier
                             .weight(buttonWeight) // Каждая кнопка занимает половину доступного места в Row
-                            .fillMaxHeight(),  // Растягиваем по высоте//Modifier.size(166.dp, 28.dp),
+                            .fillMaxHeight(),
                         text = FAVORITES_TEXT,
                         isChecked = checkId == 2
-                        //onClick = onClick
                     ) {
                         onSelected(2)
                     }
@@ -1901,7 +1658,6 @@ object VolleyButton {
             }
         }
     }
-
 
     /**
      * слайдер-группа кнопок выбора All players|Favorites
