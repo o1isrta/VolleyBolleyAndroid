@@ -21,45 +21,65 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.model.LatLng
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtonsMap
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
+import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.ListContent
 import cy.volleybolley.core.presentation.ui.screens.courts.MapScreenComponents.MapScreen
-import cy.volleybolley.courts.presentation.SearchCourtEvent
-import cy.volleybolley.courts.presentation.SearchCourtState
+import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.util.UiStateRenderer
 
 object CourtsComponents {
     @Composable
     fun CourtMapListSwitcherScreen(
-        state: SearchCourtState,
-        onEvent: (SearchCourtEvent) -> Unit,
+        modifier: Modifier = Modifier,
+        courts: List<Court> = emptyList(),
+        selectedCourt: Court? = null,
+        userLocation: LatLng? = null,
+        showDetails: Boolean = false,
+        isLoading: Boolean = false,
+        error: String? = null,
         isMapSelected: Boolean,
         onTabSelected: (Boolean) -> Unit,
-        modifier: Modifier = Modifier,
-        onBackNavigationRequested: () -> Unit = {}
+        onBackNavigationRequested: () -> Unit = {},
+        onCourtClick: (Court) -> Unit,
+        onCourtChoose: (Court) -> Unit,
+        onMapClick: () -> Unit,
+        onCourtDetailsClick: (Court) -> Unit,
+        onUserLocationUpdate: (LatLng) -> Unit,
+        onUserLocationDenied: () -> Unit,
     ) {
         Box(
-            modifier = modifier
-                .fillMaxSize()
+            modifier = modifier.fillMaxSize()
         ) {
             UiStateRenderer(
-                isLoading = state.isLoading,
-                error = state.error
+                isLoading = isLoading,
+                error = error
             ) {
                 when {
                     isMapSelected -> {
                         MapScreen(
-                            state = state,
-                            onEvent = onEvent
+                            courts = courts,
+                            selectedCourt = selectedCourt,
+                            userLocation = userLocation,
+                            showDetails = showDetails,
+                            onMapClick = onMapClick,
+                            onCourtClick = onCourtClick,
+                            onCourtChoose = onCourtChoose,
+                            onCourtDetailsClick = onCourtDetailsClick,
+                            onUserLocationUpdate = onUserLocationUpdate,
+                            onUserLocationDenied = onUserLocationDenied
                         )
                     }
 
                     else -> {
-                        ListScreenComponents.ListContent(
-                            state = state,
-                            onEvent = onEvent,
+                        ListContent(
+                            courts = courts,
+                            selectedCourt = selectedCourt,
+                            onClick = onCourtClick,
+                            onChooseCourt = onCourtChoose,
                             modifier = Modifier.padding(top = VolleyDimens.DIMEN_40.dp)
                         )
                     }
@@ -85,8 +105,7 @@ private fun MapListTopBar(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
@@ -121,23 +140,29 @@ private fun MapListTopBar(
 @Composable
 private fun PreviewCourtMapListSwitcherScreen() {
     var isMapSelected by remember { mutableStateOf(false) }
+    var selectedCourt by remember { mutableStateOf<Court?>(CourtsMockData.sampleCourts[1]) }
 
-    val previewState = SearchCourtState(
-        courts = CourtsMockData.sampleCourts,
-        selectedCourt = CourtsMockData.sampleCourts[1],
-        isLoading = false,
-        error = null
-    )
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
         CourtsComponents.CourtMapListSwitcherScreen(
-            state = previewState,
-            onEvent = {},
+            courts = CourtsMockData.sampleCourts,
+            selectedCourt = selectedCourt,
+            userLocation = LatLng(7.8804, 98.3923),
+            showDetails = false,
+            isLoading = false,
+            error = null,
             isMapSelected = isMapSelected,
             onTabSelected = { isMapSelected = it },
+            onBackNavigationRequested = {},
+            onCourtClick = { },
+            onCourtChoose = { },
+            onMapClick = {},
+            onCourtDetailsClick = { },
+            onUserLocationUpdate = { },
+            onUserLocationDenied = { }
         )
     }
 }

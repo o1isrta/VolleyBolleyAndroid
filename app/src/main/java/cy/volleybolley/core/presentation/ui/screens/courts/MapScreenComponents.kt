@@ -52,22 +52,33 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.OutlinedActiv
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.CourtDetailsContent
+import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.CourtImageWithTags
+import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.DistanceContainer
+import cy.volleybolley.core.presentation.ui.screens.courts.MapScreenComponents.MapScreenContent
 import cy.volleybolley.courts.domain.model.Court
-import cy.volleybolley.courts.presentation.SearchCourtEvent
-import cy.volleybolley.courts.presentation.SearchCourtState
 
 object MapScreenComponents {
     private const val DEFAULT_LAT = 7.8804
     private const val DEFAULT_LNG = 98.3923
     private const val DEFAULT_ZOOM = 14f
     private val DEFAULT_LAT_LNG = LatLng(DEFAULT_LAT, DEFAULT_LNG)
+
     @SuppressLint("MissingPermission")
     @OptIn(ExperimentalPermissionsApi::class)
     @Composable
     fun MapScreen(
-        state: SearchCourtState,
-        onEvent: (SearchCourtEvent) -> Unit,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        courts: List<Court> = emptyList(),
+        selectedCourt: Court? = null,
+        userLocation: LatLng? = null,
+        showDetails: Boolean = false,
+        onMapClick: () -> Unit,
+        onCourtClick: (Court) -> Unit,
+        onCourtChoose: (Court) -> Unit,
+        onCourtDetailsClick: (Court) -> Unit,
+        onUserLocationUpdate: (LatLng) -> Unit,
+        onUserLocationDenied: () -> Unit,
     ) {
         val context = LocalContext.current
         val fusedLocationClient = remember {
@@ -86,8 +97,8 @@ object MapScreenComponents {
                         fusedLocationClient.lastLocation
                             .addOnSuccessListener { location ->
                                 location?.let {
-                                    onEvent(SearchCourtEvent.UpdateUserLocation(LatLng(it.latitude, it.longitude)))
-                                } ?: onEvent(SearchCourtEvent.DeniedUserLocation)
+                                    onUserLocationUpdate(LatLng(it.latitude, it.longitude))
+                                } ?: onUserLocationDenied()
                             }
                     }
 
@@ -97,75 +108,91 @@ object MapScreenComponents {
         }
 
         MapScreenContent(
-            state = state,
-            onEvent = onEvent,
+            courts = courts,
+            selectedCourt = selectedCourt,
+            userLocation = userLocation,
+            showDetails = showDetails,
+            onMapClick = onMapClick,
+            onCourtClick = onCourtClick,
+            onCourtChoose = onCourtChoose,
+            onCourtDetailsClick = onCourtDetailsClick,
             modifier = modifier
         )
     }
 
     @Composable
-    private fun MapScreenContent(
-        state: SearchCourtState,
-        onEvent: (SearchCourtEvent) -> Unit,
-        modifier: Modifier = Modifier
+    fun MapScreenContent(
+        modifier: Modifier = Modifier,
+        courts: List<Court> = emptyList(),
+        selectedCourt: Court? = null,
+        userLocation: LatLng? = null,
+        showDetails: Boolean = false,
+        onMapClick: () -> Unit,
+        onCourtClick: (Court) -> Unit,
+        onCourtChoose: (Court) -> Unit,
+        onCourtDetailsClick: (Court) -> Unit,
     ) {
         val context = LocalContext.current
         val defaultLatLng = DEFAULT_LAT_LNG
         val cameraPositionState = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(state.userLocation ?: defaultLatLng, DEFAULT_ZOOM)
+            position = CameraPosition.fromLatLngZoom(userLocation ?: defaultLatLng, DEFAULT_ZOOM)
         }
         Box(modifier = modifier.fillMaxSize()) {
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
                 uiSettings = MapUiSettings(zoomControlsEnabled = false),
-                onMapClick = { onEvent(SearchCourtEvent.ClickOnMap) }
+                onMapClick = { onMapClick() }
             ) {
-                state.userLocation?.let { userLocation ->
+                userLocation?.let { location ->
                     Marker(
-                        state = MarkerState(position = userLocation),
+                        state = MarkerState(position = location),
                         title = "You are here",
                         icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
                     )
                 }
 
-                state.courts.forEach { court ->
+                courts.forEach { court ->
                     Marker(
                         state = MarkerState(position = court.location.toLatLng()),
                         title = court.location.courtName,
-                        icon = court.getMarkerIcon(context, state.selectedCourt),
+                        icon = court.getMarkerIcon(context, selectedCourt),
                         onClick = {
-                            onEvent(SearchCourtEvent.ClickOnSearchCourtMarker(court))
+                            onCourtClick(court)
                             true
                         }
                     )
                 }
             }
 
-            state.selectedCourt?.let { court ->
-                AnimatedVisibility(
-                    visible = true,
-                    enter = fadeIn() + slideInVertically(),
-                    exit = fadeOut() + slideOutVertically()
+            selectedCourt?.let { court ->
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.BottomCenter
                 ) {
-                    val modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(VolleyDimens.DIMEN_8.dp)
+                    AnimatedVisibility(
+                        visible = true,
+                        enter = fadeIn() + slideInVertically(),
+                        exit = fadeOut() + slideOutVertically()
+                    ) {
+                        val modifier = Modifier
+                            .padding(VolleyDimens.DIMEN_8.dp)
 
-                    if (state.showDetails) {
-                        CourtMapItemDetail(
-                            court = court,
-                            onClick = { onEvent(SearchCourtEvent.ClickOnMap) },
-                            onChooseCourt = { onEvent(SearchCourtEvent.ClickOnChooseSearchCourt(court)) },
-                            modifier = modifier
-                        )
-                    } else {
-                        CourtMapItemWithButton(
-                            court = court,
-                            onClick = { onEvent(SearchCourtEvent.ClickOnSearchCourtDetails(court)) },
-                            onChooseCourt = { onEvent(SearchCourtEvent.ClickOnChooseSearchCourt(court)) },
-                            modifier = modifier
-                        )
+                        if (showDetails) {
+                            CourtMapItemDetail(
+                                court = court,
+                                onClick = onMapClick,
+                                onChooseCourt = { onCourtChoose(court) },
+                                modifier = modifier
+                            )
+                        } else {
+                            CourtMapItemWithButton(
+                                court = court,
+                                onClick = { onCourtDetailsClick(court) },
+                                onChooseCourt = { onCourtChoose(court) },
+                                modifier = modifier
+                            )
+                        }
                     }
                 }
             }
@@ -175,9 +202,9 @@ object MapScreenComponents {
 
 @Composable
 private fun CourtMapItem(
+    modifier: Modifier = Modifier,
     court: Court,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
@@ -213,7 +240,7 @@ private fun CourtMapItem(
                 )
             }
 
-            ListScreenComponents.DistanceContainer(
+            DistanceContainer(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 distance = "Nearest"
             )
@@ -223,10 +250,10 @@ private fun CourtMapItem(
 
 @Composable
 private fun CourtMapItemWithButton(
+    modifier: Modifier,
     court: Court,
     onClick: () -> Unit,
     onChooseCourt: () -> Unit,
-    modifier: Modifier,
 ) {
     TransparentContainer(
         modifier = modifier
@@ -244,16 +271,16 @@ private fun CourtMapItemWithButton(
                 court = court,
                 onClick = onClick,
             )
-            CourtActionButtons(onChooseCourt = onChooseCourt, onClickDetails = onClick)
+            CourtActionButtons(onClickDetails = onClick, onChooseCourt = onChooseCourt)
         }
     }
 }
 
 @Composable
 private fun CourtActionButtons(
+    modifier: Modifier = Modifier,
     onClickDetails: () -> Unit,
     onChooseCourt: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
@@ -296,8 +323,12 @@ private fun CourtMapItemDetail(
                 court = court,
                 onClick = onClick
             )
-
-            ListScreenComponents.CourtDetailsContent(
+            CourtImageWithTags(
+                photoUrl = court.photo,
+                tags = court.tags
+            )
+            CourtDetailsContent(
+                modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
                 court = court,
                 onChooseCourt = onChooseCourt
             )
@@ -323,13 +354,15 @@ private fun PreviewMapScreenContent() {
         ) {
             Text(text = "🗺 Fake Google Map", color = VolleyColor.GreyDark)
         }
-        CourtMapItemWithButton(
-            court = selectedCourt,
-            onClick = {},
-            onChooseCourt = {},
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(VolleyDimens.DIMEN_8.dp)
+        MapScreenContent(
+            courts = CourtsMockData.sampleCourts,
+            selectedCourt = selectedCourt,
+            userLocation = LatLng(7.8804, 98.3923),
+            showDetails = false,
+            onMapClick = {},
+            onCourtClick = { },
+            onCourtChoose = {},
+            onCourtDetailsClick = { }
         )
     }
 }

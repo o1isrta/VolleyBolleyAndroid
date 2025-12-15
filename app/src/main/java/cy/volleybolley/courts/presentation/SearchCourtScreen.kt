@@ -61,11 +61,23 @@ private fun CourtListContent(
     state: SearchCourtState,
     onEvent: (SearchCourtEvent) -> Unit,
 ) {
+
     CourtMapListSwitcherScreen(
-        state = state,
-        onEvent = onEvent,
+        courts = state.courts,
+        selectedCourt = state.selectedCourt,
+        userLocation = state.userLocation,
+        showDetails = state.showDetails,
+        isLoading = state.isLoading,
+        error = state.error,
         isMapSelected = isMapSelected,
         onTabSelected = onTabSelected,
+        onBackNavigationRequested = { onEvent(SearchCourtEvent.OnBackFromSearchCourtListScreen) },
+        onCourtClick = { court -> onEvent(SearchCourtEvent.ClickOnSearchCourtMarker(court)) },
+        onCourtChoose = { court -> onEvent(SearchCourtEvent.ClickOnChooseSearchCourt(court)) },
+        onMapClick = { onEvent(SearchCourtEvent.ClickOnMap) },
+        onCourtDetailsClick = { court -> onEvent(SearchCourtEvent.ClickOnSearchCourtDetails(court)) },
+        onUserLocationUpdate = { latLng -> onEvent(SearchCourtEvent.UpdateUserLocation(latLng)) },
+        onUserLocationDenied = { onEvent(SearchCourtEvent.DeniedUserLocation) },
         modifier = Modifier.fillMaxSize()
     )
 }

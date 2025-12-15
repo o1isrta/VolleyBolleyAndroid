@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -32,6 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices.PIXEL_9_PRO_XL
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -42,39 +43,48 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.CourtDetailsContent
+import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.CourtItemDetails
+import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.CourtListItem
+import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.DistanceContainer
+import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.ListContent
 import cy.volleybolley.courts.domain.model.Court
-import cy.volleybolley.courts.presentation.SearchCourtEvent
-import cy.volleybolley.courts.presentation.SearchCourtState
 
 object ListScreenComponents {
     @Composable
     fun ListContent(
-        state: SearchCourtState,
-        onEvent: (SearchCourtEvent) -> Unit,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        courts: List<Court> = emptyList(),
+        selectedCourt: Court? = null,
+        onClick: (Court) -> Unit,
+        onChooseCourt: (Court) -> Unit,
     ) {
         TransparentContainer(
             modifier = modifier
                 .wrapContentHeight()
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(VolleyDimens.DIMEN_8.dp)
         ) {
             CourtsSearchList(
-                state = state,
-                onEvent = onEvent
+                courts = courts,
+                selectedCourt = selectedCourt,
+                onClick = onClick,
+                onChooseCourt = onChooseCourt
             )
         }
     }
 
     @Composable
     private fun CourtsSearchList(
-        state: SearchCourtState,
-        onEvent: (SearchCourtEvent) -> Unit
+        courts: List<Court>,
+        selectedCourt: Court?,
+        onClick: (Court) -> Unit,
+        onChooseCourt: (Court) -> Unit
     ) {
         var searchText by remember { mutableStateOf("") }
-        val filteredCourts by remember(state.courts, searchText) {
+        val filteredCourts by remember(courts, searchText) {
             derivedStateOf {
-                state.courts.filter {
+                courts.filter {
                     it.location.courtName.contains(searchText, ignoreCase = true) ||
                         it.location.locationName.contains(searchText, ignoreCase = true)
                 }
@@ -97,41 +107,36 @@ object ListScreenComponents {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                items(filteredCourts, key = { it.courtId }) { court ->
-                    val isSelected = court == state.selectedCourt
+                itemsIndexed(filteredCourts, key = { _, court -> court.courtId }) { index, court ->
+                    val isSelected = court == selectedCourt
                     if (isSelected) {
                         CourtItemDetails(
                             court = court,
-                            onClick = { onEvent(SearchCourtEvent.ClickOnSearchCourtMarker(court)) },
-                            onChooseCourt = { onEvent(SearchCourtEvent.ClickOnChooseSearchCourt(court)) }
+                            onClick = { onClick(court) },
+                            onChooseCourt = { onChooseCourt(court) }
                         )
                     } else {
                         CourtListItem(
-                            court = court,
-                            onClick = { onEvent(SearchCourtEvent.ClickOnSearchCourtMarker(court)) },
+                            courtName = court.location.courtName,
+                            locationName = court.location.locationName,
+                            onClick = { onClick(court) },
                             modifier = Modifier.padding(vertical = VolleyDimens.DIMEN_16.dp)
                         )
                     }
-                    DividerItem()
+                    if (index < filteredCourts.lastIndex) {
+                        DividerItem()
+                    }
                 }
             }
-
         }
     }
 
     @Composable
-    private fun DividerItem() {
-        HorizontalDivider(
-            thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
-            color = VolleyColor.Divider
-        )
-    }
-
-    @Composable
     fun CourtListItem(
-        court: Court,
+        modifier: Modifier = Modifier,
+        courtName: String,
+        locationName: String,
         onClick: () -> Unit,
-        modifier: Modifier = Modifier
     ) {
         Row(
             modifier = modifier
@@ -143,14 +148,14 @@ object ListScreenComponents {
                 modifier = Modifier.weight(1f)
             ) {
                 VolleyText.BodyBold(
-                    text = court.location.courtName,
+                    text = courtName,
                     color = VolleyColor.White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
 
                 VolleyText.BodyLight(
-                    text = court.location.locationName,
+                    text = locationName,
                     color = VolleyColor.White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -178,8 +183,13 @@ object ListScreenComponents {
                 .animateContentSize()
         ) {
             CourtListItem(
-                court = court,
+                courtName = court.location.courtName,
+                locationName = court.location.locationName,
                 onClick = onClick,
+            )
+            CourtImageWithTags(
+                photoUrl = court.photo,
+                tags = court.tags
             )
             CourtDetailsContent(
                 court = court,
@@ -190,21 +200,17 @@ object ListScreenComponents {
 
     @Composable
     fun CourtDetailsContent(
+        modifier: Modifier = Modifier,
         court: Court,
         onChooseCourt: () -> Unit
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
         ) {
-            CourtImageWithTags(
-                photoUrl = court.photo,
-                tags = court.tags
-            )
-
             VolleyText.BodyBold(
-                text = "Court pricing: ${court.price} THB/60 min",
+                text = court.price,
                 color = VolleyColor.White,
             )
 
@@ -214,22 +220,45 @@ object ListScreenComponents {
             )
 
             if (court.contacts.isNotEmpty()) {
-                VolleyText.BodyRegular(
-                    text = "Contacts: ${court.contacts.first().contact}",
-                    color = VolleyColor.White
-                )
+                Row(
+                    verticalAlignment = Alignment.Top,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    VolleyText.BodyRegular(
+                        text = "${stringResource(R.string.contacts)} ",
+                        color = VolleyColor.White
+                    )
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        court.contacts.forEach { contact ->
+                            VolleyText.BodyRegular(
+                                text = contact.contact,
+                                color = VolleyColor.White
+                            )
+                        }
+                    }
+                }
             }
-
-            ActiveButton(
-                onClick = onChooseCourt,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = VolleyDimens.DIMEN_16.dp)
-                    .height(VolleyDimens.DIMEN_44.dp),
-                text = stringResource(R.string.choose_this_court),
-                enabled = true,
-            )
         }
+        ActiveButton(
+            onClick = onChooseCourt,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = VolleyDimens.DIMEN_16.dp)
+                .height(VolleyDimens.DIMEN_44.dp),
+            text = stringResource(R.string.choose_this_court),
+            enabled = true,
+        )
+    }
+
+    @Stable
+    @Composable
+    private fun DividerItem() {
+        HorizontalDivider(
+            thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+            color = VolleyColor.Divider
+        )
     }
 
     @Stable
@@ -283,10 +312,10 @@ object ListScreenComponents {
 
     @Stable
     @Composable
-    private fun CourtImageWithTags(
+    fun CourtImageWithTags(
+        modifier: Modifier = Modifier,
         photoUrl: String,
         tags: List<String>,
-        modifier: Modifier = Modifier
     ) {
         Box(
             modifier = modifier
@@ -318,23 +347,19 @@ object ListScreenComponents {
     }
 }
 
-@Preview(heightDp = 1000)
+@Preview(device = PIXEL_9_PRO_XL)
 @Composable
 private fun PreviewListScreen() {
-    val previewState = SearchCourtState(
-        courts = CourtsMockData.sampleCourts,
-        selectedCourt = CourtsMockData.sampleCourts[2],
-        isLoading = false,
-        error = null
-    )
     Box(
         modifier = Modifier
             .background(VolleyColor.TurquoiseDark)
             .fillMaxSize()
     ) {
-        ListScreenComponents.ListContent(
-            state = previewState,
-            onEvent = {}
+        ListContent(
+            courts = CourtsMockData.sampleCourts,
+            selectedCourt = CourtsMockData.sampleCourts[2],
+            onClick = {},
+            onChooseCourt = {}
         )
     }
 }
@@ -347,17 +372,23 @@ private fun PreviewComponentContainer() {
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
-        ListScreenComponents.DistanceContainer(
+        DistanceContainer(
             distance = "3.4 km"
         )
-        ListScreenComponents.CourtListItem(
+        CourtListItem(
             modifier = Modifier.padding(vertical = VolleyDimens.DIMEN_16.dp),
-            court = CourtsMockData.sampleCourts[0],
+            courtName = CourtsMockData.sampleCourts[0].location.courtName,
+            locationName = CourtsMockData.sampleCourts[0].location.locationName,
             onClick = {}
         )
-        ListScreenComponents.CourtDetailsContent(
+        CourtDetailsContent(
             court = CourtsMockData.sampleCourts[0],
             onChooseCourt = {},
+        )
+        CourtItemDetails(
+            court = CourtsMockData.sampleCourts[0],
+            onChooseCourt = {},
+            onClick = {},
         )
     }
 }

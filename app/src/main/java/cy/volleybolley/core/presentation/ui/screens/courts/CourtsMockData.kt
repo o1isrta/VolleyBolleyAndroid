@@ -52,7 +52,7 @@ object CourtsMockData {
     val sampleCourts = listOf(
         Court(
             courtId = 1,
-            price = "800",
+            price = "Court pricing: 800 THB/60 min",
             description = DESC_1,
             contacts = listOf(Contact(PHONE, "+66-2-2134567")),
             photo = "",
@@ -66,7 +66,7 @@ object CourtsMockData {
         ),
         Court(
             courtId = 2,
-            price = "750",
+            price = "Court pricing: 750 THB/60 min",
             description = DESC_2,
             contacts = listOf(Contact(PHONE, "+66-2-2134568")),
             photo = "",
@@ -80,9 +80,9 @@ object CourtsMockData {
         ),
         Court(
             courtId = 3,
-            price = "900",
+            price = "Court pricing: 900 THB/60 min",
             description = DESC_3,
-            contacts = listOf(Contact(PHONE, "+66-2-2134569")),
+            contacts = listOf(Contact(PHONE, "+66-2-2134569"), Contact(PHONE, "+66-2-1234567")),
             photo = "",
             tags = listOf(OUTDOOR, LIGHTS, TURF),
             location = Location(
@@ -94,7 +94,7 @@ object CourtsMockData {
         ),
         Court(
             courtId = 4,
-            price = "850",
+            price = "Court pricing: 850 THB/60 min",
             description = DESC_4,
             contacts = listOf(Contact(PHONE, "+66-2-2134570")),
             photo = "",
@@ -108,7 +108,7 @@ object CourtsMockData {
         ),
         Court(
             courtId = 5,
-            price = "700",
+            price = "Court pricing: 700 THB/60 min",
             description = DESC_5,
             contacts = listOf(Contact(PHONE, "+66‑2‑2134571")),
             photo = "",
@@ -122,7 +122,7 @@ object CourtsMockData {
         ),
         Court(
             courtId = 6,
-            price = "950",
+            price = "Court pricing: 950 THB/60 min",
             description = DESC_6,
             contacts = listOf(Contact(PHONE, "+66‑2‑2134572")),
             photo = "",
@@ -136,7 +136,7 @@ object CourtsMockData {
         ),
         Court(
             courtId = 7,
-            price = "820",
+            price = "Court pricing: 820 THB/60 min",
             description = DESC_7,
             contacts = listOf(Contact(PHONE, "+66‑2‑2134573")),
             photo = "",
