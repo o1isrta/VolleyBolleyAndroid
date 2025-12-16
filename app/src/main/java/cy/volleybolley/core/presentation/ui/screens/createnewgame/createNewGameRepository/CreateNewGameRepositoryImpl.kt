@@ -7,8 +7,7 @@ import cy.volleybolley.core.presentation.ui.GENDER_MALE
 import cy.volleybolley.core.presentation.ui.LEVEL_HIGH
 import cy.volleybolley.core.presentation.ui.LEVEL_LIGHT
 import cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM
-import cy.volleybolley.core.presentation.ui.LEVEL_PRO
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
+import cy.volleybolley.core.presentation.ui.LEVEL_PRO/**/
 import cy.volleybolley.players.domain.model.Player
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,11 +45,6 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
     override suspend fun getGameDataFromServer(): VolleyResult<GameData, ErrorType> {
         // Имитация загрузки с сервера
         delay(DEBOUNCE_DELAY_500MS) // Имитация задержки при получении данных с сервера
-        //try {
-        // return VolleyResult.Success(apiService.getGameData())
-        // } catch (e: Exception) {
-        // return VolleyResult.Failure(ErrorType.SERVER_ERROR)
-        //}
 
         // Mock Data
         val mockGameData = GameData(
@@ -78,8 +72,6 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
                 VolleyResult.Failure(result.error) // Пробросить ошибку дальше
             }
         }
-//        val response = getGameDataFromServer()
-//        _gameData.value = response
     }
 
     override suspend fun updateGameData(update: (GameData) -> GameData): VolleyResult<GameData, ErrorType> {

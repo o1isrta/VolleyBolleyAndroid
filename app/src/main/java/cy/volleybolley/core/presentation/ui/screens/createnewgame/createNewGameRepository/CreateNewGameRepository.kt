@@ -79,9 +79,6 @@ class FakeCreateNewGameRepository(
 
     override suspend fun loadGameData(): VolleyResult<Unit, ErrorType> {
         // Имитируем загрузку и обновление внутренней StateFlow
-//        val loadedData = GameData()
-//        _gameData.value = loadedData
-//        return VolleyResult.Success(loadedData)
         return when (val result = getGameDataFromServer()) {
             is VolleyResult.Success -> {
                 _gameData.value = result.data
