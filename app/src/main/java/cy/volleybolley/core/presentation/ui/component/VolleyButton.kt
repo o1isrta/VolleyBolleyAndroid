@@ -928,7 +928,7 @@ object VolleyButton {
          * true - кнопка нажата
          */
         val isChecked: Boolean,
-        val button: @Composable (modifier: Modifier, isChecked: Boolean, onClick: () -> Unit) -> Unit // кнопка
+        val button: @Composable (modifier: Modifier, isChecked: Boolean, onClick: () -> Unit) -> Unit
     )
 
     /**
@@ -1240,7 +1240,6 @@ object VolleyButton {
         )
     }
 
-
     private object ButtonPositions {
         const val POSITION_LIGHT = 1
         const val POSITION_MEDIUM = 2
@@ -1499,7 +1498,7 @@ object VolleyButton {
             onClick = onClick,
             border = BorderStroke(1.dp, Color.Transparent),
             shape = RoundedCornerShape(16.dp),
-            modifier = modifier, // Растягиваем кнопку по высоте//modifier,
+            modifier = modifier, // Растягиваем кнопку по высоте
             contentPadding = paddingValues,
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = color, // Цвет фона
@@ -1975,7 +1974,6 @@ private fun PreviewCheckGradientButton() {
         Column {
             VolleyButton.CheckGradientButton(
                 modifier = Modifier
-                    //  .padding(24.dp)
                     .height(44.dp),
                 isChecked = true,
                 text = ISCHECKED_TRUE_TEXT,
@@ -1984,7 +1982,6 @@ private fun PreviewCheckGradientButton() {
             Spacer(modifier = Modifier.height(8.dp))
             VolleyButton.CheckGradientButton(
                 modifier = Modifier
-                    //  .padding(24.dp)
                     .height(44.dp),
                 isChecked = false,
                 text = ISCHECKED_FALSE_TEXT,

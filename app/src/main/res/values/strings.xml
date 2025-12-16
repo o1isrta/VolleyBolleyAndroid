@@ -268,4 +268,7 @@
     <string name="privacy_options_screen">PrivacyOptionsScreen</string>
     <string name="time_picker">TimePicker</string>
     <string name="please_select_player_level">Please, select player level!"</string>
+    <string name="previous_month">Previous Month"</string>
+    <string name="next_month">"Next Month"</string>
+    <string name="next_year">"Next Year"</string>
 </resources>

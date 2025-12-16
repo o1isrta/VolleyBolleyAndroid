@@ -50,6 +50,7 @@ import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.text.DateFormatSymbols
 import java.time.DayOfWeek
@@ -256,41 +257,23 @@ fun MonthHeader(month: CalendarMonth, calendarState: CalendarState) {
         month.yearMonth >= calendarState.endMonth
     val isNextYearDisabled = month.yearMonth.plusYears(VolleyCalendar.YEAR_1) >= calendarState.endMonth
 
-    val monthName = month.yearMonth.month.name.lowercase(Locale.ENGLISH).let {
-        if (it.isNotEmpty()) {
-            it.substring(0, 1).uppercase(Locale.ENGLISH) + it.substring(1)
-        } else {
-            it
-        }
-    }
+    val monthName = formatMonthName(month.yearMonth.month.name.lowercase(Locale.ENGLISH))
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(
+        MonthNavigationButton(
+            isDisabled = isPreviousMonthDisabled,
+            imageRes = R.drawable.chevron_left,
+            contentDescription = R.string.previous_month.toString(),
             onClick = {
-                if (!isPreviousMonthDisabled) {
-                    coroutineScope.launch {
-                        calendarState.scrollToMonth(month.yearMonth.minusMonths(VolleyCalendar.MONTH_1))
-                    }
+                coroutineScope.launch {
+                    calendarState.scrollToMonth(month.yearMonth.minusMonths(VolleyCalendar.MONTH_1))
                 }
-            },
-            enabled = !isPreviousMonthDisabled
-        ) {
-            Image(
-                painter = painterResource(R.drawable.chevron_left),
-                contentDescription = "Previous Month",
-                modifier = Modifier.size(width = VolleyDimens.DIMEN_7.dp, height = VolleyDimens.DIMEN_14.dp),
-                colorFilter = ColorFilter.tint(
-                    if (isPreviousMonthDisabled)
-                        VolleyColor.GreyDisabled
-                    else
-                        VolleyColor.Black
-                )
-            )
-        }
+            }
+        )
 
         Row(
             modifier = Modifier,
@@ -301,57 +284,93 @@ fun MonthHeader(month: CalendarMonth, calendarState: CalendarState) {
                 text = "$monthName, ", // Используем отформатированное имя месяца
                 color = VolleyColor.TextCalendarDark
             )
-            Row(
-                modifier = Modifier
-                    .clickable {
-                        if (!isNextYearDisabled) {
-                            coroutineScope.launch {
-                                calendarState.scrollToMonth(month.yearMonth.plusYears(VolleyCalendar.YEAR_1))
-                            }
-                        }
-                    },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                VolleyText.ButtonText(
-                    text = "${month.yearMonth.year}", // Используем отформатированное имя месяца
-                )
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_5.dp))
 
-                Image(
-                    painter = painterResource(R.drawable.chevron_down),
-                    contentDescription = "Next Year",
-                    modifier = Modifier
-                        .size(width = VolleyDimens.DIMEN_14.dp, height = VolleyDimens.DIMEN_7.dp),
-                    colorFilter = ColorFilter.tint(
-                        if (isNextYearDisabled)
-                            VolleyColor.GreyDisabled
-                        else VolleyColor.Black
-                    )
-                )
-            }
+            YearNavigation(
+                year = month.yearMonth.year,
+                isDisabled = isNextYearDisabled,
+                coroutineScope = coroutineScope,
+                calendarState = calendarState,
+                month = month
+            )
         }
 
-        IconButton(
+        MonthNavigationButton(
+            isDisabled = isNextMonthDisabled,
+            imageRes = R.drawable.chevron_right,
+            contentDescription = R.string.next_month.toString(),
             onClick = {
-                if (!isNextMonthDisabled) {
+                coroutineScope.launch {
+                    calendarState.scrollToMonth(month.yearMonth.plusMonths(VolleyCalendar.MONTH_1))
+                }
+            }
+        )
+    }
+}
+
+private fun formatMonthName(monthName: String): String {
+    return if (monthName.isNotEmpty()) {
+        monthName.substring(0, 1).uppercase(Locale.ENGLISH) + monthName.substring(1)
+    } else {
+        monthName
+    }
+}
+
+@Composable
+private fun MonthNavigationButton(
+    isDisabled: Boolean,
+    imageRes: Int,
+    contentDescription: String,
+    onClick: () -> Unit
+) {
+    IconButton(
+        onClick = onClick,
+        enabled = !isDisabled
+    ) {
+        Image(
+            painter = painterResource(imageRes),
+            contentDescription = contentDescription,
+            modifier = Modifier.size(
+                width = VolleyDimens.DIMEN_7.dp,
+                height = VolleyDimens.DIMEN_14.dp
+            ),
+            colorFilter = ColorFilter.tint(
+                if (isDisabled) VolleyColor.GreyDisabled else VolleyColor.Black
+            )
+        )
+    }
+}
+
+@Composable
+private fun YearNavigation(
+    year: Int,
+    isDisabled: Boolean,
+    coroutineScope: CoroutineScope,
+    calendarState: CalendarState,
+    month: CalendarMonth
+) {
+    Row(
+        modifier = Modifier
+            .clickable {
+                if (!isDisabled) {
                     coroutineScope.launch {
-                        calendarState.scrollToMonth(month.yearMonth.plusMonths(VolleyCalendar.MONTH_1))
+                        calendarState.scrollToMonth(month.yearMonth.plusYears(VolleyCalendar.YEAR_1))
                     }
                 }
             },
-            enabled = !isNextMonthDisabled
-        ) {
-            Image(
-                painter = painterResource(R.drawable.chevron_right),
-                contentDescription = "Next Month",
-                modifier = Modifier.size(width = VolleyDimens.DIMEN_7.dp, height = VolleyDimens.DIMEN_14.dp),
-                colorFilter = ColorFilter.tint(
-                    if (isNextMonthDisabled)
-                        VolleyColor.GreyDisabled
-                    else VolleyColor.Black
-                )
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        VolleyText.ButtonText(text = "$year")
+        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_5.dp))
+
+        Image(
+            painter = painterResource(R.drawable.chevron_down),
+            contentDescription = R.string.next_year.toString(),
+            modifier = Modifier
+                .size(width = VolleyDimens.DIMEN_14.dp, height = VolleyDimens.DIMEN_7.dp),
+            colorFilter = ColorFilter.tint(
+                if (isDisabled) VolleyColor.GreyDisabled else VolleyColor.Black
             )
-        }
+        )
     }
 }
 
@@ -400,7 +419,7 @@ private fun CalendarSectionPreview() {
         modifier = Modifier
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
-            .padding(20.dp)
+            .padding(VolleyDimens.DIMEN_20.dp)
     ) {
         VolleyCalendar.CalendarSection(
             selectedDate = previewDate.value, // LocalDate.of(2025, 10, 20),
