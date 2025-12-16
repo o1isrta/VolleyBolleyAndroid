@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,31 +43,29 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.SearchCourtRoute
-import kotlinx.coroutines.flow.collectLatest
-import androidx.lifecycle.viewmodel.compose.viewModel
-import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
 import cy.volleybolley.core.presentation.ui.navigation.GameEnteringConditionsRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Gender
+import androidx.lifecycle.viewmodel.compose.viewModel
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BasicGameSetupScreen(
     navController: NavHostController,
     viewModel: BasicGameSetupScreenViewModel = viewModel(),
     paddingFromSystemUi: PaddingValues
 ) {
-    val scrollState = rememberScrollState() //Состояние скролла
+    val scrollState = rememberScrollState()
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     ObserveUiEffects(viewModel, navController, context)
 
-    //  Отображение контента
+    // Отображение контента
     ContentDisplay(state, scrollState, paddingFromSystemUi, viewModel)
 }
 
@@ -95,7 +94,7 @@ private fun ObserveUiEffects(
                     Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_SHORT).show()
                 }
 
-                else -> { //Обработка всех возможных случаев
+                else -> { // Обработка всех возможных случаев
                     Log.w("BasicGameSetupScreen", "Unhandled effect: $effect")
                 }
             }
@@ -158,7 +157,7 @@ private fun ContentDisplay(
                         GenderSection(state, viewModel)
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-                        VolleySimpleComponent.DividerLine() //HorizontalLine()
+                        VolleySimpleComponent.DividerLine()
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
                         LevelSection(state, viewModel)
@@ -185,7 +184,11 @@ private fun TitleSection(viewModel: BasicGameSetupScreenViewModel) {
     TitleWithBackArrow(
         title = stringResource(R.string.create_a_game),
         modifier = Modifier.fillMaxWidth(),
-        onBackClick = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnBackClicked) }
+        onBackClick = {
+            viewModel.obtainEvent(
+                BasicGameSetupScreenEvent.OnBackClicked
+            )
+        }
     )
 }
 
@@ -201,9 +204,11 @@ private fun MessageSection(state: BasicGameSetupScreenState, viewModel: BasicGam
     VolleyMessageTextField.MessageField(
         hint = stringResource(R.string.leave_a_note_for_players),
         textInput = state.message,
-        modifier = Modifier.height(106.dp),
+        modifier = Modifier.height(VolleyDimens.DIMEN_106.dp),
         actionToTransferContent = { newMessage ->
-            viewModel.obtainEvent(BasicGameSetupScreenEvent.MessageChanged(newMessage))
+            viewModel.obtainEvent(
+                BasicGameSetupScreenEvent.MessageChanged(newMessage)
+            )
         }
     )
 }
@@ -258,7 +263,11 @@ private fun PlaceSection(
         VolleyButton.ActiveGradientButton(
             modifier = Modifier,
             text = stringResource(R.string.change),
-            onClick = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnChangeClick) }
+            onClick = {
+                viewModel.obtainEvent(
+                    BasicGameSetupScreenEvent.OnChangeClick
+                )
+            }
         )
     }
 }
@@ -276,6 +285,7 @@ private fun DateSection(
     )
 
     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+    val str: String = R.string.basic_game_setup_screen.toString()
     VolleyButton.GroupButtonsForDate2(
         checkId = if (viewModel.isSameDay(state.date, LocalDate.now())) 1 else 2,
         modifier = Modifier,
@@ -285,12 +295,12 @@ private fun DateSection(
                     viewModel.obtainEvent(BasicGameSetupScreenEvent.OnTodayClicked)
                 }
 
-                2 -> {  //Выбрать Дату (Pick Date)
+                2 -> { // Выбрать Дату (Pick Date)
                     viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked)
                 }
 
                 else -> { // Обработка нераспознанной позиции
-                    Log.e("BasicGameSetupScreen", "Нераспознанная позиция кнопки даты: $position")
+                    Log.e(str, "Unrecognized date button position: $position")
                 }
             }
         }
@@ -338,7 +348,11 @@ private fun TimeSection(
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
         VolleyTextFieldAttribute.DurationFieldWithArrows(
             inputTime = state.startTime
-        ) { time -> viewModel.obtainEvent(BasicGameSetupScreenEvent.StartTimeChanged(time)) }
+        ) { time ->
+            viewModel.obtainEvent(
+                BasicGameSetupScreenEvent.StartTimeChanged(time)
+            )
+        }
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
         VolleyText.BodyRegular(
@@ -350,7 +364,11 @@ private fun TimeSection(
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
         VolleyTextFieldAttribute.DurationFieldWithArrows(
             inputTime = state.finishTime
-        ) { time -> viewModel.obtainEvent(BasicGameSetupScreenEvent.FinishTimeChanged(time)) }
+        ) { time ->
+            viewModel.obtainEvent(
+                BasicGameSetupScreenEvent.FinishTimeChanged(time)
+            )
+        }
     }
 }
 
@@ -382,7 +400,7 @@ private fun GenderSection(
             selectedGender?.let { gender ->
                 viewModel.obtainEvent(BasicGameSetupScreenEvent.GenderSelected(gender))
             } ?: run { // Обработка нераспознанной позиции
-                Log.e("BasicGameSetupScreen", "Нераспознанная позиция: $position")
+                Log.e("BasicGameSetupScreen", "Unrecognized position: $position")
             }
         }
     )
@@ -403,7 +421,9 @@ private fun LevelSection(
         modifier = Modifier,
         checkedLevels = state.levels,
         onSelected = { levels ->
-            viewModel.obtainEvent(BasicGameSetupScreenEvent.PlayerLevelSelected(levels))
+            viewModel.obtainEvent(
+                BasicGameSetupScreenEvent.PlayerLevelSelected(levels)
+            )
         }
     )
 }
@@ -416,7 +436,9 @@ private fun NextButtonSection(
         modifier = modifier,
         text = stringResource(R.string.next_step),
         onClick = {
-            viewModel.obtainEvent(BasicGameSetupScreenEvent.OnNextStepClick)
+            viewModel.obtainEvent(
+                BasicGameSetupScreenEvent.OnNextStepClick
+            )
         }
     )
 }

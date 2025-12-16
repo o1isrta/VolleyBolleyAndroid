@@ -28,8 +28,8 @@ open class PrivacyOptionsScreenViewModel(
     private var searchJob: Job? = null
 
     companion object {
-        val DEBOUNCE_DELAY_300MS = 300L
-        val DEBOUNCE_DELAY_500MS = 500L
+        const val DEBOUNCE_DELAY_300MS = 300L
+        const val DEBOUNCE_DELAY_500MS = 500L
     }
 
     init {

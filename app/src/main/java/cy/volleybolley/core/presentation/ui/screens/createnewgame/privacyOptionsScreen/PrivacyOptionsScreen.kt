@@ -37,7 +37,6 @@ import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen.BasicGameSetupScreenViewModel
 import cy.volleybolley.players.domain.model.Player
 import kotlinx.coroutines.flow.collectLatest
 
@@ -69,11 +68,12 @@ private fun ObserveUiEffects(
     navController: NavHostController,
     context: Context
 ) {
+    val str : String= R.string.privacy_options_screen.toString()
     LaunchedEffect(viewModel.uiEffect) { // подписываемся на Effect
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
                 is PrivacyOptionsScreenEffect.ShowError -> {
-                    Log.d("GameEnteringConditionsScreen", "ShowError effect triggered: ${effect.message}")
+                    Log.d(str, "ShowError effect triggered: ${effect.message}")
                     Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_LONG).show()
                 }
 
@@ -83,7 +83,7 @@ private fun ObserveUiEffects(
                 // Обработка всех возможных случаев
                 else -> {
                     // Handle unexpected effect or do nothing.  Log it!
-                    Log.w("PrivacyOptionsScreen", "Unhandled effect: $effect")
+                    Log.w(str, "Unhandled effect: $effect")
                 }
             }
         }

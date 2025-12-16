@@ -30,6 +30,7 @@ object VolleyDimens {
     const val DIMEN_30: Int = 30
     const val DIMEN_32: Int = 32
     const val DIMEN_34: Int = 34
+    const val DIMEN_35: Int = 35
     const val DIMEN_36: Int = 36
     const val DIMEN_38: Int = 38
     const val DIMEN_40: Int = 40

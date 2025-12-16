@@ -263,4 +263,9 @@
     <string name="auth_error_no_google_acc_on_device">Authorization error:\nAdd Google account on your device!</string>
     <string name="default_name">No name</string>
     <string name="default_level">LIGHT</string>
+    <string name="basic_game_setup_screen">BasicGameSetupScreen</string>
+    <string name="game_entering_conditions_screen">GameEnteringConditionsScreen</string>
+    <string name="privacy_options_screen">PrivacyOptionsScreen</string>
+    <string name="time_picker">TimePicker</string>
+    <string name="please_select_player_level">Please, select player level!"</string>
 </resources>

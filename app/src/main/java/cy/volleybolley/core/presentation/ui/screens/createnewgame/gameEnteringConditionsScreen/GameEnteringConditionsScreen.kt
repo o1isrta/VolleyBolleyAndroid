@@ -56,7 +56,7 @@ import kotlinx.serialization.json.Json
 fun GameEnteringConditionsScreen(
     navController: NavHostController,
     viewModel: GameEnteringConditionsScreenViewModel = viewModel(),
-    paddingFromSystemUi: PaddingValues  //= GameEnteringConditionsScreenViewModel()
+    paddingFromSystemUi: PaddingValues
 ) {
 
     val scrollState = rememberScrollState()
@@ -77,6 +77,7 @@ private fun ObserveUiEffects(
     context: Context
 ) {
     LaunchedEffect(viewModel.uiEffect) {
+        var str: String = R.string.game_entering_conditions_screen.toString()
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
                 is GameEnteringConditionsScreenEffect.ShowError ->
@@ -95,7 +96,7 @@ private fun ObserveUiEffects(
                     navController.navigate(PrivacyOptionsRoute)
 
                 else -> Log.w(
-                    "GameEnteringConditionsScreen",
+                    str,
                     "Unhandled effect: $effect"
                 ) // Обработка неожиданных эффектов
             }
@@ -169,7 +170,11 @@ private fun TitleSection(viewModel: GameEnteringConditionsScreenViewModel) {
     TitleWithBackArrow(
         title = stringResource(R.string.create_a_game),
         modifier = Modifier.fillMaxWidth(),
-        onBackClick = { viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnBackClicked) }
+        onBackClick = {
+            viewModel.obtainEvent(
+                GameEnteringConditionsScreenEvent.OnBackClicked
+            )
+        }
     )
     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
 }
@@ -190,7 +195,9 @@ private fun MaximumPlayersSection(
     VolleyTextFieldAttribute.CountField(
         inputCount = state.maximumPlayers,
         actionToTransferCount = { newCount ->
-            viewModel.obtainEvent(GameEnteringConditionsScreenEvent.MaximumPlayersChanged(newCount))
+            viewModel.obtainEvent(
+                GameEnteringConditionsScreenEvent.MaximumPlayersChanged(newCount)
+            )
         }
     )
 
@@ -235,7 +242,7 @@ private fun PrivacySection(
                     Privacy.Private -> viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnPrivateSelected)
                 }
             } ?: run {
-                Log.e("GameEnteringConditionsScreen", "Нераспознанная позиция: $position")
+                Log.e(R.string.game_entering_conditions_screen.toString(), "Unrecognized position: $position")
             }
         }
     )
@@ -254,17 +261,21 @@ private fun PlayersListSection(
                 VolleySimpleComponent.PlayerRowWithRemove(
                     player = player,
                     onAction = {
-                        viewModel.obtainEvent(GameEnteringConditionsScreenEvent.RemovePlayer(index))
+                        viewModel.obtainEvent(
+                            GameEnteringConditionsScreenEvent.RemovePlayer(index)
+                        )
                     }
                 )
             }
         }
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_24.dp))
         VolleyButton.OutlinedGradientButton(
-            modifier = Modifier.height(44.dp),
+            modifier = Modifier.height(VolleyDimens.DIMEN_44.dp),
             text = stringResource(R.string.manage_players),
             onClick = {
-                viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnManagePlayersClick)
+                viewModel.obtainEvent(
+                    GameEnteringConditionsScreenEvent.OnManagePlayersClick
+                )
             }
         )
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
@@ -298,7 +309,7 @@ private fun PaymentSection(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
-        modifier = Modifier//.fillMaxWidth()
+        modifier = Modifier
     ) {
         VolleyText.BodyBold(
             text = stringResource(R.string.per_person),
@@ -342,9 +353,13 @@ private fun PaymentSection(
             )
         } ?: run {
             VolleyButton.OutlinedActiveButtonSmallText(
-                modifier = Modifier.height(35.dp),
+                modifier = Modifier.height(VolleyDimens.DIMEN_35.dp),
                 text = stringResource(R.string.add_payment),
-                onClick = { viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnAddPaymentClick) }
+                onClick = {
+                    viewModel.obtainEvent(
+                        GameEnteringConditionsScreenEvent.OnAddPaymentClick
+                    )
+                }
             )
         }
     }
@@ -356,10 +371,14 @@ private fun PaymentSection(
 private fun SaveButtonSection(viewModel: GameEnteringConditionsScreenViewModel) {
     VolleyButton.ActiveButton(
         modifier = Modifier
-            .height(44.dp)
+            .height(VolleyDimens.DIMEN_44.dp)
             .fillMaxWidth(),
         text = stringResource(R.string.save_game),
-        onClick = { viewModel.obtainEvent(GameEnteringConditionsScreenEvent.OnSaveGameClick) }
+        onClick = {
+            viewModel.obtainEvent(
+                GameEnteringConditionsScreenEvent.OnSaveGameClick
+            )
+        }
     )
 }
 

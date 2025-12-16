@@ -92,7 +92,9 @@ open class GameEnteringConditionsScreenViewModel(private val gameRepository: Cre
                 )
             }
         }
-        sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPrivacy)
+        sendUiEffect(
+            GameEnteringConditionsScreenEffect.NavigateToPrivacy
+        )
     }
 
     private fun onRemovePlayer(index: Int) {

@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.core.presentation.ui.component.PreviewContainer
+import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyBoldMedium
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyBoldSmall
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyLight
@@ -20,14 +21,15 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText.BodySmall
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyTiny
 import cy.volleybolley.core.presentation.ui.model.VolleyText.ButtonText
 import cy.volleybolley.core.presentation.ui.model.VolleyText.LogoDisplay
+import cy.volleybolley.core.presentation.ui.model.VolleyText.TEXT_EXAMPLE
 import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleLarge
 import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleMedium
 import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleXL
 import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleXLAlt
-import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 
 @UiLibraryMarker
 object VolleyText {
+    internal const val TEXT_EXAMPLE = "Пример текста"
 
     @Stable
     @Composable
@@ -372,7 +374,7 @@ fun PreviewTitleXL() {
             .width(550.dp)
     ) {
         TitleXL(
-            "Пример текста",
+            TEXT_EXAMPLE,
             modifier = Modifier
                 .padding(10.dp),
             color = VolleyColor.White,
@@ -389,7 +391,7 @@ fun PreviewTitleXLAlt() {
             .width(550.dp)
     ) {
         TitleXLAlt(
-            "Пример текста",
+            TEXT_EXAMPLE,
             modifier = Modifier
                 .padding(10.dp),
             color = VolleyColor.White,
@@ -406,7 +408,7 @@ fun PreviewTitleLarge() {
             .width(550.dp)
     ) {
         TitleLarge(
-            "Пример текста",
+            TEXT_EXAMPLE,
             modifier = Modifier
                 .padding(10.dp),
             color = VolleyColor.White,
@@ -423,7 +425,7 @@ fun PreviewTitleMedium() {
             .width(550.dp)
     ) {
         TitleMedium(
-            "Пример текста",
+            TEXT_EXAMPLE,
             modifier = Modifier
                 .padding(10.dp),
             color = VolleyColor.White,
@@ -440,7 +442,7 @@ fun PreviewBodyBoldMedium() {
             .width(550.dp)
     ) {
         BodyBoldMedium(
-            "Пример текста",
+            TEXT_EXAMPLE,
             modifier = Modifier
                 .padding(10.dp),
             color = VolleyColor.White,
@@ -457,7 +459,7 @@ fun PreviewBodySmall() {
             .width(550.dp)
     ) {
         BodySmall(
-            "Пример текста",
+            TEXT_EXAMPLE,
             modifier = Modifier
                 .padding(10.dp),
             color = VolleyColor.White,
@@ -474,7 +476,7 @@ fun PreviewBodyLight() {
             .width(550.dp)
     ) {
         BodyLight(
-            "Пример текста",
+            TEXT_EXAMPLE,
             modifier = Modifier
                 .padding(10.dp),
             color = VolleyColor.White,
@@ -491,7 +493,7 @@ fun PreviewBodyBoldSmall() {
             .width(550.dp)
     ) {
         BodyBoldSmall(
-            "Пример текста",
+            TEXT_EXAMPLE,
             modifier = Modifier
                 .padding(10.dp),
             color = VolleyColor.White,
@@ -508,7 +510,7 @@ fun PreviewBodyTiny() {
             .width(550.dp)
     ) {
         BodyTiny(
-            "Пример текста",
+            TEXT_EXAMPLE,
             modifier = Modifier
                 .padding(10.dp),
             color = VolleyColor.White,
@@ -525,7 +527,7 @@ fun PreviewButtonText() {
             .width(550.dp)
     ) {
         ButtonText(
-            "Пример текста",
+            TEXT_EXAMPLE,
             modifier = Modifier
                 .padding(10.dp),
             color = VolleyColor.White,
@@ -542,7 +544,7 @@ fun PreviewLogoDisplay() {
             .width(550.dp)
     ) {
         LogoDisplay(
-            "Пример текста",
+            TEXT_EXAMPLE,
             modifier = Modifier
                 .padding(10.dp),
             color = VolleyColor.White,
