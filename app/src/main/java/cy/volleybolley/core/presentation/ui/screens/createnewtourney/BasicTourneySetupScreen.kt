@@ -36,14 +36,13 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-
 const val DEFAULT_START_HOUR = 14
 const val DEFAULT_START_MINUTES = 0
 const val DEFAULT_FINISH_HOUR = 15
 const val DEFAULT_FINISH_MINUTES = 0
 
 @Composable
-fun BasicTourneySetupScreen(navController: NavHostController) {
+fun BasicTourneySetupScreen(/*navController: NavHostController*/) {
     val scrollState = rememberScrollState() // Состояние скролла
     Column(
         modifier = Modifier
@@ -314,6 +313,6 @@ private fun BasicTourneySetupScreenPreview() {
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
-        BasicTourneySetupScreen(navController = navController)
+        BasicTourneySetupScreen(/*navController = navController*/)
     }
 }

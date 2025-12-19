@@ -59,62 +59,64 @@ fun VerifyPhoneNumberScreen(
     eventCallback: (VerifyPhoneNumberEvent) -> Unit
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        modifier = Modifier
-            .padding(
-                top = paddingFromSystemUi.calculateTopPadding() + VolleyDimens.DIMEN_8.dp,
-                start = VolleyDimens.DIMEN_8.dp,
-                end = VolleyDimens.DIMEN_8.dp
-            )
-            .fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
-                .fillMaxWidth()
-        ) {
-            VolleyTopBar.TopBarWithBackButton(
-                modifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.registration),
-                onBackNavigationRequested = onBackNavigationRequested
-            )
-            VolleyTextFieldGradient.PhoneCodeTextField(
+        modifier =
+            Modifier
+                .padding(
+                    top = paddingFromSystemUi.calculateTopPadding() + VolleyDimens.DIMEN_8.dp,
+                    start = VolleyDimens.DIMEN_8.dp,
+                    end = VolleyDimens.DIMEN_8.dp
+                )
+                .fillMaxWidth(),
+        content = {
+            Column(
                 modifier = Modifier
-                    .padding(top = VolleyDimens.DIMEN_16.dp)
-                    .fillMaxWidth(),
-                text = state.code,
-                alertMessage = if (state.isCodeInputError) {
-                    stringResource(R.string.invalid_code)
-                } else {
-                    ""
-                },
-                actionToTransferContent = { eventCallback(VerifyPhoneNumberEvent.TypeCode(it)) }
-            )
-            AnimatedVisibility(
-                modifier = Modifier
-                    .padding(top = VolleyDimens.DIMEN_8.dp)
-                    .align(Alignment.CenterHorizontally),
-                visible = state.isBtnNewCodeVisible
+                    .padding(VolleyDimens.DIMEN_20.dp)
+                    .fillMaxWidth()
             ) {
-                VolleyButton.GradientTextButton(
-                    text = if (state.isBtnNewCodeEnabled) {
-                        stringResource(R.string.get_new_code)
+                VolleyTopBar.TopBarWithBackButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.registration),
+                    onBackNavigationRequested = onBackNavigationRequested
+                )
+                VolleyTextFieldGradient.PhoneCodeTextField(
+                    modifier = Modifier
+                        .padding(top = VolleyDimens.DIMEN_16.dp)
+                        .fillMaxWidth(),
+                    text = state.code,
+                    alertMessage = if (state.isCodeInputError) {
+                        stringResource(R.string.invalid_code)
                     } else {
-                        stringResource(R.string.resend_in, state.remainingSendNewCodeTime)
+                        ""
                     },
-                    isEnable = state.isBtnNewCodeEnabled && !state.isLoading,
-                    onClick = { eventCallback(VerifyPhoneNumberEvent.SendNewCodeButtonClicked) }
+                    actionToTransferContent = { eventCallback(VerifyPhoneNumberEvent.TypeCode(it)) }
+                )
+                AnimatedVisibility(
+                    modifier = Modifier
+                        .padding(top = VolleyDimens.DIMEN_8.dp)
+                        .align(Alignment.CenterHorizontally),
+                    visible = state.isBtnNewCodeVisible
+                ) {
+                    VolleyButton.GradientTextButton(
+                        text = if (state.isBtnNewCodeEnabled) {
+                            stringResource(R.string.get_new_code)
+                        } else {
+                            stringResource(R.string.resend_in, state.remainingSendNewCodeTime)
+                        },
+                        isEnable = state.isBtnNewCodeEnabled && !state.isLoading,
+                        onClick = { eventCallback(VerifyPhoneNumberEvent.SendNewCodeButtonClicked) }
+                    )
+                }
+                VolleyButton.ActiveButton(
+                    modifier = Modifier
+                        .padding(top = VolleyDimens.DIMEN_16.dp)
+                        .fillMaxWidth(),
+                    enabled = state.isBtnVerifyEnabled && !state.isLoading,
+                    text = stringResource(R.string.send_code),
+                    onClick = { eventCallback(VerifyPhoneNumberEvent.VerifyCodeButtonClicked) }
                 )
             }
-            VolleyButton.ActiveButton(
-                modifier = Modifier
-                    .padding(top = VolleyDimens.DIMEN_16.dp)
-                    .fillMaxWidth(),
-                enabled = state.isBtnVerifyEnabled && !state.isLoading,
-                text = stringResource(R.string.send_code),
-                onClick = { eventCallback(VerifyPhoneNumberEvent.VerifyCodeButtonClicked) }
-            )
         }
-    }
+    )
 }
 
 @Preview(showBackground = true, showSystemUi = true)

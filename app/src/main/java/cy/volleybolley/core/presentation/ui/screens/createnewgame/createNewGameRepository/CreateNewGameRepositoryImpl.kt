@@ -1,6 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository
 
 import android.util.Log
+import cy.volleybolley.core.data.network.model.mapToErrorType
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.ui.GENDER_FEMALE
@@ -10,10 +11,14 @@ import cy.volleybolley.core.presentation.ui.LEVEL_LIGHT
 import cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM
 import cy.volleybolley.core.presentation.ui.LEVEL_PRO/**/
 import cy.volleybolley.players.domain.model.Player
+import cy.volleybolley.profile.data.dto.toUpdateBody
+import cy.volleybolley.profile.data.network.model.ProfileRequest
+import cy.volleybolley.profile.domain.model.PersonalData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.io.IOException
+import kotlin.coroutines.cancellation.CancellationException
 
 class CreateNewGameRepositoryImpl : CreateNewGameRepository {
     private val _gameData = MutableStateFlow(GameData())
@@ -83,29 +88,20 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
     }
 
     override suspend fun updateGameData(update: (GameData) -> GameData): VolleyResult<GameData, ErrorType> {
-        return try {
-            val updatedData = update(_gameData.value)
-            _gameData.value = updatedData
+        // заглушка
+        val updatedData = update(_gameData.value)
+        _gameData.value = updatedData
+        return VolleyResult.Success(updatedData)
+
+/*        val response = networkClient.getResponse(
+            GRequest.UpdatePersonalData(
+                body = actualChangesOnPersonalData?.toUpdateBody() ?: personalData.toUpdateBody()
+            )
+        )
+        return if (response.isSuccess) {
             VolleyResult.Success(updatedData)
-        } catch (e: IllegalArgumentException) {
-            // Обработка некорректных данных (BAD_REQUEST)
-            Log.e("CreateNewGameRepositoryImpl", "IllegalArgumentException during updateGameData", e)
-            VolleyResult.Failure(ErrorType.BAD_REQUEST)
-        } catch (e: NullPointerException) {
-            // Обработка null-значений (BAD_REQUEST)
-            Log.e("CreateNewGameRepositoryImpl", "NullPointerException during updateGameData", e)
-            VolleyResult.Failure(ErrorType.BAD_REQUEST)
-        } catch (e: SecurityException) {
-            // Обработка ошибок безопасности (UNAUTHORIZED)
-            Log.e("CreateNewGameRepositoryImpl", "SecurityException during updateGameData", e)
-            VolleyResult.Failure(ErrorType.UNAUTHORIZED)
-        } catch (e: IOException) {
-            //  Обработка проблем с вводом-выводом (например, сетевые ошибки)
-            Log.e("CreateNewGameRepositoryImpl", "IOException during updateGameData", e)
-            VolleyResult.Failure(ErrorType.NETWORK_ERROR) //  Предположим, что у вас есть такой ErrorType
-        } catch (e: RuntimeException) { // Или другой подкласс RuntimeException, подходящий для вашей ситуации
-            Log.e("CreateNewGameRepositoryImpl", "RuntimeException during updateGameData", e)
-            VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
-        }
+        } else {
+            VolleyResult.Failure(response.resultCode.mapToErrorType())
+        }*/
     }
 }

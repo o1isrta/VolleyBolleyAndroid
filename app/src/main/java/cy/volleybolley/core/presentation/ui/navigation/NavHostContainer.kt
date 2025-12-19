@@ -142,7 +142,8 @@ fun NavHostContainer(
         }
 
         // Home nested graph
-        navigation<HomeTopLevelRoute>(startDestination = BasicGameSetupRoute) { // (startDestination = HomeRoute) {
+        // (startDestination = HomeRoute) {
+        navigation<HomeTopLevelRoute>(startDestination = BasicGameSetupRoute) {
             // home
             composable<HomeRoute> {
                 HomeScreen(
@@ -202,7 +203,7 @@ fun NavHostContainer(
             }
 
             // create tourney
-            composable<BasicTourneySetupRoute> { BasicTourneySetupScreen(navController) }
+            composable<BasicTourneySetupRoute> { BasicTourneySetupScreen(/*navController*/) }
             composable<TourneyEnteringConditionsRoute> { TourneyEnteringConditionsScreen(navController) }
 
             // find game

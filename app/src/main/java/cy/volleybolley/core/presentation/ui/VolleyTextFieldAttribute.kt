@@ -615,7 +615,7 @@ object VolleyTextFieldAttribute {
         }
     }*/
 
-    object CurrencyAmountTransformation : VisualTransformation {
+    /*object CurrencyAmountTransformation : VisualTransformation {
         override fun filter(text: AnnotatedString): TransformedText {
             val digitsAndDots = text.text.filter { it.isDigit() || it == '.' }
             val parts = digitsAndDots.split('.')
@@ -649,9 +649,10 @@ object VolleyTextFieldAttribute {
                             return digitsAndDots.length
                         }
                     }
-                })
+                }
+            )
         }
-    }
+    }*/
 }
 
 @Preview(showBackground = true, showSystemUi = true)
