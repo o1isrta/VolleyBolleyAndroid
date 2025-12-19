@@ -59,14 +59,13 @@ fun VerifyPhoneNumberScreen(
     eventCallback: (VerifyPhoneNumberEvent) -> Unit
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        modifier =
-            Modifier
-                .padding(
-                    top = paddingFromSystemUi.calculateTopPadding() + VolleyDimens.DIMEN_8.dp,
-                    start = VolleyDimens.DIMEN_8.dp,
-                    end = VolleyDimens.DIMEN_8.dp
-                )
-                .fillMaxWidth(),
+        modifier = Modifier
+            .padding(
+                top = paddingFromSystemUi.calculateTopPadding() + VolleyDimens.DIMEN_8.dp,
+                start = VolleyDimens.DIMEN_8.dp,
+                end = VolleyDimens.DIMEN_8.dp
+            )
+            .fillMaxWidth(),
         content = {
             Column(
                 modifier = Modifier

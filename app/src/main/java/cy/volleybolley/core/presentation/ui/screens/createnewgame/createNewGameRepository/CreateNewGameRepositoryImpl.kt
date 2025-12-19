@@ -1,7 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository
 
-import android.util.Log
-import cy.volleybolley.core.data.network.model.mapToErrorType
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.ui.GENDER_FEMALE
@@ -11,14 +9,9 @@ import cy.volleybolley.core.presentation.ui.LEVEL_LIGHT
 import cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM
 import cy.volleybolley.core.presentation.ui.LEVEL_PRO/**/
 import cy.volleybolley.players.domain.model.Player
-import cy.volleybolley.profile.data.dto.toUpdateBody
-import cy.volleybolley.profile.data.network.model.ProfileRequest
-import cy.volleybolley.profile.domain.model.PersonalData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.io.IOException
-import kotlin.coroutines.cancellation.CancellationException
 
 class CreateNewGameRepositoryImpl : CreateNewGameRepository {
     private val _gameData = MutableStateFlow(GameData())
