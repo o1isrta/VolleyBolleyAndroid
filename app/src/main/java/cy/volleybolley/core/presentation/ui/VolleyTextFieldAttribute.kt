@@ -58,6 +58,10 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientField
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import java.util.Calendar
 
+const val HOURS_12 = 12
+const val DEFAULT_HOUR = 14
+const val DEFAULT_MINUTES = 0
+
 @UiLibraryMarker
 object VolleyTextFieldAttribute {
     @Composable
@@ -355,7 +359,7 @@ object VolleyTextFieldAttribute {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(16.dp, 6.dp)
+                    .padding(VolleyDimens.DIMEN_16.dp, VolleyDimens.DIMEN_6.dp)
                     .clickable {
                         showTimePicker = true
                     }
@@ -370,13 +374,15 @@ object VolleyTextFieldAttribute {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.width(24.dp)
-                )
-                {
+                    modifier = Modifier.width(VolleyDimens.DIMEN_24.dp)
+                ) {
                     Image(
                         painter = painterResource(R.drawable.up),
                         contentDescription = null,
-                        modifier = Modifier.size(width = 8.dp, height = 4.dp)
+                        modifier = Modifier.size(
+                            width = VolleyDimens.DIMEN_8.dp,
+                            height = VolleyDimens.DIMEN_4.dp
+                        )
                     )
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_4.dp))
 
@@ -390,7 +396,10 @@ object VolleyTextFieldAttribute {
                     Image(
                         painter = painterResource(R.drawable.down),
                         contentDescription = null,
-                        modifier = Modifier.size(width = 8.dp, height = 4.dp)
+                        modifier = Modifier.size(
+                            width = VolleyDimens.DIMEN_8.dp,
+                            height = VolleyDimens.DIMEN_4.dp
+                        )
                     )
                 }
             }
@@ -509,9 +518,9 @@ object VolleyTextFieldAttribute {
                     onClick = {
                         val hour = timePickerState.hour
                         val minute = timePickerState.minute
-                        val isAfternoon = hour >= 12  // Если час >= 12, то это PM
+                        val isAfternoon = hour >= HOURS_12 // Если час >= 12, то это PM
                         val stampOfTime = VolleyTimeStamp(
-                            hour = if (hour > 12) hour - 12 else hour, // Преобразуем в 12-часовой формат
+                            hour = if (hour > HOURS_12) hour - HOURS_12 else hour, // Преобразуем в 12-часовой формат
                             minutes = minute,
                             isAfternoon = isAfternoon,
                         )
@@ -608,9 +617,7 @@ object VolleyTextFieldAttribute {
 
     object CurrencyAmountTransformation : VisualTransformation {
         override fun filter(text: AnnotatedString): TransformedText {
-
             val digitsAndDots = text.text.filter { it.isDigit() || it == '.' }
-
             val parts = digitsAndDots.split('.')
             val integerPart = parts.getOrElse(0) { "" }
             val decimalPart = parts.getOrElse(1) { "" }
@@ -646,9 +653,6 @@ object VolleyTextFieldAttribute {
         }
     }
 }
-
-const val DEFAULT_HOUR = 14
-const val DEFAULT_MINUTES = 0
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

@@ -11,8 +11,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-open class GameEnteringConditionsScreenViewModel(private val gameRepository: CreateNewGameRepository) :
-    BaseViewModel<GameEnteringConditionsScreenState, GameEnteringConditionsScreenEvent, GameEnteringConditionsScreenEffect>(
+open class GameEnteringConditionsScreenViewModel(
+    private val gameRepository: CreateNewGameRepository
+) :
+    BaseViewModel<
+        GameEnteringConditionsScreenState,
+        GameEnteringConditionsScreenEvent,
+        GameEnteringConditionsScreenEffect
+        >(
         GameEnteringConditionsScreenState()
     ) {
     override val tag: String = "GameEnteringConditionsScreenViewModel"
@@ -24,15 +30,13 @@ open class GameEnteringConditionsScreenViewModel(private val gameRepository: Cre
         viewModelScope.launch {
             gameRepository.gameData
                 .collectLatest { gameDataFromRepo ->
-                    // Когда GameData в репозитории меняется, обновляем соответствующие части UI State
                     uiStateMutable.update { currentState ->
                         currentState.copy(
                             // Обновляем список игроков из репозитория
                             players = gameDataFromRepo.players,
-                            // Обновляем остальные поля из GameData (если они нужны на этом экране)
                             maximumPlayers = gameDataFromRepo.maximumPlayers,
                             perPerson = gameDataFromRepo.perPerson,
-                            accountNumber = gameDataFromRepo.accountNumber // Это, возможно, будет приходить из другого источника или быть частью GameData
+                            accountNumber = gameDataFromRepo.accountNumber
                         )
                     }
                 }

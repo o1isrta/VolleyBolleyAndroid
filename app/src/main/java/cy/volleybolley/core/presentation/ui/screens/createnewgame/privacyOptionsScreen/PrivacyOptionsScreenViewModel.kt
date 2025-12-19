@@ -152,6 +152,7 @@ open class PrivacyOptionsScreenViewModel(
             ErrorType.UNKNOWN_ERROR -> "An unexpected error occurred."
             ErrorType.BAD_REQUEST -> "Bad request"
             ErrorType.NO_REFRESH_TOKEN -> "No refresh token"
+            ErrorType.NETWORK_ERROR -> "Network error"
         }
 
         sendUiEffect(PrivacyOptionsScreenEffect.ShowError(errorMessage))

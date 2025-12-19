@@ -76,7 +76,7 @@ import org.koin.core.parameter.parametersOf
 fun NavHostContainer(
     paddingFromSystemUi: PaddingValues,
     navController: NavHostController,
-    //startDestination: NavMap = LaunchRoute,
+    // startDestination: NavMap = LaunchRoute,
     startDestination: NavMap = HomeTopLevelRoute,
     activityFinisher: () -> Unit,
 ) {
@@ -142,7 +142,7 @@ fun NavHostContainer(
         }
 
         // Home nested graph
-        navigation<HomeTopLevelRoute>(startDestination = BasicGameSetupRoute) {//(startDestination = HomeRoute) {
+        navigation<HomeTopLevelRoute>(startDestination = BasicGameSetupRoute) { // (startDestination = HomeRoute) {
             // home
             composable<HomeRoute> {
                 HomeScreen(

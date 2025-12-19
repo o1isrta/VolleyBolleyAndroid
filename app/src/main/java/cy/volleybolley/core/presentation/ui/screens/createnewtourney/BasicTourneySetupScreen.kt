@@ -1,7 +1,10 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewtourney
 
+import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,10 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,6 +37,10 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 
+const val DEFAULT_START_HOUR = 14
+const val DEFAULT_START_MINUTES = 0
+const val DEFAULT_FINISH_HOUR = 15
+const val DEFAULT_FINISH_MINUTES = 0
 
 @Composable
 fun BasicTourneySetupScreen(navController: NavHostController) {
@@ -45,7 +49,6 @@ fun BasicTourneySetupScreen(navController: NavHostController) {
         modifier = Modifier
             .verticalScroll(scrollState)
     ) {
-
         VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = VolleyDimens.DIMEN_32,
             modifier = Modifier
@@ -61,7 +64,7 @@ fun BasicTourneySetupScreen(navController: NavHostController) {
                     VolleyDimens.DIMEN_8.dp,
                     VolleyDimens.DIMEN_16.dp
                 )
-                .height(44.dp)
+                .height(VolleyDimens.DIMEN_44.dp)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
             text = stringResource(R.string.next_game),
@@ -71,8 +74,7 @@ fun BasicTourneySetupScreen(navController: NavHostController) {
 }
 
 @Composable
-fun HorizontalLine(
-) {
+fun HorizontalLine() {
     HorizontalDivider(
         modifier = Modifier,
         color = VolleyColor.Divider,
@@ -81,8 +83,7 @@ fun HorizontalLine(
 }
 
 @Composable
-fun BasicTourneySetupScreenContent(
-) {
+fun BasicTourneySetupScreenContent() {
     Column(
         modifier = Modifier
             .padding(horizontal = VolleyDimens.DIMEN_20.dp)
@@ -223,8 +224,8 @@ fun BasicTourneySetupScreenContent(
 
             VolleyTextFieldAttribute.DurationFieldWithArrows(
                 inputTime = VolleyTimeStamp(
-                    14,
-                    0,
+                    DEFAULT_START_HOUR,
+                    DEFAULT_START_MINUTES,
                     true
                 )
             ) { }
@@ -241,8 +242,8 @@ fun BasicTourneySetupScreenContent(
 
             VolleyTextFieldAttribute.DurationFieldWithArrows(
                 inputTime = VolleyTimeStamp(
-                    15,
-                    0,
+                    DEFAULT_FINISH_HOUR,
+                    DEFAULT_FINISH_MINUTES,
                     true
                 )
             ) { }

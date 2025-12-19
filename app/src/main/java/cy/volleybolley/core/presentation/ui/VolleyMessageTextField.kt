@@ -53,8 +53,7 @@ object VolleyMessageTextField {
         actionToTransferContent: (String) -> Unit,
     ) {
         val limitedText = VolleyUiUtil.getLimitedText(maxLength, textInput)
-        Box(
-        ) {
+        Box {
             MessageContainer(
                 modifier = modifier
             ) {
@@ -233,7 +232,7 @@ object VolleyMessageTextField {
         Box(
             contentAlignment = mainContainerAlignment,
             modifier = modifier
-                .onSizeChanged { containerSize = it }//
+                .onSizeChanged { containerSize = it }
                 .clip(shape)
         ) {
             Box(

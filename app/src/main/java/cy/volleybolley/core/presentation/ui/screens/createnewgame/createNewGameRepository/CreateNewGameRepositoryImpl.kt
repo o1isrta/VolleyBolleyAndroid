@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository
 
+import android.util.Log
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.ui.GENDER_FEMALE
@@ -12,6 +13,7 @@ import cy.volleybolley.players.domain.model.Player
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.io.IOException
 
 class CreateNewGameRepositoryImpl : CreateNewGameRepository {
     private val _gameData = MutableStateFlow(GameData())
@@ -87,15 +89,22 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
             VolleyResult.Success(updatedData)
         } catch (e: IllegalArgumentException) {
             // Обработка некорректных данных (BAD_REQUEST)
+            Log.e("CreateNewGameRepositoryImpl", "IllegalArgumentException during updateGameData", e)
             VolleyResult.Failure(ErrorType.BAD_REQUEST)
         } catch (e: NullPointerException) {
             // Обработка null-значений (BAD_REQUEST)
+            Log.e("CreateNewGameRepositoryImpl", "NullPointerException during updateGameData", e)
             VolleyResult.Failure(ErrorType.BAD_REQUEST)
         } catch (e: SecurityException) {
             // Обработка ошибок безопасности (UNAUTHORIZED)
+            Log.e("CreateNewGameRepositoryImpl", "SecurityException during updateGameData", e)
             VolleyResult.Failure(ErrorType.UNAUTHORIZED)
-        } catch (e: Exception) {
-            // Общий случай для всех остальных исключений
+        } catch (e: IOException) {
+            //  Обработка проблем с вводом-выводом (например, сетевые ошибки)
+            Log.e("CreateNewGameRepositoryImpl", "IOException during updateGameData", e)
+            VolleyResult.Failure(ErrorType.NETWORK_ERROR) //  Предположим, что у вас есть такой ErrorType
+        } catch (e: RuntimeException) { // Или другой подкласс RuntimeException, подходящий для вашей ситуации
+            Log.e("CreateNewGameRepositoryImpl", "RuntimeException during updateGameData", e)
             VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
         }
     }

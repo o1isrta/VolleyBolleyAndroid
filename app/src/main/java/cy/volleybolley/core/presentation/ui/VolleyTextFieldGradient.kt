@@ -453,9 +453,11 @@ object VolleyTextFieldGradient {
 @Composable
 private fun PreviewGradientTextFields() {
     Root {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(VolleyColor.TurquoiseDark)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.TurquoiseDark)
+        ) {
             Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
 
             VolleyTextFieldGradient.SearchField(

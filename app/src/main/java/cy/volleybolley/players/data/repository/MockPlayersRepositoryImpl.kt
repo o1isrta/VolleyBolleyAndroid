@@ -13,13 +13,19 @@ import cy.volleybolley.players.domain.model.PlayerDetail
 import cy.volleybolley.players.domain.repository.PlayersRepository
 
 class MockPlayersRepositoryImpl : PlayersRepository {
-
+    companion object{
+        const val KRISTINA_ID = 1
+        const val POLINA_ID = 2
+        const val ANTON_ID = 3
+        const val ALEKSANDR_ID = 4
+        const val MARIA_ID = 5
+    }
     private val mockPlayers = listOf(
-        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
-        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
-        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
-        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE),
-        Player(5, "Maria", "Novak", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(KRISTINA_ID, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(POLINA_ID, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(ANTON_ID, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE),
+        Player(MARIA_ID, "Maria", "Novak", null, false, LEVEL_PRO, GENDER_FEMALE),
         /*  Player(6, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
           Player(7, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
           Player(8, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
