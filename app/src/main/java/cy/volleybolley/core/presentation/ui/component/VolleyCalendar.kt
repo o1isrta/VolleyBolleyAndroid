@@ -70,7 +70,6 @@ object VolleyCalendar { // Calendar Section
     private const val YEAR_2 = 2L
     const val YEAR_1 = 1L
     const val COEFF = 2
-    val SPECIFIC_DATE = LocalDate.of(2025, 10, 22)
 
     @Composable
     fun CalendarSection(
@@ -390,9 +389,11 @@ fun DaysOfWeekHeader() {
         daysOfWeek.forEach { dayOfWeek ->
             val formattedDayOfWeek =
                 dayOfWeek.replaceFirstChar {
-                    if (it.isLowerCase())
+                    if (it.isLowerCase()) {
                         it.titlecase(Locale.getDefault())
-                    else it.toString()
+                    } else {
+                        it.toString()
+                    }
                 }
             Box(
                 modifier = Modifier
@@ -407,13 +408,24 @@ fun DaysOfWeekHeader() {
             }
         }
     }
-
 }
+
+const val DEFAULT_YEAR = 2025
+const val DEFAULT_MONTH = 10
+const val DEFAULT_DAY = 22
 
 @Preview
 @Composable
 private fun CalendarSectionPreview() {
-    val previewDate = remember { mutableStateOf(VolleyCalendar.SPECIFIC_DATE) } // Начальная дата для preview
+    val previewDate = remember {
+        mutableStateOf(
+            LocalDate.of(
+                DEFAULT_YEAR,
+                DEFAULT_MONTH,
+                DEFAULT_DAY
+            )
+        )
+    } // Начальная дата для preview
 
     Box(
         modifier = Modifier

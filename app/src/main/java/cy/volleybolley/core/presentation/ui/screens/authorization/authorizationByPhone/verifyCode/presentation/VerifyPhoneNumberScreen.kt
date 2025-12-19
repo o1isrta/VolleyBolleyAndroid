@@ -21,6 +21,7 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
+import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.model.VerifyPhoneNumberEffect
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.model.VerifyPhoneNumberEvent
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.model.VerifyPhoneNumberState
@@ -59,12 +60,17 @@ fun VerifyPhoneNumberScreen(
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         modifier = Modifier
-            .padding(top = paddingFromSystemUi.calculateTopPadding() + 8.dp, start = 8.dp, end = 8.dp)
+            .padding(top = paddingFromSystemUi.calculateTopPadding() + VolleyDimens.DIMEN_8.dp,
+                start = VolleyDimens.DIMEN_8.dp,
+                end = VolleyDimens.DIMEN_8.dp
+            )
             .fillMaxWidth()
     ) {
-        Column(modifier = Modifier
-            .padding(20.dp)
-            .fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .padding(VolleyDimens.DIMEN_20.dp)
+                .fillMaxWidth()
+        ) {
             VolleyTopBar.TopBarWithBackButton(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.registration),
@@ -72,7 +78,7 @@ fun VerifyPhoneNumberScreen(
             )
             VolleyTextFieldGradient.PhoneCodeTextField(
                 modifier = Modifier
-                    .padding(top = 16.dp)
+                    .padding(top = VolleyDimens.DIMEN_16.dp)
                     .fillMaxWidth(),
                 text = state.code,
                 alertMessage = if (state.isCodeInputError) {
@@ -84,7 +90,7 @@ fun VerifyPhoneNumberScreen(
             )
             AnimatedVisibility(
                 modifier = Modifier
-                    .padding(top = 8.dp)
+                    .padding(top = VolleyDimens.DIMEN_8.dp)
                     .align(Alignment.CenterHorizontally),
                 visible = state.isBtnNewCodeVisible
             ) {
@@ -100,7 +106,7 @@ fun VerifyPhoneNumberScreen(
             }
             VolleyButton.ActiveButton(
                 modifier = Modifier
-                    .padding(top = 16.dp)
+                    .padding(top = VolleyDimens.DIMEN_16.dp)
                     .fillMaxWidth(),
                 enabled = state.isBtnVerifyEnabled && !state.isLoading,
                 text = stringResource(R.string.send_code),

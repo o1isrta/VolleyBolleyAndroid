@@ -8,6 +8,11 @@ import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
 import java.time.LocalDate
 
+private const val DEFAULT_START_HOUR = 2
+private const val DEFAULT_START_MINUTE = 0
+private const val DEFAULT_FINISH_HOUR = 4
+private const val DEFAULT_FINISH_MINUTE = 0
+
 data class BasicGameSetupScreenState(
     val message: String = "",
     val placeCourt: Court = Court(
@@ -25,10 +30,9 @@ data class BasicGameSetupScreenState(
         tags = listOf()
     ),
     val date: LocalDate = LocalDate.now(),
-    val startTime: VolleyTimeStamp? = VolleyTimeStamp(2, 0, true),
-    val finishTime: VolleyTimeStamp? = VolleyTimeStamp(4, 0, true),
+    val startTime: VolleyTimeStamp? = VolleyTimeStamp(DEFAULT_START_HOUR, DEFAULT_START_MINUTE, true),
+    val finishTime: VolleyTimeStamp? = VolleyTimeStamp(DEFAULT_FINISH_HOUR, DEFAULT_FINISH_MINUTE, true),
     val gender: Gender = Gender.Mix,
     val levels: Set<Level> = setOf(Level.Light, Level.Medium, Level.Hard),
     val isLoading: Boolean = false
 ) : UiState
-

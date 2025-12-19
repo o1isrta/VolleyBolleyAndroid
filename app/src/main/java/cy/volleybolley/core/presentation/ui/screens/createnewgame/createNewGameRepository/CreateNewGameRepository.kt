@@ -18,11 +18,9 @@ import kotlinx.coroutines.flow.update
 interface CreateNewGameRepository {
     val gameData: StateFlow<GameData>
 
-    //suspend fun updateGameData(gameData: GameData)
     fun addPlayersToGame(players: List<Player>)
     fun removePlayerFromGame(playerIndex: Int)
 
-    // suspend fun searchPlayers(query: String, favoritesOnly: Boolean): VolleyResult<List<Player>, ErrorType>
     suspend fun saveGameDataToServer(): VolleyResult<Unit, ErrorType>
     suspend fun getGameDataFromServer(): VolleyResult<GameData, ErrorType>
     suspend fun loadGameData(): VolleyResult<Unit, ErrorType>
@@ -92,21 +90,26 @@ class FakeCreateNewGameRepository(
     }
 }
 
+private const val KRISTINA_ID = 1
+private const val POLINA_ID = 2
+private const val ANTON_ID = 3
+private const val ALEKSANDR_ID = 4
+private const val MARIA_ID = 5
+
 class FakeSearchPlayersUseCase : SearchPlayersUseCase {
-    override suspend fun invoke(query: String/*, favoritesOnly: Boolean*/): VolleyResult<List<Player>, ErrorType> {
+    override suspend fun invoke(query: String): VolleyResult<List<Player>, ErrorType> {
         // Возвращаем тестовые данные
         val samplePlayers = listOf(
-            Player(1, "Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
-            Player(2, "Polina", "Vasylyeva", null, false, GENDER_FEMALE, LEVEL_PRO),
-            Player(3, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
-            Player(4, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH),
-            Player(5, "Maria", "Novak", null, false, GENDER_FEMALE, LEVEL_PRO)
+            Player(KRISTINA_ID, "Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
+            Player(POLINA_ID, "Polina", "Vasylyeva", null, false, GENDER_FEMALE, LEVEL_PRO),
+            Player(ANTON_ID, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
+            Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH),
+            Player(MARIA_ID, "Maria", "Novak", null, false, GENDER_FEMALE, LEVEL_PRO)
         )
 
         val filteredPlayers = samplePlayers.filter { player ->
-            player.lastName.contains(query, ignoreCase = true) && (/* !favoritesOnly*|| */player.isFavorite)
+            player.lastName.contains(query, ignoreCase = true) && player.isFavorite
         }
         return VolleyResult.Success(filteredPlayers)
     }
-//
 }

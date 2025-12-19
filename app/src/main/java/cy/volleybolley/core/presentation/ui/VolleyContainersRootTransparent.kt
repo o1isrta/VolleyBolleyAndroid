@@ -125,7 +125,7 @@ object VolleyContainersRootTransparent {
                     .clip(shape)
                     .blur(blurRadius.dp)
                     .border(
-                        width = 0.dp,//VolleyDimens.DIMEN_4.dp,
+                        width = 0.dp,
                         color = VolleyColor.White.copy(alpha = 0.2f),
                         shape = shape
                     )
@@ -141,7 +141,7 @@ object VolleyContainersRootTransparent {
     @Composable
     private fun TransparentGradientContainer(
         modifier: Modifier = Modifier,
-        cornerRadius: Int = VolleyDimens.DIMEN_16, ///  cornerRadius: Int = VolleyDimens.DIMEN_32,
+        cornerRadius: Int = VolleyDimens.DIMEN_16,
         mainContainerAlignment: Alignment = Alignment.TopStart,
         contentContainerAlignment: Alignment = Alignment.TopStart,
         content: @Composable BoxScope.() -> Unit

@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,21 +17,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.rememberDatePickerState
@@ -48,30 +39,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyColor.TextField
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldMedium
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
-import cy.volleybolley.ui.theme.Background
 import java.util.Calendar
 
 @UiLibraryMarker
@@ -230,8 +214,6 @@ object VolleyTextFieldAttribute {
                         modifier = Modifier
                             .clickable(null, null) {
                                 actionToTransferCount(inputCount - 1)
-                                // val newCount = inputCount - 1
-                                // actionToTransferCount(newCount)
                             }
                     )
                     Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
@@ -248,8 +230,6 @@ object VolleyTextFieldAttribute {
                         modifier = Modifier
                             .clickable(null, null) {
                                 actionToTransferCount(inputCount + 1)
-                                // val newCount = inputCount + 1
-                                // actionToTransferCount(newCount)
                             }
                     )
                 }
@@ -385,12 +365,6 @@ object VolleyTextFieldAttribute {
                     color = VolleyColor.White,
                     maxLines = 1,
                     modifier = Modifier
-                    /*    .padding(
-                            start = VolleyDimens.DIMEN_16.dp,
-                            top = VolleyDimens.DIMEN_13.dp,
-                            end = VolleyDimens.DIMEN_4.dp,
-                            bottom = VolleyDimens.DIMEN_13.dp
-                        )*/
                 )
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_4.dp))
                 Column(
@@ -513,9 +487,6 @@ object VolleyTextFieldAttribute {
         val is24HourFormat = false
 
         val timePickerState = rememberTimePickerState(
-//            initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-//            initialMinute = currentTime.get(Calendar.MINUTE),
-//            is24Hour = false,
             initialHour = initialHour,
             initialMinute = initialMinute,
             is24Hour = is24HourFormat
@@ -676,6 +647,9 @@ object VolleyTextFieldAttribute {
     }
 }
 
+const val DEFAULT_HOUR = 14
+const val DEFAULT_MINUTES = 0
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewGradientTextFields() {
@@ -728,8 +702,8 @@ private fun PreviewGradientTextFields() {
 
             VolleyTextFieldAttribute.DurationFieldWithArrows(
                 inputTime = VolleyTimeStamp(
-                    14,
-                    0,
+                    DEFAULT_HOUR,
+                    DEFAULT_MINUTES,
                     true
                 ),
                 modifier = Modifier

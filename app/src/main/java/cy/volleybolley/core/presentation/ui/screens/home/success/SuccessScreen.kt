@@ -99,7 +99,6 @@ private fun SuccessScreen(
                     start = VolleyDimens.DIMEN_8.dp,
                     end = VolleyDimens.DIMEN_8.dp,
                     top = VolleyDimens.DIMEN_8.dp
-                    //top = VolleyDimens.DIMEN_116.dp
                 ),
                 cornerRadius = VolleyDimens.DIMEN_32,
             ) {
@@ -127,7 +126,6 @@ private fun SuccessScreen(
                     RowIconText(
                         painterResource = R.drawable.ic_geo,
                         title = state.event.locationName,
-                        //text = state.event.locationPlace
                         text = state.event.locationPlace,
                         iconSize = VolleyDimens.DIMEN_16.dp
                     )
@@ -169,7 +167,6 @@ private fun SuccessScreen(
                         eventCallback(SuccessEvent.OnInvitePlayers)
                     },
                     onShareLinkClick = {
-                        // eventCallback(SuccessEvent.OnShareLink)
                         shareEventLink(context, state.event)
                     }
                 )
@@ -199,15 +196,9 @@ private fun RowIconText(
     iconSize: Dp = VolleyDimens.DIMEN_24.dp,
 ) {
     Row(
-        // modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
         modifier = modifier.padding(top = VolleyDimens.DIMEN_16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        /*    Image(
-                painter = painterResource(painterResource),
-              //  modifier = Modifier.size(VolleyDimens.DIMEN_24.dp),
-                contentDescription = null
-            )*/
         Box(
             modifier = Modifier.size(VolleyDimens.DIMEN_24.dp),
             contentAlignment = Alignment.Center

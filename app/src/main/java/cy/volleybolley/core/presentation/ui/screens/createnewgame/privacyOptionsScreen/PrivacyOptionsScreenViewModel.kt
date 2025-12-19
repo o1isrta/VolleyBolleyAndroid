@@ -96,7 +96,7 @@ open class PrivacyOptionsScreenViewModel(
     private fun searchPlayers(query: String) {
         launchSafe(
             onError = { throwable ->
-                handleSearchError(throwable, query)
+                handleSearchError(throwable /*, query*/)
             },
             getErrorLogMessage = { "Error searching players for query: $query - $it" }
         ) {
@@ -108,7 +108,7 @@ open class PrivacyOptionsScreenViewModel(
         }
     }
 
-    private fun handleSearchError(throwable: Throwable, query: String) {
+    private fun handleSearchError(throwable: Throwable /* , query: String */) {
         sendUiEffect(PrivacyOptionsScreenEffect.ShowError(throwable.localizedMessage ?: "Unknown error"))
         uiStateMutable.update {
             it.copy(
@@ -167,7 +167,7 @@ open class PrivacyOptionsScreenViewModel(
         uiStateMutable.update { currentState ->
             val updatedSelectedPlayers = currentState.selectedPlayers.toMutableSet()
             if (isPlayerSelected(player)) { // если был выбран, то при нажатии, становится не выбран. и наоборот
-                updatedSelectedPlayers.remove(player)  // снимаем выбор
+                updatedSelectedPlayers.remove(player) // снимаем выбор
             } else {
                 if (updatedSelectedPlayers.size < gameRepository.gameData.value.maximumPlayers) {
                     updatedSelectedPlayers.add(player) // выбираем
@@ -202,5 +202,6 @@ open class PrivacyOptionsScreenViewModel(
 
 // Специальный ViewModel для Preview
 class PrivacyOptionsScreenViewModelPreview : PrivacyOptionsScreenViewModel(
-    FakeCreateNewGameRepository(GameData()), FakeSearchPlayersUseCase()
+    FakeCreateNewGameRepository(GameData()),
+    FakeSearchPlayersUseCase()
 )

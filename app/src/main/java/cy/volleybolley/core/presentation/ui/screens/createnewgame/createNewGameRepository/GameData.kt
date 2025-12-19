@@ -7,6 +7,13 @@ import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.players.domain.model.Player
 import java.time.LocalDate
 
+private const val DEFAULT_START_HOUR = 2
+private const val DEFAULT_START_MINUTE = 0
+private const val DEFAULT_FINISH_HOUR = 4
+private const val DEFAULT_FINISH_MINUTE = 0
+private const val DEFAULT_MAXIMUM_PLAYERS = 8
+private const val DEFAULT_PER_PERSON = "5.0"
+
 data class GameData(
     // получаем с экрана BasicGameSetupScreen:
     val message: String = "",
@@ -25,16 +32,17 @@ data class GameData(
         tags = listOf()
     ),
     val date: LocalDate = LocalDate.now(),
-    val startTime: VolleyTimeStamp? = VolleyTimeStamp(2, 0, true),
-    val finishTime: VolleyTimeStamp? = VolleyTimeStamp(4, 0, true),
+    val startTime: VolleyTimeStamp? = VolleyTimeStamp(DEFAULT_START_HOUR, DEFAULT_START_MINUTE, true),
+    val finishTime: VolleyTimeStamp? = VolleyTimeStamp(DEFAULT_FINISH_HOUR, DEFAULT_FINISH_MINUTE, true),
     val gender: Gender = Gender.Mix,
     val levels: Set<Level> = setOf(Level.Light, Level.Medium, Level.Hard),
     // получаем с экрана GameEnteringConditionsScreen:
-    val maximumPlayers: Int = 8,
-    val perPerson: String = "5.0",
-    val accountNumber: String? = null,  // номер аккаунта, если есть
+    val maximumPlayers: Int = DEFAULT_MAXIMUM_PLAYERS,
+    val perPerson: String = DEFAULT_PER_PERSON,
+    val accountNumber: String? = null, // номер аккаунта, если есть
     // получаем с экрана PrivacyOptionsScreen, показываем на экране GameEnteringConditionsScreen,
-    // редактируем на обоих экранах (на GameEnteringConditionsScreen можем удалять игроков, на PrivacyOptionsScreen - добавлять, удалять)
+    // редактируем на обоих экранах
+    // (на GameEnteringConditionsScreen можем удалять игроков, на PrivacyOptionsScreen - добавлять, удалять)
     val players: List<Player> = emptyList() // игроки, выбранные для игры
 )
 

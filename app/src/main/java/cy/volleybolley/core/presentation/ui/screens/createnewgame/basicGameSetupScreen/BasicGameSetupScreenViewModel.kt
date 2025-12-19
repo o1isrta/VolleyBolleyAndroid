@@ -34,8 +34,8 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     companion object {
         const val MAX_LENGTH = VolleyDimens.DIMEN_160
         const val DEBOUNCE_DELAY_300MS = 300L
-        const val HOUR1 = 60
-        const val HOUR2 = 240
+        const val MINIMUM_GAME_DURATION_MINUTES = 60
+        const val MAXIMUM_GAME_DURATION_MINUTES = 240
         const val HOUR = 60
     }
 
@@ -63,7 +63,6 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     }
 
     override fun obtainEvent(event: BasicGameSetupScreenEvent) {
-        //   var timeChangeJob: Job? = null
         when (event) {
             is BasicGameSetupScreenEvent.MessageChanged -> messageChanged(event.text)
             BasicGameSetupScreenEvent.OnBackClicked -> onBackClicked()
@@ -123,12 +122,11 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     private fun startTimeChanged(time: VolleyTimeStamp?) {
         timeChangeJob?.cancel()
         viewModelScope.launch {
-            Log.d(str, "ViewModel: Received OnEndTimeChanged event: ${time}")
+            Log.d(str, "ViewModel: Received OnEndTimeChanged event: $time")
             delay(DEBOUNCE_DELAY_300MS) // Дебаунс 300ms
-            val newState = uiStateMutable.value.copy(
+            uiStateMutable.value = uiStateMutable.value.copy(
                 startTime = time
             )
-            uiStateMutable.value = newState
             Log.d(str, "ViewModel: New UI State: ${uiStateMutable.value}")
         }
     }
@@ -136,12 +134,11 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     private fun finishTimeChanged(time: VolleyTimeStamp?) {
         timeChangeJob?.cancel()
         viewModelScope.launch {
-            Log.d(str, "ViewModel: Received OnEndTimeChanged event: ${time}")
+            Log.d(str, "ViewModel: Received OnEndTimeChanged event: $time")
             delay(DEBOUNCE_DELAY_300MS) // Дебаунс 300ms
-            val newState = uiStateMutable.value.copy(
+            uiStateMutable.value = uiStateMutable.value.copy(
                 finishTime = time
             )
-            uiStateMutable.value = newState
             Log.d(str, "ViewModel: New UI State: ${uiStateMutable.value}")
         }
     }
@@ -197,23 +194,18 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
         val startTime = uiStateMutable.value.startTime
         val finishTime = uiStateMutable.value.finishTime
 
-        if (startTime == null || finishTime == null) {
-            return "Please select both start and end times." // Или другое сообщение об ошибке
+        return when {
+            startTime == null || finishTime == null -> "Please select both start and end times."
+            finishTime.compareTo(startTime) <= 0 -> "The end time of the game must be after the start time."
+            else -> {
+                val durationMinutes = calculateDurationMinutes(startTime, finishTime)
+                when {
+                    durationMinutes < MINIMUM_GAME_DURATION_MINUTES -> "The game duration must be at least one hour."
+                    durationMinutes > MAXIMUM_GAME_DURATION_MINUTES -> "The game duration must be no more than 4 hours."
+                    else -> ""
+                }
+            }
         }
-        if (finishTime.compareTo(startTime) <= 0) {
-            return "The end time of the game must be after the start time."
-        }
-        // Рассчитываем длительность игры в минутах
-        val durationMinutes = calculateDurationMinutes(startTime, finishTime)
-
-        // Проверяем, чтобы длительность игры была не меньше часа (60 минут) и не больше 4 часов (240 минут)
-        if (durationMinutes < HOUR1) {
-            return "The game duration must be at least one hour."
-        }
-        if (durationMinutes > HOUR2) {
-            return "The game duration must be no more than 4 hours."
-        }
-        return ""
     }
 
     /** Подсчет разницы во времени
@@ -221,20 +213,20 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
      */
     private fun calculateDurationMinutes(startTime: VolleyTimeStamp, endTime: VolleyTimeStamp): Int {
         val startTotalMinutes = (startTime.hour +
-            (if (startTime.isAfternoon) {
+            if (startTime.isAfternoon) {
                 VolleyTimeStamp.AFTERNOON_VALUE
             } else {
                 0
-            })
+            }
             ) * HOUR +
             startTime.minutes
 
         val endTotalMinutes = (endTime.hour +
-            (if (endTime.isAfternoon) {
+            if (endTime.isAfternoon) {
                 VolleyTimeStamp.AFTERNOON_VALUE
             } else {
                 0
-            })
+            }
             ) * HOUR +
             endTime.minutes
 
@@ -246,18 +238,21 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
      * maxLength — ожидаемый максимальный размер в кодовых единицах (Int).
      */
     private fun getLimitedText(maxLength: Int, input: String): String {
-        if (maxLength <= 0) return ""
-        if (input.length <= maxLength) return input
-
-        // Не разрезаем суррогатную пару: если на границе стоит high surrogate — сдвинуть на 1 влево
-        var end = maxLength
-        if (Character.isHighSurrogate(input[end - 1])) {
-            end -= 1
+        val result = when {
+            maxLength <= 0 -> ""
+            input.length <= maxLength -> input
+            else -> {
+                var end = maxLength
+                if (Character.isHighSurrogate(input[end - 1])) {
+                    end--
+                }
+                input.substring(0, end)
+            }
         }
-        return input.substring(0, end)
+        return result
     }
 
-    //Вспомогательная ф-ция для сравнения дней
+    // Вспомогательная ф-ция для сравнения дней
     fun isSameDay(date1: LocalDate, date2: LocalDate): Boolean {
         return date1 == date2
     }
@@ -268,7 +263,7 @@ class BasicGameSetupScreenViewModelPreview : BasicGameSetupScreenViewModel(FakeC
     @RequiresApi(Build.VERSION_CODES.O)
     private val _showCalendarPreview = MutableStateFlow(
         true
-        //LocalDate.now() == LocalDate.of(2025,11,23)
+        // LocalDate.now() == LocalDate.of(2025,11,23)
     ) // чтобы видно было календарь - поставить сегодняшнюю дату
 
     @RequiresApi(Build.VERSION_CODES.O)

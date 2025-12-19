@@ -13,7 +13,7 @@ class SuccessViewModel(
         when (event) {
             SuccessEvent.OnDoneClick -> sendUiEffect(SuccessEffect.CloseScreen)
             is SuccessEvent.OnInvitePlayers -> sendUiEffect(SuccessEffect.NavigateToInvitePlayers)
-            //SuccessEvent.OnShareLink -> sendUiEffect(SuccessEffect.ShareLink)
+            // SuccessEvent.OnShareLink -> sendUiEffect(SuccessEffect.ShareLink)
         }
     }
 }

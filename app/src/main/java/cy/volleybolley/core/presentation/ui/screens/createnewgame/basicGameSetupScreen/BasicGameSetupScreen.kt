@@ -1,10 +1,8 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -167,7 +165,8 @@ private fun ContentDisplay(
                             Modifier
                                 .height(44.dp)
                                 .align(Alignment.CenterHorizontally)
-                                .fillMaxWidth(), viewModel
+                                .fillMaxWidth(),
+                            viewModel
                         )
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
@@ -215,7 +214,8 @@ private fun MessageSection(state: BasicGameSetupScreenState, viewModel: BasicGam
 
 @Composable
 private fun PlaceSection(
-    state: BasicGameSetupScreenState, viewModel: BasicGameSetupScreenViewModel
+    state: BasicGameSetupScreenState,
+    viewModel: BasicGameSetupScreenViewModel
 ) {
     VolleyText.TitleMedium(
         text = stringResource(R.string.place),
@@ -274,7 +274,8 @@ private fun PlaceSection(
 
 @Composable
 private fun DateSection(
-    state: BasicGameSetupScreenState, viewModel: BasicGameSetupScreenViewModel
+    state: BasicGameSetupScreenState,
+    viewModel: BasicGameSetupScreenViewModel
 ) {
     val showCalendar = viewModel.showCalendar.collectAsState().value
 
@@ -308,7 +309,7 @@ private fun DateSection(
     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
 
     // Календарь показывается только если выбрана кнопка "Pick Date"
-    if (showCalendar) {  // Используем флаг из ViewModel
+    if (showCalendar) { // Используем флаг из ViewModel
         VolleyCalendar.GameCalendar(
             selectedDate = state.date,
             onDateSelected = { selectedDate ->
@@ -325,7 +326,8 @@ private fun DateSection(
 
 @Composable
 private fun TimeSection(
-    state: BasicGameSetupScreenState, viewModel: BasicGameSetupScreenViewModel
+    state: BasicGameSetupScreenState,
+    viewModel: BasicGameSetupScreenViewModel
 ) {
     VolleyText.BodyBold(
         text = stringResource(R.string.game_duration),
@@ -374,7 +376,8 @@ private fun TimeSection(
 
 @Composable
 private fun GenderSection(
-    state: BasicGameSetupScreenState, viewModel: BasicGameSetupScreenViewModel
+    state: BasicGameSetupScreenState,
+    viewModel: BasicGameSetupScreenViewModel
 ) {
     VolleyText.TitleMedium(
         text = stringResource(R.string.gender),
@@ -408,7 +411,8 @@ private fun GenderSection(
 
 @Composable
 private fun LevelSection(
-    state: BasicGameSetupScreenState, viewModel: BasicGameSetupScreenViewModel
+    state: BasicGameSetupScreenState,
+    viewModel: BasicGameSetupScreenViewModel
 ) {
     VolleyText.TitleMedium(
         text = stringResource(R.string.player_level),
@@ -430,7 +434,8 @@ private fun LevelSection(
 
 @Composable
 private fun NextButtonSection(
-    modifier: Modifier, viewModel: BasicGameSetupScreenViewModel
+    modifier: Modifier,
+    viewModel: BasicGameSetupScreenViewModel
 ) {
     VolleyButton.ActiveButton(
         modifier = modifier,
@@ -454,8 +459,8 @@ private fun BasicGameSetupScreenPreview() {
     ) {
         BasicGameSetupScreen(
             viewModel = BasicGameSetupScreenViewModelPreview(),
-            navController = navController, paddingFromSystemUi = PaddingValues(0.dp)
+            navController = navController,
+            paddingFromSystemUi = PaddingValues(0.dp)
         )
     }
 }
-

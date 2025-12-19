@@ -48,7 +48,6 @@ import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
-//import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite

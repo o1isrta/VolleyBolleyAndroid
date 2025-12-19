@@ -58,7 +58,6 @@ fun GameEnteringConditionsScreen(
     viewModel: GameEnteringConditionsScreenViewModel = viewModel(),
     paddingFromSystemUi: PaddingValues
 ) {
-
     val scrollState = rememberScrollState()
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -227,7 +226,7 @@ private fun PrivacySection(
     VolleyButton.GroupButtonsForPrivacy(
         checkId = when {
             state.players.isNotEmpty() -> 2 // Privacy.Private
-            else -> 1                       // Privacy.Public
+            else -> 1 // Privacy.Public
         },
         modifier = Modifier.padding(vertical = 12.dp),
         onSelected = { position ->
@@ -394,7 +393,8 @@ private fun GameEnteringConditionsScreenPreview() {
         // GameEnteringConditionsScreen(navController = navController)
         GameEnteringConditionsScreen(
             viewModel = GameEnteringConditionsScreenViewModelPreview(),
-            navController = navController, paddingFromSystemUi = PaddingValues(0.dp)
+            navController = navController,
+            paddingFromSystemUi = PaddingValues(0.dp)
         )
     }
 }

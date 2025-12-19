@@ -124,13 +124,13 @@ object VolleySimpleComponent {
                 .heightIn(min = VolleyDimens.DIMEN_23.dp)
         ) {
             VolleyText.BodyRegular(
-                text = player.firstName + " " + player.lastName,// ?: stringResource(R.string.free_spot),
+                text = player.firstName + " " + player.lastName,
                 color = VolleyColor.White,
                 modifier = Modifier.weight(1f)
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End//Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+                horizontalArrangement = Arrangement.End
             ) {
                 player.level.let { LevelBadge(it) }
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
@@ -139,7 +139,7 @@ object VolleySimpleComponent {
                     modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
                 ) {
                     Icon(
-                        painter = icon,//painterResource(R.drawable.ic_remove),
+                        painter = icon,
                         contentDescription = null,
                         tint = Color.Unspecified,
                         modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
@@ -281,14 +281,19 @@ private fun PreviewLevelBadge() {
     }
 }
 
+private const val KRISTINA_ID = 1
+private const val POLINA_ID = 2
+private const val ANTON_ID = 3
+private const val ALEKSANDR_ID = 4
+
 @Preview
 @Composable
 private fun PreviewPlayerRowWithRemoveList() {
     val players: List<Player> = listOf(
-        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
-        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
-        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
-        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE)
+        Player(KRISTINA_ID, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(POLINA_ID, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(ANTON_ID, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE)
     )
     VolleyContainersRootTransparent.Root {
         Box(
@@ -316,10 +321,10 @@ private fun PreviewPlayerRowWithRemoveList() {
 @Composable
 private fun PreviewPlayerRowWithSelectAndFavoriteList() {
     val players: List<Player> = listOf(
-        Player(1, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
-        Player(2, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
-        Player(3, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
-        Player(4, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE)
+        Player(KRISTINA_ID, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(POLINA_ID, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+        Player(ANTON_ID, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+        Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE)
     )
     VolleyContainersRootTransparent.Root {
         Box(

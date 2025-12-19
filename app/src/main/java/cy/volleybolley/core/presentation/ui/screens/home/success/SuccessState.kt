@@ -3,7 +3,6 @@ package cy.volleybolley.core.presentation.ui.screens.home.success
 import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.profile.domain.model.PaymentType
 import kotlinx.serialization.SerialName
-//import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -31,9 +30,9 @@ fun SucceedGame.toDeepLink(): String {
     val encodedType = URLEncoder.encode(type.serialName, StandardCharsets.UTF_8.toString())
     val encodedId = URLEncoder.encode(id.toString(), StandardCharsets.UTF_8.toString())
     return "volleybolley://invite/$encodedType/$encodedId"
-//    val encodedType = URLEncoder.encode(type.toString(), StandardCharsets.UTF_8.toString())
-//    val encodedId = URLEncoder.encode(id.toString(), StandardCharsets.UTF_8.toString())
-//    return "volleybolley://invite/$encodedType/$encodedId"
+// val encodedType = URLEncoder.encode(type.toString(), StandardCharsets.UTF_8.toString())
+// val encodedId = URLEncoder.encode(id.toString(), StandardCharsets.UTF_8.toString())
+// return "volleybolley://invite/$encodedType/$encodedId"
 }
 
 @Serializable

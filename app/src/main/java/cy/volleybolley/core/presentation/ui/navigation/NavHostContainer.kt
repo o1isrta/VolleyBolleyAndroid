@@ -8,9 +8,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-//import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
-//import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
-//import cy.volleybolley.core.presentation.ui.screens.home.rateplayers.RatePlayersScreen
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.AuthorizationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.VerifyPhoneNumberScreen

@@ -18,12 +18,18 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
     override val gameData: StateFlow<GameData> = _gameData // Expose as immutable StateFlow
 
     companion object {
-        val DEBOUNCE_DELAY_500MS = 500L
+        const val DEBOUNCE_DELAY_500MS = 500L
+        const val DEBOUNCE_DELAY_1000MS = 1000L
+        private const val KRISTINA_ID = 1
+        private const val POLINA_ID = 2
+        private const val ANTON_ID = 3
+        private const val ALEKSANDR_ID = 4
     }
 
     override fun addPlayersToGame(players: List<Player>) {
-        if (players.size < _gameData.value.maximumPlayers)
+        if (players.size < _gameData.value.maximumPlayers) {
             _gameData.value = _gameData.value.copy(players = _gameData.value.players + players)
+        }
     }
 
     override fun removePlayerFromGame(playerIndex: Int) {
@@ -36,7 +42,7 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
 
     override suspend fun saveGameDataToServer(): VolleyResult<Unit, ErrorType> {
         // Имитация сохранения на сервер
-        delay(1000)
+        delay(DEBOUNCE_DELAY_1000MS)
         return VolleyResult.Success(Unit)
     }
 
@@ -49,10 +55,10 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
         // Mock Data
         val mockGameData = GameData(
             players = listOf(
-                Player(1, "Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
-                Player(2, "Polina", "Vasylyeva", null, false, GENDER_FEMALE, LEVEL_PRO),
-                Player(3, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
-                Player(4, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH)
+                Player(KRISTINA_ID, "Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
+                Player(POLINA_ID, "Polina", "Vasylyeva", null, false, GENDER_FEMALE, LEVEL_PRO),
+                Player(ANTON_ID, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
+                Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH)
             )
         )
         return VolleyResult.Success(mockGameData)
@@ -79,7 +85,17 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
             val updatedData = update(_gameData.value)
             _gameData.value = updatedData
             VolleyResult.Success(updatedData)
+        } catch (e: IllegalArgumentException) {
+            // Обработка некорректных данных (BAD_REQUEST)
+            VolleyResult.Failure(ErrorType.BAD_REQUEST)
+        } catch (e: NullPointerException) {
+            // Обработка null-значений (BAD_REQUEST)
+            VolleyResult.Failure(ErrorType.BAD_REQUEST)
+        } catch (e: SecurityException) {
+            // Обработка ошибок безопасности (UNAUTHORIZED)
+            VolleyResult.Failure(ErrorType.UNAUTHORIZED)
         } catch (e: Exception) {
+            // Общий случай для всех остальных исключений
             VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
         }
     }

@@ -19,6 +19,7 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
+import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.model.AuthorizationByPhoneEffect
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.model.AuthorizationByPhoneEvent
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.model.AuthorizationByPhoneState
@@ -60,12 +61,18 @@ fun AuthorizationByPhoneScreen(
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         modifier = Modifier
-            .padding(top = paddingFromSystemUi.calculateTopPadding() + 8.dp, start = 8.dp, end = 8.dp)
+            .padding(
+                top = paddingFromSystemUi.calculateTopPadding() + VolleyDimens.DIMEN_8.dp,
+                start = VolleyDimens.DIMEN_8.dp,
+                end = VolleyDimens.DIMEN_8.dp
+            )
             .fillMaxWidth()
     ) {
-        Column(modifier = Modifier
-            .padding(20.dp)
-            .fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .padding(VolleyDimens.DIMEN_20.dp)
+                .fillMaxWidth()
+        ) {
             VolleyTopBar.TopBarWithBackButton(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.registration),
@@ -73,7 +80,7 @@ fun AuthorizationByPhoneScreen(
             )
             VolleyTextFieldGradient.PhoneTextField(
                 modifier = Modifier
-                    .padding(top = 16.dp)
+                    .padding(top = VolleyDimens.DIMEN_16.dp)
                     .fillMaxWidth(),
                 text = state.phoneNumber,
                 alertMessage = if (state.isPhoneNumberInputError) {
@@ -85,7 +92,7 @@ fun AuthorizationByPhoneScreen(
             )
             VolleyButton.ActiveButton(
                 modifier = Modifier
-                    .padding(top = 16.dp)
+                    .padding(top = VolleyDimens.DIMEN_16.dp)
                     .fillMaxWidth(),
                 enabled = state.isBtnSendCodeEnabled && !state.isLoading,
                 text = stringResource(R.string.send_code),
@@ -95,13 +102,15 @@ fun AuthorizationByPhoneScreen(
     }
 }
 
+const val DEFAULT_PHONE_NUMBER = "66123"
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewAuthorizationByPhoneScreen() {
     RootContainer { paddingFromSystemUi, _ ->
         AuthorizationByPhoneScreen(
             state = AuthorizationByPhoneState(
-                phoneNumber = "66123",
+                phoneNumber = DEFAULT_PHONE_NUMBER,
                 isPhoneNumberInputError = true
             ),
             paddingFromSystemUi = paddingFromSystemUi,

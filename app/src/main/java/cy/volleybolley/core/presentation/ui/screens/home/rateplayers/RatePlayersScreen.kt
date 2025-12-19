@@ -101,7 +101,7 @@ private fun RatePlayersScreen(
                                         RatePlayersEvent.RatePlayer(
                                             player.playerId,
                                             position
-                                            //RatingType.entries[position - 1]
+                                            // RatingType.entries[position - 1]
                                         )
                                     )
                                 }
@@ -142,14 +142,13 @@ private fun Header() {
 private fun PlayerBox(
     player: PlayerShortUI,
     onSelected: (RatingType) -> Unit
-    //onSelected: (Int) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_12.dp)
     ) {
         PlayerInfo(player = player)
         GroupButtonsForChangeLevel(
-            current = player.rating,//.checkId,
+            current = player.rating,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             onSelected = onSelected
         )

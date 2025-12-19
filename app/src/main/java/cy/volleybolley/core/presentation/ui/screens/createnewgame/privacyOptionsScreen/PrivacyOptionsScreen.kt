@@ -68,7 +68,7 @@ private fun ObserveUiEffects(
     navController: NavHostController,
     context: Context
 ) {
-    val str : String= R.string.privacy_options_screen.toString()
+    val str: String = R.string.privacy_options_screen.toString()
     LaunchedEffect(viewModel.uiEffect) { // подписываемся на Effect
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
@@ -96,7 +96,6 @@ fun PrivacyOptionsContent(
     viewModel: PrivacyOptionsScreenViewModel,
     paddingFromSystemUi: PaddingValues
 ) {
-
     Column(
         modifier = Modifier.padding(paddingFromSystemUi)
     ) {
@@ -139,7 +138,10 @@ fun PrivacyOptionsContent(
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                 // передаем список найденных игроков + выбранных
                 val filteredPlayers =
-                    filterPlayers((state.selectedPlayers + state.playersSearchResult.toSet()).toList(), state.flagFavorites)
+                    filterPlayers(
+                        (state.selectedPlayers + state.playersSearchResult.toSet()).toList(),
+                        state.flagFavorites
+                    )
                 val scrollState = rememberScrollState()
 
                 Column(
@@ -195,7 +197,8 @@ private fun PrivacyOptionsScreenPreview() {
         // GameEnteringConditionsScreen(navController = navController)
         PrivacyOptionsScreen(
             viewModel = PrivacyOptionsScreenViewModelPreview(),
-            navController = navController, paddingFromSystemUi = PaddingValues(0.dp)
+            navController = navController,
+            paddingFromSystemUi = PaddingValues(0.dp)
         )
     }
 }

@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +40,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 
 @Composable
 fun BasicTourneySetupScreen(navController: NavHostController) {
-    val scrollState = rememberScrollState() //Состояние скролла
+    val scrollState = rememberScrollState() // Состояние скролла
     Column(
         modifier = Modifier
             .verticalScroll(scrollState)
@@ -70,9 +68,6 @@ fun BasicTourneySetupScreen(navController: NavHostController) {
             onClick = {}
         )
     }
-//    Button(onClick = { navController.popBackStack() }) {
-//        Text("Назад")
-//    }
 }
 
 @Composable
@@ -168,7 +163,7 @@ fun BasicTourneySetupScreenContent(
             }
 
             VolleyButton.ActiveGradientButton(
-                modifier = Modifier,//.height(VolleyDimens.DIMEN_44.dp),
+                modifier = Modifier,
                 text = "Create"
             ) { }
         }
