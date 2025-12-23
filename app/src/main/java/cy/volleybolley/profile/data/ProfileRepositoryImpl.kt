@@ -15,13 +15,12 @@ import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PersonalData
 
 class ProfileRepositoryImpl(
-    private val networkClient: NetworkClient<ProfileRequest, ProfileResponse>,
-    private var accessToken: String? = null,
+    private val networkClient: NetworkClient<ProfileRequest, ProfileResponse>
 ) : ProfileRepository {
     private var lastReceivedPersonalData: PersonalData? = null
 
     override suspend fun getPersonalData(): VolleyResult<PersonalData, ErrorType> {
-        val response = networkClient.getResponse(ProfileRequest.GetPersonalData(accessToken))
+        val response = networkClient.getResponse(ProfileRequest.GetPersonalData())
         if (!response.isSuccess) {
             return VolleyResult.Failure(response.resultCode.mapToErrorType())
         }
@@ -33,7 +32,7 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun getPayments(): VolleyResult<List<Payment>, ErrorType> {
-        val response = networkClient.getResponse(ProfileRequest.GetPayments(accessToken))
+        val response = networkClient.getResponse(ProfileRequest.GetPayments())
         if (!response.isSuccess) {
             return VolleyResult.Failure(response.resultCode.mapToErrorType())
         }
@@ -47,7 +46,6 @@ class ProfileRepositoryImpl(
         val actualChangesOnPersonalData = lastReceivedPersonalData?.getChangedPersonalDataFields(personalData)
         val response = networkClient.getResponse(
             ProfileRequest.UpdatePersonalData(
-                accessToken = accessToken,
                 body = actualChangesOnPersonalData?.toUpdateBody() ?: personalData.toUpdateBody()
             )
         )
@@ -63,7 +61,6 @@ class ProfileRepositoryImpl(
     ): VolleyResult<Unit, ErrorType> {
         val response = networkClient.getResponse(
             ProfileRequest.UpdatePayments(
-                accessToken = accessToken,
                 body = payments.toUpdateBody()
             )
         )
@@ -75,12 +72,11 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun updateAvatar(
-        imageBytes: ByteArray?,
+        photoBytes: ByteArray?,
     ): VolleyResult<String, ErrorType> {
         val response = networkClient.getResponse(
             ProfileRequest.UpdateProfileAvatar(
-                accessToken = accessToken,
-                body = AvatarDto(convertImageBytesToBase64String(imageBytes))
+                body = AvatarDto(convertImageBytesToBase64String(photoBytes))
             )
         )
         if (!response.isSuccess) {
@@ -93,7 +89,7 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun deleteProfile(): VolleyResult<Unit, ErrorType> {
-        val response = networkClient.getResponse(ProfileRequest.DeleteProfile(accessToken))
+        val response = networkClient.getResponse(ProfileRequest.DeleteProfile())
         return if (response.isSuccess) {
             VolleyResult.Success(Unit)
         } else {
@@ -102,10 +98,6 @@ class ProfileRepositoryImpl(
     }
 
     private fun handleAvatarNullValue(avatar: String?): String = avatar ?: ""
-
-    fun updateAccessToken(newAccessToken: String) {
-        accessToken = newAccessToken
-    }
 
     private fun convertImageBytesToBase64String(imageBytes: ByteArray?): String? {
         return imageBytes?.let { Base64.encodeToString(it, Base64.DEFAULT) }

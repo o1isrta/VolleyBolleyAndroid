@@ -1,6 +1,12 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
+import cy.volleybolley.auth.domain.api.LoginDataRepository
+import cy.volleybolley.core.data.network.plugin.TokenRefreshPlugin
+import cy.volleybolley.core.presentation.App
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
+import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -10,7 +16,10 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 const val TIMEOUT_MILLIS = 30_000L
@@ -25,7 +34,38 @@ val coreModule = module {
         }
     }
 
+    // Main HttpClient with TokenRefreshPlugin (for all modules except Auth)
     single<HttpClient> {
+        HttpClient(OkHttp) {
+            install(HttpTimeout) {
+                connectTimeoutMillis = TIMEOUT_MILLIS
+                requestTimeoutMillis = TIMEOUT_MILLIS
+                socketTimeoutMillis = TIMEOUT_MILLIS
+            }
+
+            if (BuildConfig.DEBUG) {
+                install(Logging) {
+                    logger = Logger.DEFAULT
+                    level = LogLevel.ALL
+                }
+            }
+
+            install(ContentNegotiation) {
+                json(get())
+            }
+
+            install(TokenRefreshPlugin) {
+                loginDataRepository = get()
+                refreshAccessTokenUseCase = get()
+                onUnauthorized = {
+                    get<LoginDataRepository>().clearAll()
+                }
+            }
+        }
+    }
+
+    // HttpClient WITHOUT TokenRefreshPlugin (for Auth and ReferenceData modules)
+    single<HttpClient>(HttpClientQualifier.NO_ACCESS_TOKEN.qualifier) {
         HttpClient(OkHttp) {
             install(HttpTimeout) {
                 connectTimeoutMillis = TIMEOUT_MILLIS
@@ -45,4 +85,15 @@ val coreModule = module {
             }
         }
     }
+
+    single<CoroutineScope> {
+        (androidContext() as App).applicationScope
+    }
+
+    viewModel { (event: SucceedGame) ->
+        SuccessViewModel(
+            createdEvent = event
+        )
+    }
+    viewModel { HomeScreenViewModel() }
 }

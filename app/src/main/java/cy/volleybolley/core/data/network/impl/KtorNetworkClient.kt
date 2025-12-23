@@ -11,10 +11,10 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
+import io.ktor.http.encodedPath
 import io.ktor.http.isSuccess
-import io.ktor.http.path
+import io.ktor.http.takeFrom
 import org.koin.core.component.KoinComponent
 import org.koin.java.KoinJavaComponent.inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -34,7 +34,7 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
             )
         }.onFailure { error ->
             if (BuildConfig.DEBUG) {
-                Log.e(NETWORK_TAG, "error in getResponse() -> $error", error)
+                Log.e(NETWORK_CLIENT_TAG, "error in getResponse() -> $error", error)
             }
 
             if (error is CancellationException) {
@@ -48,7 +48,11 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
         httpResponse: HttpResponse
     ): Response<SealedResponse> {
         if (BuildConfig.DEBUG) {
-            Log.v(NETWORK_TAG, "Response body = ${httpResponse.bodyAsText()}")
+            Log.v(
+                NETWORK_CLIENT_TAG,
+                "Response body = ${httpResponse.bodyAsText()}, Response status = ${httpResponse.status.value} " +
+                    httpResponse.status.description
+            )
         }
 
         return if (httpResponse.status.isSuccess()) {
@@ -65,11 +69,13 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
         }
     }
 
-    protected fun HttpRequestBuilder.requestConfigure(path: String, accessToken: String?, body: Any? = null) {
-        accessToken?.let { headers.append(HttpHeaders.Authorization, it) }
+    protected fun HttpRequestBuilder.requestConfigure(path: String, body: Any? = null) {
         url {
-            path(path)
+            takeFrom(BuildConfig.BASE_URL)
+            val basePath = encodedPath.removeSuffix("/")
+            encodedPath = "$basePath$path"
         }
+        Log.v(NETWORK_CLIENT_TAG, "→ FINAL URL = ${this.url.buildString()}")
         body?.let {
             contentType(ContentType.Application.Json)
             setBody(body)
@@ -84,6 +90,6 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
     ): SealedResponse
 
     companion object {
-        const val NETWORK_TAG = "NETWORK_TAG"
+        const val NETWORK_CLIENT_TAG = "NETWORK_TAG"
     }
 }

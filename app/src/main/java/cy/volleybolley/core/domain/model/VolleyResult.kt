@@ -25,3 +25,21 @@ inline fun <Data, Error> VolleyResult<Data, Error>.onFailure(action: (Error) -> 
     if (this is VolleyResult.Failure) action(error)
     return this
 }
+
+inline fun <Data, Error, R> VolleyResult<Data, Error>.mapSuccess(
+    transform: (Data) -> R
+): VolleyResult<R, Error> {
+    return when (this) {
+        is VolleyResult.Success -> VolleyResult.Success(transform(data))
+        is VolleyResult.Failure -> VolleyResult.Failure(error)
+    }
+}
+
+inline fun <Data, Error, E2> VolleyResult<Data, Error>.mapFailure(
+    transform: (Error) -> E2
+): VolleyResult<Data, E2> {
+    return when (this) {
+        is VolleyResult.Success -> VolleyResult.Success(data)
+        is VolleyResult.Failure -> VolleyResult.Failure(transform(error))
+    }
+}

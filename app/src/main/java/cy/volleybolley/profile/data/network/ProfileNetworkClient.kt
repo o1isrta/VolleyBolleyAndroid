@@ -1,6 +1,5 @@
 package cy.volleybolley.profile.data.network
 
-import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.impl.KtorNetworkClient
 import cy.volleybolley.profile.data.dto.AvatarDto
 import cy.volleybolley.profile.data.dto.PersonalDataDto
@@ -13,36 +12,36 @@ import io.ktor.http.HttpMethod
 
 class ProfileNetworkClient : KtorNetworkClient<ProfileRequest, ProfileResponse>() {
     override suspend fun sendRequestByType(request: ProfileRequest): HttpResponse {
-        return httpClient.request(urlString = BuildConfig.BASE_URL) {
+        return httpClient.request {
             when (request) {
                 is ProfileRequest.GetPersonalData -> {
                     method = HttpMethod.Get
-                    requestConfigure(request.path, request.accessToken)
+                    requestConfigure(request.path)
                 }
 
                 is ProfileRequest.GetPayments -> {
                     method = HttpMethod.Get
-                    requestConfigure(request.path, request.accessToken)
+                    requestConfigure(request.path)
                 }
 
                 is ProfileRequest.UpdatePersonalData -> {
                     method = HttpMethod.Patch
-                    requestConfigure(request.path, request.accessToken, request.body)
+                    requestConfigure(request.path, body = request.body)
                 }
 
                 is ProfileRequest.UpdatePayments -> {
                     method = HttpMethod.Put
-                    requestConfigure(request.path, request.accessToken, request.body)
+                    requestConfigure(request.path, body = request.body)
                 }
 
                 is ProfileRequest.UpdateProfileAvatar -> {
                     method = HttpMethod.Put
-                    requestConfigure(request.path, request.accessToken, request.body)
+                    requestConfigure(request.path, body = request.body)
                 }
 
                 is ProfileRequest.DeleteProfile -> {
                     method = HttpMethod.Delete
-                    requestConfigure(request.path, request.accessToken)
+                    requestConfigure(request.path)
                 }
             }
         }

@@ -26,12 +26,12 @@ val referenceDataModule = module {
     single<NetworkClient<ReferenceDataRequest, ReferenceDataResponse>>(
         HttpClientQualifier.REFERENCE_DATA.qualifier
     ) {
-        ReferenceDataNetworkClient()
+        ReferenceDataNetworkClient(lazyHttpClient = inject(HttpClientQualifier.NO_ACCESS_TOKEN.qualifier))
     }
 
     single<ReferenceDataRemoteRepository> {
         ReferenceDataRemoteRepositoryImpl(
-            networkClient = get(),
+            networkClient = get(HttpClientQualifier.REFERENCE_DATA.qualifier),
             localRepository = get()
         )
     }
