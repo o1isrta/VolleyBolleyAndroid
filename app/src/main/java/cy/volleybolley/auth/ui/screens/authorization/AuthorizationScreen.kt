@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
-import cy.volleybolley.auth.ui.GoogleSignInHelper
+import cy.volleybolley.auth.ui.google.GoogleSignInHelper
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.LaunchGoogleSignIn
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.NavigateToHome
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.NavigateToRegistration
