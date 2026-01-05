@@ -28,7 +28,7 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
         BasicGameSetupScreenState()
     ) {
     override val tag: String = "BasicGameSetupScreenViewModel"
-    val str: String = R.string.time_picker.toString()
+
     private var timeChangeJob: Job? = null
 
     companion object {
@@ -122,44 +122,48 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     private fun startTimeChanged(time: VolleyTimeStamp?) {
         timeChangeJob?.cancel()
         viewModelScope.launch {
-            Log.d(str, "ViewModel: Received OnEndTimeChanged event: $time")
             delay(DEBOUNCE_DELAY_300MS) // Дебаунс 300ms
             uiStateMutable.value = uiStateMutable.value.copy(
                 startTime = time
             )
-            Log.d(str, "ViewModel: New UI State: ${uiStateMutable.value}")
         }
     }
 
     private fun finishTimeChanged(time: VolleyTimeStamp?) {
         timeChangeJob?.cancel()
         viewModelScope.launch {
-            Log.d(str, "ViewModel: Received OnEndTimeChanged event: $time")
             delay(DEBOUNCE_DELAY_300MS) // Дебаунс 300ms
             uiStateMutable.value = uiStateMutable.value.copy(
                 finishTime = time
             )
-            Log.d(str, "ViewModel: New UI State: ${uiStateMutable.value}")
         }
     }
 
     private fun playerLevelSelected(levels: Set<Level>) {
         if (levels.isEmpty()) {
-            sendUiEffect(BasicGameSetupScreenEffect.ShowError(message = R.string.please_select_player_level.toString()))
+            sendUiEffect(BasicGameSetupScreenEffect.ShowErrorMessageById(messageId = R.string.please_select_player_level))
         } else {
             uiStateMutable.value = uiStateMutable.value.copy(levels = levels)
         }
     }
 
     private fun onNextStepClick() {
-        val message: String = validateData()
+        val messageId: Int = validateData()
+        if (messageId < 0) {
+            nextStep()
+        } else {
+            sendUiEffect(
+                BasicGameSetupScreenEffect.ShowErrorMessageById(messageId = messageId)
+            )
+        }
+      /*  val message: String = validateData()
         if (message.isEmpty()) {
             nextStep()
         } else {
             sendUiEffect(
                 BasicGameSetupScreenEffect.ShowError(message = message)
             )
-        }
+        }*/
     }
 
     private fun nextStep() { // если accountNumber != Null, аккаунт существует
@@ -168,7 +172,7 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
             getErrorLogMessage = { "Error: ${it.message ?: "Unknown error"}" },
             onError = { er ->
                 sendUiEffect(
-                    BasicGameSetupScreenEffect.ShowError(
+                    BasicGameSetupScreenEffect.ShowErrorMessage(
                         er.message ?: "Failed to check account"
                     )
                 )
@@ -190,19 +194,19 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
 
     /** Проверяет собранные на экране данные
      * */
-    private fun validateData(): String {
+    private fun validateData(): Int {
         val startTime = uiStateMutable.value.startTime
         val finishTime = uiStateMutable.value.finishTime
 
         return when {
-            startTime == null || finishTime == null -> "Please select both start and end times."
-            finishTime.compareTo(startTime) <= 0 -> "The end time of the game must be after the start time."
+            startTime == null || finishTime == null -> R.string.please_select_both_start_and_end_times
+            finishTime.compareTo(startTime) <= 0 -> R.string.end_time_of_the_game_must_be
             else -> {
                 val durationMinutes = calculateDurationMinutes(startTime, finishTime)
                 when {
-                    durationMinutes < MINIMUM_GAME_DURATION_MINUTES -> "The game duration must be at least one hour."
-                    durationMinutes > MAXIMUM_GAME_DURATION_MINUTES -> "The game duration must be no more than 4 hours."
-                    else -> ""
+                    durationMinutes < MINIMUM_GAME_DURATION_MINUTES -> R.string.game_duration_at_least_1_hour
+                    durationMinutes > MAXIMUM_GAME_DURATION_MINUTES -> R.string.game_duration_no_more_than_4_hours
+                    else -> -1
                 }
             }
         }

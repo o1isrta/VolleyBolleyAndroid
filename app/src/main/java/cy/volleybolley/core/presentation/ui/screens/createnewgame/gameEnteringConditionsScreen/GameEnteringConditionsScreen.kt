@@ -52,11 +52,6 @@ import cy.volleybolley.profile.domain.model.PaymentType
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.serialization.json.Json
 
-object GameEnteringConditionsScreenConstants {
-    const val PUBLIC = 1
-    const val PRIVATE = 2
-}
-
 @Composable
 fun GameEnteringConditionsScreen(
     navController: NavHostController,
@@ -117,7 +112,7 @@ private fun ObserveUiEffects(
         val str: String = context.getString(R.string.game_entering_conditions_screen)
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
-                is GameEnteringConditionsScreenEffect.ShowError ->
+                is GameEnteringConditionsScreenEffect.ShowErrorMessage ->
                     Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_SHORT).show()
 
                 is GameEnteringConditionsScreenEffect.NavigateToPayments ->

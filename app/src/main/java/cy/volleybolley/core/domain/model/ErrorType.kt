@@ -7,6 +7,5 @@ enum class ErrorType {
     SERVER_ERROR,
     UNAUTHORIZED,
     NO_REFRESH_TOKEN,
-    UNKNOWN_ERROR,
-    NETWORK_ERROR
+    UNKNOWN_ERROR
 }

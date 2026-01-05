@@ -22,7 +22,6 @@ object DiProvider {
         profileModule,
         playersModule,
         referenceDataModule,
-        profileModule,
         screensModule,
         createNewGameModule,
         launchModule,

@@ -267,8 +267,19 @@
     <string name="game_entering_conditions_screen">GameEnteringConditionsScreen</string>
     <string name="privacy_options_screen">PrivacyOptionsScreen</string>
     <string name="time_picker">TimePicker</string>
-    <string name="please_select_player_level">Please, select player level!"</string>
-    <string name="previous_month">Previous Month"</string>
-    <string name="next_month">"Next Month"</string>
-    <string name="next_year">"Next Year"</string>
+    <string name="please_select_player_level">Please, select player level!</string>
+    <string name="previous_month">Previous Month</string>
+    <string name="next_month">Next Month</string>
+    <string name="next_year">Next Year</string>
+    <string name="please_select_both_start_and_end_times">Please select both start and end times.</string>
+    <string name="end_time_of_the_game_must_be">The end time of the game must be after the start time.</string>
+    <string name="game_duration_at_least_1_hour">The game duration must be at least one hour.</string>
+    <string name="game_duration_no_more_than_4_hours">The game duration must be no more than 4 hours.</string>
+    <string name="authentication_required">Authentication required</string>
+    <string name="network_unavailable">Network unavailable, please check your connection</string>
+    <string name="server_is_busy">Server is busy, please try again later.</string>
+    <string name="an_unexpected_error_occurred">An unexpected error occurred.</string>
+    <string name="bad_request">Bad request</string>
+    <string name="no_refresh_token">No refresh token</string>
+    <string name="network_error">Network error</string>
 </resources>

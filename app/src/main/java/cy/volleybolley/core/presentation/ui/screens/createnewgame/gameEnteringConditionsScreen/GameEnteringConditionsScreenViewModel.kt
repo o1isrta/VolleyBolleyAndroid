@@ -124,7 +124,7 @@ open class GameEnteringConditionsScreenViewModel(
             getErrorLogMessage = { "Error saving game: ${it.message ?: "Unknown error"}" },
             onError = { er ->
                 uiStateMutable.update { it.copy(isLoading = false, errorMessage = er.message ?: "Failed to save game") }
-                sendUiEffect(GameEnteringConditionsScreenEffect.ShowError(er.message ?: "Failed to save game"))
+                sendUiEffect(GameEnteringConditionsScreenEffect.ShowErrorMessage(er.message ?: "Failed to save game"))
             }
         ) {
             gameRepository.updateGameData { gameData ->
@@ -146,7 +146,7 @@ open class GameEnteringConditionsScreenViewModel(
             dispatcher = Dispatchers.IO,
             getErrorLogMessage = { "Error checking account existence: ${it.message ?: "Unknown error"}" },
             onError = { er ->
-                sendUiEffect(GameEnteringConditionsScreenEffect.ShowError(er.message ?: "Failed to check account"))
+                sendUiEffect(GameEnteringConditionsScreenEffect.ShowErrorMessage(er.message ?: "Failed to check account"))
             }
         ) {
             val accountNumber = getAccountNumber() // Получение номера счета (аккаунта), если он есть

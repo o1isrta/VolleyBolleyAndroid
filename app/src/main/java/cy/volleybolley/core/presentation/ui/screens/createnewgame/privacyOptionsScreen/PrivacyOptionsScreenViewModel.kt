@@ -1,6 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen
 
 import androidx.lifecycle.viewModelScope
+import cy.volleybolley.R
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.base.BaseViewModel
@@ -25,6 +26,7 @@ open class PrivacyOptionsScreenViewModel(
     PrivacyOptionsScreenState()
 ) {
     override val tag: String = "PrivacyOptionsScreenViewModel"
+
     private var searchJob: Job? = null
 
     companion object {
@@ -108,8 +110,8 @@ open class PrivacyOptionsScreenViewModel(
         }
     }
 
-    private fun handleSearchError(throwable: Throwable /* , query: String */) {
-        sendUiEffect(PrivacyOptionsScreenEffect.ShowError(throwable.localizedMessage ?: "Unknown error"))
+    private fun handleSearchError(throwable: Throwable) {
+        sendUiEffect(PrivacyOptionsScreenEffect.ShowErrorMessage(throwable.localizedMessage ?: "Unknown error"))
         uiStateMutable.update {
             it.copy(
                 isLoading = false,
@@ -144,18 +146,17 @@ open class PrivacyOptionsScreenViewModel(
     }
 
     private fun handleFailure(error: ErrorType) {
-        val errorMessage = when (error) {
-            ErrorType.UNAUTHORIZED -> "Authentication required"
-            ErrorType.NO_CONNECTION -> "Network unavailable, please check your connection."
-            ErrorType.SERVER_ERROR -> "Server is busy, please try again later."
-            ErrorType.NOT_FOUND -> "No players found."
-            ErrorType.UNKNOWN_ERROR -> "An unexpected error occurred."
-            ErrorType.BAD_REQUEST -> "Bad request"
-            ErrorType.NO_REFRESH_TOKEN -> "No refresh token"
-            ErrorType.NETWORK_ERROR -> "Network error"
+        val errorMessageId = when (error) {
+            ErrorType.UNAUTHORIZED -> R.string.authentication_required
+            ErrorType.NO_CONNECTION -> R.string.network_unavailable
+            ErrorType.SERVER_ERROR -> R.string.server_is_busy
+            ErrorType.NOT_FOUND -> R.string.no_players_found
+            ErrorType.UNKNOWN_ERROR -> R.string.an_unexpected_error_occurred
+            ErrorType.BAD_REQUEST -> R.string.bad_request
+            ErrorType.NO_REFRESH_TOKEN -> R.string.no_refresh_token
         }
 
-        sendUiEffect(PrivacyOptionsScreenEffect.ShowError(errorMessage))
+        sendUiEffect(PrivacyOptionsScreenEffect.ShowErrorMessageById(errorMessageId))
         uiStateMutable.update {
             it.copy(
                 isLoading = false,

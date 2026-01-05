@@ -7,7 +7,7 @@ sealed class GameEnteringConditionsScreenEffect : UiEffect {
         GameEnteringConditionsScreenEffect() // Навигация к экрану создания аккаунта (PaymentsScreen )
 
     object NavigateToSuccess : GameEnteringConditionsScreenEffect() // Навигация к экрану Success
-    data class ShowError(val message: String) : GameEnteringConditionsScreenEffect()
+    data class ShowErrorMessage(val message: String) : GameEnteringConditionsScreenEffect()
     object NavigateBack : GameEnteringConditionsScreenEffect()
     object NavigateToPrivacy :
         GameEnteringConditionsScreenEffect() // навигация к экрану PrivacyOptions (поиск и выбор игроков)

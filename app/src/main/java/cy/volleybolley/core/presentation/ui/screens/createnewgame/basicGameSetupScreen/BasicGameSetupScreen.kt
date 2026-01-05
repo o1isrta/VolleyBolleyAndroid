@@ -42,12 +42,16 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackA
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
+import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.navigation.GameEnteringConditionsRoute
 import cy.volleybolley.core.presentation.ui.navigation.SearchCourtRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Gender
+import cy.volleybolley.courts.domain.model.Court
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 
@@ -64,7 +68,28 @@ fun BasicGameSetupScreen(
     ObserveUiEffects(viewModel, navController, context)
 
     // Отображение контента
-    ContentDisplay(state, scrollState, paddingFromSystemUi, viewModel)
+    ContentDisplay(
+        state = state,
+        scrollState = scrollState,
+        paddingFromSystemUi = paddingFromSystemUi,
+        onBackClicked = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnBackClicked) },
+        onMessageChanged = { viewModel.obtainEvent(BasicGameSetupScreenEvent.MessageChanged(it)) },
+        onChangeClick = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnChangeClick) },
+        onTodayClicked = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnTodayClicked) },
+        onPickDateClicked = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked) },
+        onDateSelected = { viewModel.obtainEvent(BasicGameSetupScreenEvent.DateSelected(it)) },
+        onStartTimeChanged = { viewModel.obtainEvent(BasicGameSetupScreenEvent.StartTimeChanged(it)) },
+        onFinishTimeChanged = { viewModel.obtainEvent(BasicGameSetupScreenEvent.FinishTimeChanged(it)) },
+        onGenderSelected = { viewModel.obtainEvent(BasicGameSetupScreenEvent.GenderSelected(it)) },
+        onPlayerLevelSelected = { viewModel.obtainEvent(BasicGameSetupScreenEvent.PlayerLevelSelected(it)) },
+        onNextStepClick = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnNextStepClick) },
+        showCalendar = viewModel.showCalendar.collectAsState().value,
+        isSameDay = { viewModel.isSameDay(state.date, LocalDate.now()) }
+       /* state,
+        scrollState,
+        paddingFromSystemUi,
+        viewModel*/
+    )
 }
 
 @Composable
@@ -88,8 +113,13 @@ private fun ObserveUiEffects(
                     navController.navigate(GameEnteringConditionsRoute)
                 }
 
-                is BasicGameSetupScreenEffect.ShowError -> {
+                is BasicGameSetupScreenEffect.ShowErrorMessage -> {
                     Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_SHORT).show()
+                }
+
+                is BasicGameSetupScreenEffect.ShowErrorMessageById -> {
+                    val errorMessage = context.getString(effect.messageId)
+                    Toast.makeText(context, "Error: ${errorMessage}", Toast.LENGTH_SHORT).show()
                 }
 
                 else -> { // Обработка всех возможных случаев
@@ -105,7 +135,19 @@ private fun ContentDisplay(
     state: BasicGameSetupScreenState,
     scrollState: ScrollState,
     paddingFromSystemUi: PaddingValues,
-    viewModel: BasicGameSetupScreenViewModel
+    onBackClicked: () -> Unit,
+    onMessageChanged: (String) -> Unit,
+    onChangeClick: () -> Unit,
+    onTodayClicked: () -> Unit,
+    onPickDateClicked: () -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
+    onStartTimeChanged: (VolleyTimeStamp?) -> Unit,
+    onFinishTimeChanged: (VolleyTimeStamp?) -> Unit,
+    onGenderSelected: (Gender) -> Unit,
+    onPlayerLevelSelected: (Set<Level>) -> Unit,
+    onNextStepClick: () -> Unit,
+    showCalendar: Boolean,
+    isSameDay: () -> Boolean
 ) {
     if (state.isLoading) {
         VolleySimpleComponent.LoadingIndicator()
@@ -128,37 +170,37 @@ private fun ContentDisplay(
                 ) {
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
 
-                    TitleSection(viewModel)
+                    TitleSection(onBackClicked)
 
                     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                     Column(modifier = Modifier.verticalScroll(scrollState)) {
-                        MessageSection(state, viewModel)
+                        MessageSection(state.message, onMessageChanged)
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                         VolleySimpleComponent.DividerLine()
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-                        PlaceSection(state, viewModel)
+                        PlaceSection(state.placeCourt, onChangeClick)
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                         VolleySimpleComponent.DividerLine()
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-                        DateSection(state, viewModel)
+                        DateSection(state.date, onTodayClicked, onPickDateClicked, onDateSelected, showCalendar, isSameDay)
 
-                        TimeSection(state, viewModel)
-
-                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-                        VolleySimpleComponent.DividerLine()
-                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-                        GenderSection(state, viewModel)
+                        TimeSection(state.startTime, state.finishTime, onStartTimeChanged, onFinishTimeChanged)
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                         VolleySimpleComponent.DividerLine()
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-                        LevelSection(state, viewModel)
+                        GenderSection(state.gender, onGenderSelected)
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                        VolleySimpleComponent.DividerLine()
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+
+                        LevelSection(state.levels, onPlayerLevelSelected)
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                         NextButtonSection(
@@ -166,7 +208,7 @@ private fun ContentDisplay(
                                 .height(44.dp)
                                 .align(Alignment.CenterHorizontally)
                                 .fillMaxWidth(),
-                            viewModel
+                            onNextStepClick
                         )
 
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
@@ -179,20 +221,20 @@ private fun ContentDisplay(
 
 // Секции для ContentDisplay
 @Composable
-private fun TitleSection(viewModel: BasicGameSetupScreenViewModel) {
+private fun TitleSection(onBackClicked: () -> Unit) {
     TitleWithBackArrow(
         title = stringResource(R.string.create_a_game),
         modifier = Modifier.fillMaxWidth(),
-        onBackClick = {
+        onBackClick = onBackClicked /*{
             viewModel.obtainEvent(
                 BasicGameSetupScreenEvent.OnBackClicked
             )
-        }
+        }*/
     )
 }
 
 @Composable
-private fun MessageSection(state: BasicGameSetupScreenState, viewModel: BasicGameSetupScreenViewModel) {
+private fun MessageSection(message:String, onMessageChanged: (String) -> Unit) {
     VolleyText.TitleMedium(
         text = stringResource(R.string.your_message),
         modifier = Modifier.fillMaxWidth(),
@@ -202,20 +244,20 @@ private fun MessageSection(state: BasicGameSetupScreenState, viewModel: BasicGam
     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
     VolleyMessageTextField.MessageField(
         hint = stringResource(R.string.leave_a_note_for_players),
-        textInput = state.message,
+        textInput = message,
         modifier = Modifier.height(VolleyDimens.DIMEN_106.dp),
-        actionToTransferContent = { newMessage ->
+        actionToTransferContent = onMessageChanged /*{ newMessage ->
             viewModel.obtainEvent(
                 BasicGameSetupScreenEvent.MessageChanged(newMessage)
             )
-        }
+        }*/
     )
 }
 
 @Composable
 private fun PlaceSection(
-    state: BasicGameSetupScreenState,
-    viewModel: BasicGameSetupScreenViewModel
+    placeCourt: Court,
+    onChangeClick: () -> Unit
 ) {
     VolleyText.TitleMedium(
         text = stringResource(R.string.place),
@@ -244,14 +286,14 @@ private fun PlaceSection(
             Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
             Column(horizontalAlignment = Alignment.Start) {
                 VolleyText.BodyBold(
-                    text = state.placeCourt.location.courtName,
+                    text = placeCourt.location.courtName,
                     modifier = Modifier,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = VolleyColor.White
                 )
                 VolleyText.BodyLight(
-                    text = state.placeCourt.location.locationName,
+                    text = placeCourt.location.locationName,
                     modifier = Modifier,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -263,21 +305,25 @@ private fun PlaceSection(
         VolleyButton.ActiveGradientButton(
             modifier = Modifier,
             text = stringResource(R.string.change),
-            onClick = {
+            onClick = onChangeClick /*{
                 viewModel.obtainEvent(
                     BasicGameSetupScreenEvent.OnChangeClick
                 )
-            }
+            }*/
         )
     }
 }
 
 @Composable
 private fun DateSection(
-    state: BasicGameSetupScreenState,
-    viewModel: BasicGameSetupScreenViewModel
+    date: LocalDate,
+    onTodayClicked: () -> Unit,
+    onPickDateClicked: () -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
+    showCalendar: Boolean,
+    isSameDay: () -> Boolean
 ) {
-    val showCalendar = viewModel.showCalendar.collectAsState().value
+    //val showCalendar = viewModel.showCalendar.collectAsState().value
 
     VolleyText.TitleMedium(
         text = stringResource(R.string.date),
@@ -288,16 +334,16 @@ private fun DateSection(
     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
     val str: String = R.string.basic_game_setup_screen.toString()
     VolleyButton.GroupButtonsForDate2(
-        checkId = if (viewModel.isSameDay(state.date, LocalDate.now())) 1 else 2,
+        checkId = if (isSameDay()) 1 else 2,
         modifier = Modifier,
         onSelected = { position ->
             when (position) {
                 1 -> { // Сегодня
-                    viewModel.obtainEvent(BasicGameSetupScreenEvent.OnTodayClicked)
+                    onTodayClicked()   //viewModel.obtainEvent(BasicGameSetupScreenEvent.OnTodayClicked)
                 }
 
                 2 -> { // Выбрать Дату (Pick Date)
-                    viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked)
+                    onPickDateClicked() //viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked)
                 }
 
                 else -> { // Обработка нераспознанной позиции
@@ -311,14 +357,14 @@ private fun DateSection(
     // Календарь показывается только если выбрана кнопка "Pick Date"
     if (showCalendar) { // Используем флаг из ViewModel
         VolleyCalendar.GameCalendar(
-            selectedDate = state.date,
-            onDateSelected = { selectedDate ->
+            selectedDate = date,
+            onDateSelected = onDateSelected /*{ selectedDate ->
                 viewModel.obtainEvent(
                     BasicGameSetupScreenEvent.DateSelected(
                         selectedDate
                     )
                 )
-            }
+            }*/
         )
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
     }
@@ -326,8 +372,10 @@ private fun DateSection(
 
 @Composable
 private fun TimeSection(
-    state: BasicGameSetupScreenState,
-    viewModel: BasicGameSetupScreenViewModel
+    startTime: VolleyTimeStamp?,
+    finishTime: VolleyTimeStamp?,
+    onStartTimeChanged: (VolleyTimeStamp?) -> Unit,
+    onFinishTimeChanged: (VolleyTimeStamp?) -> Unit
 ) {
     VolleyText.BodyBold(
         text = stringResource(R.string.game_duration),
@@ -349,11 +397,12 @@ private fun TimeSection(
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
         VolleyTextFieldAttribute.DurationFieldWithArrows(
-            inputTime = state.startTime
+            inputTime = startTime
         ) { time ->
-            viewModel.obtainEvent(
+            onStartTimeChanged(time)
+           /* viewModel.obtainEvent(
                 BasicGameSetupScreenEvent.StartTimeChanged(time)
-            )
+            )*/
         }
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
@@ -365,19 +414,20 @@ private fun TimeSection(
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
         VolleyTextFieldAttribute.DurationFieldWithArrows(
-            inputTime = state.finishTime
+            inputTime = finishTime
         ) { time ->
-            viewModel.obtainEvent(
+            onFinishTimeChanged(time)
+            /*viewModel.obtainEvent(
                 BasicGameSetupScreenEvent.FinishTimeChanged(time)
-            )
+            )*/
         }
     }
 }
 
 @Composable
 private fun GenderSection(
-    state: BasicGameSetupScreenState,
-    viewModel: BasicGameSetupScreenViewModel
+    gender: Gender,
+    onGenderSelected: (Gender) -> Unit
 ) {
     VolleyText.TitleMedium(
         text = stringResource(R.string.gender),
@@ -387,7 +437,7 @@ private fun GenderSection(
 
     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
     VolleyButton.GroupButtonsForGender3(
-        checkId = when (state.gender) {
+        checkId = when (gender) {
             Gender.Mix -> 1
             Gender.Men -> 2
             Gender.Women -> 3
@@ -401,7 +451,8 @@ private fun GenderSection(
                 else -> null // Обработка некорректной позиции
             }
             selectedGender?.let { gender ->
-                viewModel.obtainEvent(BasicGameSetupScreenEvent.GenderSelected(gender))
+               onGenderSelected(gender)
+            // viewModel.obtainEvent(BasicGameSetupScreenEvent.GenderSelected(gender))
             } ?: run { // Обработка нераспознанной позиции
                 Log.e("BasicGameSetupScreen", "Unrecognized position: $position")
             }
@@ -411,8 +462,8 @@ private fun GenderSection(
 
 @Composable
 private fun LevelSection(
-    state: BasicGameSetupScreenState,
-    viewModel: BasicGameSetupScreenViewModel
+    levels: Set<Level>,
+    onPlayerLevelSelected: (Set<Level>) -> Unit
 ) {
     VolleyText.TitleMedium(
         text = stringResource(R.string.player_level),
@@ -423,28 +474,28 @@ private fun LevelSection(
     Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
     VolleyButton.GroupButtonsForLevelMulti(
         modifier = Modifier,
-        checkedLevels = state.levels,
-        onSelected = { levels ->
+        checkedLevels = levels,
+        onSelected = onPlayerLevelSelected /*{ levels ->
             viewModel.obtainEvent(
                 BasicGameSetupScreenEvent.PlayerLevelSelected(levels)
             )
-        }
+        }*/
     )
 }
 
 @Composable
 private fun NextButtonSection(
     modifier: Modifier,
-    viewModel: BasicGameSetupScreenViewModel
+    onNextStepClick: () -> Unit
 ) {
     VolleyButton.ActiveButton(
         modifier = modifier,
         text = stringResource(R.string.next_step),
-        onClick = {
+        onClick = onNextStepClick /*{
             viewModel.obtainEvent(
                 BasicGameSetupScreenEvent.OnNextStepClick
             )
-        }
+        }*/
     )
 }
 

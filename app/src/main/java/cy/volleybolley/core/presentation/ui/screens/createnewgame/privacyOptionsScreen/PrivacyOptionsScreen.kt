@@ -40,11 +40,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.players.domain.model.Player
 import kotlinx.coroutines.flow.collectLatest
 
-object PrivacyOptionsScreenConstants {
-    const val ALL_PLAYERS = 1
-    const val FAVORITE_PLAYERS = 2
-}
-
 @Composable
 fun PrivacyOptionsScreen(
     navController: NavHostController,
@@ -91,7 +86,7 @@ private fun ObserveUiEffects(
     LaunchedEffect(viewModel.uiEffect) { // подписываемся на Effect
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
-                is PrivacyOptionsScreenEffect.ShowError -> {
+                is PrivacyOptionsScreenEffect.ShowErrorMessage -> {
                     Log.d(str, "ShowError effect triggered: ${effect.message}")
                     Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_LONG).show()
                 }
@@ -150,9 +145,11 @@ fun PrivacyOptionsContent(
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
                 VolleyButton.SliderButtonsPlayers(
                     modifier = Modifier.fillMaxWidth(),
-                    checkId = if (state.flagFavorites)
+                    checkId = if (state.flagFavorites) {
                         PrivacyOptionsScreenConstants.FAVORITE_PLAYERS
-                    else PrivacyOptionsScreenConstants.ALL_PLAYERS,
+                    } else {
+                        PrivacyOptionsScreenConstants.ALL_PLAYERS
+                    },
                     onSelected = onAllOrFavoritesSelected
                 )
 
