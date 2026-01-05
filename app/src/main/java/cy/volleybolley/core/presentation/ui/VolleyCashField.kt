@@ -35,7 +35,7 @@ object VolleyCashField {
         value: String,
         currency: String,
         inputSymbolLimit: Int = VolleyDimens.DIMEN_6,
-        actionToTransferContent: (String) -> Unit,
+        onValueChanged: (String) -> Unit,
     ) {
         val textStyle = remember {
             VolleyTypography.BodyRegular.copy(color = VolleyColor.White, textAlign = TextAlign.Start)
@@ -58,9 +58,9 @@ object VolleyCashField {
             ) {
                 BasicTextField(
                     value = correctValue,
-                    onValueChange = { value ->
-                        actionToTransferContent(
-                            value.trim().take(inputSymbolLimit)
+                    onValueChange = { newValue ->
+                        onValueChanged(
+                            newValue.trim().take(inputSymbolLimit)
                         )
                     },
                     singleLine = true,
