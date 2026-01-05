@@ -40,6 +40,11 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.players.domain.model.Player
 import kotlinx.coroutines.flow.collectLatest
 
+object PrivacyOptionsScreenConstants {
+    const val ALL_PLAYERS = 1
+    const val FAVORITE_PLAYERS = 2
+}
+
 @Composable
 fun PrivacyOptionsScreen(
     navController: NavHostController,
@@ -56,8 +61,22 @@ fun PrivacyOptionsScreen(
     } else {
         PrivacyOptionsContent(
             state = state,
-            viewModel = viewModel,
-            paddingFromSystemUi = paddingFromSystemUi
+            paddingFromSystemUi = paddingFromSystemUi,
+            onBackClick = { viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnBackClicked) },
+            onQueryChanged = { newQuery -> viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnQueryChanged(newQuery)) },
+            onAllOrFavoritesSelected = { position ->
+                val isFavorite = position == PrivacyOptionsScreenConstants.FAVORITE_PLAYERS
+                viewModel.obtainEvent(PrivacyOptionsScreenEvent.AllOrFavoritesSelected(isFavorite))
+            },
+            onPlayerSelectionClick = { player ->
+                viewModel.obtainEvent(
+                    PrivacyOptionsScreenEvent.OnPlayerSelectionClick(
+                        player
+                    )
+                )
+            },
+            onAddSelectedClick = { viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnAddSelectedClick) },
+            isPlayerSelected = { player -> viewModel.isPlayerSelected(player) }
         )
     }
 }
@@ -93,8 +112,13 @@ private fun ObserveUiEffects(
 @Composable
 fun PrivacyOptionsContent(
     state: PrivacyOptionsScreenState,
-    viewModel: PrivacyOptionsScreenViewModel,
-    paddingFromSystemUi: PaddingValues
+    paddingFromSystemUi: PaddingValues,
+    onBackClick: () -> Unit,
+    onQueryChanged: (String) -> Unit,
+    onAllOrFavoritesSelected: (Int) -> Unit,
+    onPlayerSelectionClick: (Player) -> Unit,
+    onAddSelectedClick: () -> Unit,
+    isPlayerSelected: (Player) -> Boolean
 ) {
     Column(
         modifier = Modifier.padding(paddingFromSystemUi)
@@ -113,26 +137,23 @@ fun PrivacyOptionsContent(
                 TitleWithBackArrow(
                     title = stringResource(R.string.private_game),
                     modifier = Modifier.fillMaxWidth(),
-                    onBackClick = { viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnBackClicked) }
+                    onBackClick = onBackClick
                 )
 
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
                 VolleyTextFieldGradient.SearchField(
                     modifier = Modifier,
                     text = state.query,
-                    actionToTransferContent = { newQuery ->
-                        viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnQueryChanged(newQuery))
-                    }
+                    actionToTransferContent = onQueryChanged
                 ) { }
 
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
                 VolleyButton.SliderButtonsPlayers(
                     modifier = Modifier.fillMaxWidth(),
-                    checkId = if (state.flagFavorites) 2 else 1,
-                    onSelected = { position ->
-                        val isFavorite = position == 2
-                        viewModel.obtainEvent(PrivacyOptionsScreenEvent.AllOrFavoritesSelected(isFavorite))
-                    }
+                    checkId = if (state.flagFavorites)
+                        PrivacyOptionsScreenConstants.FAVORITE_PLAYERS
+                    else PrivacyOptionsScreenConstants.ALL_PLAYERS,
+                    onSelected = onAllOrFavoritesSelected
                 )
 
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
@@ -153,9 +174,9 @@ fun PrivacyOptionsContent(
                     filteredPlayers.forEach { player ->
                         VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
                             player = player,
-                            isSelected = viewModel.isPlayerSelected(player),
+                            isSelected = isPlayerSelected(player),
                             onAction = {
-                                viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnPlayerSelectionClick(player))
+                                onPlayerSelectionClick(player)
                             }
                         )
                     }
@@ -164,11 +185,11 @@ fun PrivacyOptionsContent(
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_24.dp))
                 VolleyButton.ActiveButton(
                     modifier = Modifier
-                        .height(44.dp)
+                        .height(VolleyDimens.DIMEN_44.dp)
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth(),
                     text = stringResource(R.string.add_selected),
-                    onClick = { viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnAddSelectedClick) }
+                    onClick = onAddSelectedClick
                 )
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
             }
