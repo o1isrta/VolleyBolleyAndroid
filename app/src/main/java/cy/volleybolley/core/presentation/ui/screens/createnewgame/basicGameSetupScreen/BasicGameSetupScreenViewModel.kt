@@ -1,7 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.R
@@ -158,14 +157,6 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
                 BasicGameSetupScreenEffect.ShowErrorMessageById(messageId = messageId)
             )
         }
-      /*  val message: String = validateData()
-        if (message.isEmpty()) {
-            nextStep()
-        } else {
-            sendUiEffect(
-                BasicGameSetupScreenEffect.ShowError(message = message)
-            )
-        }*/
     }
 
     private fun nextStep() { // если accountNumber != Null, аккаунт существует

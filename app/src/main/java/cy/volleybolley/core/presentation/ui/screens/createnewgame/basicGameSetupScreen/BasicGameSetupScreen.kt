@@ -116,7 +116,7 @@ private fun ObserveUiEffects(
 
                 is BasicGameSetupScreenEffect.ShowErrorMessageById -> {
                     val errorMessage = context.getString(effect.messageId)
-                    Toast.makeText(context, "Error: ${errorMessage}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
                 }
 
                 else -> Log.w("BasicGameSetupScreen", "Unhandled effect: $effect")
