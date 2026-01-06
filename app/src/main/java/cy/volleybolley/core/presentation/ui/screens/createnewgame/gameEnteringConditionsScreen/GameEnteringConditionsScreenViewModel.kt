@@ -146,7 +146,9 @@ open class GameEnteringConditionsScreenViewModel(
             dispatcher = Dispatchers.IO,
             getErrorLogMessage = { "Error checking account existence: ${it.message ?: "Unknown error"}" },
             onError = { er ->
-                sendUiEffect(GameEnteringConditionsScreenEffect.ShowErrorMessage(er.message ?: "Failed to check account"))
+                sendUiEffect(
+                    GameEnteringConditionsScreenEffect.ShowErrorMessage(er.message ?: "Failed to check account")
+                )
             }
         ) {
             val accountNumber = getAccountNumber() // Получение номера счета (аккаунта), если он есть

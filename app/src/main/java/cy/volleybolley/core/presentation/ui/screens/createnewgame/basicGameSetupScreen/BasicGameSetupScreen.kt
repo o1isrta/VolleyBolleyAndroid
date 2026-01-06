@@ -51,7 +51,6 @@ import cy.volleybolley.core.presentation.ui.navigation.GameEnteringConditionsRou
 import cy.volleybolley.core.presentation.ui.navigation.SearchCourtRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Gender
 import cy.volleybolley.courts.domain.model.Court
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 
@@ -84,11 +83,9 @@ fun BasicGameSetupScreen(
         onPlayerLevelSelected = { viewModel.obtainEvent(BasicGameSetupScreenEvent.PlayerLevelSelected(it)) },
         onNextStepClick = { viewModel.obtainEvent(BasicGameSetupScreenEvent.OnNextStepClick) },
         showCalendar = viewModel.showCalendar.collectAsState().value,
-        isSameDay = { viewModel.isSameDay(state.date, LocalDate.now()) }
-       /* state,
-        scrollState,
-        paddingFromSystemUi,
-        viewModel*/
+        isSameDay = {
+            viewModel.isSameDay(state.date, LocalDate.now())
+        }
     )
 }
 
@@ -122,9 +119,7 @@ private fun ObserveUiEffects(
                     Toast.makeText(context, "Error: ${errorMessage}", Toast.LENGTH_SHORT).show()
                 }
 
-                else -> { // Обработка всех возможных случаев
-                    Log.w("BasicGameSetupScreen", "Unhandled effect: $effect")
-                }
+                else -> Log.w("BasicGameSetupScreen", "Unhandled effect: $effect")
             }
         }
     }
@@ -186,7 +181,14 @@ private fun ContentDisplay(
                         VolleySimpleComponent.DividerLine()
                         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
 
-                        DateSection(state.date, onTodayClicked, onPickDateClicked, onDateSelected, showCalendar, isSameDay)
+                        DateSection(
+                            state.date,
+                            onTodayClicked,
+                            onPickDateClicked,
+                            onDateSelected,
+                            showCalendar,
+                            isSameDay
+                        )
 
                         TimeSection(state.startTime, state.finishTime, onStartTimeChanged, onFinishTimeChanged)
 
@@ -225,16 +227,12 @@ private fun TitleSection(onBackClicked: () -> Unit) {
     TitleWithBackArrow(
         title = stringResource(R.string.create_a_game),
         modifier = Modifier.fillMaxWidth(),
-        onBackClick = onBackClicked /*{
-            viewModel.obtainEvent(
-                BasicGameSetupScreenEvent.OnBackClicked
-            )
-        }*/
+        onBackClick = onBackClicked
     )
 }
 
 @Composable
-private fun MessageSection(message:String, onMessageChanged: (String) -> Unit) {
+private fun MessageSection(message: String, onMessageChanged: (String) -> Unit) {
     VolleyText.TitleMedium(
         text = stringResource(R.string.your_message),
         modifier = Modifier.fillMaxWidth(),
@@ -246,11 +244,7 @@ private fun MessageSection(message:String, onMessageChanged: (String) -> Unit) {
         hint = stringResource(R.string.leave_a_note_for_players),
         textInput = message,
         modifier = Modifier.height(VolleyDimens.DIMEN_106.dp),
-        actionToTransferContent = onMessageChanged /*{ newMessage ->
-            viewModel.obtainEvent(
-                BasicGameSetupScreenEvent.MessageChanged(newMessage)
-            )
-        }*/
+        actionToTransferContent = onMessageChanged
     )
 }
 
@@ -275,7 +269,7 @@ private fun PlaceSection(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.weight(1f), // Важно. Занимает только часть доступного пространства,
+            modifier = Modifier.weight(1f),
             horizontalArrangement = Arrangement.Start
         ) {
             Image(
@@ -305,11 +299,7 @@ private fun PlaceSection(
         VolleyButton.ActiveGradientButton(
             modifier = Modifier,
             text = stringResource(R.string.change),
-            onClick = onChangeClick /*{
-                viewModel.obtainEvent(
-                    BasicGameSetupScreenEvent.OnChangeClick
-                )
-            }*/
+            onClick = onChangeClick
         )
     }
 }
@@ -323,8 +313,6 @@ private fun DateSection(
     showCalendar: Boolean,
     isSameDay: () -> Boolean
 ) {
-    //val showCalendar = viewModel.showCalendar.collectAsState().value
-
     VolleyText.TitleMedium(
         text = stringResource(R.string.date),
         modifier = Modifier.fillMaxWidth(),
@@ -339,11 +327,11 @@ private fun DateSection(
         onSelected = { position ->
             when (position) {
                 1 -> { // Сегодня
-                    onTodayClicked()   //viewModel.obtainEvent(BasicGameSetupScreenEvent.OnTodayClicked)
+                    onTodayClicked()
                 }
 
                 2 -> { // Выбрать Дату (Pick Date)
-                    onPickDateClicked() //viewModel.obtainEvent(BasicGameSetupScreenEvent.OnPickDateClicked)
+                    onPickDateClicked()
                 }
 
                 else -> { // Обработка нераспознанной позиции
@@ -358,13 +346,7 @@ private fun DateSection(
     if (showCalendar) { // Используем флаг из ViewModel
         VolleyCalendar.GameCalendar(
             selectedDate = date,
-            onDateSelected = onDateSelected /*{ selectedDate ->
-                viewModel.obtainEvent(
-                    BasicGameSetupScreenEvent.DateSelected(
-                        selectedDate
-                    )
-                )
-            }*/
+            onDateSelected = onDateSelected
         )
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
     }
@@ -400,9 +382,6 @@ private fun TimeSection(
             inputTime = startTime
         ) { time ->
             onStartTimeChanged(time)
-           /* viewModel.obtainEvent(
-                BasicGameSetupScreenEvent.StartTimeChanged(time)
-            )*/
         }
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
@@ -417,9 +396,6 @@ private fun TimeSection(
             inputTime = finishTime
         ) { time ->
             onFinishTimeChanged(time)
-            /*viewModel.obtainEvent(
-                BasicGameSetupScreenEvent.FinishTimeChanged(time)
-            )*/
         }
     }
 }
@@ -451,8 +427,7 @@ private fun GenderSection(
                 else -> null // Обработка некорректной позиции
             }
             selectedGender?.let { gender ->
-               onGenderSelected(gender)
-            // viewModel.obtainEvent(BasicGameSetupScreenEvent.GenderSelected(gender))
+                onGenderSelected(gender)
             } ?: run { // Обработка нераспознанной позиции
                 Log.e("BasicGameSetupScreen", "Unrecognized position: $position")
             }
@@ -475,11 +450,7 @@ private fun LevelSection(
     VolleyButton.GroupButtonsForLevelMulti(
         modifier = Modifier,
         checkedLevels = levels,
-        onSelected = onPlayerLevelSelected /*{ levels ->
-            viewModel.obtainEvent(
-                BasicGameSetupScreenEvent.PlayerLevelSelected(levels)
-            )
-        }*/
+        onSelected = onPlayerLevelSelected
     )
 }
 
@@ -491,11 +462,7 @@ private fun NextButtonSection(
     VolleyButton.ActiveButton(
         modifier = modifier,
         text = stringResource(R.string.next_step),
-        onClick = onNextStepClick /*{
-            viewModel.obtainEvent(
-                BasicGameSetupScreenEvent.OnNextStepClick
-            )
-        }*/
+        onClick = onNextStepClick
     )
 }
 

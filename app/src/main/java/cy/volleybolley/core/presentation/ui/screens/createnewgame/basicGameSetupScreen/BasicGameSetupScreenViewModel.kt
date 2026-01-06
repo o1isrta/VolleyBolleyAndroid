@@ -141,7 +141,9 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
 
     private fun playerLevelSelected(levels: Set<Level>) {
         if (levels.isEmpty()) {
-            sendUiEffect(BasicGameSetupScreenEffect.ShowErrorMessageById(messageId = R.string.please_select_player_level))
+            sendUiEffect(
+                BasicGameSetupScreenEffect.ShowErrorMessageById(messageId = R.string.please_select_player_level)
+            )
         } else {
             uiStateMutable.value = uiStateMutable.value.copy(levels = levels)
         }
