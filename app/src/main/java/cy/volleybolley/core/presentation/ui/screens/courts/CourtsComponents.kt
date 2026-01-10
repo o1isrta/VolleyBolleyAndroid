@@ -150,7 +150,7 @@ private fun PreviewCourtMapListSwitcherScreen() {
         CourtsComponents.CourtMapListSwitcherScreen(
             courts = CourtsMockData.sampleCourts,
             selectedCourt = selectedCourt,
-            userLocation = LatLng(7.8804, 98.3923),
+            userLocation = CourtsMockData.LAT_LNG_MOSCOW,
             showDetails = false,
             isLoading = false,
             error = null,

@@ -61,7 +61,6 @@ private fun CourtListContent(
     state: SearchCourtState,
     onEvent: (SearchCourtEvent) -> Unit,
 ) {
-
     CourtMapListSwitcherScreen(
         courts = state.courts,
         selectedCourt = state.selectedCourt,

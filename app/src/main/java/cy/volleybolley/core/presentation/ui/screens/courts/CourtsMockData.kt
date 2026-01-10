@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.courts
 
+import com.google.android.gms.maps.model.LatLng
 import cy.volleybolley.courts.domain.model.Contact
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
@@ -149,4 +150,7 @@ object CourtsMockData {
             )
         )
     )
+    const val MOSCOW_LAT = 7.8804
+    const val MOSCOW_LNG = 98.3923
+    val LAT_LNG_MOSCOW = LatLng(MOSCOW_LAT, MOSCOW_LNG)
 }
