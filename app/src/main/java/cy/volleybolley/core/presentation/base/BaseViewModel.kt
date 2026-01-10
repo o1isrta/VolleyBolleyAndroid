@@ -44,6 +44,12 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
         }
     }
 
+    fun absorbEffect() {
+        viewModelScope.launch {
+            uiEffectMutable.send(null)
+        }
+    }
+
     // В этом случае используем общую ошибку для избегания вылетов при недочетах во внешних зависимостях
     @Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException")
     /**
@@ -66,6 +72,15 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
                 Log.e(tag, getErrorLogMessage(e), e)
                 onError?.invoke(e)
             }
+        }
+    }
+
+    /**
+     * Функция для изменения списка по индексу
+     */
+    protected fun<T> List<T>.replaceForCompose(index: Int, newElement: T): List<T> {
+        return this.toMutableList().apply {
+            this[index] = newElement
         }
     }
 }

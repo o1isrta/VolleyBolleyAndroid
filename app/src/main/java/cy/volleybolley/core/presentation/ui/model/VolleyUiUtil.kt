@@ -1,6 +1,8 @@
 package cy.volleybolley.core.presentation.ui.model
 
+import android.util.Log
 import androidx.compose.ui.unit.IntSize
+import cy.volleybolley.BuildConfig
 import cy.volleybolley.profile.presentation.ui.screens.faq.model.FaqString
 import cy.volleybolley.profile.presentation.ui.screens.faq.model.FaqStringType
 import java.text.SimpleDateFormat
@@ -101,6 +103,20 @@ object VolleyUiUtil {
                     value = string,
                 )
             }
+        }
+    }
+
+    @JvmStatic
+    fun showDebugLog(tag: String, message: String) {
+        if (BuildConfig.DEBUG) {
+            Log.d(tag, message)
+        }
+    }
+
+    @JvmStatic
+    fun showDebugExceptionLog(tag: String, message: String, e: Exception) {
+        if (BuildConfig.DEBUG) {
+            Log.w(tag, message, e)
         }
     }
 }

@@ -5,15 +5,14 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import cy.volleybolley.core.presentation.ui.screens.authorization.aboutlevels.AboutLevelsScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorization.AuthorizationScreen
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.AuthorizationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.VerifyPhoneNumberScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.registration.RegistrationScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.GameEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.PrivacyOptionsScreen
@@ -41,9 +40,9 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.JoinedPl
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGameDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
-import cy.volleybolley.core.presentation.ui.screens.home.RatePlayersScreen
-import cy.volleybolley.core.presentation.ui.screens.home.SuccessScreen
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
+import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
+import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
 import cy.volleybolley.courts.presentation.SearchCourtScreen
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreen
@@ -62,6 +61,11 @@ import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreen
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenViewModel
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreen
+import cy.volleybolley.rateplayers.RatePlayersScreen
+import cy.volleybolley.registration.presentation.ui.screens.aboutlevels.AboutLevelsScreen
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationScreen
+import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationViewModel
+import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -77,7 +81,7 @@ fun NavHostContainer(
         startDestination = startDestination
     ) {
         // authorization
-        composable<LaunchRoute> { LaunchScreen(navController) }
+        composable<LaunchRoute> { LaunchScreen(navController, paddingFromSystemUi) }
         composable<OnboardingRoute> {
             OnboardingScreen(
                 onNextScreenRequested = { navController.navigate(AuthorizationRoute) },
@@ -88,12 +92,21 @@ fun NavHostContainer(
             AuthorizationScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
                 onNavigateToRegisterByPhoneRequested = { navController.navigate(AuthorizationByPhoneRoute) },
-                onSuccessRegisteredAction = { navController.navigate(RegistrationRoute) }
+                onSuccessGetNotRegisterUser = { user ->
+                    navController.navigate(RegistrationRoute(user))
+                },
+                onSuccessGetRegisterUser = { navController.navigate(HomeRoute) }
             )
         }
-        composable<RegistrationRoute> {
+        composable<RegistrationRoute> { backStackEntry ->
+            val userData = backStackEntry.toRoute<RegistrationRoute>().user
+            val viewModel = koinViewModel<RegistrationViewModel> {
+                parametersOf(userData)
+            }
+
             RegistrationScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
+                viewModel = viewModel,
                 onRegistrationSuccessEvent = {
                     navController.navigate(HomeRoute) {
                         popUpTo(LaunchRoute) { inclusive = false }
@@ -135,9 +148,29 @@ fun NavHostContainer(
                 )
             }
             composable<SearchCourtRoute> { SearchCourtScreen(navController) }
-            composable<RatePlayersRoute> { RatePlayersScreen(navController) }
-            composable<SuccessRoute> { SuccessScreen(navController) }
 
+            composable<RatePlayersRoute> { backStackEntry ->
+                val args = backStackEntry.toRoute<RatePlayersRoute>()
+                val eventId = args.eventId
+                val eventType = args.eventType
+                RatePlayersScreen(
+                    navController = navController,
+                    viewModel = koinViewModel {
+                        parametersOf(eventId, eventType)
+                    }
+                )
+            }
+            composable<SuccessRoute> { backStackEntry ->
+                val event = Json.decodeFromString<SucceedGame>(
+                    backStackEntry.toRoute<SuccessRoute>().succeedGame
+                )
+                SuccessScreen(
+                    navController = navController,
+                    viewModel = koinViewModel {
+                        parametersOf(event)
+                    }
+                )
+            }
             // create game
             composable<BasicGameSetupRoute> { BasicGameSetupScreen(navController) }
             composable<GameEnteringConditionsRoute> { GameEnteringConditionsScreen(navController) }
@@ -195,8 +228,8 @@ fun NavHostContainer(
         navigation<ProfileTopLevelRoute>(startDestination = ProfileRoute) {
             composable<ProfileRoute> {
                 ProfileScreen(
-                    paddingFromSystemUi = paddingFromSystemUi,
                     navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi,
                     finisher = activityFinisher,
                 )
             }
@@ -280,6 +313,17 @@ fun NavHostContainer(
                     paddingFromSystemUi = paddingFromSystemUi
                 )
             }
+        }
+
+        composable<ShareLinkRoute>(
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "volleybolley://invite/{type}/{id}" }
+            )
+        ) { backStackEntry ->
+//            val route = backStackEntry.toRoute<ShareLinkRoute>()
+            JoinTheGameScreen(
+                navController = navController
+            )
         }
     }
 }

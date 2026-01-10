@@ -1,7 +1,5 @@
 package cy.volleybolley.games.domain.usecases.game
 
-import cy.volleybolley.core.domain.model.ErrorType
-import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.games.domain.api.GameRatingRepository
 import cy.volleybolley.games.domain.api.TournamentRatingRepository
 import cy.volleybolley.games.domain.api.game.RatePlayersUseCase
@@ -12,14 +10,21 @@ class RatePlayersUseCaseImpl(
     private val gameRepository: GameRatingRepository,
     private val tournamentRepository: TournamentRatingRepository
 ) : RatePlayersUseCase {
-    override suspend fun ratePlayers(
+    override fun ratePlayers(
         id: Int,
         type: EventType,
-        players: List<RatePlayer>
-    ): VolleyResult<Unit, ErrorType> {
-        return when (type) {
-            EventType.GAME -> gameRepository.ratePlayers(gameId = id, players = players)
-            EventType.TOURNAMENT -> tournamentRepository.ratePlayers(tournamentId = id, players = players)
+        players: List<RatePlayer>,
+    ) {
+        when (type) {
+            EventType.GAME -> gameRepository.ratePlayers(
+                gameId = id,
+                players = players,
+            )
+
+            EventType.TOURNAMENT -> tournamentRepository.ratePlayers(
+                tournamentId = id,
+                players = players,
+            )
         }
     }
 }

@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,9 +16,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -25,6 +29,8 @@ import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.navigation.AuthorizationRoute
+import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
 import cy.volleybolley.core.presentation.ui.navigation.OnboardingRoute
 import org.koin.compose.viewmodel.koinViewModel
@@ -32,14 +38,27 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun LaunchScreen(
     navController: NavHostController,
+    paddingFromSystemUi: PaddingValues,
     viewModel: LaunchViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     LaunchedEffect(effect) {
         when (effect) {
-            is LaunchEffect.NavigateToOnboarding -> {
+            is LaunchScreenEffect.NavigateToOnboarding -> {
                 navController.navigate(OnboardingRoute) {
+                    popUpTo(LaunchRoute) { inclusive = true }
+                }
+            }
+
+            is LaunchScreenEffect.NavigateToHome -> {
+                navController.navigate(HomeTopLevelRoute) {
+                    popUpTo(LaunchRoute) { inclusive = true }
+                }
+            }
+
+            is LaunchScreenEffect.NavigateToAuthorization -> {
+                navController.navigate(AuthorizationRoute) {
                     popUpTo(LaunchRoute) { inclusive = true }
                 }
             }
@@ -47,35 +66,67 @@ fun LaunchScreen(
             null -> {}
         }
     }
-    LaunchScreen(state = state)
+    LaunchScreen(
+        state = state,
+        paddingFromSystemUi = paddingFromSystemUi
+    )
 }
 
 @Composable
-fun LaunchScreen(state: LaunchState) {
+fun LaunchScreen(
+    state: LaunchScreenState,
+    paddingFromSystemUi: PaddingValues,
+) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(VolleyColor.TurquoiseDark)
+        contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.bg_launch),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .background(VolleyColor.TurquoiseDark)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.bg_launch),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
 
-        LogoWithAppName(
-            modifier = Modifier.align(Alignment.Center),
-            isProgressBarVisible = state.isLoading
-        )
+            LogoWithAppName(
+                onBlockSizeChanged = {}
+            )
+        }
+
+        Column {
+            Spacer(Modifier.weight(1f))
+            Box(
+                contentAlignment = Alignment.BottomCenter,
+                modifier = Modifier.weight(1f)
+            ) {
+                if (state.isLoading) {
+                    VolleyProgress.CircularProgress(
+                        modifier = Modifier
+                            .padding(
+                                bottom = paddingFromSystemUi.calculateBottomPadding() + VolleyDimens.DIMEN_52.dp
+                            )
+                    )
+                }
+            }
+        }
     }
 }
 
 @Stable
 @Composable
-fun LogoWithAppName(modifier: Modifier = Modifier, isProgressBarVisible: Boolean = false) {
+fun LogoWithAppName(
+    modifier: Modifier = Modifier,
+    onBlockSizeChanged: (IntSize) -> Unit,
+) {
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .onSizeChanged { size ->
+                onBlockSizeChanged(size)
+            },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -88,14 +139,14 @@ fun LogoWithAppName(modifier: Modifier = Modifier, isProgressBarVisible: Boolean
             text = stringResource(id = R.string.volleybolley),
             color = VolleyColor.White
         )
-        if (isProgressBarVisible) {
-            VolleyProgress.CircularProgress(modifier = Modifier.padding(top = 16.dp))
-        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun LaunchScreenPreview() {
-    LaunchScreen(state = LaunchState(isLoading = true))
+    LaunchScreen(
+        state = LaunchScreenState(isLoading = true),
+        paddingFromSystemUi = PaddingValues(bottom = 40.dp)
+    )
 }

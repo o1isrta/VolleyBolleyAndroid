@@ -24,4 +24,3 @@ data class JoinedGame(
     val currencyType: String,
     val players: List<PlayerShort>,
 )
-
