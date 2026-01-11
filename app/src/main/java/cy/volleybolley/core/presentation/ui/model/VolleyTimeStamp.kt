@@ -6,7 +6,7 @@ class VolleyTimeStamp(
     val isAfternoon: Boolean,
 ) {
     private val hour12Format: Int
-        get() = hour // hour - if (isAfternoon) AFTERNOON_VALUE else 0
+        get() = hour
 
     fun getTimeString24HourFormat() = "$hour:${getCorrectMinutesString()}"
 

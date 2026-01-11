@@ -184,7 +184,11 @@ private fun ContentDisplay(
 
                     TitleSection(onBackClick = onBackClick)
 
-                    Column(modifier = Modifier.verticalScroll(scrollState)) {
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(scrollState)
+                            .weight(1f)
+                    ) {
                         MaximumPlayersSection(state, onMaximumPlayersChanged = onMaximumPlayersChanged)
 
                         PrivacySection(state, onPrivacySelected = onPrivacySelected)
@@ -194,17 +198,18 @@ private fun ContentDisplay(
                             onRemovePlayer = onRemovePlayer,
                             onManagePlayersClick = onManagePlayersClick
                         )
+                        //}
+
+                        PaymentSection(
+                            state = state,
+                            onPerPersonChanged = onPerPersonChanged,
+                            onAddPaymentClick = onAddPaymentClick
+                        )
+
+                        SaveButtonSection(onSaveGameClick = onSaveGameClick)
+
+                        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                     }
-
-                    PaymentSection(
-                        state = state,
-                        onPerPersonChanged = onPerPersonChanged,
-                        onAddPaymentClick = onAddPaymentClick
-                    )
-
-                    SaveButtonSection(onSaveGameClick = onSaveGameClick)
-
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
                 }
             }
         }

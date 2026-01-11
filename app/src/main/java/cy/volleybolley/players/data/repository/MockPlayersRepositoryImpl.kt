@@ -14,11 +14,24 @@ import cy.volleybolley.players.domain.repository.PlayersRepository
 
 class MockPlayersRepositoryImpl : PlayersRepository {
     companion object {
-        const val KRISTINA_ID = 1
-        const val POLINA_ID = 2
-        const val ANTON_ID = 3
-        const val ALEKSANDR_ID = 4
-        const val MARIA_ID = 5
+        const val DEBOUNCE_DELAY_500MS = 500L
+        const val DEBOUNCE_DELAY_1000MS = 1000L
+        private const val KRISTINA_ID = 1
+        private const val POLINA_ID = 2
+        private const val ANTON_ID = 3
+        private const val ALEKSANDR_ID = 4
+        private const val MARK_ID = 5
+        private const val POL_ID = 6
+        private const val ANN_ID = 7
+        private const val SERGEY_ID = 8
+        private const val SVETLANA_ID = 9
+        private const val NIKITA_ID = 10
+        private const val ALEKSANDRA_ID = 11
+        private const val MONIKA_ID = 12
+        private const val JOHN_ID = 13
+        private const val MARYA_ID = 14
+        private const val SERGEY2_ID = 15
+        private const val SVETLANA2_ID = 16
     }
 
     private val mockPlayers = listOf(
@@ -26,13 +39,19 @@ class MockPlayersRepositoryImpl : PlayersRepository {
         Player(POLINA_ID, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
         Player(ANTON_ID, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
         Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE),
-        Player(MARIA_ID, "Maria", "Novak", null, false, LEVEL_PRO, GENDER_FEMALE),
-        /*  Player(6, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
-          Player(7, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
-          Player(8, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
-          Player(9, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE),
-          Player(10, "Maria", "Novak", null, false, LEVEL_PRO, GENDER_FEMALE),
-        */
+        Player(MARK_ID, "Mark", "Johansen", null, true, LEVEL_MEDIUM, GENDER_MALE),
+        Player(POL_ID, "Pol", "Johnson", null, false, LEVEL_MEDIUM, GENDER_MALE),
+        Player(ANN_ID, "Ann", "Nissan", null, true, LEVEL_LIGHT, GENDER_FEMALE),
+        Player(SERGEY_ID, "Sergey", "Krugovsky", null, false, LEVEL_HIGH, GENDER_MALE),
+        Player(SVETLANA_ID, "Svetlana", "Markova", null, true, LEVEL_MEDIUM, GENDER_FEMALE,),
+        Player(NIKITA_ID, "Nikita", "Hotko", null, true, LEVEL_MEDIUM, GENDER_MALE,),
+        Player(ALEKSANDRA_ID, "Aleksandra", "Malinina", null, false, LEVEL_HIGH, GENDER_FEMALE),
+        Player(MONIKA_ID, "Monika", "Dobson", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+        Player(JOHN_ID, "John", "Johnson", null, false, LEVEL_HIGH, GENDER_MALE),
+        Player(MARYA_ID, "Maria", "Kalinina", null, true, LEVEL_PRO, GENDER_FEMALE),
+        Player(SERGEY2_ID, "Sergey", "Karp", null, false, LEVEL_MEDIUM, GENDER_MALE),
+        Player(SVETLANA2_ID, "Svetlana", "Dubstsova", null, true, LEVEL_MEDIUM, GENDER_FEMALE,),
+
         /* Player(11, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
                Player(12, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
                Player(13, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),

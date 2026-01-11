@@ -4,12 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,7 +31,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 object VolleyCashField {
     @Composable
     fun CashField(
-        paddingValues: PaddingValues = PaddingValues(),
         value: String,
         currency: String,
         inputSymbolLimit: Int = VolleyDimens.DIMEN_6,
@@ -46,9 +45,7 @@ object VolleyCashField {
         VolleyContainersRootTransparent.TransparentContainer(
             cornerRadius = VolleyDimens.DIMEN_16,
             modifier = Modifier
-                .padding(paddingValues)
-            // .height(30.dp)
-            // .width(75.dp)
+                .sizeIn(minHeight = VolleyDimens.DIMEN_30.dp, minWidth = VolleyDimens.DIMEN_75.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -100,20 +97,6 @@ object VolleyCashField {
                 accumulator + stepValue
             }
         }
-        /*  val maxWidth = 90 // Максимальная ширина (в VolleyDimens единицах)
-
-          if (value.isEmpty()) {
-              return VolleyDimens.DIMEN_9.coerceAtMost(maxWidth) // Ensure the minimal value does not exceed maxWidth
-          }
-
-          val calculatedWidth = value.chunked(1).map { symbol ->
-              if (symbol.isDigitsOnly()) symbol.toInt() else 1
-          }.sumOf { digit -> // Use sumOf directly for cleaner accumulation
-              if (digit == 1) VolleyDimens.DIMEN_6 else VolleyDimens.DIMEN_10
-          }
-
-          return calculatedWidth.coerceAtMost(maxWidth) // Limit the width to maxWidth
-  */
     }
 }
 

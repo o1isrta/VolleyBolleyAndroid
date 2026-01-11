@@ -24,6 +24,12 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
         private const val POLINA_ID = 2
         private const val ANTON_ID = 3
         private const val ALEKSANDR_ID = 4
+        private const val MARK_ID = 5
+        private const val POL_ID = 6
+        private const val ANN_ID = 7
+        private const val SERGEY_ID = 8
+        private const val SVETLANA_ID = 9
+        private const val NIKITA_ID = 10
     }
 
     override fun addPlayersToGame(players: List<Player>) {
@@ -58,7 +64,13 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
                 Player(KRISTINA_ID, "Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
                 Player(POLINA_ID, "Polina", "Vasylyeva", null, false, GENDER_FEMALE, LEVEL_PRO),
                 Player(ANTON_ID, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
-                Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH)
+                Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH),
+                Player(MARK_ID, "Mark", "Yohansen", null, true, GENDER_MALE, LEVEL_MEDIUM),
+                Player(POL_ID, "Pol", "Jhonson", null, false, GENDER_MALE, LEVEL_MEDIUM),
+                Player(ANN_ID, "Ann", "Nissan", null, true, GENDER_FEMALE, LEVEL_LIGHT),
+                Player(SERGEY_ID, "Sergey", "Krugovsky", null, false, GENDER_MALE, LEVEL_HIGH),
+                Player(SVETLANA_ID, "Svetlana", "Markova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
+                Player(NIKITA_ID, "Nikita", "Popov", null, false, GENDER_MALE, LEVEL_PRO)
             )
         )
         return VolleyResult.Success(mockGameData)
