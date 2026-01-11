@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,11 +50,12 @@ object VolleySimpleComponent {
     @Composable
     fun TitleWithBackArrow(
         modifier: Modifier = Modifier,
+        contentAlignment: Alignment = Alignment.Center,
         title: String,
         onBackClick: () -> Unit = {}
     ) {
         Box(
-            contentAlignment = Alignment.Center,
+            contentAlignment = contentAlignment,
             modifier = modifier
         ) {
             VolleyText.TitleLarge(
@@ -75,7 +77,7 @@ object VolleySimpleComponent {
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_arrow_back),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.back_arrow_button),
                     tint = VolleyColor.White,
                 )
             }
@@ -132,7 +134,7 @@ object VolleySimpleComponent {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
-                player.level.let { LevelBadge(it) }
+                LevelBadge(player.level)
                 Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
                 IconButton(
                     onClick = onAction,
@@ -157,7 +159,7 @@ object VolleySimpleComponent {
         player: Player,
         onAction: () -> Unit
     ) {
-        var icon = painterResource(R.drawable.ic_remove)
+        val icon = painterResource(R.drawable.ic_remove)
         PlayerRowWithAction(player, icon, onAction)
     }
 
@@ -285,16 +287,16 @@ private const val KRISTINA_ID = 1
 private const val POLINA_ID = 2
 private const val ANTON_ID = 3
 private const val ALEKSANDR_ID = 4
+private val players = listOf(
+    Player(KRISTINA_ID, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
+    Player(POLINA_ID, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
+    Player(ANTON_ID, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
+    Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE)
+)
 
 @Preview
 @Composable
 private fun PreviewPlayerRowWithRemoveList() {
-    val players: List<Player> = listOf(
-        Player(KRISTINA_ID, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
-        Player(POLINA_ID, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
-        Player(ANTON_ID, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
-        Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE)
-    )
     VolleyContainersRootTransparent.Root {
         Box(
             contentAlignment = Alignment.Center,
@@ -320,12 +322,6 @@ private fun PreviewPlayerRowWithRemoveList() {
 @Preview
 @Composable
 private fun PreviewPlayerRowWithSelectAndFavoriteList() {
-    val players: List<Player> = listOf(
-        Player(KRISTINA_ID, "Kristina", "Popova", null, true, LEVEL_MEDIUM, GENDER_FEMALE),
-        Player(POLINA_ID, "Polina", "Vasylyeva", null, false, LEVEL_PRO, GENDER_FEMALE),
-        Player(ANTON_ID, "Anton", "Ivanov", null, true, LEVEL_LIGHT, GENDER_MALE),
-        Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, LEVEL_HIGH, GENDER_MALE)
-    )
     VolleyContainersRootTransparent.Root {
         Box(
             contentAlignment = Alignment.Center,

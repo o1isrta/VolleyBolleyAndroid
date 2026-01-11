@@ -61,7 +61,7 @@ object VolleyMessageTextField {
                 // чтобы backgroundHeight учитывал их обеих
                 Box(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = VolleyDimens.DIMEN_16.dp)
                         .fillMaxSize()
                 ) {
                     MessageTextField(
@@ -79,18 +79,6 @@ object VolleyMessageTextField {
                             .fillMaxWidth()
                     )
 
-                    /* Box(
-                        contentAlignment = Alignment.BottomEnd,
-                        modifier = Modifier//modifier
-                            .padding(
-                                start = VolleyDimens.DIMEN_16.dp,
-                                top = 0.dp,
-                                end = VolleyDimens.DIMEN_16.dp,
-                                bottom = VolleyDimens.DIMEN_16.dp
-                            )
-                          //  .fillMaxWidth()
-                          //  .align(Alignment.BottomEnd)
-                    ) { */
                     VolleyText.BodyLight(
                         text = "${limitedText.length}/$maxLength",
                         maxLines = 1,
@@ -237,30 +225,6 @@ object VolleyMessageTextField {
         ) {
             Box(
                 modifier = Modifier
-                    /* .onSizeChanged { size ->
-                        containerSize = size
-                    }
-                    .height(backgroundHeight)
-                    .fillMaxWidth()
-                    .background(
-                        shape = shape,
-                        brush = Brush.radialGradient(
-                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_1 to VolleyColor.White
-                                .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_1),
-                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_2 to VolleyColor.White
-                                .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_2),
-                            VolleyUiUtil.GRADIENT_COLOR_STOP_MARK_3 to VolleyColor.White
-                                .copy(alpha = VolleyUiUtil.GRADIENT_COLOR_STOP_VALUE_3),
-                            center = Offset(containerSize.width / 2f, containerSize.height / 2f),
-                            radius = gradientRadius,
-                        )
-                    )
-                    .clip(shape)
-                    .border(
-                        width = VolleyDimens.DIMEN_1.dp,
-                        color = VolleyColor.White.copy(alpha = VolleyUiUtil.GRADIENT_BORDER_ALPHA),
-                        shape = shape
-                    ) */
                     .matchParentSize()
                     .background(
                         Brush.radialGradient(
@@ -329,7 +293,7 @@ private fun PreviewMessageField() {
                 hint = "Some hint...",
                 textInput = "",
                 modifier = Modifier
-                    .height(106.dp)
+                    .height(VolleyDimens.DIMEN_106.dp)
                     .padding(VolleyDimens.DIMEN_20.dp, 0.dp)
             ) { }
 

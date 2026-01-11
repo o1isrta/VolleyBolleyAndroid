@@ -7,11 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.PreviewContainer
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyBoldMedium
@@ -21,7 +23,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText.BodySmall
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyTiny
 import cy.volleybolley.core.presentation.ui.model.VolleyText.ButtonText
 import cy.volleybolley.core.presentation.ui.model.VolleyText.LogoDisplay
-import cy.volleybolley.core.presentation.ui.model.VolleyText.TEXT_EXAMPLE
 import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleLarge
 import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleMedium
 import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleXL
@@ -29,8 +30,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleXLAlt
 
 @UiLibraryMarker
 object VolleyText {
-    internal const val TEXT_EXAMPLE = "Пример текста"
-
     @Stable
     @Composable
     fun TitleXL(
@@ -368,15 +367,15 @@ object VolleyText {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewTitleXL() {
+private fun PreviewTitleXL() {
     PreviewContainer(
         modifier = Modifier
-            .width(550.dp)
+            .width(VolleyDimens.DIMEN_550.dp)
     ) {
         TitleXL(
-            TEXT_EXAMPLE,
+            stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(10.dp),
+                .padding(VolleyDimens.DIMEN_10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -385,15 +384,15 @@ fun PreviewTitleXL() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewTitleXLAlt() {
+private fun PreviewTitleXLAlt() {
     PreviewContainer(
         modifier = Modifier
-            .width(550.dp)
+            .width(VolleyDimens.DIMEN_550.dp)
     ) {
         TitleXLAlt(
-            TEXT_EXAMPLE,
+            stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(10.dp),
+                .padding(VolleyDimens.DIMEN_10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -402,15 +401,15 @@ fun PreviewTitleXLAlt() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewTitleLarge() {
+private fun PreviewTitleLarge() {
     PreviewContainer(
         modifier = Modifier
-            .width(550.dp)
+            .width(VolleyDimens.DIMEN_550.dp)
     ) {
         TitleLarge(
-            TEXT_EXAMPLE,
+            stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(10.dp),
+                .padding(VolleyDimens.DIMEN_10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -419,15 +418,15 @@ fun PreviewTitleLarge() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewTitleMedium() {
+private fun PreviewTitleMedium() {
     PreviewContainer(
         modifier = Modifier
-            .width(550.dp)
+            .width(VolleyDimens.DIMEN_550.dp)
     ) {
         TitleMedium(
-            TEXT_EXAMPLE,
+            stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(10.dp),
+                .padding(VolleyDimens.DIMEN_10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -436,15 +435,15 @@ fun PreviewTitleMedium() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewBodyBoldMedium() {
+private fun PreviewBodyBoldMedium() {
     PreviewContainer(
         modifier = Modifier
-            .width(550.dp)
+            .width(VolleyDimens.DIMEN_550.dp)
     ) {
         BodyBoldMedium(
-            TEXT_EXAMPLE,
+            stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(10.dp),
+                .padding(VolleyDimens.DIMEN_10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -453,15 +452,15 @@ fun PreviewBodyBoldMedium() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewBodySmall() {
+private fun PreviewBodySmall() {
     PreviewContainer(
         modifier = Modifier
-            .width(550.dp)
+            .width(VolleyDimens.DIMEN_550.dp)
     ) {
         BodySmall(
-            TEXT_EXAMPLE,
+            stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(10.dp),
+                .padding(VolleyDimens.DIMEN_10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -470,15 +469,15 @@ fun PreviewBodySmall() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewBodyLight() {
+private fun PreviewBodyLight() {
     PreviewContainer(
         modifier = Modifier
-            .width(550.dp)
+            .width(VolleyDimens.DIMEN_550.dp)
     ) {
         BodyLight(
-            TEXT_EXAMPLE,
+            stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(10.dp),
+                .padding(VolleyDimens.DIMEN_10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -487,15 +486,15 @@ fun PreviewBodyLight() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewBodyBoldSmall() {
+private fun PreviewBodyBoldSmall() {
     PreviewContainer(
         modifier = Modifier
-            .width(550.dp)
+            .width(VolleyDimens.DIMEN_550.dp)
     ) {
         BodyBoldSmall(
-            TEXT_EXAMPLE,
+            stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(10.dp),
+                .padding(VolleyDimens.DIMEN_10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -504,15 +503,15 @@ fun PreviewBodyBoldSmall() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewBodyTiny() {
+private fun PreviewBodyTiny() {
     PreviewContainer(
         modifier = Modifier
-            .width(550.dp)
+            .width(VolleyDimens.DIMEN_550.dp)
     ) {
         BodyTiny(
-            TEXT_EXAMPLE,
+            stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(10.dp),
+                .padding(VolleyDimens.DIMEN_10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -521,15 +520,15 @@ fun PreviewBodyTiny() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewButtonText() {
+private fun PreviewButtonText() {
     PreviewContainer(
         modifier = Modifier
-            .width(550.dp)
+            .width(VolleyDimens.DIMEN_550.dp)
     ) {
         ButtonText(
-            TEXT_EXAMPLE,
+            stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(10.dp),
+                .padding(VolleyDimens.DIMEN_10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -538,15 +537,15 @@ fun PreviewButtonText() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewLogoDisplay() {
+private fun PreviewLogoDisplay() {
     PreviewContainer(
         modifier = Modifier
-            .width(550.dp)
+            .width(VolleyDimens.DIMEN_550.dp)
     ) {
         LogoDisplay(
-            TEXT_EXAMPLE,
+            stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(10.dp),
+                .padding(VolleyDimens.DIMEN_10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
