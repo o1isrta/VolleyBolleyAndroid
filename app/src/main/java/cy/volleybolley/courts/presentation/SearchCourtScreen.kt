@@ -1,7 +1,8 @@
 package cy.volleybolley.courts.presentation
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -12,14 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cy.volleybolley.core.presentation.ui.navigation.BasicGameSetupRoute
+import cy.volleybolley.core.presentation.ui.navigation.BasicTourneySetupRoute
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtsComponents.CourtMapListSwitcherScreen
+import cy.volleybolley.games.domain.model.event.EventType
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchCourtScreen(
-    navHostController: NavHostController,
-    viewModel: SearchCourtViewModel = koinViewModel(),
+    navController: NavHostController,
+    paddingFromSystemUi: PaddingValues,
+    viewModel: SearchCourtViewModel,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -33,11 +37,19 @@ fun SearchCourtScreen(
                 }
 
                 is SearchCourtEffect.NavigateToGameCreation -> {
-                    navHostController.navigate("create_game") // Дальнейшее создание игры
+                    when (effect.eventType) {
+                        EventType.GAME -> {
+                            navController.navigate(BasicGameSetupRoute)
+                        }
+
+                        EventType.TOURNAMENT -> {
+                            navController.navigate(BasicTourneySetupRoute)
+                        }
+                    }
                 }
 
                 is SearchCourtEffect.NavigateBack -> {
-                    navHostController.popBackStack()
+                    navController.popBackStack()
                 }
 
                 null -> {}
@@ -47,6 +59,7 @@ fun SearchCourtScreen(
     }
 
     CourtListContent(
+        modifier = Modifier.padding(paddingFromSystemUi),
         isMapSelected = isMapSelected,
         onTabSelected = { isMapSelected = it },
         state = state,
@@ -56,12 +69,14 @@ fun SearchCourtScreen(
 
 @Composable
 private fun CourtListContent(
+    modifier: Modifier,
     isMapSelected: Boolean,
     onTabSelected: (Boolean) -> Unit,
     state: SearchCourtState,
     onEvent: (SearchCourtEvent) -> Unit,
 ) {
     CourtMapListSwitcherScreen(
+        modifier = modifier,
         courts = state.courts,
         selectedCourt = state.selectedCourt,
         userLocation = state.userLocation,
@@ -77,6 +92,5 @@ private fun CourtListContent(
         onCourtDetailsClick = { court -> onEvent(SearchCourtEvent.ClickOnSearchCourtDetails(court)) },
         onUserLocationUpdate = { latLng -> onEvent(SearchCourtEvent.UpdateUserLocation(latLng)) },
         onUserLocationDenied = { onEvent(SearchCourtEvent.DeniedUserLocation) },
-        modifier = Modifier.fillMaxSize()
     )
 }

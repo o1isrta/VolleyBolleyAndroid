@@ -150,7 +150,7 @@ object CourtsMockData {
             )
         )
     )
-    const val MOSCOW_LAT = 7.8804
-    const val MOSCOW_LNG = 98.3923
-    val LAT_LNG_MOSCOW = LatLng(MOSCOW_LAT, MOSCOW_LNG)
+    const val PHUKET_LAT = 7.8804
+    const val PHUKET_LNG = 98.3923
+    val LAT_LNG_PHUKET = LatLng(PHUKET_LAT, PHUKET_LNG)
 }

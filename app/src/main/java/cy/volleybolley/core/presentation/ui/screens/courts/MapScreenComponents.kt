@@ -357,7 +357,7 @@ private fun PreviewMapScreenContent() {
         MapScreenContent(
             courts = CourtsMockData.sampleCourts,
             selectedCourt = selectedCourt,
-            userLocation = CourtsMockData.LAT_LNG_MOSCOW,
+            userLocation = CourtsMockData.LAT_LNG_PHUKET,
             showDetails = false,
             onMapClick = {},
             onCourtClick = { },

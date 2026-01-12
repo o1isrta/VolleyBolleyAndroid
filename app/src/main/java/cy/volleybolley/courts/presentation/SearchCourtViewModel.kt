@@ -5,11 +5,13 @@ import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.courts.domain.api.CourtsUseCase
 import cy.volleybolley.courts.domain.model.Court
+import cy.volleybolley.games.domain.model.event.EventType
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 class SearchCourtViewModel @Inject constructor(
-    private val courtsUseCase: CourtsUseCase
+    private val courtsUseCase: CourtsUseCase,
+    private val eventType: EventType,
 ) : BaseViewModel<SearchCourtState, SearchCourtEvent, SearchCourtEffect>(SearchCourtState()) {
 
     override val tag: String = "SearchCourtViewModel"
@@ -27,6 +29,9 @@ class SearchCourtViewModel @Inject constructor(
         }
     }
 
+    init {
+        loadCourts()
+    }
     private fun loadCourts() {
         uiStateMutable.update { it.copy(isLoading = true) }
 
@@ -76,7 +81,12 @@ class SearchCourtViewModel @Inject constructor(
     }
 
     private fun clickOnChooseCourt(court: Court) {
-        sendUiEffect(SearchCourtEffect.NavigateToGameCreation(court))
+        sendUiEffect(
+            SearchCourtEffect.NavigateToGameCreation(
+                selectedCourt = court,
+                eventType = eventType
+            )
+        )
     }
 
     private fun clickOnMap() {

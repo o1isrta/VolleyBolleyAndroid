@@ -134,7 +134,9 @@ object UpcomingTourneyDetailsRoute : NavMap
 object HomeRoute : NavMap
 
 @Serializable
-object SearchCourtRoute : NavMap
+data class SearchCourtRoute(
+    val eventType: EventType
+) : NavMap
 
 @Serializable
 data class RatePlayersRoute(

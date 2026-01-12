@@ -147,7 +147,18 @@ fun NavHostContainer(
                     finisher = activityFinisher,
                 )
             }
-            composable<SearchCourtRoute> { SearchCourtScreen(navController) }
+
+            composable<SearchCourtRoute> { backStackEntry ->
+                val args = backStackEntry.toRoute<SearchCourtRoute>()
+                val eventType = args.eventType
+                SearchCourtScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    viewModel = koinViewModel {
+                        parametersOf(eventType)
+                    }
+                )
+            }
 
             composable<RatePlayersRoute> { backStackEntry ->
                 val args = backStackEntry.toRoute<RatePlayersRoute>()
