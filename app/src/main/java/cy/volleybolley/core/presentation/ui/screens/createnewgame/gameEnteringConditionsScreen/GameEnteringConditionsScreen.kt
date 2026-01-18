@@ -189,7 +189,6 @@ private fun ContentDisplay(
                     Column(
                         modifier = Modifier
                             .verticalScroll(scrollState)
-                            //  .weight(1f)
                     ) {
                         MaximumPlayersSection(state, onMaximumPlayersChanged = onMaximumPlayersChanged)
 

@@ -3,6 +3,7 @@ package cy.volleybolley.core.presentation.ui.screens.createnewtourney
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.tooling.preview.Preview
+
 /*const val DEFAULT_START_HOUR = 14
 const val DEFAULT_START_MINUTES = 0
 const val DEFAULT_FINISH_HOUR = 15
@@ -11,32 +12,32 @@ const val DEFAULT_FINISH_MINUTES = 0*/
 @Composable
 fun BasicTourneySetupScreen(/*navController: NavHostController*/) {
     val scrollState = rememberScrollState() // Состояние скролла
-   /* Column(
-        modifier = Modifier
-            .verticalScroll(scrollState)
-    ) {
-        VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = VolleyDimens.DIMEN_32,
-            modifier = Modifier
-                .padding(VolleyDimens.DIMEN_8.dp)
-        ) {
-            BasicTourneySetupScreenContent()
-        }
-        VolleyButton.ActiveButton(
-            modifier = Modifier
-                .padding(
-                    VolleyDimens.DIMEN_8.dp,
-                    VolleyDimens.DIMEN_8.dp,
-                    VolleyDimens.DIMEN_8.dp,
-                    VolleyDimens.DIMEN_16.dp
-                )
-                .height(VolleyDimens.DIMEN_44.dp)
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(),
-            text = stringResource(R.string.next_game),
-            onClick = {}
-        )
-    }*/
+    /* Column(
+         modifier = Modifier
+             .verticalScroll(scrollState)
+     ) {
+         VolleyContainersRootTransparent.TransparentContainer(
+             cornerRadius = VolleyDimens.DIMEN_32,
+             modifier = Modifier
+                 .padding(VolleyDimens.DIMEN_8.dp)
+         ) {
+             BasicTourneySetupScreenContent()
+         }
+         VolleyButton.ActiveButton(
+             modifier = Modifier
+                 .padding(
+                     VolleyDimens.DIMEN_8.dp,
+                     VolleyDimens.DIMEN_8.dp,
+                     VolleyDimens.DIMEN_8.dp,
+                     VolleyDimens.DIMEN_16.dp
+                 )
+                 .height(VolleyDimens.DIMEN_44.dp)
+                 .align(Alignment.CenterHorizontally)
+                 .fillMaxWidth(),
+             text = stringResource(R.string.next_game),
+             onClick = {}
+         )
+     }*/
 }
 
 /*@Composable
@@ -49,7 +50,7 @@ fun HorizontalLine() {
 }*/
 
 @Composable
-fun BasicTourneySetupScreenContent() {/*
+fun BasicTourneySetupScreenContent() { /*
     Column(
         modifier = Modifier
             .padding(horizontal = VolleyDimens.DIMEN_20.dp)
@@ -266,12 +267,12 @@ fun BasicTourneySetupScreenContent() {/*
 @Preview
 @Composable
 private fun BasicTourneySetupScreenPreview() {
-/*    val navController = rememberNavController() // Создаем моковый NavHostController
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(VolleyColor.TurquoiseDark)
-    ) {
-        BasicTourneySetupScreen(*//*navController = navController*//*)
+    /*    val navController = rememberNavController() // Создаем моковый NavHostController
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.TurquoiseDark)
+        ) {
+            BasicTourneySetupScreen(*//*navController = navController*//*)
     }*/
 }
