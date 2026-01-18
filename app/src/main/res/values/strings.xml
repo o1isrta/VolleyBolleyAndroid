@@ -283,4 +283,5 @@
     <string name="no_refresh_token">No refresh token</string>
     <string name="network_error">Network error</string>
     <string name="text_example">Text example</string>
+    <string name="default_phone_number">66123</string>
 </resources>

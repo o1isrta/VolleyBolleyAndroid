@@ -116,5 +116,5 @@ dependencies {
     implementation(platform(libs.firebase.bom))
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation("com.kizitonwose.calendar:compose:2.9.0")
+    implementation(libs.compose.calendar)
 }

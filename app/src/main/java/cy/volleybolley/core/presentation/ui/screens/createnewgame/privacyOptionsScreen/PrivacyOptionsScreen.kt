@@ -3,6 +3,7 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOption
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,18 +15,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -46,7 +47,7 @@ fun PrivacyOptionsScreen(
     viewModel: PrivacyOptionsScreenViewModel = viewModel(),
     paddingFromSystemUi: PaddingValues
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     ObserveUiEffects(viewModel, navController, context)
@@ -135,60 +136,64 @@ fun PrivacyOptionsContent(
                     onBackClick = onBackClick
                 )
 
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-                VolleyTextFieldGradient.SearchField(
-                    modifier = Modifier,
-                    text = state.query,
-                    actionToTransferContent = onQueryChanged
-                ) { }
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-                VolleyButton.SliderButtonsPlayers(
-                    modifier = Modifier.fillMaxWidth(),
-                    checkId = if (state.flagFavorites) {
-                        PrivacyOptionsScreenConstants.FAVORITE_PLAYERS
-                    } else {
-                        PrivacyOptionsScreenConstants.ALL_PLAYERS
-                    },
-                    onSelected = onAllOrFavoritesSelected
-                )
-
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-                // передаем список найденных игроков + выбранных
-                val filteredPlayers =
-                    filterPlayers(
-                        (state.selectedPlayers + state.playersSearchResult.toSet()).toList(),
-                        state.flagFavorites
-                    )
-                val scrollState = rememberScrollState()
-
+                val scrollState = rememberSaveable(saver = ScrollState.Saver) {
+                    ScrollState(0)
+                }
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_24.dp),
                     modifier = Modifier
-                        .weight(1f)
                         .verticalScroll(scrollState)
                 ) {
-                    filteredPlayers.forEach { player ->
-                        VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
-                            player = player,
-                            isSelected = isPlayerSelected(player),
-                            onAction = {
-                                onPlayerSelectionClick(player)
-                            }
-                        )
-                    }
-                }
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                    VolleyTextFieldGradient.SearchField(
+                        modifier = Modifier,
+                        text = state.query,
+                        actionToTransferContent = onQueryChanged
+                    ) { }
 
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_24.dp))
-                VolleyButton.ActiveButton(
-                    modifier = Modifier
-                        .height(VolleyDimens.DIMEN_44.dp)
-                        .align(Alignment.CenterHorizontally)
-                        .fillMaxWidth(),
-                    text = stringResource(R.string.add_selected),
-                    onClick = onAddSelectedClick
-                )
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                    VolleyButton.SliderButtonsPlayers(
+                        modifier = Modifier.fillMaxWidth(),
+                        checkId = if (state.flagFavorites) {
+                            PrivacyOptionsScreenConstants.FAVORITE_PLAYERS
+                        } else {
+                            PrivacyOptionsScreenConstants.ALL_PLAYERS
+                        },
+                        onSelected = onAllOrFavoritesSelected
+                    )
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+                    // передаем список найденных игроков + выбранных
+                    val filteredPlayers =
+                        filterPlayers(
+                            (state.selectedPlayers union state.playersSearchResult).toList(),
+                            state.flagFavorites
+                        )
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_24.dp),
+                        modifier = Modifier
+                    ) {
+                        filteredPlayers.forEach { player ->
+                            VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
+                                player = player,
+                                isSelected = isPlayerSelected(player),
+                                onAction = {
+                                    onPlayerSelectionClick(player)
+                                }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_24.dp))
+                    VolleyButton.ActiveButton(
+                        modifier = Modifier
+                            .height(VolleyDimens.DIMEN_44.dp)
+                            .align(Alignment.CenterHorizontally)
+                            .fillMaxWidth(),
+                        text = stringResource(R.string.add_selected),
+                        onClick = onAddSelectedClick
+                    )
+                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+                }
             }
         }
     }

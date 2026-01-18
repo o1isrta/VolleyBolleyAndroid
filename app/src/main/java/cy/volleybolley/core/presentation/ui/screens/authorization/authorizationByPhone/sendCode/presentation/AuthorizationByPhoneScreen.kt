@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.RootContainer
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -102,15 +101,21 @@ fun AuthorizationByPhoneScreen(
     }
 }
 
-const val DEFAULT_PHONE_NUMBER = "66123"
+@Composable
+fun PreviewRootContainer(content: @Composable (PaddingValues) -> Unit) {
+    val fakePadding = PaddingValues(0.dp) // Или любые другие значения
+    VolleyContainersRootTransparent.TransparentContainer {
+        content(fakePadding)
+    }
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewAuthorizationByPhoneScreen() {
-    RootContainer { paddingFromSystemUi, _ ->
+    PreviewRootContainer { paddingFromSystemUi -> // Use PreviewRootContainer here
         AuthorizationByPhoneScreen(
             state = AuthorizationByPhoneState(
-                phoneNumber = DEFAULT_PHONE_NUMBER,
+                phoneNumber = stringResource(R.string.default_phone_number),
                 isPhoneNumberInputError = true
             ),
             paddingFromSystemUi = paddingFromSystemUi,

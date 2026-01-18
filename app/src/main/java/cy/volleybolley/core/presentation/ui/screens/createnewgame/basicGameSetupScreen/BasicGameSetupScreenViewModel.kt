@@ -39,10 +39,14 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     }
 
     // флаг для показа календаря
-    private val _showCalendar = MutableStateFlow(!isSameDay(uiStateMutable.value.date, LocalDate.now()))
+    private val _showCalendar = MutableStateFlow(false)
     open val showCalendar: StateFlow<Boolean> = _showCalendar.asStateFlow()
 
     init {
+        // Используем корутину, чтобы получить начальное значение из uiState
+        viewModelScope.launch {
+            _showCalendar.value = !isSameDay(uiState.value.date, LocalDate.now()) // Инициализация в init
+        }
         // Подписка на изменения GameData из репозитория
         viewModelScope.launch {
             gameRepository.gameData.collectLatest { gameDataFromRepo ->
@@ -64,8 +68,8 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     override fun obtainEvent(event: BasicGameSetupScreenEvent) {
         when (event) {
             is BasicGameSetupScreenEvent.MessageChanged -> messageChanged(event.text)
-            BasicGameSetupScreenEvent.OnBackClicked -> onBackClicked()
-            BasicGameSetupScreenEvent.OnChangeClick -> onChangeClick()
+            is BasicGameSetupScreenEvent.OnBackClicked -> onBackClicked()
+            is BasicGameSetupScreenEvent.OnChangeClick -> onChangeClick()
             is BasicGameSetupScreenEvent.DateSelected -> dateSelected(event.date)
 
             is BasicGameSetupScreenEvent.OnPickDateClicked -> {
@@ -73,7 +77,7 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
                 _showCalendar.value = true // отображаем календарь, даже если дата сегодня
             }
 
-            BasicGameSetupScreenEvent.OnTodayClicked -> {
+            is BasicGameSetupScreenEvent.OnTodayClicked -> {
                 // Скрываем календарь при нажатии "Today" и устанавливаем сегодняшнюю дату
                 uiStateMutable.value = uiStateMutable.value.copy(date = LocalDate.now())
                 _showCalendar.value = false // скрываем календарь
@@ -120,7 +124,7 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
 
     private fun startTimeChanged(time: VolleyTimeStamp?) {
         timeChangeJob?.cancel()
-        viewModelScope.launch {
+        timeChangeJob = viewModelScope.launch {
             delay(DEBOUNCE_DELAY_300MS) // Дебаунс 300ms
             uiStateMutable.value = uiStateMutable.value.copy(
                 startTime = time
@@ -130,7 +134,7 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
 
     private fun finishTimeChanged(time: VolleyTimeStamp?) {
         timeChangeJob?.cancel()
-        viewModelScope.launch {
+        timeChangeJob = viewModelScope.launch {
             delay(DEBOUNCE_DELAY_300MS) // Дебаунс 300ms
             uiStateMutable.value = uiStateMutable.value.copy(
                 finishTime = time

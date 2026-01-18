@@ -1,6 +1,6 @@
 [versions]
 # Config
-compose = "2.9.0"
+composeCalendar = "2.9.0"
 firebaseAuth = "23.2.1"
 firebaseBom = "33.16.0"
 koinAndroid = "4.1.0"
@@ -39,7 +39,7 @@ material = "1.13.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
-compose = { module = "com.kizitonwose.calendar:compose", version.ref = "compose" }
+compose-calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "composeCalendar" }
 firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 google-firebase-auth = { module = "com.google.firebase:firebase-auth" }

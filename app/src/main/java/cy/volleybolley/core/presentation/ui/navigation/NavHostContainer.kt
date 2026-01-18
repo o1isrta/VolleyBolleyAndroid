@@ -142,8 +142,7 @@ fun NavHostContainer(
         }
 
         // Home nested graph
-        // (startDestination = HomeRoute) {
-        navigation<HomeTopLevelRoute>(startDestination = BasicGameSetupRoute) {
+        navigation<HomeTopLevelRoute>(startDestination = HomeRoute) {
             // home
             composable<HomeRoute> {
                 HomeScreen(
@@ -257,11 +256,6 @@ fun NavHostContainer(
                     navController = navController,
                     paddingFromSystemUi = paddingFromSystemUi,
                     finisher = activityFinisher,
-                    /*
-                    * paddingFromSystemUi = paddingFromSystemUi,
-                    navController = navController,
-                    finisher = activityFinisher,
-                    * */
                 )
             }
 

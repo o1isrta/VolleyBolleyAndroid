@@ -1,50 +1,17 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewtourney
 
 import androidx.compose.runtime.Composable
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
-import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
-import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
-import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
-import cy.volleybolley.core.presentation.ui.component.VolleyButton
-import cy.volleybolley.core.presentation.ui.model.Level
-import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
-import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-const val DEFAULT_START_HOUR = 14
+/*const val DEFAULT_START_HOUR = 14
 const val DEFAULT_START_MINUTES = 0
 const val DEFAULT_FINISH_HOUR = 15
-const val DEFAULT_FINISH_MINUTES = 0
+const val DEFAULT_FINISH_MINUTES = 0*/
 
 @Composable
 fun BasicTourneySetupScreen(/*navController: NavHostController*/) {
     val scrollState = rememberScrollState() // Состояние скролла
-    Column(
+   /* Column(
         modifier = Modifier
             .verticalScroll(scrollState)
     ) {
@@ -69,20 +36,20 @@ fun BasicTourneySetupScreen(/*navController: NavHostController*/) {
             text = stringResource(R.string.next_game),
             onClick = {}
         )
-    }
+    }*/
 }
 
-@Composable
+/*@Composable
 fun HorizontalLine() {
     HorizontalDivider(
         modifier = Modifier,
         color = VolleyColor.Divider,
         thickness = VolleyDimens.DIMEN_1.dp
     )
-}
+}*/
 
 @Composable
-fun BasicTourneySetupScreenContent() {
+fun BasicTourneySetupScreenContent() {/*
     Column(
         modifier = Modifier
             .padding(horizontal = VolleyDimens.DIMEN_20.dp)
@@ -191,15 +158,7 @@ fun BasicTourneySetupScreenContent() {
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
 
         // здесь будет календарь
-        /*     Box(
-     modifier = Modifier
-         .fillMaxWidth()
-         .height(266.dp)
-         .clip(RoundedCornerShape(32.dp)) // Задаем скругление углов
-         .background(VolleyColor.White) // Цвет прямоугольника
-  )
- Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
- */
+
         VolleyText.BodyBold(
             text = stringResource(R.string.game_duration),
             modifier = Modifier,
@@ -301,18 +260,18 @@ fun BasicTourneySetupScreenContent() {
         )
 
         Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-    }
+    }*/
 }
 
 @Preview
 @Composable
 private fun BasicTourneySetupScreenPreview() {
-    val navController = rememberNavController() // Создаем моковый NavHostController
+/*    val navController = rememberNavController() // Создаем моковый NavHostController
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
-        BasicTourneySetupScreen(/*navController = navController*/)
-    }
+        BasicTourneySetupScreen(*//*navController = navController*//*)
+    }*/
 }

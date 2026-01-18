@@ -2,13 +2,10 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.gameEnteringC
 
 import cy.volleybolley.core.presentation.base.UiEffect
 
-sealed class GameEnteringConditionsScreenEffect : UiEffect {
-    object NavigateToPayments :
-        GameEnteringConditionsScreenEffect() // Навигация к экрану создания аккаунта (PaymentsScreen )
-
-    object NavigateToSuccess : GameEnteringConditionsScreenEffect() // Навигация к экрану Success
-    data class ShowErrorMessage(val message: String) : GameEnteringConditionsScreenEffect()
-    object NavigateBack : GameEnteringConditionsScreenEffect()
-    object NavigateToPrivacy :
-        GameEnteringConditionsScreenEffect() // навигация к экрану PrivacyOptions (поиск и выбор игроков)
+sealed interface GameEnteringConditionsScreenEffect : UiEffect {
+    data object NavigateToPayments : GameEnteringConditionsScreenEffect
+    data object NavigateToSuccess : GameEnteringConditionsScreenEffect
+    data class ShowErrorMessage(val message: String) : GameEnteringConditionsScreenEffect
+    data object NavigateBack : GameEnteringConditionsScreenEffect
+    data object NavigateToPrivacy : GameEnteringConditionsScreenEffect
 }
