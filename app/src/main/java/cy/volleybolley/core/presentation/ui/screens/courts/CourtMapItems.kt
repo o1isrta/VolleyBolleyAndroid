@@ -26,11 +26,11 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.OutlinedActiv
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.screens.courts.CourtMapItem.CourtMapItemWithButton
+import cy.volleybolley.core.presentation.ui.screens.courts.CourtMapItems.CourtMapItemWithButton
 import cy.volleybolley.core.presentation.ui.screens.courts.ListItemComponents.DistanceContainer
 import cy.volleybolley.courts.presentation.model.CourtUi
 
-object CourtMapItem {
+object CourtMapItems {
     @Composable
     fun CourtMapItem(
         modifier: Modifier = Modifier,

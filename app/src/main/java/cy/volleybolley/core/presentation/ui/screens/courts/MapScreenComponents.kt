@@ -42,7 +42,7 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtDetailComponents.CourtMapItemDetail
-import cy.volleybolley.core.presentation.ui.screens.courts.CourtMapItem.CourtMapItemWithButton
+import cy.volleybolley.core.presentation.ui.screens.courts.CourtMapItems.CourtMapItemWithButton
 import cy.volleybolley.core.presentation.ui.screens.courts.MapScreenComponents.MapScreenContent
 import cy.volleybolley.courts.presentation.model.CourtUi
 

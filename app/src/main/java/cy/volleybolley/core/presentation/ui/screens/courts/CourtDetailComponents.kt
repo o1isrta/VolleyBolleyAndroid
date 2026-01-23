@@ -25,8 +25,8 @@ import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtDetailComponents.CourtDetailsContentWithButton
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtDetailComponents.CourtItemDetails
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtDetailComponents.CourtMapItemDetail
-import cy.volleybolley.core.presentation.ui.screens.courts.CourtMapItem.CourtActionButtons
-import cy.volleybolley.core.presentation.ui.screens.courts.CourtMapItem.CourtMapItem
+import cy.volleybolley.core.presentation.ui.screens.courts.CourtMapItems.CourtActionButtons
+import cy.volleybolley.core.presentation.ui.screens.courts.CourtMapItems.CourtMapItem
 import cy.volleybolley.core.presentation.ui.screens.courts.ListItemComponents.CourtDetailsContent
 import cy.volleybolley.core.presentation.ui.screens.courts.ListItemComponents.CourtImageWithTags
 import cy.volleybolley.core.presentation.ui.screens.courts.ListItemComponents.DistanceContainer
@@ -127,7 +127,6 @@ object CourtDetailComponents {
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng
 import cy.volleybolley.courts.domain.model.Contact
 import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.courts.presentation.model.CourtUi
+import java.util.Locale
 
 object CourtsMockData {
     private const val PHONE = "phone"
@@ -49,8 +50,14 @@ object CourtsMockData {
         Standard beach court with nets provided, shower & locker available,
         great for mid‑level players.
     """.trimIndent()
+    private const val DISTANCE_FORMAT_INT = "%d km"
 
-    private const val KM_SUFFIX = " km"
+    fun randomKm(): String =
+        String.format(
+            Locale.US,
+            DISTANCE_FORMAT_INT,
+            (1..20).random()
+        )
 
     val sampleCourts = listOf(
         CourtUi(
@@ -66,7 +73,7 @@ object CourtsMockData {
                 courtName = "Karon Beach Club",
                 locationName = "Patak Rd, Mueang"
             ),
-            distanceText = "${(1..20).random()}$KM_SUFFIX"
+            distanceText = randomKm()
         ),
         CourtUi(
             courtId = 2,
@@ -81,7 +88,7 @@ object CourtsMockData {
                 courtName = "Metadee Resort & Villas",
                 locationName = "56 Kata Rd, Karon, Mueang"
             ),
-            distanceText = "${(1..20).random()}$KM_SUFFIX"
+            distanceText = randomKm()
         ),
         CourtUi(
             courtId = 3,
@@ -96,7 +103,7 @@ object CourtsMockData {
                 courtName = "Pullman Phuket Karon Beach",
                 locationName = "333 Patak Rd, Tombion Karon"
             ),
-            distanceText = "${(1..20).random()}$KM_SUFFIX"
+            distanceText = randomKm()
         ),
         CourtUi(
             courtId = 4,
@@ -111,7 +118,7 @@ object CourtsMockData {
                 courtName = "The Shore at Katathani Resort",
                 locationName = "16 Kata Rd, Karon"
             ),
-            distanceText = "${(1..20).random()}$KM_SUFFIX"
+            distanceText = randomKm()
         ),
         CourtUi(
             courtId = 5,
@@ -126,7 +133,7 @@ object CourtsMockData {
                 courtName = "Kata Beach Sports Complex",
                 locationName = "34 Kata Rd, Karon"
             ),
-            distanceText = "${(1..20).random()}$KM_SUFFIX"
+            distanceText = randomKm()
         ),
         CourtUi(
             courtId = 6,
@@ -141,7 +148,7 @@ object CourtsMockData {
                 courtName = "Sunset Court Resort",
                 locationName = "8 Kata Noi Beach, Karon"
             ),
-            distanceText = "${(1..20).random()}$KM_SUFFIX"
+            distanceText = randomKm()
         ),
         CourtUi(
             courtId = 7,
@@ -156,7 +163,7 @@ object CourtsMockData {
                 courtName = "BeachSide Volley Karon",
                 locationName = "Karon Beachfront, Mueang"
             ),
-            distanceText = "${(1..20).random()}$KM_SUFFIX"
+            distanceText = randomKm()
         )
     )
     const val PHUKET_LAT = 7.8804
