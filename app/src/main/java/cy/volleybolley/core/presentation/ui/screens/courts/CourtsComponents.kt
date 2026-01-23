@@ -28,15 +28,15 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.ListContent
 import cy.volleybolley.core.presentation.ui.screens.courts.MapScreenComponents.MapScreen
-import cy.volleybolley.courts.domain.model.Court
+import cy.volleybolley.courts.presentation.model.CourtUi
 import cy.volleybolley.courts.util.UiStateRenderer
 
 object CourtsComponents {
     @Composable
     fun CourtMapListSwitcherScreen(
         modifier: Modifier = Modifier,
-        courts: List<Court> = emptyList(),
-        selectedCourt: Court? = null,
+        courts: List<CourtUi> = emptyList(),
+        selectedCourt: CourtUi? = null,
         userLocation: LatLng? = null,
         showDetails: Boolean = false,
         isLoading: Boolean = false,
@@ -44,54 +44,48 @@ object CourtsComponents {
         isMapSelected: Boolean,
         onTabSelected: (Boolean) -> Unit,
         onBackNavigationRequested: () -> Unit = {},
-        onCourtClick: (Court) -> Unit,
-        onCourtChoose: (Court) -> Unit,
+        onMapCourtClick: (CourtUi) -> Unit,
+        onMapCourtDetailsClick: (CourtUi) -> Unit,
         onMapClick: () -> Unit,
-        onCourtDetailsClick: (Court) -> Unit,
+        onListCourtClick: (CourtUi) -> Unit,
+        onCourtChoose: (CourtUi) -> Unit,
         onUserLocationUpdate: (LatLng) -> Unit,
         onUserLocationDenied: () -> Unit,
     ) {
-        Box(
-            modifier = modifier.fillMaxSize()
-        ) {
-            UiStateRenderer(
-                isLoading = isLoading,
-                error = error
-            ) {
-                when {
-                    isMapSelected -> {
-                        MapScreen(
-                            courts = courts,
-                            selectedCourt = selectedCourt,
-                            userLocation = userLocation,
-                            showDetails = showDetails,
-                            onMapClick = onMapClick,
-                            onCourtClick = onCourtClick,
-                            onCourtChoose = onCourtChoose,
-                            onCourtDetailsClick = onCourtDetailsClick,
-                            onUserLocationUpdate = onUserLocationUpdate,
-                            onUserLocationDenied = onUserLocationDenied
-                        )
-                    }
+        Box(modifier = modifier.fillMaxSize()) {
+            UiStateRenderer(isLoading = isLoading, error = error) {
 
-                    else -> {
-                        ListContent(
-                            courts = courts,
-                            selectedCourt = selectedCourt,
-                            onClick = onCourtClick,
-                            onChooseCourt = onCourtChoose,
-                            modifier = Modifier.padding(top = VolleyDimens.DIMEN_40.dp)
-                        )
-                    }
+                if (isMapSelected) {
+                    MapScreen(
+                        courts = courts,
+                        selectedCourt = selectedCourt,
+                        userLocation = userLocation,
+                        showDetails = showDetails,
+                        onMapClick = onMapClick,
+                        onCourtClick = onMapCourtClick,
+                        onCourtDetailsClick = onMapCourtDetailsClick,
+                        onCourtChoose = onCourtChoose,
+                        onUserLocationUpdate = onUserLocationUpdate,
+                        onUserLocationDenied = onUserLocationDenied
+                    )
+                } else {
+                    ListContent(
+                        courts = courts,
+                        selectedCourt = selectedCourt,
+                        onClick = onListCourtClick,
+                        onChooseCourt = onCourtChoose,
+                        modifier = Modifier.padding(top = VolleyDimens.DIMEN_40.dp)
+                    )
                 }
             }
+
             MapListTopBar(
                 isMapSelected = isMapSelected,
                 onTabSelected = onTabSelected,
                 onBackNavigationRequested = onBackNavigationRequested,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(all = VolleyDimens.DIMEN_8.dp)
+                    .padding(VolleyDimens.DIMEN_8.dp)
             )
         }
     }
@@ -140,7 +134,7 @@ private fun MapListTopBar(
 @Composable
 private fun PreviewCourtMapListSwitcherScreen() {
     var isMapSelected by remember { mutableStateOf(false) }
-    var selectedCourt by remember { mutableStateOf<Court?>(CourtsMockData.sampleCourts[1]) }
+    var selectedCourt by remember { mutableStateOf<CourtUi?>(CourtsMockData.sampleCourts[1]) }
 
     Box(
         modifier = Modifier
@@ -157,12 +151,13 @@ private fun PreviewCourtMapListSwitcherScreen() {
             isMapSelected = isMapSelected,
             onTabSelected = { isMapSelected = it },
             onBackNavigationRequested = {},
-            onCourtClick = { },
+            onMapCourtClick = { },
             onCourtChoose = { },
             onMapClick = {},
-            onCourtDetailsClick = { },
+            onListCourtClick = { },
             onUserLocationUpdate = { },
-            onUserLocationDenied = { }
+            onMapCourtDetailsClick = { },
+            onUserLocationDenied = { },
         )
     }
 }

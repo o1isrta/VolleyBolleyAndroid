@@ -11,10 +11,11 @@ import com.google.android.gms.maps.model.LatLng
 import cy.volleybolley.R
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.courts.presentation.model.CourtUi
 
 fun Location.toLatLng() = LatLng(latitude, longitude)
 
-fun Court.getMarkerIcon(context: Context, selectedCourt: Court?): BitmapDescriptor {
+fun CourtUi.getMarkerIcon(context: Context, selectedCourt: CourtUi?): BitmapDescriptor {
     return if (this.courtId == selectedCourt?.courtId) {
         context.drawableToBitmapDescriptor(R.drawable.ic_pin_map)
     } else {

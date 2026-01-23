@@ -2,8 +2,8 @@ package cy.volleybolley.core.presentation.ui.screens.courts
 
 import com.google.android.gms.maps.model.LatLng
 import cy.volleybolley.courts.domain.model.Contact
-import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.courts.presentation.model.CourtUi
 
 object CourtsMockData {
     private const val PHONE = "phone"
@@ -51,9 +51,9 @@ object CourtsMockData {
     """.trimIndent()
 
     val sampleCourts = listOf(
-        Court(
+        CourtUi(
             courtId = 1,
-            price = "Court pricing: 800 THB/60 min",
+            price = "800 THB/60 min",
             description = DESC_1,
             contacts = listOf(Contact(PHONE, "+66-2-2134567")),
             photo = "",
@@ -63,11 +63,12 @@ object CourtsMockData {
                 latitude = 7.8804,
                 courtName = "Karon Beach Club",
                 locationName = "Patak Rd, Mueang"
-            )
+            ),
+            distanceText = "${(1..20).random()} km"
         ),
-        Court(
+        CourtUi(
             courtId = 2,
-            price = "Court pricing: 750 THB/60 min",
+            price = "750 THB/60 min",
             description = DESC_2,
             contacts = listOf(Contact(PHONE, "+66-2-2134568")),
             photo = "",
@@ -77,11 +78,12 @@ object CourtsMockData {
                 latitude = 7.8904,
                 courtName = "Metadee Resort & Villas",
                 locationName = "56 Kata Rd, Karon, Mueang"
-            )
+            ),
+            distanceText = "${(1..20).random()} km"
         ),
-        Court(
+        CourtUi(
             courtId = 3,
-            price = "Court pricing: 900 THB/60 min",
+            price = "900 THB/60 min",
             description = DESC_3,
             contacts = listOf(Contact(PHONE, "+66-2-2134569"), Contact(PHONE, "+66-2-1234567")),
             photo = "",
@@ -91,11 +93,12 @@ object CourtsMockData {
                 latitude = 7.9004,
                 courtName = "Pullman Phuket Karon Beach",
                 locationName = "333 Patak Rd, Tombion Karon"
-            )
+            ),
+            distanceText = "${(1..20).random()} km"
         ),
-        Court(
+        CourtUi(
             courtId = 4,
-            price = "Court pricing: 850 THB/60 min",
+            price = "850 THB/60 min",
             description = DESC_4,
             contacts = listOf(Contact(PHONE, "+66-2-2134570")),
             photo = "",
@@ -105,11 +108,12 @@ object CourtsMockData {
                 latitude = 7.9104,
                 courtName = "The Shore at Katathani Resort",
                 locationName = "16 Kata Rd, Karon"
-            )
+            ),
+            distanceText = "${(1..20).random()} km"
         ),
-        Court(
+        CourtUi(
             courtId = 5,
-            price = "Court pricing: 700 THB/60 min",
+            price = "700 THB/60 min",
             description = DESC_5,
             contacts = listOf(Contact(PHONE, "+66‑2‑2134571")),
             photo = "",
@@ -119,11 +123,12 @@ object CourtsMockData {
                 latitude = 7.9200,
                 courtName = "Kata Beach Sports Complex",
                 locationName = "34 Kata Rd, Karon"
-            )
+            ),
+            distanceText = "${(1..20).random()} km"
         ),
-        Court(
+        CourtUi(
             courtId = 6,
-            price = "Court pricing: 950 THB/60 min",
+            price = "950 THB/60 min",
             description = DESC_6,
             contacts = listOf(Contact(PHONE, "+66‑2‑2134572")),
             photo = "",
@@ -133,11 +138,12 @@ object CourtsMockData {
                 latitude = 7.9300,
                 courtName = "Sunset Court Resort",
                 locationName = "8 Kata Noi Beach, Karon"
-            )
+            ),
+            distanceText = "${(1..20).random()} km"
         ),
-        Court(
+        CourtUi(
             courtId = 7,
-            price = "Court pricing: 820 THB/60 min",
+            price = "820 THB/60 min",
             description = DESC_7,
             contacts = listOf(Contact(PHONE, "+66‑2‑2134573")),
             photo = "",
@@ -147,7 +153,8 @@ object CourtsMockData {
                 latitude = 7.9400,
                 courtName = "BeachSide Volley Karon",
                 locationName = "Karon Beachfront, Mueang"
-            )
+            ),
+            distanceText = "${(1..20).random()} km"
         )
     )
     const val PHUKET_LAT = 7.8804

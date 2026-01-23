@@ -43,21 +43,21 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.CourtDetailsContent
+import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.CourtDetailsContentWithButton
 import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.CourtItemDetails
 import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.CourtListItem
 import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.DistanceContainer
 import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.ListContent
-import cy.volleybolley.courts.domain.model.Court
+import cy.volleybolley.courts.presentation.model.CourtUi
 
 object ListScreenComponents {
     @Composable
     fun ListContent(
         modifier: Modifier = Modifier,
-        courts: List<Court> = emptyList(),
-        selectedCourt: Court? = null,
-        onClick: (Court) -> Unit,
-        onChooseCourt: (Court) -> Unit,
+        courts: List<CourtUi> = emptyList(),
+        selectedCourt: CourtUi? = null,
+        onClick: (CourtUi) -> Unit,
+        onChooseCourt: (CourtUi) -> Unit,
     ) {
         TransparentContainer(
             modifier = modifier
@@ -76,10 +76,10 @@ object ListScreenComponents {
 
     @Composable
     private fun CourtsSearchList(
-        courts: List<Court>,
-        selectedCourt: Court?,
-        onClick: (Court) -> Unit,
-        onChooseCourt: (Court) -> Unit
+        courts: List<CourtUi>,
+        selectedCourt: CourtUi?,
+        onClick: (CourtUi) -> Unit,
+        onChooseCourt: (CourtUi) -> Unit
     ) {
         var searchText by remember { mutableStateOf("") }
         val filteredCourts by remember(courts, searchText) {
@@ -119,6 +119,7 @@ object ListScreenComponents {
                         CourtListItem(
                             courtName = court.location.courtName,
                             locationName = court.location.locationName,
+                            distance = court.distanceText,
                             onClick = { onClick(court) },
                             modifier = Modifier.padding(vertical = VolleyDimens.DIMEN_16.dp)
                         )
@@ -136,6 +137,7 @@ object ListScreenComponents {
         modifier: Modifier = Modifier,
         courtName: String,
         locationName: String,
+        distance: String,
         onClick: () -> Unit,
     ) {
         Row(
@@ -164,14 +166,14 @@ object ListScreenComponents {
 
             DistanceContainer(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                distance = "${(1..20).random()} km",
+                distance = distance,
             )
         }
     }
 
     @Composable
     fun CourtItemDetails(
-        court: Court,
+        court: CourtUi,
         onClick: () -> Unit,
         onChooseCourt: () -> Unit
     ) {
@@ -186,12 +188,13 @@ object ListScreenComponents {
                 courtName = court.location.courtName,
                 locationName = court.location.locationName,
                 onClick = onClick,
+                distance = court.distanceText
             )
             CourtImageWithTags(
                 photoUrl = court.photo,
                 tags = court.tags
             )
-            CourtDetailsContent(
+            CourtDetailsContentWithButton(
                 court = court,
                 onChooseCourt = onChooseCourt
             )
@@ -199,20 +202,53 @@ object ListScreenComponents {
     }
 
     @Composable
+    fun CourtDetailsContentWithButton(
+        modifier: Modifier = Modifier,
+        court: CourtUi,
+        onChooseCourt: () -> Unit
+    ) {
+        Column(modifier = modifier) {
+            CourtDetailsContent(
+                court = court,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            ActiveButton(
+                onClick = onChooseCourt,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = VolleyDimens.DIMEN_16.dp)
+                    .height(VolleyDimens.DIMEN_44.dp),
+                text = stringResource(R.string.choose_this_court),
+                enabled = true,
+            )
+        }
+    }
+
+    @Stable
+    @Composable
     fun CourtDetailsContent(
         modifier: Modifier = Modifier,
-        court: Court,
-        onChooseCourt: () -> Unit
+        court: CourtUi
     ) {
         Column(
             modifier = modifier
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
         ) {
-            VolleyText.BodyBold(
-                text = court.price,
-                color = VolleyColor.White,
-            )
+            Row(
+                verticalAlignment = Alignment.Top,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                VolleyText.BodyBold(
+                    text = "${stringResource(R.string.court_pricing)} ",
+                    color = VolleyColor.White
+                )
+                VolleyText.BodyRegular(
+                    text = court.price,
+                    color = VolleyColor.White
+                )
+            }
 
             VolleyText.BodyRegular(
                 text = court.description,
@@ -224,7 +260,7 @@ object ListScreenComponents {
                     verticalAlignment = Alignment.Top,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    VolleyText.BodyRegular(
+                    VolleyText.BodyBold(
                         text = "${stringResource(R.string.contacts)} ",
                         color = VolleyColor.White
                     )
@@ -241,15 +277,6 @@ object ListScreenComponents {
                 }
             }
         }
-        ActiveButton(
-            onClick = onChooseCourt,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = VolleyDimens.DIMEN_16.dp)
-                .height(VolleyDimens.DIMEN_44.dp),
-            text = stringResource(R.string.choose_this_court),
-            enabled = true,
-        )
     }
 
     @Stable
@@ -379,9 +406,10 @@ private fun PreviewComponentContainer() {
             modifier = Modifier.padding(vertical = VolleyDimens.DIMEN_16.dp),
             courtName = CourtsMockData.sampleCourts[0].location.courtName,
             locationName = CourtsMockData.sampleCourts[0].location.locationName,
-            onClick = {}
+            onClick = {},
+            distance = CourtsMockData.sampleCourts[0].distanceText
         )
-        CourtDetailsContent(
+        CourtDetailsContentWithButton(
             court = CourtsMockData.sampleCourts[0],
             onChooseCourt = {},
         )

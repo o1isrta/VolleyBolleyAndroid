@@ -8,7 +8,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,9 +24,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,6 +39,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -56,7 +59,7 @@ import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.
 import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.CourtImageWithTags
 import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.DistanceContainer
 import cy.volleybolley.core.presentation.ui.screens.courts.MapScreenComponents.MapScreenContent
-import cy.volleybolley.courts.domain.model.Court
+import cy.volleybolley.courts.presentation.model.CourtUi
 
 object MapScreenComponents {
     private const val DEFAULT_LAT = 7.8804
@@ -69,14 +72,14 @@ object MapScreenComponents {
     @Composable
     fun MapScreen(
         modifier: Modifier = Modifier,
-        courts: List<Court> = emptyList(),
-        selectedCourt: Court? = null,
+        courts: List<CourtUi> = emptyList(),
+        selectedCourt: CourtUi? = null,
         userLocation: LatLng? = null,
         showDetails: Boolean = false,
         onMapClick: () -> Unit,
-        onCourtClick: (Court) -> Unit,
-        onCourtChoose: (Court) -> Unit,
-        onCourtDetailsClick: (Court) -> Unit,
+        onCourtClick: (CourtUi) -> Unit,
+        onCourtChoose: (CourtUi) -> Unit,
+        onCourtDetailsClick: (CourtUi) -> Unit,
         onUserLocationUpdate: (LatLng) -> Unit,
         onUserLocationDenied: () -> Unit,
     ) {
@@ -123,19 +126,33 @@ object MapScreenComponents {
     @Composable
     fun MapScreenContent(
         modifier: Modifier = Modifier,
-        courts: List<Court> = emptyList(),
-        selectedCourt: Court? = null,
+        courts: List<CourtUi> = emptyList(),
+        selectedCourt: CourtUi? = null,
         userLocation: LatLng? = null,
         showDetails: Boolean = false,
         onMapClick: () -> Unit,
-        onCourtClick: (Court) -> Unit,
-        onCourtChoose: (Court) -> Unit,
-        onCourtDetailsClick: (Court) -> Unit,
+        onCourtClick: (CourtUi) -> Unit,
+        onCourtChoose: (CourtUi) -> Unit,
+        onCourtDetailsClick: (CourtUi) -> Unit,
     ) {
         val context = LocalContext.current
-        val defaultLatLng = DEFAULT_LAT_LNG
         val cameraPositionState = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(userLocation ?: defaultLatLng, DEFAULT_ZOOM)
+            position = CameraPosition.fromLatLngZoom(
+                DEFAULT_LAT_LNG,
+                DEFAULT_ZOOM
+            )
+        }
+        var hasCenteredOnUser by rememberSaveable { mutableStateOf(false) }
+        LaunchedEffect(userLocation) {
+            if (userLocation != null && !hasCenteredOnUser) {
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newLatLngZoom(
+                        userLocation,
+                        DEFAULT_ZOOM
+                    )
+                )
+                hasCenteredOnUser = true
+            }
         }
         Box(modifier = modifier.fillMaxSize()) {
             GoogleMap(
@@ -181,9 +198,9 @@ object MapScreenComponents {
                         if (showDetails) {
                             CourtMapItemDetail(
                                 court = court,
-                                onClick = onMapClick,
                                 onChooseCourt = { onCourtChoose(court) },
-                                modifier = modifier
+                                modifier = modifier,
+                                onClickDetails = { onCourtDetailsClick(court) }
                             )
                         } else {
                             CourtMapItemWithButton(
@@ -203,13 +220,11 @@ object MapScreenComponents {
 @Composable
 private fun CourtMapItem(
     modifier: Modifier = Modifier,
-    court: Court,
-    onClick: () -> Unit,
+    court: CourtUi,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -242,7 +257,7 @@ private fun CourtMapItem(
 
             DistanceContainer(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                distance = "Nearest"
+                distance = court.distanceText
             )
         }
     }
@@ -251,12 +266,13 @@ private fun CourtMapItem(
 @Composable
 private fun CourtMapItemWithButton(
     modifier: Modifier,
-    court: Court,
+    court: CourtUi,
     onClick: () -> Unit,
     onChooseCourt: () -> Unit,
 ) {
     TransparentContainer(
         modifier = modifier
+            .clip(RoundedCornerShape(VolleyDimens.DIMEN_32.dp))
             .background(VolleyColor.TurquoiseDark)
             .wrapContentHeight(),
         mainContainerAlignment = Alignment.Center
@@ -269,7 +285,6 @@ private fun CourtMapItemWithButton(
         ) {
             CourtMapItem(
                 court = court,
-                onClick = onClick,
             )
             CourtActionButtons(onClickDetails = onClick, onChooseCourt = onChooseCourt)
         }
@@ -302,13 +317,14 @@ private fun CourtActionButtons(
 
 @Composable
 private fun CourtMapItemDetail(
-    court: Court,
-    onClick: () -> Unit,
+    court: CourtUi,
+    onClickDetails: () -> Unit,
     onChooseCourt: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TransparentContainer(
         modifier = modifier
+            .clip(RoundedCornerShape(VolleyDimens.DIMEN_32.dp))
             .background(VolleyColor.TurquoiseDark)
             .wrapContentHeight(),
         mainContainerAlignment = Alignment.Center
@@ -316,20 +332,21 @@ private fun CourtMapItemDetail(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onClick)
                 .padding(VolleyDimens.DIMEN_20.dp)
         ) {
             CourtMapItem(
                 court = court,
-                onClick = onClick
             )
             CourtImageWithTags(
                 photoUrl = court.photo,
                 tags = court.tags
             )
             CourtDetailsContent(
-                modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
                 court = court,
+            )
+            CourtActionButtons(
+                modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+                onClickDetails = onClickDetails,
                 onChooseCourt = onChooseCourt
             )
         }
@@ -383,7 +400,7 @@ private fun PreviewCourtMapItemWithButton() {
 private fun PreviewCourtMapItemDetail() {
     CourtMapItemDetail(
         court = CourtsMockData.sampleCourts[1],
-        onClick = {},
+        onClickDetails = {},
         onChooseCourt = {}
     )
 }

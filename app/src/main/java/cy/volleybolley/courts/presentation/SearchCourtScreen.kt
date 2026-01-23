@@ -85,12 +85,29 @@ private fun CourtListContent(
         error = state.error,
         isMapSelected = isMapSelected,
         onTabSelected = onTabSelected,
-        onBackNavigationRequested = { onEvent(SearchCourtEvent.OnBackFromSearchCourtListScreen) },
-        onCourtClick = { court -> onEvent(SearchCourtEvent.ClickOnSearchCourtMarker(court)) },
-        onCourtChoose = { court -> onEvent(SearchCourtEvent.ClickOnChooseSearchCourt(court)) },
-        onMapClick = { onEvent(SearchCourtEvent.ClickOnMap) },
-        onCourtDetailsClick = { court -> onEvent(SearchCourtEvent.ClickOnSearchCourtDetails(court)) },
-        onUserLocationUpdate = { latLng -> onEvent(SearchCourtEvent.UpdateUserLocation(latLng)) },
-        onUserLocationDenied = { onEvent(SearchCourtEvent.DeniedUserLocation) },
+        onBackNavigationRequested = {
+            onEvent(SearchCourtEvent.OnBackFromSearchCourtListScreen)
+        },
+        onMapCourtClick = { court ->
+            onEvent(SearchCourtEvent.ClickOnCourtMarker(court))
+        },
+        onMapCourtDetailsClick = { court ->
+            onEvent(SearchCourtEvent.ToggleCourtDetailsFromMap(court))
+        },
+        onMapClick = {
+            onEvent(SearchCourtEvent.ClickOnMap)
+        },
+        onListCourtClick = { court ->
+            onEvent(SearchCourtEvent.ClickOnCourtFromList(court))
+        },
+        onCourtChoose = { court ->
+            onEvent(SearchCourtEvent.ClickOnChooseSearchCourt(court))
+        },
+        onUserLocationUpdate = { latLng ->
+            onEvent(SearchCourtEvent.UpdateUserLocation(latLng))
+        },
+        onUserLocationDenied = {
+            onEvent(SearchCourtEvent.DeniedUserLocation)
+        }
     )
 }
