@@ -51,12 +51,14 @@ object CourtsMockData {
         great for mid‑level players.
     """.trimIndent()
     private const val DISTANCE_FORMAT_INT = "%d km"
+    private const val MIN_DISTANCE_KM = 1
+    private const val MAX_DISTANCE_KM = 20
 
     fun randomKm(): String =
         String.format(
             Locale.US,
             DISTANCE_FORMAT_INT,
-            (1..20).random()
+            (MIN_DISTANCE_KM..MAX_DISTANCE_KM).random()
         )
 
     val sampleCourts = listOf(
