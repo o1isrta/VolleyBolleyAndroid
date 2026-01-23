@@ -54,7 +54,6 @@ object CourtsComponents {
     ) {
         Box(modifier = modifier.fillMaxSize()) {
             UiStateRenderer(isLoading = isLoading, error = error) {
-
                 if (isMapSelected) {
                     MapScreen(
                         courts = courts,

@@ -57,9 +57,14 @@ class SearchCourtViewModel @Inject constructor(
         launchSafe(getErrorLogMessage = { "Failed to load courts: ${it.message}" }, block = {
             when (val result = courtsUseCase.getCourts()) {
                 is VolleyResult.Success -> {
-                    val userLocation = uiState.value.userLocation
-                    val uiCourts = result.data.map { it.toCourtUI(userLocation) }
-                    uiStateMutable.update { it.copy(courts = uiCourts, isLoading = false) }
+                    uiStateMutable.update { state ->
+                        state.copy(
+                            courts = result.data.map {
+                                it.toCourtUI(state.userLocation)
+                            },
+                            isLoading = false
+                        )
+                    }
                 }
 
                 is VolleyResult.Failure -> {
@@ -74,8 +79,19 @@ class SearchCourtViewModel @Inject constructor(
     }
 
     private fun updateUserLocation(latLng: LatLng) {
-        uiStateMutable.update { it.copy(userLocation = latLng) }
-        updateCourtsWithDistance(latLng)
+        uiStateMutable.update { state ->
+            val updatedCourts = state.courts.map { courtUi ->
+                courtUi.updateDistance(latLng)
+            }
+
+            val updatedSelectedCourt = state.selectedCourt?.updateDistance(latLng)
+
+            state.copy(
+                userLocation = latLng,
+                courts = updatedCourts,
+                selectedCourt = updatedSelectedCourt
+            )
+        }
     }
 
     private fun deniedUserLocation() {
@@ -113,15 +129,18 @@ class SearchCourtViewModel @Inject constructor(
 
     private fun toggleCourtMapDetails(court: CourtUi) {
         uiStateMutable.update { state ->
-            if (state.selectedCourt != court) return@update state
-            state.copy(showDetails = !state.showDetails)
+            when (state.selectedCourt) {
+                court -> state.copy(showDetails = !state.showDetails)
+                else -> state
+            }
         }
     }
 
     private fun clickOnChooseCourt(court: CourtUi) {
         sendUiEffect(
             SearchCourtEffect.NavigateToGameCreation(
-                selectedCourt = court, eventType = eventType
+                selectedCourt = court,
+                eventType = eventType
             )
         )
     }

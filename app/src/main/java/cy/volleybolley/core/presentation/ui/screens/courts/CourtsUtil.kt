@@ -9,7 +9,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import cy.volleybolley.R
-import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.courts.presentation.model.CourtUi
 
