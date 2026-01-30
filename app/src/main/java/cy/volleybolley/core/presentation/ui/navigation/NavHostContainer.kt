@@ -9,8 +9,7 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.sendCode.presentation.AuthorizationByPhoneScreen
-import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.verifyCode.presentation.VerifyPhoneNumberScreen
+import cy.volleybolley.auth.phone.ui.AuthorizationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.BasicGameSetupScreen
@@ -61,10 +60,10 @@ import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreen
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenViewModel
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreen
+import cy.volleybolley.rateplayers.RatePlayersScreen
 import cy.volleybolley.registration.presentation.ui.screens.aboutlevels.AboutLevelsScreen
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationScreen
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationViewModel
-import cy.volleybolley.rateplayers.RatePlayersScreen
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -119,12 +118,14 @@ fun NavHostContainer(
             AuthorizationByPhoneScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
                 onBackNavigationRequested = { navController.popBackStack() },
-                requestNavigateToVerifyPhoneScreen = {
-                    navController.navigate(VerifyPhoneNumberRoute)
+                onAuthorized = {
+                    navController.navigate(RegistrationRoute) {
+                        popUpTo(AuthorizationByPhoneRoute) { inclusive = true }
+                    }
                 }
             )
         }
-        composable<VerifyPhoneNumberRoute> {
+        /*composable<VerifyPhoneNumberRoute> {
             VerifyPhoneNumberScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
                 onBackNavigationRequested = { navController.popBackStack() },
@@ -132,7 +133,7 @@ fun NavHostContainer(
                     navController.navigate(RegistrationRoute)
                 }
             )
-        }
+        }*/
         composable<AboutLevelsRoute> {
             AboutLevelsScreen(onBackNavigationRequested = { navController.popBackStack() })
         }
