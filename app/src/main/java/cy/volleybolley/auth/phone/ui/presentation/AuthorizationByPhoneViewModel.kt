@@ -1,14 +1,31 @@
 package cy.volleybolley.auth.phone.ui.presentation
 
+import cy.volleybolley.auth.domain.api.usecase.SaveAccessTokenUseCase
+import cy.volleybolley.auth.domain.api.usecase.SaveIsRegisteredUseCase
+import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
+import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenTimestampUseCase
+import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenUseCase
+import cy.volleybolley.auth.domain.models.LoginData
+import cy.volleybolley.auth.phone.domain.PhoneTokenAuthUseCase
 import cy.volleybolley.auth.phone.domain.ResendCodeToken
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.auth.phone.domain.PhoneValidator
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEffect
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEvent
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneState
+import cy.volleybolley.core.domain.model.onFailure
+import cy.volleybolley.core.domain.model.onSuccess
 import kotlinx.coroutines.flow.update
+import kotlinx.serialization.json.Json
 
-class AuthorizationByPhoneViewModel() :
+class AuthorizationByPhoneViewModel(
+    private val phoneTokenAuthUseCase: PhoneTokenAuthUseCase,
+    private val saveAccessTokenUseCase: SaveAccessTokenUseCase,
+    private val saveRefreshTokenUseCase: SaveRefreshTokenUseCase,
+    private val saveRefreshTokenTimestampUseCase: SaveRefreshTokenTimestampUseCase,
+    private val savePersonalDataUseCase: SavePersonalDataUseCase,
+    private val saveIsRegisteredUseCase: SaveIsRegisteredUseCase
+    ) :
     BaseViewModel<AuthorizationByPhoneState, AuthorizationByPhoneEvent, AuthorizationByPhoneEffect>(
         initialState = AuthorizationByPhoneState()
     ) {
@@ -106,6 +123,14 @@ class AuthorizationByPhoneViewModel() :
         )
     }
 
+    private suspend fun saveLoginData(loginData: LoginData) {
+        saveRefreshTokenUseCase.execute(loginData.refreshToken)
+        saveAccessTokenUseCase.execute(loginData.accessToken)
+        saveRefreshTokenTimestampUseCase.execute(System.currentTimeMillis())
+        savePersonalDataUseCase.execute(loginData.userPersonalData)
+        saveIsRegisteredUseCase.execute(loginData.isRegistered)
+    }
+
     fun onCodeSent(
         verificationId: String,
         resendToken: ResendCodeToken
@@ -121,8 +146,33 @@ class AuthorizationByPhoneViewModel() :
     }
 
     fun onAuthorized(idToken: String) {
-        uiStateMutable.update { it.copy(isLoading = false) }
-        uiEffectMutable.trySend(AuthorizationByPhoneEffect.Authorized(idToken))
+        launchSafe(
+            block = {
+                uiStateMutable.update { it.copy(isLoading = true) }
+                val result = phoneTokenAuthUseCase.loginWithPhone(idToken)
+                uiStateMutable.update { it.copy(isLoading = false) }
+
+                result
+                    .onSuccess { loginData ->
+                        saveLoginData(loginData)
+
+                        if (loginData.isRegistered) {
+                            uiEffectMutable.trySend(AuthorizationByPhoneEffect.NavigateHome)
+                        } else {
+                            val userJson = Json.Default.encodeToString(loginData.userPersonalData)
+                            uiEffectMutable.trySend(AuthorizationByPhoneEffect.NavigateToRegistration(userJson))
+                        }
+                    }
+                    .onFailure {
+                        uiEffectMutable.trySend(AuthorizationByPhoneEffect.ShowError("Authorization error"))
+                    }
+            },
+            onError = {
+                uiStateMutable.update { it.copy(isLoading = false) }
+                uiEffectMutable.trySend(AuthorizationByPhoneEffect.ShowError("Unexpected error during authorization"))
+            },
+            getErrorLogMessage = { "PhoneTokenReceived: unexpected error -> ${it.message}" }
+        )
     }
 
     fun onError() {

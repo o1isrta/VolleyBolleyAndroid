@@ -118,22 +118,13 @@ fun NavHostContainer(
             AuthorizationByPhoneScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
                 onBackNavigationRequested = { navController.popBackStack() },
-                onAuthorized = {
-                    navController.navigate(RegistrationRoute) {
-                        popUpTo(AuthorizationByPhoneRoute) { inclusive = true }
-                    }
-                }
+                onSuccessGetNotRegisterUser = { user ->
+                    navController.navigate(RegistrationRoute(user))
+                },
+                onSuccessGetRegisterUser = { navController.navigate(HomeRoute) }
             )
         }
-        /*composable<VerifyPhoneNumberRoute> {
-            VerifyPhoneNumberScreen(
-                paddingFromSystemUi = paddingFromSystemUi,
-                onBackNavigationRequested = { navController.popBackStack() },
-                onNavigateToRegistrationScreenRequested = {
-                    navController.navigate(RegistrationRoute)
-                }
-            )
-        }*/
+
         composable<AboutLevelsRoute> {
             AboutLevelsScreen(onBackNavigationRequested = { navController.popBackStack() })
         }

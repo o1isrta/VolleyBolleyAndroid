@@ -1,6 +1,8 @@
 package cy.volleybolley.auth.phone.di
 
 import com.google.firebase.auth.FirebaseAuth
+import cy.volleybolley.auth.phone.domain.PhoneTokenAuthUseCase
+import cy.volleybolley.auth.phone.domain.impl.PhoneTokenAuthUseCaseImpl
 import cy.volleybolley.auth.phone.ui.PhoneAuthHelper
 import cy.volleybolley.auth.phone.ui.presentation.AuthorizationByPhoneViewModel
 import org.koin.core.module.dsl.viewModel
@@ -11,9 +13,19 @@ val authorizationByPhoneModule = module {
         FirebaseAuth.getInstance()
     }
 
-    factory {
+    single {
         PhoneAuthHelper(get())
     }
 
-    viewModel { AuthorizationByPhoneViewModel() }
+
+    single<PhoneTokenAuthUseCase> {
+        PhoneTokenAuthUseCaseImpl(get())
+    }
+
+    viewModel { AuthorizationByPhoneViewModel(get(),
+        get(),
+        get(),
+        get(),
+        get(),
+        get()) }
 }

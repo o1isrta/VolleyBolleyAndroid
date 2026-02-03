@@ -84,7 +84,7 @@ val authorizationModule = module {
         AuthNetworkClient(lazyHttpClient = inject(HttpClientQualifier.NO_ACCESS_TOKEN.qualifier))
     }
 
-    single<AuthRepository> { AuthRepositoryImpl(get(named(HttpClientQualifier.AUTH.value))) }
+    factory<AuthRepository> { AuthRepositoryImpl(get(named(HttpClientQualifier.AUTH.value))) }
     single<GoogleTokenAuthUseCase> { GoogleTokenAuthUseCaseImpl(get()) }
 
     single {

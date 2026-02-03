@@ -18,7 +18,14 @@ class AuthNetworkClient(
                     requestConfigure(path = request.path, body = request.body)
                 }
             }
+
             is AuthRequest.RefreshAccessToken -> {
+                httpClient.post {
+                    requestConfigure(path = request.path, body = request.body)
+                }
+            }
+
+            is AuthRequest.Phone -> {
                 httpClient.post {
                     requestConfigure(path = request.path, body = request.body)
                 }
@@ -35,9 +42,15 @@ class AuthNetworkClient(
                 val googleResponse = httpResponse.body<AuthResponse.GoogleResponse>()
                 googleResponse
             }
+
             is AuthRequest.RefreshAccessToken -> {
                 val refreshResponse = httpResponse.body<AuthResponse.RefreshAccessTokenResponse>()
                 refreshResponse
+            }
+
+            is AuthRequest.Phone -> {
+                val phoneResponse = httpResponse.body<AuthResponse.GoogleResponse>()
+                phoneResponse
             }
         }
     }

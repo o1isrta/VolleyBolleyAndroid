@@ -2,6 +2,7 @@ package cy.volleybolley.auth.phone.ui
 
 import android.app.Activity
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,7 +21,8 @@ fun AuthorizationByPhoneScreen(
     phoneAuthHelper: PhoneAuthHelper = koinInject(),
     paddingFromSystemUi: PaddingValues,
     onBackNavigationRequested: () -> Unit,
-    onAuthorized: (String) -> Unit,
+    onSuccessGetNotRegisterUser: (String) -> Unit,
+    onSuccessGetRegisterUser: () -> Unit,
 ) {
     val context = LocalContext.current
     val activity = context as Activity
@@ -62,8 +64,16 @@ fun AuthorizationByPhoneScreen(
                 )
             }
 
-            is AuthorizationByPhoneEffect.Authorized -> {
-                onAuthorized(e.idToken)
+            is AuthorizationByPhoneEffect.NavigateToRegistration -> {
+                onSuccessGetNotRegisterUser(e.userJson)
+            }
+
+            is AuthorizationByPhoneEffect.NavigateHome -> {
+                onSuccessGetRegisterUser()
+            }
+
+            is AuthorizationByPhoneEffect.ShowError -> {
+                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
             }
 
             null -> Unit

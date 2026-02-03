@@ -1,6 +1,6 @@
 package cy.volleybolley.auth.data
 
-import cy.volleybolley.auth.data.dto.GoogleAuthRequestBodyDto
+import cy.volleybolley.auth.data.dto.AuthRequestBodyDto
 import cy.volleybolley.auth.data.dto.RefreshAccessTokenRequestBodyDto
 import cy.volleybolley.auth.data.dto.UserDto
 import cy.volleybolley.auth.data.dto.toDomain
@@ -18,7 +18,7 @@ class AuthRepositoryImpl(private val networkClient: NetworkClient<AuthRequest, A
     override suspend fun loginWithGoogle(idToken: String): VolleyResult<LoginData, ErrorType> {
         val response = networkClient.getResponse(
             AuthRequest.Google(
-                body = GoogleAuthRequestBodyDto(idToken)
+                body = AuthRequestBodyDto(idToken)
             )
         )
 
@@ -47,6 +47,25 @@ class AuthRepositoryImpl(private val networkClient: NetworkClient<AuthRequest, A
 
         val accessToken = (response.body as? AuthResponse.RefreshAccessTokenResponse)?.accessToken
         return accessToken?.let { VolleyResult.Success(it) } ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+    }
+
+    override suspend fun loginWithPhone(idToken: String): VolleyResult<LoginData, ErrorType> {
+        val response = networkClient.getResponse(
+            AuthRequest.Phone(
+                body = AuthRequestBodyDto(idToken)
+            )
+        )
+
+        if (!response.isSuccess) {
+            return VolleyResult.Failure(response.resultCode.mapToErrorType())
+
+        }
+
+        val loginData = (response.body as? AuthResponse.GoogleResponse)?.toDomain()
+
+        return loginData?.
+            let { VolleyResult.Success(it) }
+            ?: VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
     }
 
     private fun showUserDtoLog(userDto: UserDto?) {
