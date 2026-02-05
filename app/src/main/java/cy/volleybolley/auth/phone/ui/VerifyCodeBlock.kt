@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
-import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEvent
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneState
+import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
+import cy.volleybolley.core.presentation.ui.component.VolleyButton
 
 @Composable
 fun VerifyCodeBlock(
@@ -51,17 +51,21 @@ fun VerifyCodeBlock(
     )
 
     AnimatedVisibility(
-        visible = state.resendToken != null
+        visible = state.isResendVisible
     ) {
         Box(
             modifier = Modifier
                 .padding(top = 16.dp)
                 .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center
         ) {
             VolleyButton.GradientTextButton(
-                text = stringResource(R.string.get_new_code),
-                isEnable = !state.isLoading,
+                text = if (state.isResendEnabled) {
+                    stringResource(R.string.get_new_code)
+                } else {
+                    stringResource(R.string.resend_in, formatSeconds(state.remainingResendTime))
+                },
+                isEnable = state.isResendEnabled && !state.isLoading,
                 onClick = {
                     eventCallback(AuthorizationByPhoneEvent.ResendCodeClicked)
                 }
@@ -79,4 +83,10 @@ fun VerifyCodeBlock(
             eventCallback(AuthorizationByPhoneEvent.VerifyCodeClicked)
         }
     )
+}
+
+private fun formatSeconds(seconds: Int): String {
+    val minutes = seconds / 60
+    val remainingSeconds = seconds % 60
+    return "%02d:%02d".format(minutes, remainingSeconds)
 }

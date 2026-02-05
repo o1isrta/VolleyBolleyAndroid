@@ -1,5 +1,6 @@
 package cy.volleybolley.auth.phone.ui.presentation
 
+import androidx.lifecycle.viewModelScope
 import cy.volleybolley.auth.domain.api.usecase.SaveAccessTokenUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveIsRegisteredUseCase
 import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
@@ -7,16 +8,20 @@ import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenTimestampUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenUseCase
 import cy.volleybolley.auth.domain.models.LoginData
 import cy.volleybolley.auth.phone.domain.PhoneTokenAuthUseCase
-import cy.volleybolley.auth.phone.domain.ResendCodeToken
-import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.auth.phone.domain.PhoneValidator
+import cy.volleybolley.auth.phone.domain.ResendCodeToken
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEffect
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEvent
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneState
 import cy.volleybolley.core.domain.model.onFailure
 import cy.volleybolley.core.domain.model.onSuccess
+import cy.volleybolley.core.presentation.base.BaseViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import kotlin.coroutines.cancellation.CancellationException
 
 class AuthorizationByPhoneViewModel(
     private val phoneTokenAuthUseCase: PhoneTokenAuthUseCase,
@@ -25,10 +30,16 @@ class AuthorizationByPhoneViewModel(
     private val saveRefreshTokenTimestampUseCase: SaveRefreshTokenTimestampUseCase,
     private val savePersonalDataUseCase: SavePersonalDataUseCase,
     private val saveIsRegisteredUseCase: SaveIsRegisteredUseCase
-    ) :
+) :
     BaseViewModel<AuthorizationByPhoneState, AuthorizationByPhoneEvent, AuthorizationByPhoneEffect>(
         initialState = AuthorizationByPhoneState()
     ) {
+    private companion object {
+        const val RESEND_TIMEOUT_SECONDS = 30
+    }
+
+    private var resendTimerJob: Job? = null
+
     override val tag = AuthorizationByPhoneViewModel::class.simpleName ?: ""
 
     override fun obtainEvent(event: AuthorizationByPhoneEvent) {
@@ -113,7 +124,14 @@ class AuthorizationByPhoneViewModel(
         val state = uiState.value
         val token = state.resendToken ?: return
 
-        uiStateMutable.update { it.copy(isLoading = true) }
+        uiStateMutable.update {
+            it.copy(
+                isResendEnabled = false,
+                remainingResendTime = RESEND_TIMEOUT_SECONDS
+            )
+        }
+
+        startResendTimer()
 
         uiEffectMutable.trySend(
             AuthorizationByPhoneEffect.RequestSendCode(
@@ -131,6 +149,38 @@ class AuthorizationByPhoneViewModel(
         saveIsRegisteredUseCase.execute(loginData.isRegistered)
     }
 
+    private fun startResendTimer() {
+        resendTimerJob?.cancel()
+
+        resendTimerJob = viewModelScope.launch {
+            try {
+                for (seconds in RESEND_TIMEOUT_SECONDS downTo 1) {
+                    uiStateMutable.update {
+                        it.copy(remainingResendTime = seconds)
+                    }
+                    delay(1000)
+                }
+
+                uiStateMutable.update {
+                    it.copy(
+                        remainingResendTime = 0,
+                        isResendEnabled = true,
+                    )
+                }
+
+            } catch (e: CancellationException) {
+
+            } catch (t: Throwable) {
+                uiStateMutable.update {
+                    it.copy(
+                        remainingResendTime = 0,
+                        isResendEnabled = true,
+                    )
+                }
+            }
+        }
+    }
+
     fun onCodeSent(
         verificationId: String,
         resendToken: ResendCodeToken
@@ -140,9 +190,13 @@ class AuthorizationByPhoneViewModel(
                 isLoading = false,
                 verificationId = verificationId,
                 resendToken = resendToken,
-                step = AuthorizationByPhoneState.Step.VERIFY_CODE
+                step = AuthorizationByPhoneState.Step.VERIFY_CODE,
+                isResendVisible = true,
+                isResendEnabled = false,
+                remainingResendTime = RESEND_TIMEOUT_SECONDS
             )
         }
+        startResendTimer()
     }
 
     fun onAuthorized(idToken: String) {
@@ -159,7 +213,7 @@ class AuthorizationByPhoneViewModel(
                         if (loginData.isRegistered) {
                             uiEffectMutable.trySend(AuthorizationByPhoneEffect.NavigateHome)
                         } else {
-                            val userJson = Json.Default.encodeToString(loginData.userPersonalData)
+                            val userJson = Json.encodeToString(loginData.userPersonalData)
                             uiEffectMutable.trySend(AuthorizationByPhoneEffect.NavigateToRegistration(userJson))
                         }
                     }

@@ -16,6 +16,10 @@ data class AuthorizationByPhoneState(
     val verificationId: String? = null,
     var resendToken: ResendCodeToken? = null,
 
+    val isResendVisible: Boolean = false,
+    val isResendEnabled: Boolean = false,
+    val remainingResendTime: Int = 0,
+
     val step: Step = Step.ENTER_PHONE
 ) : UiState {
     enum class Step {
