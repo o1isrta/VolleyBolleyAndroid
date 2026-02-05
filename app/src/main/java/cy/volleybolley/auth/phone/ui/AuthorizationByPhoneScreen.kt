@@ -3,11 +3,18 @@ package cy.volleybolley.auth.phone.ui
 import android.app.Activity
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.auth.ui.phone.AuthorizationByPhoneContent
 import cy.volleybolley.auth.phone.ui.presentation.AuthorizationByPhoneViewModel
@@ -80,10 +87,24 @@ fun AuthorizationByPhoneScreen(
         }
     }
 
-    AuthorizationByPhoneContent(
-        state = state,
-        paddingFromSystemUI = paddingFromSystemUi,
-        onBackNavigationRequested = onBackNavigationRequested,
-        eventCallback = { viewModel.obtainEvent(it) },
-    )
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AuthorizationByPhoneContent(
+            state = state,
+            paddingFromSystemUI = paddingFromSystemUi,
+            onBackNavigationRequested = onBackNavigationRequested,
+            eventCallback = { viewModel.obtainEvent(it) },
+        )
+
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+    }
 }

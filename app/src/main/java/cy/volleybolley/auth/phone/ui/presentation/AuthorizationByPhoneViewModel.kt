@@ -105,6 +105,10 @@ class AuthorizationByPhoneViewModel(
         val state = uiState.value
         val verificationId = state.verificationId ?: return
 
+        if (state.code.isBlank()) {
+            return
+        }
+
         if (state.code.length < 6) {
             uiStateMutable.update { it.copy(isCodeInputError = true) }
             return
@@ -193,7 +197,8 @@ class AuthorizationByPhoneViewModel(
                 step = AuthorizationByPhoneState.Step.VERIFY_CODE,
                 isResendVisible = true,
                 isResendEnabled = false,
-                remainingResendTime = RESEND_TIMEOUT_SECONDS
+                remainingResendTime = RESEND_TIMEOUT_SECONDS,
+                isCodeInputError = false
             )
         }
         startResendTimer()
