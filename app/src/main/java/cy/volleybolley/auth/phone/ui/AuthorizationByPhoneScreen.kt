@@ -1,24 +1,22 @@
 package cy.volleybolley.auth.phone.ui
 
+import VolleyballProgressIndicator
 import android.app.Activity
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cy.volleybolley.auth.ui.phone.AuthorizationByPhoneContent
 import cy.volleybolley.auth.phone.ui.presentation.AuthorizationByPhoneViewModel
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEffect
+import cy.volleybolley.auth.ui.phone.AuthorizationByPhoneContent
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
@@ -60,7 +58,6 @@ fun AuthorizationByPhoneScreen(
                     onSuccess = { idToken ->
                         if (idToken != null) {
                             viewModel.onAuthorized(idToken)
-                            Log.d("Экран верификации кода", idToken)
                         } else {
                             viewModel.onError()
                         }
@@ -103,7 +100,7 @@ fun AuthorizationByPhoneScreen(
                     .zIndex(1f),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                VolleyballProgressIndicator()
             }
         }
     }
