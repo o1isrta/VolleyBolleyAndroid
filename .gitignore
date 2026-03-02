@@ -12,3 +12,4 @@ local.properties
 /build-logic/checks/build
 /build-logic/develop-properties/build
 /build-logic/gradle-ext/build
+CLAUDE.md
