@@ -118,7 +118,9 @@ object MyTourneyRoute : NavMap
 
 // --- upcoming games flow ---
 @Serializable
-object JoinedPlayersRoute : NavMap
+data class JoinedPlayersRoute(
+    val tournamentDetailsHolderKey: String
+) : NavMap
 
 @Serializable
 object UpcomingGameDetailsRoute : NavMap

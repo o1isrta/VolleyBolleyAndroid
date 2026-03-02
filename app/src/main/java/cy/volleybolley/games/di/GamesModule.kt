@@ -2,6 +2,7 @@ package cy.volleybolley.games.di
 
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.di.HttpClientQualifier
+import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.dataholder.TournamentDetailsDataHolder
 import cy.volleybolley.games.data.GameFeedRepositoryImpl
 import cy.volleybolley.games.data.GameParticipationRepositoryImpl
 import cy.volleybolley.games.data.GameRatingRepositoryImpl
@@ -134,6 +135,9 @@ val gamesModule = module {
     factory<JoinTournamentUseCase> { JoinTournamentUseCaseImpl(repository = get()) }
     factory<DeclineTournamentInviteUseCase> { DeclineTournamentInviteUseCaseImpl(repository = get()) }
     factory<InvitePlayersToTournamentUseCase> { InvitePlayersToTournamentUseCaseImpl(repository = get()) }
+
+    // Класс для передачи TournamentDetails с экрана UpcomingTourneyDetails на экран JoinedPlayersScreen
+    single<TournamentDetailsDataHolder> { TournamentDetailsDataHolder() }
 
     // ViewModel
 }
