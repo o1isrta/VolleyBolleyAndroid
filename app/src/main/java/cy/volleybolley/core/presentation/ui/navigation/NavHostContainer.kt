@@ -32,12 +32,12 @@ import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.
 import cy.volleybolley.core.presentation.ui.screens.games.archive.teamsscreen.TeamsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.GameInvitesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.JoinTheTourneyScreen
-import cy.volleybolley.core.presentation.ui.screens.games.mygames.ChangeTeamScreen
-import cy.volleybolley.core.presentation.ui.screens.games.mygames.GameHomeScreen
-import cy.volleybolley.core.presentation.ui.screens.games.mygames.ManagePlayersScreen
-import cy.volleybolley.core.presentation.ui.screens.games.mygames.MyGameScreen
-import cy.volleybolley.core.presentation.ui.screens.games.mygames.MyGamesScreen
-import cy.volleybolley.core.presentation.ui.screens.games.mygames.MyTourneyScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.changeteam.ChangeTeamScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.gamehome.GameHomeScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.manageplayers.ManagePlayersScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.mygame.MyGameScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess.MyGamesScreen
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.mytourney.MyTourneyScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.JoinedPlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGameDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreen
@@ -243,10 +243,10 @@ fun NavHostContainer(
             composable<JoinTeamRoute> { JoinTeamScreen(navController) }
         }
 
-        // My games nested graph
-        navigation<MyGamesTopLevelRoute>(startDestination = MyGamesRoute) {
-            composable<MyGamesRoute> {
-                MyGamesScreen(
+        // Game Home nested graph
+        navigation<GameHomeTopLevelRoute>(startDestination = GameHomeRoute) {
+            composable<GameHomeRoute> {
+                GameHomeScreen(
                     navController = navController,
                     finisher = activityFinisher,
                 )
@@ -264,7 +264,7 @@ fun NavHostContainer(
 
             // my games
             composable<ChangeTeamRoute> { ChangeTeamScreen(navController) }
-            composable<GameHomeRoute> { GameHomeScreen(navController) }
+            composable<MyGamesRoute> { MyGamesScreen(navController) }
             composable<ManagePlayersRoute> { ManagePlayersScreen(navController) }
             composable<MyGameRoute> { MyGameScreen(navController) }
             composable<MyTourneyRoute> { MyTourneyScreen(navController) }

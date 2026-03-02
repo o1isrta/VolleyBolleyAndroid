@@ -59,7 +59,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBotto
 import cy.volleybolley.core.presentation.ui.navigation.AuthorizationRoute
 import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
-import cy.volleybolley.core.presentation.ui.navigation.MyGamesTopLevelRoute
+import cy.volleybolley.core.presentation.ui.navigation.GameHomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
 import cy.volleybolley.core.presentation.ui.navigation.OnboardingRoute
 import cy.volleybolley.core.presentation.ui.navigation.ProfileTopLevelRoute
@@ -306,7 +306,7 @@ private fun BottomNavComponent(
         ),
         TopLevelRoute(
             stringResource(R.string.my_games),
-            MyGamesTopLevelRoute,
+            GameHomeTopLevelRoute,
             painterResource(R.drawable.ic_ball),
             painterResource(R.drawable.ic_ball_gradient)
         ),

@@ -24,6 +24,7 @@ object VolleyDimens {
     const val DIMEN_23: Int = 23
     const val DIMEN_24: Int = 24
     const val DIMEN_25: Int = 25
+    const val DIMEN_26: Int = 26
     const val DIMEN_27: Int = 27
     const val DIMEN_28: Int = 28
     const val DIMEN_29: Int = 29
@@ -35,6 +36,7 @@ object VolleyDimens {
     const val DIMEN_38: Int = 38
     const val DIMEN_40: Int = 40
     const val DIMEN_44: Int = 44
+    const val DIMEN_45: Int = 45
     const val DIMEN_46: Int = 46
     const val DIMEN_48: Int = 48
     const val DIMEN_52: Int = 52
@@ -60,6 +62,8 @@ object VolleyDimens {
     const val DIMEN_192: Int = 192
     const val DIMEN_194: Int = 194
     const val DIMEN_204: Int = 204
+    const val DIMEN_240: Int = 240
+    const val DIMEN_280: Int = 280
     const val DIMEN_380: Int = 380
     const val LAUNCH_LOGO_SIZE: Int = 200
     const val REGISTRATION_DIVIDER_THICKNESS = 1
