@@ -228,6 +228,7 @@
     <string name="set_privacy_if_you_want_to_play_with_particular_players">Set privacy if you want to play with particular players</string>
     <string name="enter_the_participation_fee_per_person">Enter the participation fee per person</string>
     <string name="dollar">$</string>
+    <string name="open_with">Open with</string>
     <string name="about_levels">About levels</string>
     <string name="back">Back</string>
     <string name="level_light_prefix">Light:</string>
@@ -293,4 +294,8 @@
     <string name="enabled">ENABLED</string>
     <string name="navigation">Navigation</string>
     <string name="start_position">You are here</string>
+    <string name="refresh">Refresh</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="payment_type_and_account">%1$s · %2$s</string>
+    <string name="past_tourney">Past tourney</string>
 </resources>

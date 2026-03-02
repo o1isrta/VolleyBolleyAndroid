@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cy.volleybolley.R
@@ -171,6 +172,7 @@ object VolleyButton {
         modifier: Modifier = Modifier,
         text: String,
         paddingValues: PaddingValues = PaddingValues(16.dp, 12.dp, 16.dp, 12.dp),
+        cornerRadius: Dp = 16.dp,
         onClick: () -> Unit
     ) {
         Button(
@@ -179,7 +181,7 @@ object VolleyButton {
             colors = ButtonDefaults.buttonColors(
                 containerColor = VolleyColor.OrangeHard
             ),
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(cornerRadius),
             contentPadding = paddingValues
         ) {
             Text(
