@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.ui
+package cy.volleybolley.auth.ui.google
 
 import android.content.Context
 import android.content.Intent

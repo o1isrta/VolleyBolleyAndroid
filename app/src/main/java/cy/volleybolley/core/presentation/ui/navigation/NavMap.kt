@@ -33,9 +33,6 @@ data class RegistrationRoute(val user: String = "") : NavMap
 object AuthorizationByPhoneRoute : NavMap
 
 @Serializable
-object VerifyPhoneNumberRoute : NavMap
-
-@Serializable
 object AboutLevelsRoute : NavMap
 
 // --- create new game flow ---
