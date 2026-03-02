@@ -16,6 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
+import cy.volleybolley.core.presentation.ui.component.ScreenPreviewContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
@@ -112,13 +113,13 @@ fun PreviewRootContainer(content: @Composable (PaddingValues) -> Unit) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewAuthorizationByPhoneScreen() {
-    PreviewRootContainer { paddingFromSystemUi -> // Use PreviewRootContainer here
+    ScreenPreviewContainer {
         AuthorizationByPhoneScreen(
             state = AuthorizationByPhoneState(
                 phoneNumber = stringResource(R.string.default_phone_number),
                 isPhoneNumberInputError = true
             ),
-            paddingFromSystemUi = paddingFromSystemUi,
+            paddingFromSystemUi = PaddingValues(0.dp),
             onBackNavigationRequested = {},
             eventCallback = {}
         )

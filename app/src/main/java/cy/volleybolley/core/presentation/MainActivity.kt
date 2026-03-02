@@ -1,9 +1,13 @@
 package cy.volleybolley.core.presentation
 
+import android.Manifest
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +24,7 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -61,29 +66,95 @@ import cy.volleybolley.core.presentation.ui.navigation.ProfileTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.RegistrationRoute
 import cy.volleybolley.core.presentation.ui.navigation.model.NoBarsRoutes
 import cy.volleybolley.core.presentation.ui.navigation.model.TopLevelRoute
+import cy.volleybolley.notification.presentation.ui.component.GlobalAlertDialog
+import cy.volleybolley.notification.presentation.ui.component.resolveNotificationRoute
 import cy.volleybolley.profile.domain.model.PersonalData
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import org.koin.compose.koinInject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
+    private val viewModel: MainActivityViewModel by viewModel()
     private val checkRefreshTokenExpirationUseCase: CheckRefreshTokenExpirationUseCase by inject()
     private val clearAllLoginDataUseCase: ClearAllLoginDataUseCase by inject()
+    private val requestNotificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        viewModel.obtainEvent(MainActivityEvent.NotificationPermissionChanged(isGranted))
+        viewModel.updateTokenBasedOnPermission()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        handleIntent(intent)
         enableEdgeToEdge()
         setContent {
-            VolleybolleyTheme {
-                RootContainer { innerPadding, navController ->
-                    NavHostContainer(
-                        navController = navController,
-                        paddingFromSystemUi = innerPadding,
-                        activityFinisher = { finish() }
-                    )
+            val state by viewModel.uiState.collectAsState()
+            val effect = viewModel.uiEffect.collectAsState(initial = null).value
+
+            LaunchedEffect(effect) {
+                when (effect) {
+                    is MainActivityEffect.RequestNotificationPermission -> {
+                        requestNotificationPermission()
+                    }
+
+                    null -> {}
                 }
             }
+
+            LaunchedEffect(Unit) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    !viewModel.isNotificationPermissionGranted()
+                ) {
+                    viewModel.showNotificationPermissionDialog(
+                        title = getString(R.string.notifications),
+                        message = getString(R.string.notifications_alert_dialog),
+                        onConfirm = {
+                            viewModel.obtainEvent(MainActivityEvent.RequestPermission)
+                        }
+                    )
+                } else {
+                    viewModel.updateTokenBasedOnPermission()
+                }
+            }
+
+            VolleybolleyTheme {
+                RootContainer(
+                    state = state,
+                    onDismissDialog = { viewModel.obtainEvent(MainActivityEvent.DismissGlobalDialog) },
+                    onRequestPermission = { requestNotificationPermission() },
+                    content = { innerPadding, navController ->
+                        val routeNotification = resolveNotificationRoute(state.screen, state.eventId)
+                        NavHostContainer(
+                            navController = navController,
+                            paddingFromSystemUi = innerPadding,
+                            activityFinisher = { finish() },
+                            startDestination = routeNotification ?: LaunchRoute
+                        )
+                    }
+                )
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        viewModel.obtainEvent(
+            MainActivityEvent.IntentReceived(
+                screen = intent?.getStringExtra("screen"),
+                eventId = intent?.getStringExtra("eventId")?.toIntOrNull()
+            )
+        )
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
@@ -109,8 +180,11 @@ private fun isAuthRoute(route: String): Boolean {
 
 @Composable
 fun RootContainer(
-    getAuthenticatedStatusUseCase: GetAuthenticatedStatusUseCase = koinInject(),
-    getPersonalDataUseCase: GetPersonalDataUseCase = koinInject(),
+    getAuthenticatedStatusUseCase: GetAuthenticatedStatusUseCase = org.koin.compose.koinInject(),
+    getPersonalDataUseCase: GetPersonalDataUseCase = org.koin.compose.koinInject(),
+    state: MainActivityState = MainActivityState(),
+    onDismissDialog: () -> Unit = {},
+    onRequestPermission: () -> Unit = {},
     content: @Composable (PaddingValues, NavHostController) -> Unit
 ) {
     val navController = rememberNavController()
@@ -141,6 +215,9 @@ fun RootContainer(
         showBottomNav = showBottomNav,
         showTopBar = showTopBar,
         userData = personalData,
+        state = state,
+        onDismissDialog = onDismissDialog,
+        onRequestPermission = onRequestPermission,
         content = content
     )
 }
@@ -152,6 +229,9 @@ private fun RootContainer(
     showBottomNav: Boolean,
     showTopBar: Boolean,
     userData: PersonalData?,
+    state: MainActivityState,
+    onDismissDialog: () -> Unit,
+    onRequestPermission: () -> Unit,
     content: @Composable (PaddingValues, NavHostController) -> Unit
 ) {
     Surface(
@@ -179,13 +259,6 @@ private fun RootContainer(
                         avatar = avatar,
                         levelName = level
                     )
-                    /*
-                    VolleyTopBar.TopBar(
-                        firstName = VolleyMocks.USER_NAME,
-                        avatar = VolleyMocks.USER_AVATAR,
-                        levelName = VolleyMocks.USER_LEVEL
-                    )
-                    * */
                 }
             },
             bottomBar = {
@@ -200,6 +273,20 @@ private fun RootContainer(
             content = { innerPadding ->
                 content(innerPadding, navController)
             },
+        )
+    }
+    state.globalDialog?.let { dialog ->
+        GlobalAlertDialog(
+            dialog = dialog,
+            onConfirm = {
+                dialog.onConfirm()
+                onRequestPermission()
+                onDismissDialog()
+            },
+            onDismiss = {
+                dialog.onDismiss()
+                onDismissDialog()
+            }
         )
     }
 }
@@ -286,13 +373,19 @@ private fun BottomNavComponent(
 
 @Preview(showBackground = true)
 @Composable
-fun Preview() {
+fun PreviewRootContainer() {
+    val fakeState = MainActivityState()
     VolleybolleyTheme {
-        RootContainer { padding, controller ->
+        RootContainer(
+            state = fakeState,
+            onRequestPermission = {},
+            onDismissDialog = {}
+        ) { padding, navController ->
             NavHostContainer(
-                navController = controller,
+                navController = navController,
+                paddingFromSystemUi = padding,
                 activityFinisher = {},
-                paddingFromSystemUi = padding
+                startDestination = LaunchRoute
             )
         }
     }

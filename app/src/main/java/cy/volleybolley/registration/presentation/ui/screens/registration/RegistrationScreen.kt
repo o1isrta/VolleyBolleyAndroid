@@ -28,10 +28,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.RootContainer
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
+import cy.volleybolley.core.presentation.ui.component.ScreenPreviewContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsForGender2
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsForLevel
@@ -336,9 +336,9 @@ private fun LevelChooser(
 @Preview(showBackground = true, heightDp = 1000)
 @Composable
 private fun RegistrationScreenPreview() {
-    RootContainer { paddingFromSystemUi, navController ->
+    ScreenPreviewContainer {
         RegistrationScreen(
-            paddingFromSystemUi = paddingFromSystemUi,
+            paddingFromSystemUi = PaddingValues(0.dp),
             state = RegistrationState(),
             onRequestNavigateToAboutLevels = {},
             eventCallback = {}

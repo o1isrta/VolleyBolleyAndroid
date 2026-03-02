@@ -284,4 +284,11 @@
     <string name="network_error">Network error</string>
     <string name="text_example">Text example</string>
     <string name="default_phone_number">66123</string>
+    <string name="notifications">Notifications</string>
+    <string name="default_channel_name">Default Channel</string>
+    <string name="notifications_alert_dialog">Stay in the loop on games and invites!\n\n
+    • Game invites\n
+    • Match reminders\n
+    • Player ratings after games</string>
+    <string name="enabled">ENABLED</string>
 </resources>

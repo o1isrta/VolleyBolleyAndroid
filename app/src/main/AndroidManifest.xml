@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".core.presentation.App"
@@ -33,6 +34,15 @@
                 <data android:scheme="volleybolley" android:host="invite"/>
             </intent-filter>
         </activity>
+      
+        <service
+            android:name=".notification.presentation.service.FirebaseNotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+      
         <provider
             android:authorities="cy.volleybolley.fileprovider"
             android:name=".core.presentation.VolleyFileProvider"
@@ -42,6 +52,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+      
     </application>
 
 </manifest>

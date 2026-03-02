@@ -108,7 +108,7 @@ dependencies {
     implementation(libs.bundles.koin.di)
     implementation(libs.bundles.ktor.client)
     implementation(libs.androidx.navigation.compose)
-
+    implementation(libs.bundles.firebase.fcm)
     ksp(libs.koin.ksp.compiler)
 
     implementation(libs.play.services.auth)

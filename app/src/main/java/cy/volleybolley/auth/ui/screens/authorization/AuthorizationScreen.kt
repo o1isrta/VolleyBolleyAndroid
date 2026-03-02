@@ -43,7 +43,7 @@ import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleSi
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleSignInFailed
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleTokenReceived
 import cy.volleybolley.core.domain.VolleyFeature
-import cy.volleybolley.core.presentation.RootContainer
+import cy.volleybolley.core.presentation.ui.component.ScreenPreviewContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
@@ -253,10 +253,10 @@ private fun BottomSheetWithSignButtons(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewAuthorizationScreen() {
-    RootContainer { paddingFromSystemUi, navController ->
+    ScreenPreviewContainer {
         AuthorizationScreen(
             onNavigateToRegisterByPhoneRequested = {},
-            paddingFromSystemUi = paddingFromSystemUi,
+            paddingFromSystemUi = PaddingValues(0.dp),
             state = AuthorizationState(),
             eventCallback = {}
         )

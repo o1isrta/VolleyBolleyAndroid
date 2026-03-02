@@ -57,7 +57,7 @@ object TourneyEnteringConditionsRoute : NavMap
 
 // --- find a game flow ---
 @Serializable
-object JoinTheGameRoute : NavMap
+data class JoinTheGameRoute(val gameId: Int) : NavMap
 
 // --- find a tourney flow ---
 @Serializable
@@ -95,7 +95,7 @@ object TeamsRoute : NavMap
 object GameInvitesRoute : NavMap
 
 @Serializable
-object JoinTheTourneyRoute : NavMap
+data class JoinTheTourneyRoute(val tourneyId: Int) : NavMap
 
 // --- my games flow ---
 @Serializable
@@ -139,7 +139,7 @@ object SearchCourtRoute : NavMap
 @Serializable
 data class RatePlayersRoute(
     val eventId: Int,
-    val eventType: EventType, // String,
+    val eventType: EventType,
 ) : NavMap
 
 @Serializable
@@ -184,3 +184,6 @@ data class EnterPaymentDataRoute(
 
 @Serializable
 data class ShareLinkRoute(val id: String, val type: String) : NavMap
+
+@Serializable
+object NotificationsRoute : NavMap

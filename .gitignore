@@ -13,3 +13,4 @@ local.properties
 /build-logic/develop-properties/build
 /build-logic/gradle-ext/build
 CLAUDE.md
+/app/google-services.json

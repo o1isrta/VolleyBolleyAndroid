@@ -47,6 +47,7 @@ import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
 import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
+import cy.volleybolley.notification.presentation.NotificationsScreen
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreen
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreen
@@ -140,6 +141,9 @@ fun NavHostContainer(
         composable<AboutLevelsRoute> {
             AboutLevelsScreen(onBackNavigationRequested = { navController.popBackStack() })
         }
+
+        // notifications
+        composable<NotificationsRoute> { NotificationsScreen(navController) }
 
         // Home nested graph
         navigation<HomeTopLevelRoute>(startDestination = HomeRoute) {

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
+import cy.volleybolley.core.presentation.ui.component.ScreenPreviewContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyDimens
@@ -104,10 +105,10 @@ fun OnboardingScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun OnboardingScreenPreview() {
-    VolleyContainersRootTransparent.Root { paddingValues ->
+    ScreenPreviewContainer {
         OnboardingScreen(
             onNextScreenRequested = {},
-            paddingFromSystemUi = paddingValues
+            paddingFromSystemUi = PaddingValues(0.dp)
         )
     }
 }

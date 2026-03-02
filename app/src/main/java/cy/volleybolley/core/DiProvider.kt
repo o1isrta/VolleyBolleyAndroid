@@ -7,6 +7,7 @@ import cy.volleybolley.core.presentation.ui.screens.di.screensModule
 import cy.volleybolley.core.presentation.ui.screens.authorization.authorizationByPhone.di.authorizationByPhoneModule
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.di.launchModule
 import cy.volleybolley.courts.di.courtsModule
+import cy.volleybolley.notification.di.notificationsModule
 import cy.volleybolley.games.di.gamesModule
 import cy.volleybolley.players.di.playersModule
 import cy.volleybolley.profile.di.profileModule
@@ -19,7 +20,6 @@ object DiProvider {
         coreModule,
         courtsModule,
         gamesModule,
-        profileModule,
         playersModule,
         referenceDataModule,
         screensModule,
@@ -29,5 +29,6 @@ object DiProvider {
         registrationModule,
         authorizationByPhoneModule,
         ratePlayersModule,
+        notificationsModule
     )
 }

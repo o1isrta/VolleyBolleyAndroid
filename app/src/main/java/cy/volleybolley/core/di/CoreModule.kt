@@ -4,6 +4,7 @@ import cy.volleybolley.BuildConfig
 import cy.volleybolley.auth.domain.api.LoginDataRepository
 import cy.volleybolley.core.data.network.plugin.TokenRefreshPlugin
 import cy.volleybolley.core.presentation.App
+import cy.volleybolley.core.presentation.MainActivityViewModel
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
 import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessViewModel
@@ -90,10 +91,17 @@ val coreModule = module {
         (androidContext() as App).applicationScope
     }
 
+    viewModel {
+        MainActivityViewModel(
+            sendDeviceTokenUseCase = get(),
+            fcmTokenStore = get(),
+            notificationPermissionChecker = get()
+        )
+    }
+    viewModel { HomeScreenViewModel() }
     viewModel { (event: SucceedGame) ->
         SuccessViewModel(
             createdEvent = event
         )
     }
-    viewModel { HomeScreenViewModel() }
 }
