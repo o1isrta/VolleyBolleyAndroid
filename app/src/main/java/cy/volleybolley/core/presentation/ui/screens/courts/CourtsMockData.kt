@@ -1,0 +1,174 @@
+package cy.volleybolley.core.presentation.ui.screens.courts
+
+import com.google.android.gms.maps.model.LatLng
+import cy.volleybolley.courts.domain.model.Contact
+import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.courts.presentation.model.CourtUi
+import java.util.Locale
+
+object CourtsMockData {
+    private const val PHONE = "phone"
+    private const val OUTDOOR = "Outdoor"
+    private const val LIGHTS = "Lights"
+    private const val TURF = "Turf"
+    private const val INDOOR = "Indoor"
+    private const val RENTAL = "Rental"
+    private const val EVENING_LIGHTS = "Evening lights"
+    private const val INDOOR_OUTDOOR = "Indoor/Outdoor"
+    private const val SUNSET_VIEW = "Sunset view"
+    private const val PREMIUM = "Premium"
+    private const val BEACH = "Beach"
+    private const val STANDARD = "Standard"
+
+    private val DESC_1 = """
+        An outdoor volleyball court close to the center with artificial turf,
+        lighting, shower and locker room.
+    """.trimIndent()
+
+    private val DESC_2 = """
+        Luxury resort with professional volleyball facilities and beach view.
+    """.trimIndent()
+
+    private val DESC_3 = """
+        Premium beachfront volleyball court with professional equipment.
+    """.trimIndent()
+
+    private val DESC_4 = """
+        Exclusive resort court with ocean view and professional maintenance.
+    """.trimIndent()
+
+    private val DESC_5 = """
+        Cozy ground‑level court with lighting, near local amenities and easy access.
+    """.trimIndent()
+
+    private val DESC_6 = """
+        High‑end indoor/outdoor facility, air‑conditioned lounge,
+        near beach view sunset court.
+    """.trimIndent()
+
+    private val DESC_7 = """
+        Standard beach court with nets provided, shower & locker available,
+        great for mid‑level players.
+    """.trimIndent()
+    private const val DISTANCE_FORMAT_INT = "%d km"
+    private const val MIN_DISTANCE_KM = 1
+    private const val MAX_DISTANCE_KM = 20
+
+    fun randomKm(): String =
+        String.format(
+            Locale.US,
+            DISTANCE_FORMAT_INT,
+            (MIN_DISTANCE_KM..MAX_DISTANCE_KM).random()
+        )
+
+    val sampleCourts = listOf(
+        CourtUi(
+            courtId = 1,
+            price = "800 THB/60 min",
+            description = DESC_1,
+            contacts = listOf(Contact(PHONE, "+66-2-2134567")),
+            photo = "",
+            tags = listOf(OUTDOOR, LIGHTS, TURF),
+            location = Location(
+                longitude = 98.3923,
+                latitude = 7.8804,
+                courtName = "Karon Beach Club",
+                locationName = "Patak Rd, Mueang"
+            ),
+            distanceText = randomKm()
+        ),
+        CourtUi(
+            courtId = 2,
+            price = "750 THB/60 min",
+            description = DESC_2,
+            contacts = listOf(Contact(PHONE, "+66-2-2134568")),
+            photo = "",
+            tags = listOf(INDOOR, RENTAL),
+            location = Location(
+                longitude = 98.4023,
+                latitude = 7.8904,
+                courtName = "Metadee Resort & Villas",
+                locationName = "56 Kata Rd, Karon, Mueang"
+            ),
+            distanceText = randomKm()
+        ),
+        CourtUi(
+            courtId = 3,
+            price = "900 THB/60 min",
+            description = DESC_3,
+            contacts = listOf(Contact(PHONE, "+66-2-2134569"), Contact(PHONE, "+66-2-1234567")),
+            photo = "",
+            tags = listOf(OUTDOOR, LIGHTS, TURF),
+            location = Location(
+                longitude = 98.4123,
+                latitude = 7.9004,
+                courtName = "Pullman Phuket Karon Beach",
+                locationName = "333 Patak Rd, Tombion Karon"
+            ),
+            distanceText = randomKm()
+        ),
+        CourtUi(
+            courtId = 4,
+            price = "850 THB/60 min",
+            description = DESC_4,
+            contacts = listOf(Contact(PHONE, "+66-2-2134570")),
+            photo = "",
+            tags = listOf(INDOOR, RENTAL),
+            location = Location(
+                longitude = 98.4223,
+                latitude = 7.9104,
+                courtName = "The Shore at Katathani Resort",
+                locationName = "16 Kata Rd, Karon"
+            ),
+            distanceText = randomKm()
+        ),
+        CourtUi(
+            courtId = 5,
+            price = "700 THB/60 min",
+            description = DESC_5,
+            contacts = listOf(Contact(PHONE, "+66‑2‑2134571")),
+            photo = "",
+            tags = listOf(OUTDOOR, EVENING_LIGHTS),
+            location = Location(
+                longitude = 98.4300,
+                latitude = 7.9200,
+                courtName = "Kata Beach Sports Complex",
+                locationName = "34 Kata Rd, Karon"
+            ),
+            distanceText = randomKm()
+        ),
+        CourtUi(
+            courtId = 6,
+            price = "950 THB/60 min",
+            description = DESC_6,
+            contacts = listOf(Contact(PHONE, "+66‑2‑2134572")),
+            photo = "",
+            tags = listOf(INDOOR_OUTDOOR, SUNSET_VIEW, PREMIUM),
+            location = Location(
+                longitude = 98.4350,
+                latitude = 7.9300,
+                courtName = "Sunset Court Resort",
+                locationName = "8 Kata Noi Beach, Karon"
+            ),
+            distanceText = randomKm()
+        ),
+        CourtUi(
+            courtId = 7,
+            price = "820 THB/60 min",
+            description = DESC_7,
+            contacts = listOf(Contact(PHONE, "+66‑2‑2134573")),
+            photo = "",
+            tags = listOf(BEACH, STANDARD),
+            location = Location(
+                longitude = 98.4400,
+                latitude = 7.9400,
+                courtName = "BeachSide Volley Karon",
+                locationName = "Karon Beachfront, Mueang"
+            ),
+            distanceText = randomKm()
+        )
+    )
+    const val PHUKET_LAT = 7.8804
+    const val PHUKET_LNG = 98.3923
+    val LAT_LNG_PHUKET = LatLng(PHUKET_LAT, PHUKET_LNG)
+}

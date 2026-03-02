@@ -291,4 +291,6 @@
     • Match reminders\n
     • Player ratings after games</string>
     <string name="enabled">ENABLED</string>
+    <string name="navigation">Navigation</string>
+    <string name="start_position">You are here</string>
 </resources>

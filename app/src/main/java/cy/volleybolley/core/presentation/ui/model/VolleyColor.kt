@@ -97,4 +97,6 @@ object VolleyColor {
      * Уведомления
      */
     val NotificationColor = Color(color = 0x30AAC8E0)
+
+    val TagColor = Color(color = 0xFF578D83)
 }

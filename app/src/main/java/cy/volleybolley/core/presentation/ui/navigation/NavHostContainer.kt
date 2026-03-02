@@ -43,11 +43,11 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.JoinedPl
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGameDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
-import cy.volleybolley.core.presentation.ui.screens.home.SearchCourtScreen
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
 import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
 import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
 import cy.volleybolley.notification.presentation.NotificationsScreen
+import cy.volleybolley.courts.presentation.SearchCourtScreen
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreen
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreen
@@ -65,10 +65,10 @@ import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreen
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenViewModel
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreen
+import cy.volleybolley.rateplayers.RatePlayersScreen
 import cy.volleybolley.registration.presentation.ui.screens.aboutlevels.AboutLevelsScreen
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationScreen
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationViewModel
-import cy.volleybolley.rateplayers.RatePlayersScreen
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -155,7 +155,18 @@ fun NavHostContainer(
                     finisher = activityFinisher,
                 )
             }
-            composable<SearchCourtRoute> { SearchCourtScreen(navController) }
+
+            composable<SearchCourtRoute> { backStackEntry ->
+                val args = backStackEntry.toRoute<SearchCourtRoute>()
+                val eventType = args.eventType
+                SearchCourtScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    viewModel = koinViewModel {
+                        parametersOf(eventType)
+                    }
+                )
+            }
 
             composable<RatePlayersRoute> { backStackEntry ->
                 val args = backStackEntry.toRoute<RatePlayersRoute>()

@@ -27,6 +27,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -1515,57 +1519,9 @@ object VolleyButton {
     /**
      * слайдер-группа кнопок выбора Map|List
      */
+    @Stable
     @Composable
-    fun SliderButtonsMap(checkId: Int = 1, modifier: Modifier, onSelected: (Int) -> Unit) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = modifier
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            VolleyColor.YellowForGradient,
-                            VolleyColor.GreenForGradient
-                        ),
-                        start = Offset(x = 0f, y = 0f),
-                        end = Offset(x = 0f, y = 100f)
-                    ),
-                    shape = RoundedCornerShape(size = 16.dp),
-                )
-                .height(VolleyDimens.DIMEN_32.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(2.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                // Вычисляем вес каждой кнопки (в данном случае поровну)
-                val buttonWeight = 1f
-
-                SliderButton(
-                    modifier = Modifier.weight(buttonWeight),
-                    text = MAP_TEXT,
-                    isChecked = checkId == 1
-                ) {
-                    onSelected(1)
-                }
-                SliderButton(
-                    modifier = Modifier.weight(buttonWeight),
-                    text = LIST_TEXT,
-                    isChecked = checkId == 2
-                ) {
-                    onSelected(1)
-                }
-            }
-        }
-    }
-
-    /**
-     * слайдер-группа кнопок выбора Map|List
-     */
-    @Composable
-    fun SliderButtonsMap1(checkId: Int = 1, modifier: Modifier, onClick: () -> Unit) {
+    fun SliderButtonsMap(checkId: Int = 1, modifier: Modifier, onTabSelected: (Int) -> Unit) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
@@ -1593,13 +1549,13 @@ object VolleyButton {
                     modifier = Modifier.size(100.dp, 28.dp),
                     text = MAP_TEXT,
                     isChecked = checkId == 1,
-                    onClick = onClick
+                    onClick = { onTabSelected(1) }
                 )
                 SliderButton(
                     modifier = Modifier.size(100.dp, 28.dp),
                     text = LIST_TEXT,
                     isChecked = checkId == 2,
-                    onClick = onClick
+                    onClick = { onTabSelected(2) }
                 )
             }
         }
@@ -2179,10 +2135,11 @@ private fun PreviewGroupButtonsForTourneyType() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewSliderButtonsMap() {
+    var selected by remember { mutableIntStateOf(1) }
     PreviewContainer {
         SliderButtonsMap(
-            modifier = Modifier.width(204.dp),
-            onSelected = {}
+            modifier = Modifier,
+            onTabSelected = { selected = if (selected == 1) 2 else 1 }
         )
     }
 }
