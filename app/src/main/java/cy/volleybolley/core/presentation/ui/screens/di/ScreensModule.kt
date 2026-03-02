@@ -1,7 +1,7 @@
 package cy.volleybolley.core.presentation.ui.screens.di
 
-import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
-import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessViewModel
+import cy.volleybolley.success.SucceedGame
+import cy.volleybolley.success.SuccessViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

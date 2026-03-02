@@ -10,11 +10,12 @@ import cy.volleybolley.games.domain.model.event.Event
 import cy.volleybolley.games.domain.model.event.EventType
 import cy.volleybolley.games.domain.model.event.game.GameDetails
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
+import cy.volleybolley.referencedata.domain.model.CurrencyType
 
 private const val HOST_NAME = "Artem Ivanov"
 private const val GENDER_MIX = "Mix"
 private val PAYMENT_TYPE_THAI_BANK = PaymentType.THAIBANK
-private const val CURRENCY_USD = "$"
+private val CURRENCY_USD = CurrencyType.UNKNOWN
 private const val PAYMENT_ACCOUNT = "988 016 7890"
 
 private const val LATITUDE = 7.8471
@@ -78,7 +79,7 @@ fun provideMockTourney(id: Int): TournamentDetails {
         pricePerPerson = "2",
         paymentType = PAYMENT_TYPE_THAI_BANK,
         paymentAccount = PAYMENT_ACCOUNT,
-        currencyType = CURRENCY_USD,
+        currencyType = CURRENCY_USD.currencyValue,
         teams = mockTeams()
     )
 }

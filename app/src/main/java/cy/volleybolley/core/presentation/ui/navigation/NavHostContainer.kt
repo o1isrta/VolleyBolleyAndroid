@@ -21,7 +21,6 @@ import cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptions
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen.PrivacyOptionsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
-import cy.volleybolley.core.presentation.ui.screens.findagame.JoinTheGameScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.ChooseTeamScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.IndividualPlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.InvitePlayersScreen
@@ -45,11 +44,13 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.Upcoming
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.dataholder.TournamentDetailsDataHolder
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
-import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
-import cy.volleybolley.core.presentation.ui.screens.home.success.SuccessScreen
+import cy.volleybolley.success.SucceedGame
+import cy.volleybolley.success.SuccessScreen
 import cy.volleybolley.notification.presentation.NotificationsScreen
 import cy.volleybolley.courts.presentation.SearchCourtScreen
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
+import cy.volleybolley.jointhegame.JoinTheGameScreen
+import cy.volleybolley.jointhegame.JoinTheGameViewModel
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreen
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreen
@@ -224,7 +225,15 @@ fun NavHostContainer(
             composable<TourneyEnteringConditionsRoute> { TourneyEnteringConditionsScreen(navController) }
 
             // find game
-            composable<JoinTheGameRoute> { JoinTheGameScreen(navController) }
+            composable<JoinTheGameRoute> { backStackEntry ->
+                val gameId = backStackEntry.toRoute<JoinTheGameRoute>().gameId
+                JoinTheGameScreen(
+                    navController = navController,
+                    viewModel = koinViewModel<JoinTheGameViewModel> {
+                        parametersOf(gameId)
+                    }
+                )
+            }
 
             // find tourney
             composable<ChooseTeamRoute> { ChooseTeamScreen(navController) }
@@ -372,9 +381,11 @@ fun NavHostContainer(
                 navDeepLink { uriPattern = "volleybolley://invite/{type}/{id}" }
             )
         ) { backStackEntry ->
-//            val route = backStackEntry.toRoute<ShareLinkRoute>()
+            val route = backStackEntry.toRoute<ShareLinkRoute>()
+            val viewModel = koinViewModel<JoinTheGameViewModel>()
             JoinTheGameScreen(
-                navController = navController
+                navController = navController,
+                viewModel = viewModel
             )
         }
     }

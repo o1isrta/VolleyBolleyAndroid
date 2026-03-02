@@ -169,7 +169,7 @@ private fun ShowPastGameDetails(
             PaymentBlock(
                 paymentType = game.paymentType.name,
                 paymentAccount = game.paymentAccount,
-                currencyType = game.currencyType,
+                currencyType = game.currencyType.currencyValue,
                 pricePerPerson = game.pricePerPerson
             )
             DividerGlass()

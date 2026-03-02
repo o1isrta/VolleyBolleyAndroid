@@ -191,7 +191,7 @@
     <string name="team_number">Team %1$d</string>
     <string name="free_spot">Free spot</string>
     <string name="choose_team_big">CHOOSE TEAM</string>
-    <string name="joined_players">Joined players %1$d/%2$d</string>
+    <string name="joined_players">Joined players:</string>
     <string name="you_are_in_the_game">You are in the game</string>
     <string name="game_host">Game host</string>
     <string name="choose_this_game">CHOOSE THIS GAME</string>
@@ -221,6 +221,7 @@
     <string name="avatar_content_description">User avatar</string>
     <string name="top_bar_level_content_description">User level</string>
     <string name="registration_date_of_birth_string_pattern">MM/dd/yyyy</string>
+    <string name="open_with">Open with:</string>
     <string name="share_link_chooser_title">Share link</string>
     <string name="share_text_game">Join the game in VolleyBolley: %1$s</string>
     <string name="share_text_tournament">Join the tourney in VolleyBolley: %1$s</string>
@@ -228,7 +229,6 @@
     <string name="set_privacy_if_you_want_to_play_with_particular_players">Set privacy if you want to play with particular players</string>
     <string name="enter_the_participation_fee_per_person">Enter the participation fee per person</string>
     <string name="dollar">$</string>
-    <string name="open_with">Open with</string>
     <string name="about_levels">About levels</string>
     <string name="back">Back</string>
     <string name="level_light_prefix">Light:</string>
@@ -298,4 +298,6 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="payment_type_and_account">%1$s · %2$s</string>
     <string name="past_tourney">Past tourney</string>
+    <string name="error_message_standard">Something went wrong</string>
+    <string name="error_message_fail_to_join">Failed to join</string>
 </resources>

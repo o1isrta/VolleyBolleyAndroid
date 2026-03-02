@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.home.success
+package cy.volleybolley.success
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
 

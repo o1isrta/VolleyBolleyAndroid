@@ -46,8 +46,8 @@ import cy.volleybolley.core.presentation.ui.navigation.PaymentsRoute
 import cy.volleybolley.core.presentation.ui.navigation.PrivacyOptionsRoute
 import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Privacy
-import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGame
-import cy.volleybolley.core.presentation.ui.screens.home.success.SucceedGameType
+import cy.volleybolley.success.SucceedGame
+import cy.volleybolley.success.SucceedGameType
 import cy.volleybolley.profile.domain.model.PaymentType
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.serialization.json.Json
