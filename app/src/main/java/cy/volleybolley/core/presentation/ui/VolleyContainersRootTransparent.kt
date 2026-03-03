@@ -49,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.createBitmap
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.ui.theme.VolleybolleyTheme
@@ -71,8 +70,8 @@ object VolleyContainersRootTransparent {
     @Composable
     fun TransparentContainer(
         modifier: Modifier = Modifier,
-        blurRadius: Int = VolleyDimens.DIMEN_24,
-        cornerRadius: Int = VolleyDimens.DIMEN_32,
+        blurRadius: Int = 24,
+        cornerRadius: Int = 32,
         mainContainerAlignment: Alignment = Alignment.TopStart,
         contentContainerAlignment: Alignment = Alignment.TopStart,
         content: @Composable BoxScope.() -> Unit
@@ -100,8 +99,8 @@ object VolleyContainersRootTransparent {
     @Composable
     private fun TransparentBlurContainer(
         modifier: Modifier = Modifier,
-        blurRadius: Int = VolleyDimens.DIMEN_24,
-        cornerRadius: Int = VolleyDimens.DIMEN_32,
+        blurRadius: Int = 24,
+        cornerRadius: Int = 32,
         mainContainerAlignment: Alignment = Alignment.TopStart,
         contentContainerAlignment: Alignment = Alignment.TopStart,
         content: @Composable BoxScope.() -> Unit
@@ -125,7 +124,7 @@ object VolleyContainersRootTransparent {
                     .clip(shape)
                     .blur(blurRadius.dp)
                     .border(
-                        width = VolleyDimens.DIMEN_4.dp,
+                        width = 4.dp,
                         color = VolleyColor.White.copy(alpha = 0.2f),
                         shape = shape
                     )
@@ -141,7 +140,7 @@ object VolleyContainersRootTransparent {
     @Composable
     private fun TransparentGradientContainer(
         modifier: Modifier = Modifier,
-        cornerRadius: Int = VolleyDimens.DIMEN_32,
+        cornerRadius: Int = 32,
         mainContainerAlignment: Alignment = Alignment.TopStart,
         contentContainerAlignment: Alignment = Alignment.TopStart,
         content: @Composable BoxScope.() -> Unit
@@ -177,7 +176,7 @@ object VolleyContainersRootTransparent {
                     )
                     .clip(shape)
                     .border(
-                        width = VolleyDimens.DIMEN_1.dp,
+                        width = 1.dp,
                         color = VolleyColor.White.copy(alpha = VolleyUiUtil.GRADIENT_BORDER_ALPHA),
                         shape = shape
                     )
@@ -210,15 +209,15 @@ object VolleyContainersRootTransparent {
     @Composable
     fun GlassContainer(
         modifier: Modifier = Modifier,
-        blurRadius: Int = VolleyDimens.DIMEN_24,
-        cornerRadius: Int = VolleyDimens.DIMEN_32,
+        blurRadius: Int = 24,
+        cornerRadius: Int = 32,
         contentAlignmentOnContainer: Alignment = Alignment.Center,
         content: @Composable BoxScope.() -> Unit
     ) {
         val localVew = LocalView.current
         var capturedImage by remember { mutableStateOf<Bitmap?>(null) }
         val correctBlurRadius =
-            if (blurRadius > 0 && blurRadius <= VolleyDimens.DIMEN_25) blurRadius else VolleyDimens.DIMEN_24
+            if (blurRadius > 0 && blurRadius <= 25) blurRadius else 24
         val shape = RoundedCornerShape(cornerRadius.dp)
 
         Box(
@@ -323,60 +322,60 @@ private fun PreviewContainers() {
         ) {
             Column {
                 VolleyContainersRootTransparent.TransparentContainer(
-                    cornerRadius = VolleyDimens.DIMEN_16,
+                    cornerRadius = 16,
                     modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_16.dp)
+                        .padding(16.dp)
                 ) {
                     VolleyText.BodyRegular(
                         text = "Some small text",
                         color = VolleyColor.White,
-                        modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+                        modifier = Modifier.padding(16.dp)
 
                     )
                 }
 
                 VolleyContainersRootTransparent.TransparentContainer(
-                    cornerRadius = VolleyDimens.DIMEN_16,
+                    cornerRadius = 16,
                     modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_16.dp)
+                        .padding(16.dp)
                 ) {
                     VolleyText.BodyRegular(
                         text = "Text in max width",
                         color = VolleyColor.White,
                         modifier = Modifier
-                            .padding(VolleyDimens.DIMEN_16.dp)
-                            .height(VolleyDimens.DIMEN_90.dp)
+                            .padding(16.dp)
+                            .height(90.dp)
                             .fillMaxWidth()
                     )
                 }
 
                 VolleyContainersRootTransparent.TransparentContainer(
-                    cornerRadius = VolleyDimens.DIMEN_16,
+                    cornerRadius = 16,
                     modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_16.dp)
+                        .padding(16.dp)
                 ) {
                     Column {
                         VolleyContainersRootTransparent.TransparentContainer(
-                            cornerRadius = VolleyDimens.DIMEN_8,
+                            cornerRadius = 8,
                             modifier = Modifier
-                                .padding(VolleyDimens.DIMEN_16.dp)
+                                .padding(16.dp)
                         ) {
                             VolleyText.BodyRegular(
                                 text = "some text 1",
                                 color = VolleyColor.White,
-                                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+                                modifier = Modifier.padding(16.dp)
                             )
                         }
 
                         VolleyContainersRootTransparent.TransparentContainer(
-                            cornerRadius = VolleyDimens.DIMEN_8,
+                            cornerRadius = 8,
                             modifier = Modifier
-                                .padding(VolleyDimens.DIMEN_16.dp)
+                                .padding(16.dp)
                         ) {
                             VolleyText.BodyRegular(
                                 text = "some text 2",
                                 color = VolleyColor.White,
-                                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+                                modifier = Modifier.padding(16.dp)
                             )
                         }
                     }
@@ -384,14 +383,14 @@ private fun PreviewContainers() {
 
                 VolleyContainersRootTransparent.GlassContainer(
                     modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_20.dp)
+                        .padding(20.dp)
                         .fillMaxWidth()
-                        .height(VolleyDimens.DIMEN_116.dp)
+                        .height(116.dp)
                 ) {
                     Text(
                         text = "Some glass container",
                         color = VolleyColor.White,
-                        fontSize = VolleyDimens.DIMEN_16.sp
+                        fontSize = 16.sp
                     )
                 }
             }

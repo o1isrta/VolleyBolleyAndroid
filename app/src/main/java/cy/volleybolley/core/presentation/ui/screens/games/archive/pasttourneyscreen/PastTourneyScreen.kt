@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -35,7 +33,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
@@ -44,9 +41,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.effect.PastTourneyEffect
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.event.PastTourneyEvent
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.model.PastTourneyState
@@ -58,80 +53,59 @@ import cy.volleybolley.games.domain.model.entity.Host
 import cy.volleybolley.games.domain.model.entity.Team
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 import cy.volleybolley.ui.theme.VolleybolleyTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun PastTourneyScreen(
     navController: NavHostController,
-    viewModel: PastTourneyViewModel = viewModel()
+    viewModel: PastTourneyViewModel = koinViewModel(),
+    paddingFromSystemUi: PaddingValues
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
-
-    PastTourneyScreen(
-        state = state,
-        effect = effect,
-        onBackClick = { navController.popBackStack() },
-        navigateAction = { route ->
-            navController.navigate(route)
-        },
-        eventCallback = { event ->
-            viewModel.obtainEvent(event)
-        }
-    )
-}
-
-@Composable
-private fun PastTourneyScreen(
-    state: PastTourneyState,
-    effect: PastTourneyEffect?,
-    onBackClick: () -> Unit,
-    navigateAction: (NavMap) -> Unit,
-    eventCallback: (PastTourneyEvent) -> Unit
-) {
     val context = LocalContext.current
 
     LaunchedEffect(effect) {
-        effect?.let {
-            when (it) {
-                PastTourneyEffect.NavigateBack -> onBackClick
-                is PastTourneyEffect.OpenMap -> context.openMap(it.location)
-                is PastTourneyEffect.Navigate -> navigateAction(it.route)
-            }
+        when (val currentEffect = effect) {
+            is PastTourneyEffect.NavigateBack -> navController.popBackStack()
+            is PastTourneyEffect.OpenMap -> context.openMap(currentEffect.location)
+            is PastTourneyEffect.Navigate -> navController.navigate(currentEffect.route)
+            null -> {}
         }
     }
 
-    Render(
+    PastTourneyScreen(
         state = state,
-        onBackClick = onBackClick,
-        eventCallback = eventCallback,
-        modifier = Modifier.padding(horizontal = VolleyDimens.DIMEN_8.dp)
+        paddingFromSystemUi = paddingFromSystemUi,
+        eventCallback = { viewModel.obtainEvent(it) }
     )
 }
 
 @Stable
 @Composable
-private fun Render(
+private fun PastTourneyScreen(
     state: PastTourneyState,
-    onBackClick: () -> Unit,
-    eventCallback: (PastTourneyEvent) -> Unit,
-    modifier: Modifier = Modifier
+    paddingFromSystemUi: PaddingValues,
+    eventCallback: (PastTourneyEvent) -> Unit
 ) {
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
+            .padding(paddingFromSystemUi)
+            .padding(horizontal = 8.dp)
             .verticalScroll(rememberScrollState())
     ) {
         when (state) {
             PastTourneyState.Loading -> ShowLoader()
 
             PastTourneyState.Error -> ShowErrorPlaceholder(
-                onBackClick = onBackClick,
+                onBackClick = { eventCallback(PastTourneyEvent.OnBackClick) },
                 onButtonClick = { eventCallback(PastTourneyEvent.Refresh) }
             )
 
             is PastTourneyState.Content -> ShowPastTourneyDetails(
                 tourney = state.tourney,
-                onBackClick = onBackClick,
+                onBackClick = { eventCallback(PastTourneyEvent.OnBackClick) },
                 onMapClick = { eventCallback(PastTourneyEvent.OnMapClick(state.tourney.courtLocation)) },
                 onJoinedPlayersClick = { eventCallback(PastTourneyEvent.OnJoinedPlayersClick(state.tourney.teams)) }
             )
@@ -149,13 +123,13 @@ private fun ShowPastTourneyDetails(
     onJoinedPlayersClick: () -> Unit
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32
+        cornerRadius = 32
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
                 .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             VolleyTopBar.TopBarWithBackButton(
                 title = stringResource(R.string.past_tourney),
@@ -195,7 +169,7 @@ private fun JoinedPlayersBlock(
     onButtonClick: () -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         VolleyText.TitleMedium(
@@ -215,8 +189,8 @@ private fun JoinedPlayersBlock(
             },
             isChecked = false,
             paddingValues = PaddingValues(
-                horizontal = VolleyDimens.DIMEN_16.dp,
-                vertical = VolleyDimens.DIMEN_14.dp
+                horizontal = 16.dp,
+                vertical = 14.dp
             ),
             onClick = onButtonClick
         )
@@ -232,7 +206,7 @@ private fun PaymentBlock(
     pricePerPerson: String
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         VolleyText.TitleMedium(
@@ -257,13 +231,13 @@ private fun PaymentBlock(
         }
 
         VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = VolleyDimens.DIMEN_16
+            cornerRadius = 16
         ) {
             VolleyText.BodyRegular(
                 text = stringResource(R.string.per_person) + " $pricePerPerson$currencyType",
                 color = VolleyColor.White,
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp)
+                    .padding(16.dp)
                     .fillMaxWidth()
             )
         }
@@ -280,7 +254,7 @@ private fun AboutTourneyBlock(
     onMapClick: (Location) -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -295,12 +269,12 @@ private fun AboutTourneyBlock(
                 painter = painterResource(R.drawable.ic_nav_yellow_arrow),
                 contentDescription = null,
                 tint = VolleyColor.OrangeHard,
-                modifier = Modifier.size(VolleyDimens.DIMEN_16.dp)
+                modifier = Modifier.size(16.dp)
             )
-            Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_8.dp))
             Column(
                 modifier = Modifier
                     .weight(1f)
+                    .padding(start = 8.dp)
             ) {
                 VolleyText.BodyBold(courtLocation.courtName, color = VolleyColor.White)
                 VolleyText.BodyLight(courtLocation.locationName, color = VolleyColor.White)
@@ -310,7 +284,7 @@ private fun AboutTourneyBlock(
                 onClick = {
                     onMapClick(courtLocation)
                 },
-                paddingValues = PaddingValues(VolleyDimens.DIMEN_16.dp, VolleyDimens.DIMEN_12.dp)
+                paddingValues = PaddingValues(16.dp, 12.dp)
             )
 
         }
@@ -319,7 +293,7 @@ private fun AboutTourneyBlock(
             VolleyText.BodyBold(
                 text = stringResource(R.string.`when`),
                 color = VolleyColor.White,
-                modifier = Modifier.padding(end = VolleyDimens.DIMEN_4.dp)
+                modifier = Modifier.padding(end = 4.dp)
             )
 
             val (dateText, timeText) = remember(startTime, endTime) {
@@ -339,7 +313,7 @@ private fun AboutTourneyBlock(
             VolleyText.BodyBold(
                 text = stringResource(R.string.level),
                 color = VolleyColor.White,
-                modifier = Modifier.padding(end = VolleyDimens.DIMEN_4.dp)
+                modifier = Modifier.padding(end = 4.dp)
             )
 
             VolleyText.BodyRegular(
@@ -353,7 +327,7 @@ private fun AboutTourneyBlock(
             VolleyText.BodyBold(
                 text = stringResource(R.string.gender),
                 color = VolleyColor.White,
-                modifier = Modifier.padding(end = VolleyDimens.DIMEN_4.dp)
+                modifier = Modifier.padding(end = 4.dp)
             )
 
             VolleyText.BodyRegular(
@@ -369,7 +343,7 @@ private fun AboutTourneyBlock(
 @Composable
 private fun HostInfoBlock(host: Host, message: String) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         VolleyText.TitleMedium(
@@ -381,7 +355,7 @@ private fun HostInfoBlock(host: Host, message: String) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             VolleyAvatar.CircularAvatar(
                 host.avatar,
-                VolleyDimens.DIMEN_40.dp
+                40.dp
             )
 
             VolleyText.BodyRegular(
@@ -389,13 +363,13 @@ private fun HostInfoBlock(host: Host, message: String) {
                 color = VolleyColor.White,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = VolleyDimens.DIMEN_8.dp)
+                    .padding(start = 8.dp)
             )
 
             Box(
                 modifier = Modifier
-                    .size(VolleyDimens.DIMEN_32.dp, VolleyDimens.DIMEN_20.dp)
-                    .clip(RoundedCornerShape(VolleyDimens.DIMEN_8.dp))
+                    .size(32.dp, 20.dp)
+                    .clip(RoundedCornerShape(8.dp))
                     .background(VolleyColor.GreyDark)
 
             ) {
@@ -408,14 +382,14 @@ private fun HostInfoBlock(host: Host, message: String) {
         }
 
         VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = VolleyDimens.DIMEN_16
+            cornerRadius = 16
         ) {
             VolleyText.BodyRegular(
                 text = message,
                 color = VolleyColor.White,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(VolleyDimens.DIMEN_16.dp)
+                    .padding(16.dp)
             )
         }
     }
@@ -425,7 +399,7 @@ private fun HostInfoBlock(host: Host, message: String) {
 @Composable
 private fun DividerGlass() {
     HorizontalDivider(
-        thickness = VolleyDimens.DIMEN_1.dp,
+        thickness = 1.dp,
         color = VolleyColor.White.copy(alpha = 0.25f)
     )
 }
@@ -438,13 +412,13 @@ private fun ShowErrorPlaceholder(
     onButtonClick: () -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32
+        cornerRadius = 32
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
                 .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             VolleyTopBar.TopBarWithBackButton(
                 title = stringResource(R.string.past_tourney),
@@ -470,10 +444,10 @@ private fun PlaceholderMessage(modifier: Modifier = Modifier) {
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .padding(
-                    top = VolleyDimens.DIMEN_8.dp,
-                    bottom = VolleyDimens.DIMEN_16.dp
+                    top = 8.dp,
+                    bottom = 16.dp
                 )
-                .size(VolleyDimens.DIMEN_160.dp)
+                .size(160.dp)
         )
 
         VolleyText.BodyRegular(
@@ -519,10 +493,8 @@ private fun PastTourneyScreenPreview() {
         ) {
             PastTourneyScreen(
                 state = PastTourneyState.Content(),
-                effect = null,
-                onBackClick = {},
-                eventCallback = {},
-                navigateAction = {}
+                paddingFromSystemUi = PaddingValues(0.dp),
+                eventCallback = {}
             )
         }
     }

@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,56 +42,68 @@ import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.ui.theme.VolleybolleyTheme
-import kotlinx.coroutines.flow.collectLatest
+import org.koin.compose.viewmodel.koinViewModel
 
 private const val LEVEL_HIGH = "H"
 
 @Composable
 fun ManagePlayersScreen(
     navController: NavHostController,
-    viewModel: ManagePlayersViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: ManagePlayersViewModel = koinViewModel(),
+    paddingFromSystemUi: PaddingValues = PaddingValues(0.dp)
 ) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle() // пока не используется
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
-    LaunchedEffect(Unit) {
-        viewModel.uiEffect.collectLatest { effect ->
-            when (effect) {
-                ManagePlayersEffect.NavigateBack -> navController.popBackStack()
-                null -> Unit
-            }
+    LaunchedEffect(effect) {
+        when (effect) {
+            is ManagePlayersEffect.NavigateBack -> navController.popBackStack()
+            null -> {}
         }
     }
 
+    ManagePlayersContent(
+        paddingFromSystemUi = paddingFromSystemUi,
+        onBack = { viewModel.obtainEvent(ManagePlayersAction.ClickBack) },
+        onRemovePlayer = { index -> viewModel.obtainEvent(ManagePlayersAction.RemovePlayer(index)) }
+    )
+}
+
+@Stable
+@Composable
+private fun ManagePlayersContent(
+    paddingFromSystemUi: PaddingValues,
+    onBack: () -> Unit,
+    onRemovePlayer: (Int) -> Unit
+) {
     val scroll = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(paddingFromSystemUi)
             .verticalScroll(scroll)
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
             ) { }
     ) {
-        Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
-
         GlassCard(
-            modifier = Modifier.padding(horizontal = VolleyDimens.DIMEN_8.dp),
-            minHeight = VolleyDimens.DIMEN_280.dp
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .padding(top = 8.dp),
+            minHeight = 280.dp
         ) {
             CardHeader(
                 title = stringResource(R.string.players_title),
-                onBack = { viewModel.obtainEvent(ManagePlayersAction.ClickBack) }
+                onBack = onBack
             )
-            PlayersList8(onRemove = { index ->
-                viewModel.obtainEvent(ManagePlayersAction.RemovePlayer(index))
-            })
+            PlayersList8(onRemove = onRemovePlayer)
         }
 
-        Spacer(Modifier.height(VolleyDimens.DIMEN_24.dp))
+        Box(Modifier.padding(bottom = 24.dp))
     }
 }
 
@@ -109,7 +122,7 @@ private fun PlayersList8(
         PlayerUi(null, null)
     )
 
-    Column(verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         players.forEachIndexed { index, p ->
             val hasPlayer = !p.name.isNullOrBlank()
 
@@ -117,7 +130,7 @@ private fun PlayersList8(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = VolleyDimens.DIMEN_23.dp)
+                    .heightIn(min = 23.dp)
             ) {
                 VolleyText.BodyRegular(
                     text = "${index + 1}. " + (p.name ?: stringResource(R.string.free_spot)),
@@ -128,17 +141,17 @@ private fun PlayersList8(
                 if (hasPlayer) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         IconButton(
                             onClick = { onRemove(index) },
-                            modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+                            modifier = Modifier.size(21.dp)
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_remove),
                                 contentDescription = null,
                                 tint = Color.Unspecified,
-                                modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+                                modifier = Modifier.size(21.dp)
                             )
                         }
                         p.level?.let { LevelBadge(it) }
@@ -157,12 +170,12 @@ private fun CardHeader(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(VolleyDimens.DIMEN_24.dp)
+            .height(24.dp)
     ) {
         Box(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .size(VolleyDimens.DIMEN_24.dp)
+                .size(24.dp)
                 .clickable(onClick = onBack),
             contentAlignment = Alignment.CenterStart
         ) {
@@ -171,8 +184,8 @@ private fun CardHeader(
                 contentDescription = null,
                 tint = VolleyColor.White,
                 modifier = Modifier.size(
-                    width = VolleyDimens.DIMEN_18.dp,
-                    height = VolleyDimens.DIMEN_24.dp
+                    width = 18.dp,
+                    height = 24.dp
                 )
             )
         }
@@ -187,10 +200,10 @@ private fun CardHeader(
 @Composable
 private fun GlassCard(
     modifier: Modifier = Modifier,
-    minHeight: Dp = VolleyDimens.DIMEN_280.dp,
-    cornerRadiusDp: Int = VolleyDimens.DIMEN_32,
-    innerPadding: Dp = VolleyDimens.DIMEN_20.dp,
-    gap: Dp = VolleyDimens.DIMEN_16.dp,
+    minHeight: Dp = 280.dp,
+    cornerRadiusDp: Int = 32,
+    innerPadding: Dp = 20.dp,
+    gap: Dp = 16.dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
@@ -221,15 +234,15 @@ private fun LevelBadge(level: String, modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .clip(RoundedCornerShape(VolleyDimens.DIMEN_10.dp))
+            .clip(RoundedCornerShape(10.dp))
             .background(VolleyColor.GreyDark)
             .padding(
-                start = VolleyDimens.DIMEN_10.dp,
-                end = VolleyDimens.DIMEN_10.dp,
-                top = VolleyDimens.DIMEN_2.dp,
-                bottom = VolleyDimens.DIMEN_2.dp
+                start = 10.dp,
+                end = 10.dp,
+                top = 2.dp,
+                bottom = 2.dp
             )
-            .height(VolleyDimens.DIMEN_23.dp)
+            .height(23.dp)
     ) {
         VolleyText.BodyRegular(level, color = VolleyColor.White)
     }

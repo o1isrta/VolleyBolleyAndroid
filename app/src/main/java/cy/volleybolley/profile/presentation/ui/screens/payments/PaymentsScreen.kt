@@ -29,7 +29,6 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.profile.domain.model.Payment
@@ -52,36 +51,38 @@ fun PaymentsScreen(
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    LaunchedEffect(effect) {
+        when (effect) {
+            is NavigateFromPaymentsScreen -> {
+                effect.route?.let { navController.navigate(it) } ?: navController.popBackStack()
+            }
+            null -> {}
+        }
+    }
+
     PaymentsScreen(
         state = state,
-        effect = effect,
-        navigateAction = { route ->
-            route?.let {
-                navController.navigate(it)
-            } ?: navController.popBackStack()
-        },
         eventCallback = { event -> viewModel.obtainEvent(event) },
         modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
 
+@Stable
 @Composable
 private fun PaymentsScreen(
     modifier: Modifier = Modifier,
     state: PaymentsScreenState,
-    effect: PaymentsScreenEffect?,
-    navigateAction: (NavMap?) -> Unit,
     eventCallback: (PaymentsScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
+        cornerRadius = 32,
         modifier = modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
+            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             VolleySimpleComponent.TitleWithBackArrow(
                 title = stringResource(R.string.payments),
@@ -89,11 +90,11 @@ private fun PaymentsScreen(
                 onBackClick = { eventCallback(ClickOnBackFromPayments) }
             )
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
-
-            Column(Modifier.verticalScroll(rememberScrollState())) {
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
-
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(top = 16.dp)
+            ) {
                 GetPaymentItemByType(
                     payments = state.payments,
                     itemType = PaymentType.THAIBANK,
@@ -119,13 +120,6 @@ private fun PaymentsScreen(
                     onCheckBoxClick = { eventCallback(ClickOnPaymentsItemCheckBox(it)) }
                 )
             }
-        }
-    }
-
-    LaunchedEffect(effect) {
-        when (effect) {
-            is NavigateFromPaymentsScreen -> navigateAction(effect.route)
-            null -> {}
         }
     }
 }
@@ -180,10 +174,10 @@ private fun PaymentsComponent(
             modifier = Modifier
                 .weight(1f)
                 .padding(
-                    start = VolleyDimens.DIMEN_0.dp,
-                    top = VolleyDimens.DIMEN_0.dp,
-                    end = VolleyDimens.DIMEN_8.dp,
-                    bottom = VolleyDimens.DIMEN_0.dp
+                    start = 0.dp,
+                    top = 0.dp,
+                    end = 8.dp,
+                    bottom = 0.dp
                 )
                 .clickable(
                     interactionSource = null,
@@ -212,7 +206,7 @@ private fun PaymentsDivider() {
     VolleySimpleComponent.DividerLine(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_0.dp, VolleyDimens.DIMEN_14.dp)
+            .padding(0.dp, 14.dp)
     )
 }
 
@@ -229,8 +223,6 @@ private fun PreviewPaymentsScreen() {
             val state = PaymentsScreenState()
             PaymentsScreen(
                 state = state,
-                effect = null,
-                navigateAction = {},
                 eventCallback = {},
             )
         }

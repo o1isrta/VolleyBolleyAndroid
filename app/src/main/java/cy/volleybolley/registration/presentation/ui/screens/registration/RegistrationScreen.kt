@@ -36,7 +36,6 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsForGender2
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsForLevel
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEffect.NavigateToHome
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEffect.ShowToast
@@ -124,7 +123,7 @@ fun RegistrationScreen(
                     .align(Alignment.BottomStart)
                     .padding(bottom = 20.dp, start = 20.dp, end = 20.dp)
                     .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_56.dp),
+                    .height(56.dp),
                 onClick = { eventCallback(GetStartedClicked) }
             )
         }
@@ -187,7 +186,7 @@ private fun FillRegistrationData(
             )
             HorizontalDivider(
                 modifier = Modifier.padding(top = 16.dp),
-                thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+                thickness = 1.dp,
                 color = VolleyColor.TextCalendarLightGrey
             )
         }
@@ -233,7 +232,7 @@ private fun FillNameAndSurname(
         )
         HorizontalDivider(
             modifier = Modifier.padding(top = 14.dp),
-            thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+            thickness = 1.dp,
             color = VolleyColor.TextCalendarLightGrey
         )
     }
@@ -258,7 +257,7 @@ private fun GenderChooser(
         )
         HorizontalDivider(
             modifier = Modifier.padding(top = 16.dp),
-            thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+            thickness = 1.dp,
             color = VolleyColor.TextCalendarLightGrey
         )
     }
@@ -283,7 +282,7 @@ private fun FillDateOfBirth(
         )
         HorizontalDivider(
             modifier = Modifier.padding(top = 16.dp),
-            thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+            thickness = 1.dp,
             color = VolleyColor.TextCalendarLightGrey
         )
     }
@@ -327,7 +326,7 @@ private fun LevelChooser(
         )
         HorizontalDivider(
             modifier = Modifier.padding(top = 16.dp),
-            thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+            thickness = 1.dp,
             color = VolleyColor.TextCalendarLightGrey
         )
     }

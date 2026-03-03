@@ -52,7 +52,6 @@ import cy.volleybolley.auth.domain.api.usecase.GetAuthenticatedStatusUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite
@@ -264,7 +263,7 @@ private fun RootContainer(
             bottomBar = {
                 val paddingFromSystemUi = ScaffoldDefaults.contentWindowInsets.asPaddingValues()
                 val bottomBarHeight = remember {
-                    VolleyDimens.DIMEN_60.dp + paddingFromSystemUi.calculateBottomPadding()
+                    60.dp + paddingFromSystemUi.calculateBottomPadding()
                 }
                 if (showBottomNav) {
                     BottomNavComponent(bottomBarHeight, navController, currentDestination)
@@ -320,8 +319,8 @@ private fun BottomNavComponent(
 
     val shape = remember {
         RoundedCornerShape(
-            topStart = VolleyDimens.DIMEN_36.dp,
-            topEnd = VolleyDimens.DIMEN_36.dp
+            topStart = 36.dp,
+            topEnd = 36.dp
         )
     }
 
@@ -333,7 +332,7 @@ private fun BottomNavComponent(
                 color = VolleyColor.TurquoiseBottom,
                 shape = shape
             )
-            .padding(top = VolleyDimens.DIMEN_10.dp)
+            .padding(top = 10.dp)
             .height(bottomNavBarHeight)
             .clip(shape)
     ) {

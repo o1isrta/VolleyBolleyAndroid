@@ -28,7 +28,6 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.ScreenPreviewContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LogoWithAppName
 
@@ -60,7 +59,7 @@ fun OnboardingScreen(
         ) {
             VolleyText.TitleXL(
                 modifier = Modifier.padding(
-                    top = paddingFromSystemUi.calculateTopPadding() + VolleyDimens.DIMEN_40.dp,
+                    top = paddingFromSystemUi.calculateTopPadding() + 40.dp,
                     start = 26.dp
                 ),
                 text = stringResource(id = R.string.welcome),
@@ -86,16 +85,16 @@ fun OnboardingScreen(
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(
-                    start = VolleyDimens.DIMEN_20.dp,
-                    end = VolleyDimens.DIMEN_20.dp,
-                    top = buttonTopPadding + VolleyDimens.DIMEN_90.dp,
+                    start = 20.dp,
+                    end = 20.dp,
+                    top = buttonTopPadding + 90.dp,
                 )
         ) {
             VolleyButton.ActiveButton(
                 text = stringResource(id = R.string.get_started),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_44.dp),
+                    .height(44.dp),
                 onClick = onNextScreenRequested
             )
         }

@@ -27,7 +27,6 @@ import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.AuthorizationRoute
 import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
@@ -107,7 +106,7 @@ fun LaunchScreen(
                     VolleyProgress.CircularProgress(
                         modifier = Modifier
                             .padding(
-                                bottom = paddingFromSystemUi.calculateBottomPadding() + VolleyDimens.DIMEN_52.dp
+                                bottom = paddingFromSystemUi.calculateBottomPadding() + 52.dp
                             )
                     )
                 }
@@ -132,7 +131,7 @@ fun LogoWithAppName(
         Image(
             painter = painterResource(id = R.drawable.ic_logo),
             contentDescription = null,
-            modifier = Modifier.size(VolleyDimens.LAUNCH_LOGO_SIZE.dp)
+            modifier = Modifier.size(200.dp)
         )
         VolleyText.LogoDisplay(
             modifier = Modifier.padding(top = 24.dp),

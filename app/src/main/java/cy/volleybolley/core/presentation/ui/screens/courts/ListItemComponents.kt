@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.courts.presentation.model.CourtUi
 
@@ -39,7 +38,7 @@ object ListItemComponents {
         Column(
             modifier = modifier
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.Top,
@@ -88,7 +87,7 @@ object ListItemComponents {
     @Composable
     fun DividerItem() {
         HorizontalDivider(
-            thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+            thickness = 1.dp,
             color = VolleyColor.Divider
         )
     }
@@ -107,13 +106,13 @@ object ListItemComponents {
                 .wrapContentSize()
                 .background(
                     color = VolleyColor.GreyDark,
-                    shape = RoundedCornerShape(VolleyDimens.DIMEN_10.dp)
+                    shape = RoundedCornerShape(10.dp)
                 )
         ) {
             VolleyText.BodyRegular(
                 modifier = Modifier.padding(
-                    vertical = VolleyDimens.DIMEN_4.dp,
-                    horizontal = VolleyDimens.DIMEN_8.dp
+                    vertical = 4.dp,
+                    horizontal = 8.dp
                 ),
                 text = distance,
                 color = VolleyColor.White,
@@ -129,9 +128,9 @@ object ListItemComponents {
             modifier = Modifier
                 .background(
                     color = VolleyColor.TagColor,
-                    shape = RoundedCornerShape(VolleyDimens.DIMEN_6.dp)
+                    shape = RoundedCornerShape(6.dp)
                 )
-                .padding(horizontal = VolleyDimens.DIMEN_4.dp, vertical = VolleyDimens.DIMEN_2.dp)
+                .padding(horizontal = 4.dp, vertical = 2.dp)
         ) {
             VolleyText.BodyRegular(
                 text = tag,
@@ -152,9 +151,9 @@ object ListItemComponents {
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .height(VolleyDimens.DIMEN_194.dp)
-                .padding(vertical = VolleyDimens.DIMEN_16.dp)
-                .clip(RoundedCornerShape(VolleyDimens.DIMEN_16.dp))
+                .height(194.dp)
+                .padding(vertical = 16.dp)
+                .clip(RoundedCornerShape(16.dp))
         ) {
             val imageModel = photoUrl.ifBlank { R.drawable.preview_court_png }
             AsyncImage(
@@ -168,8 +167,8 @@ object ListItemComponents {
             Row(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(VolleyDimens.DIMEN_16.dp),
-                horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_4.dp)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 tags.forEach { tag ->
                     TagItem(tag = tag)

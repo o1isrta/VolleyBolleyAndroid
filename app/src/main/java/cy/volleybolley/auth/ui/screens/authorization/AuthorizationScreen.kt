@@ -46,7 +46,6 @@ import cy.volleybolley.core.domain.VolleyFeature
 import cy.volleybolley.core.presentation.ui.component.ScreenPreviewContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugLog
 import org.koin.androidx.compose.koinViewModel
@@ -162,7 +161,7 @@ fun AuthorizationScreen(
                     .fillMaxWidth()
                     .padding(
                         start = 21.dp,
-                        end = VolleyDimens.DIMEN_112.dp
+                        end = 112.dp
                     ),
                 maxLines = 4
             )
@@ -192,15 +191,15 @@ private fun BottomSheetWithSignButtons(
             .background(
                 color = VolleyColor.TurquoiseBottom,
                 shape = RoundedCornerShape(
-                    topStart = VolleyDimens.DIMEN_32.dp,
-                    topEnd = VolleyDimens.DIMEN_32.dp
+                    topStart = 32.dp,
+                    topEnd = 32.dp
                 )
             )
             .padding(
-                start = VolleyDimens.DIMEN_16.dp,
-                end = VolleyDimens.DIMEN_16.dp,
-                top = VolleyDimens.DIMEN_20.dp,
-                bottom = VolleyDimens.DIMEN_20.dp + paddingFromSystemUi.calculateBottomPadding()
+                start = 16.dp,
+                end = 16.dp,
+                top = 20.dp,
+                bottom = 20.dp + paddingFromSystemUi.calculateBottomPadding()
             ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -210,10 +209,10 @@ private fun BottomSheetWithSignButtons(
                 onClick = onNavigateToRegisterByPhoneRequested,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_56.dp),
+                    .height(56.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = VolleyColor.YellowPro),
-                shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp),
-                contentPadding = PaddingValues(horizontal = VolleyDimens.DIMEN_16.dp)
+                shape = RoundedCornerShape(16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 VolleyText.BodyBoldMedium(
                     text = stringResource(id = R.string.continue_with_phone_number),

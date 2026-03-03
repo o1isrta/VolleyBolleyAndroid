@@ -7,14 +7,13 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 
 object VolleyProgress {
     @Stable
     @Composable
     fun CircularProgress(modifier: Modifier = Modifier) {
         CircularProgressIndicator(
-            modifier = modifier.size(VolleyDimens.DIMEN_40.dp),
+            modifier = modifier.size(40.dp),
             color = VolleyColor.YellowPro
         )
     }

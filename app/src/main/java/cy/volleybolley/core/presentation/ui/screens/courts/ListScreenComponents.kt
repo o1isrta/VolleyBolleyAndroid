@@ -28,7 +28,6 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient.SearchField
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtDetailComponents.CourtItemDetails
 import cy.volleybolley.core.presentation.ui.screens.courts.ListItemComponents.DistanceContainer
@@ -49,7 +48,7 @@ object ListScreenComponents {
             modifier = modifier
                 .wrapContentHeight()
                 .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_8.dp)
+                .padding(8.dp)
         ) {
             CourtsSearchList(
                 courts = courts,
@@ -80,7 +79,7 @@ object ListScreenComponents {
         Column(
             modifier = Modifier
                 .wrapContentHeight()
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             SearchField(
                 modifier = Modifier.fillMaxWidth(),
@@ -107,7 +106,7 @@ object ListScreenComponents {
                             locationName = court.location.locationName,
                             distance = court.distanceText,
                             onClick = { onClick(court) },
-                            modifier = Modifier.padding(vertical = VolleyDimens.DIMEN_16.dp)
+                            modifier = Modifier.padding(vertical = 16.dp)
                         )
                     }
                     if (index < filteredCourts.lastIndex) {

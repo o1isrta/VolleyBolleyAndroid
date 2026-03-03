@@ -29,7 +29,6 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyTitleBar.VolleyArrowBackTitleBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 import cy.volleybolley.notification.presentation.ui.component.NotificationsScreenComponents.NotificationListContent
 import cy.volleybolley.notification.presentation.ui.model.NotificationItem
@@ -47,9 +46,9 @@ object NotificationsScreenComponents {
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(VolleyDimens.DIMEN_16))
+                .clip(RoundedCornerShape(16))
                 .background(VolleyColor.NotificationColor)
-                .padding(VolleyDimens.DIMEN_16.dp)
+                .padding(16.dp)
                 .clickable { onClick() }
         ) {
             Row(
@@ -67,7 +66,7 @@ object NotificationsScreenComponents {
                 )
             }
 
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = message,
@@ -88,7 +87,7 @@ object NotificationsScreenComponents {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-            Box(modifier = Modifier.padding(VolleyDimens.DIMEN_8.dp)) {
+            Box(modifier = Modifier.padding(8.dp)) {
                 NotificationsList(
                     notifications = notifications,
                     onBackClick = { navController.popBackStack() },
@@ -113,8 +112,8 @@ object NotificationsScreenComponents {
                     title = stringResource(R.string.notifications),
                     modifier = Modifier
                         .padding(
-                            horizontal = VolleyDimens.DIMEN_20.dp,
-                            vertical = VolleyDimens.DIMEN_12.dp
+                            horizontal = 20.dp,
+                            vertical = 12.dp
                         ),
                     onBackClick = onBackClick
                 )
@@ -122,8 +121,8 @@ object NotificationsScreenComponents {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = VolleyDimens.DIMEN_20.dp),
-                    contentPadding = PaddingValues(bottom = VolleyDimens.DIMEN_16.dp)
+                        .padding(horizontal = 20.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     itemsIndexed(notifications) { index, notification ->
                         NotificationContent(
@@ -133,7 +132,7 @@ object NotificationsScreenComponents {
                             onClick = { onItemClick(notification) }
                         )
                         if (index < notifications.lastIndex) {
-                            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                            Spacer(Modifier.height(16.dp))
                         }
                     }
                 }

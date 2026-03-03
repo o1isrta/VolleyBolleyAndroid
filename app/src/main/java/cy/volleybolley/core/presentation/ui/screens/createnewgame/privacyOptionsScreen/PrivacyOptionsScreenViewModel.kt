@@ -38,16 +38,45 @@ open class PrivacyOptionsScreenViewModel(
         viewModelScope.launch {
             gameRepository.gameData
                 .collectLatest { gameDataFromRepo ->
-                    // Когда GameData в репозитории меняется, обновляем соответствующие части UI State
                     uiStateMutable.update { currentState ->
+                        val selectedPlayers = gameDataFromRepo.players.toSet()
                         currentState.copy(
-                            // Обновляем список игроков из репозитория
                             flagFavorites = false,
                             playersSearchResult = emptyList(),
-                            selectedPlayers = gameDataFromRepo.players.toMutableSet()
+                            selectedPlayers = selectedPlayers,
+                            filteredPlayers = filterPlayers(
+                                selectedPlayers,
+                                emptyList(),
+                                false
+                            )
                         )
                     }
                 }
+        }
+    }
+
+    private fun updateFilteredPlayers() {
+        uiStateMutable.update { currentState ->
+            currentState.copy(
+                filteredPlayers = filterPlayers(
+                    currentState.selectedPlayers,
+                    currentState.playersSearchResult,
+                    currentState.flagFavorites
+                )
+            )
+        }
+    }
+
+    private fun filterPlayers(
+        selectedPlayers: Set<Player>,
+        searchResult: List<Player>,
+        flagFavorites: Boolean
+    ): List<Player> {
+        val allPlayers = (selectedPlayers union searchResult).toList()
+        return if (flagFavorites) {
+            allPlayers.filter { it.isFavorite }
+        } else {
+            allPlayers
         }
     }
 
@@ -71,7 +100,8 @@ open class PrivacyOptionsScreenViewModel(
             }
 
             is PrivacyOptionsScreenEvent.AllOrFavoritesSelected -> {
-                uiStateMutable.value = uiStateMutable.value.copy(flagFavorites = event.isFavorites)
+                uiStateMutable.update { it.copy(flagFavorites = event.isFavorites) }
+                updateFilteredPlayers()
             }
         }
     }
@@ -128,7 +158,7 @@ open class PrivacyOptionsScreenViewModel(
     }
 
     private fun handleSuccess(players: List<Player>, query: String) {
-        val filteredPlayers = if (query.isBlank()) {
+        val filteredByQuery = if (query.isBlank()) {
             players
         } else {
             players.filter { player ->
@@ -139,10 +169,11 @@ open class PrivacyOptionsScreenViewModel(
 
         uiStateMutable.update {
             it.copy(
-                playersSearchResult = filteredPlayers,
+                playersSearchResult = filteredByQuery,
                 isLoading = false
             )
         }
+        updateFilteredPlayers()
     }
 
     private fun handleFailure(error: ErrorType) {
@@ -167,16 +198,18 @@ open class PrivacyOptionsScreenViewModel(
 
     private fun onPlayerSelectionChange(player: Player) {
         uiStateMutable.update { currentState ->
-            val updatedSelectedPlayers = currentState.selectedPlayers.toMutableSet()
-            if (isPlayerSelected(player)) { // если был выбран, то при нажатии, становится не выбран. и наоборот
-                updatedSelectedPlayers.remove(player) // снимаем выбор
+            val updatedSelectedPlayers = if (isPlayerSelected(player)) {
+                currentState.selectedPlayers - player
             } else {
-                if (updatedSelectedPlayers.size < gameRepository.gameData.value.maximumPlayers) {
-                    updatedSelectedPlayers.add(player) // выбираем
+                if (currentState.selectedPlayers.size < gameRepository.gameData.value.maximumPlayers) {
+                    currentState.selectedPlayers + player
+                } else {
+                    currentState.selectedPlayers
                 }
             }
             currentState.copy(selectedPlayers = updatedSelectedPlayers)
         }
+        updateFilteredPlayers()
     }
 
     private fun onAddSelectedPlayersClick() {

@@ -33,7 +33,6 @@ import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEffect.NavigateFromPersonalDataScreen
@@ -79,33 +78,33 @@ private fun PersonalDataScreen(
     eventCallback: (PersonalDataScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
+        cornerRadius = 32,
         modifier = modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
+            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             VolleySimpleComponent.TitleWithBackArrow(
                 title = stringResource(R.string.personal_data),
                 modifier = Modifier.fillMaxWidth(),
                 onBackClick = { eventCallback(OnBackFromPersonalDataClick) }
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.height(8.dp))
 
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Spacer(Modifier.height(8.dp))
                 AvatarBlock(
                     modifier = Modifier.fillMaxWidth(),
                     avatarString = state.avatar,
                     onIconClick = { eventCallback(OnAvatarEditClick) }
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Spacer(Modifier.height(8.dp))
                 PersonalDataTextMark(stringResource(R.string.name))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Spacer(Modifier.height(8.dp))
 
                 VolleyTextFieldGradient.SimpleGradientTextField(
                     hint = stringResource(R.string.name),
@@ -113,9 +112,9 @@ private fun PersonalDataScreen(
                     actionToTransferContent = { eventCallback(NameChanged(it)) }
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_14.dp))
+                Spacer(Modifier.height(14.dp))
                 PersonalDataTextMark(stringResource(R.string.surname))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Spacer(Modifier.height(8.dp))
 
                 VolleyTextFieldGradient.SimpleGradientTextField(
                     hint = stringResource(R.string.surname),
@@ -123,11 +122,11 @@ private fun PersonalDataScreen(
                     actionToTransferContent = { eventCallback(SurnameChanged(it)) }
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_14.dp))
+                Spacer(Modifier.height(14.dp))
                 PersonalDataDivider()
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
                 PersonalDataTextMark(stringResource(R.string.gender))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Spacer(Modifier.height(8.dp))
 
                 VolleyButton.GroupButtonsForGender2(
                     modifier = Modifier,
@@ -135,20 +134,20 @@ private fun PersonalDataScreen(
                     onSelected = { eventCallback(GenderSelect(it)) },
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
                 PersonalDataDivider()
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
                 PersonalDataTextMark(stringResource(R.string.date_of_bith))
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Spacer(Modifier.height(8.dp))
 
                 VolleyTextFieldAttribute.DatePickerField(
                     inputDate = state.dateOfBirthMillis,
                     actionForSaveDate = { eventCallback(DateSelect(it)) }
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
                 PersonalDataDivider()
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 VolleyTextFieldGradient.GradientSpinner(
                     modifier = Modifier.fillMaxWidth(),
@@ -159,9 +158,9 @@ private fun PersonalDataScreen(
                     onItemSelect = { country, _ -> eventCallback(CountrySelect(country!!)) }
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
                 PersonalDataDivider()
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 VolleyTextFieldGradient.GradientSpinner(
                     modifier = Modifier.fillMaxWidth(),
@@ -172,14 +171,14 @@ private fun PersonalDataScreen(
                     onItemSelect = { city, _ -> eventCallback(CitySelect(city!!)) }
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 VolleyButton.ActiveButton(
                     enabled = state.buttonEnabled,
                     text = stringResource(R.string.update),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(VolleyDimens.DIMEN_44.dp)
+                        .height(44.dp)
                 ) { eventCallback(OnUpdateButtonClick) }
             }
         }
@@ -228,7 +227,7 @@ private fun AvatarBlock(
         Box {
             VolleyAvatar.CircularAvatar(
                 avatar = avatarString,
-                size = VolleyDimens.DIMEN_122.dp
+                size = 122.dp
             )
 
             Image(
@@ -238,10 +237,10 @@ private fun AvatarBlock(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(
-                        VolleyDimens.DIMEN_0.dp,
-                        VolleyDimens.DIMEN_0.dp,
-                        VolleyDimens.DIMEN_10.dp,
-                        VolleyDimens.DIMEN_6.dp
+                        0.dp,
+                        0.dp,
+                        10.dp,
+                        6.dp
                     )
                     .clickable(
                         interactionSource = null,
@@ -266,7 +265,7 @@ private fun PreviewAvatarBlock() {
             AvatarBlock(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(VolleyDimens.DIMEN_8.dp)
+                    .padding(8.dp)
             )
         }
     }

@@ -4,10 +4,11 @@ import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.players.domain.model.Player
 
 data class PrivacyOptionsScreenState(
-    val flagFavorites: Boolean = false, // флаг = true - искать игроков среди favorites, false - среди всех
+    val flagFavorites: Boolean = false,
     val errorMessage: String? = null,
-    val isLoading: Boolean = false, // Для загрузки
-    val playersSearchResult: List<Player> = emptyList(), // Список игроков для отображения в поиске
-    val query: String = "", // для отслеживания текущего поискового запроса
-    val selectedPlayers: MutableSet<Player> = mutableSetOf() // Игроки, которых пользователь выбрал
+    val isLoading: Boolean = false,
+    val playersSearchResult: List<Player> = emptyList(),
+    val query: String = "",
+    val selectedPlayers: Set<Player> = emptySet(),
+    val filteredPlayers: List<Player> = emptyList()
 ) : UiState

@@ -31,7 +31,7 @@ class RegistrationViewModel(
 ) : BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(
     initialState = RegistrationState()
 ) {
-    override val tag = RegistrationViewModel::class.simpleName ?: "RegistrationViewModel"
+    override val tag = RegistrationViewModel::class.simpleName.orEmpty()
 
     init {
         val personalData: PersonalData = json.decodeFromString(userData)

@@ -34,7 +34,6 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsForChangeLevel
 import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.games.domain.model.entity.RatingType
 import cy.volleybolley.ui.theme.VolleybolleyTheme
@@ -75,8 +74,8 @@ private fun RatePlayersScreen(
 
     Box(Modifier.fillMaxSize()) {
         TransparentContainer(
-            modifier = Modifier.padding(VolleyDimens.DIMEN_8.dp),
-            cornerRadius = VolleyDimens.DIMEN_16,
+            modifier = Modifier.padding(8.dp),
+            cornerRadius = 16,
         ) {
             if (state.isLoading) {
                 Box(
@@ -87,12 +86,12 @@ private fun RatePlayersScreen(
                 }
             } else {
                 Column(
-                    modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp),
+                    modifier = Modifier.padding(20.dp),
                 ) {
                     Header()
                     LazyColumn(
-                        modifier = Modifier.padding(top = VolleyDimens.DIMEN_20.dp),
-                        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp),
+                        modifier = Modifier.padding(top = 20.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         itemsIndexed(state.players) { index, player ->
                             PlayerBox(
@@ -112,7 +111,7 @@ private fun RatePlayersScreen(
                         text = stringResource(R.string.rate_players),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = VolleyDimens.DIMEN_16.dp)
+                            .padding(top = 16.dp)
                     ) {
                         eventCallback(RatePlayersEvent.ConfirmRate)
                     }
@@ -126,7 +125,7 @@ private fun RatePlayersScreen(
 @Composable
 private fun Header() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         VolleyText.TitleLarge(
             text = stringResource(R.string.game_completed),
@@ -146,7 +145,7 @@ private fun PlayerBox(
     onSelected: (RatingType) -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PlayerInfo(player = player, modifier = Modifier.fillMaxWidth())
         GroupButtonsForChangeLevel(
@@ -165,10 +164,10 @@ private fun PlayerInfo(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        CircularAvatar(avatar = player.avatar, size = VolleyDimens.DIMEN_40.dp)
+        CircularAvatar(avatar = player.avatar, size = 40.dp)
         VolleyText.BodyRegular(text = player.name, color = VolleyColor.White)
         Spacer(Modifier.weight(1f))
         if (player.level != LevelType.UNCONFINED) {
@@ -186,9 +185,9 @@ private fun LevelPill(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .height(VolleyDimens.DIMEN_23.dp)
-            .width(VolleyDimens.DIMEN_30.dp)
-            .clip(RoundedCornerShape(VolleyDimens.DIMEN_10.dp))
+            .height(23.dp)
+            .width(30.dp)
+            .clip(RoundedCornerShape(10.dp))
             .background(VolleyColor.GreyDark)
     ) {
         VolleyText.BodyRegular(level, color = VolleyColor.White)
@@ -234,7 +233,7 @@ private fun RatePlayersPreview() {
                     )
                 )
             )
-            Box(modifier = Modifier.padding(top = VolleyDimens.DIMEN_116.dp)) {
+            Box(modifier = Modifier.padding(top = 116.dp)) {
                 RatePlayersScreen(
                     state = state,
                     effect = null,

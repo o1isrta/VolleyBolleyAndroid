@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.PreviewContainer
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
-import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyBoldMedium
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyBoldSmall
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyLight
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodySmall
@@ -370,12 +369,12 @@ object VolleyText {
 private fun PreviewTitleXL() {
     PreviewContainer(
         modifier = Modifier
-            .width(VolleyDimens.DIMEN_550.dp)
+            .width(550.dp)
     ) {
         TitleXL(
             stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_10.dp),
+                .padding(10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -387,12 +386,12 @@ private fun PreviewTitleXL() {
 private fun PreviewTitleXLAlt() {
     PreviewContainer(
         modifier = Modifier
-            .width(VolleyDimens.DIMEN_550.dp)
+            .width(550.dp)
     ) {
         TitleXLAlt(
             stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_10.dp),
+                .padding(10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -404,12 +403,12 @@ private fun PreviewTitleXLAlt() {
 private fun PreviewTitleLarge() {
     PreviewContainer(
         modifier = Modifier
-            .width(VolleyDimens.DIMEN_550.dp)
+            .width(550.dp)
     ) {
         TitleLarge(
             stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_10.dp),
+                .padding(10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -421,12 +420,12 @@ private fun PreviewTitleLarge() {
 private fun PreviewTitleMedium() {
     PreviewContainer(
         modifier = Modifier
-            .width(VolleyDimens.DIMEN_550.dp)
+            .width(550.dp)
     ) {
         TitleMedium(
             stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_10.dp),
+                .padding(10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -438,12 +437,12 @@ private fun PreviewTitleMedium() {
 private fun PreviewBodyBoldMedium() {
     PreviewContainer(
         modifier = Modifier
-            .width(VolleyDimens.DIMEN_550.dp)
+            .width(550.dp)
     ) {
         BodyBoldMedium(
             stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_10.dp),
+                .padding(10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -455,12 +454,12 @@ private fun PreviewBodyBoldMedium() {
 private fun PreviewBodySmall() {
     PreviewContainer(
         modifier = Modifier
-            .width(VolleyDimens.DIMEN_550.dp)
+            .width(550.dp)
     ) {
         BodySmall(
             stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_10.dp),
+                .padding(10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -472,12 +471,12 @@ private fun PreviewBodySmall() {
 private fun PreviewBodyLight() {
     PreviewContainer(
         modifier = Modifier
-            .width(VolleyDimens.DIMEN_550.dp)
+            .width(550.dp)
     ) {
         BodyLight(
             stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_10.dp),
+                .padding(10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -489,12 +488,12 @@ private fun PreviewBodyLight() {
 private fun PreviewBodyBoldSmall() {
     PreviewContainer(
         modifier = Modifier
-            .width(VolleyDimens.DIMEN_550.dp)
+            .width(550.dp)
     ) {
         BodyBoldSmall(
             stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_10.dp),
+                .padding(10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -506,12 +505,12 @@ private fun PreviewBodyBoldSmall() {
 private fun PreviewBodyTiny() {
     PreviewContainer(
         modifier = Modifier
-            .width(VolleyDimens.DIMEN_550.dp)
+            .width(550.dp)
     ) {
         BodyTiny(
             stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_10.dp),
+                .padding(10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -523,12 +522,12 @@ private fun PreviewBodyTiny() {
 private fun PreviewButtonText() {
     PreviewContainer(
         modifier = Modifier
-            .width(VolleyDimens.DIMEN_550.dp)
+            .width(550.dp)
     ) {
         ButtonText(
             stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_10.dp),
+                .padding(10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )
@@ -540,12 +539,12 @@ private fun PreviewButtonText() {
 private fun PreviewLogoDisplay() {
     PreviewContainer(
         modifier = Modifier
-            .width(VolleyDimens.DIMEN_550.dp)
+            .width(550.dp)
     ) {
         LogoDisplay(
             stringResource(R.string.text_example),
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_10.dp),
+                .padding(10.dp),
             color = VolleyColor.White,
             textAlign = TextAlign.Left
         )

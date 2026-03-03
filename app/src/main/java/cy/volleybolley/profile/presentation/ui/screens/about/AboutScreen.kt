@@ -27,7 +27,6 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
@@ -63,24 +62,24 @@ private fun AboutScreen(
     eventCallback: (AboutScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
+        cornerRadius = 32,
         modifier = modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
+            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             VolleySimpleComponent.TitleWithBackArrow(
                 title = stringResource(R.string.about),
                 modifier = Modifier.fillMaxWidth(),
                 onBackClick = { eventCallback(OnBackFromAboutClick) }
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.height(8.dp))
 
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Spacer(Modifier.height(8.dp))
 
                 AboutTextLine(
                     title = stringResource(R.string.founder),
@@ -89,7 +88,7 @@ private fun AboutScreen(
                 )
 
                 AboutScreenDivider(
-                    bottomPadding = VolleyDimens.DIMEN_22
+                    bottomPadding = 22
                 )
 
                 AboutTextLine(
@@ -99,7 +98,7 @@ private fun AboutScreen(
                 )
 
                 AboutScreenDivider(
-                    bottomPadding = VolleyDimens.DIMEN_12
+                    bottomPadding = 12
                 )
 
                 AboutTextLine(
@@ -136,7 +135,7 @@ private fun AboutTextLine(
             modifier = Modifier.weight(VolleyUiUtil.ABOUT_SCREEN_TITLES_WEIGHT)
         )
 
-        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+        Spacer(Modifier.width(8.dp))
 
         VolleyText.BodyRegular(
             text = value,
@@ -150,15 +149,15 @@ private fun AboutTextLine(
 
 @Composable
 private fun AboutScreenDivider(
-    topPadding: Int = VolleyDimens.DIMEN_16,
-    bottomPadding: Int = VolleyDimens.DIMEN_16,
+    topPadding: Int = 16,
+    bottomPadding: Int = 16,
 ) {
     VolleySimpleComponent.DividerLine(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                start = VolleyDimens.DIMEN_0.dp,
-                end = VolleyDimens.DIMEN_0.dp,
+                start = 0.dp,
+                end = 0.dp,
                 top = topPadding.dp,
                 bottom = bottomPadding.dp,
             )

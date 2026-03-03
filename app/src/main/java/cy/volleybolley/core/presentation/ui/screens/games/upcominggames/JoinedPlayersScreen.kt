@@ -14,69 +14,88 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBarWithBackButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.games.domain.model.entity.PlayerShort
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 import cy.volleybolley.ui.theme.VolleybolleyTheme
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun JoinedPlayersScreen(
     navController: NavHostController,
-    paddingFromSystemUi: PaddingValues,
-    tournamentDetails: TournamentDetails,
+    tournamentDetails: TournamentDetails?,
+    viewModel: JoinedPlayersScreenViewModel = koinViewModel { parametersOf(tournamentDetails) },
+    paddingFromSystemUi: PaddingValues
 ) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
+
+    LaunchedEffect(effect) {
+        when (effect) {
+            is JoinedPlayersScreenEffect.NavigateBack -> navController.popBackStack()
+            null -> {}
+        }
+    }
+
     JoinedPlayersScreen(
-        modifier = Modifier
-            .padding(paddingFromSystemUi)
-            .fillMaxSize(),
-        tournamentDetails = tournamentDetails,
-        navigateBack = { navController.popBackStack() }
+        state = state,
+        paddingFromSystemUi = paddingFromSystemUi,
+        eventCallback = { viewModel.obtainEvent(it) }
     )
 }
 
 @Stable
 @Composable
 private fun JoinedPlayersScreen(
-    modifier: Modifier = Modifier,
-    tournamentDetails: TournamentDetails,
-    navigateBack: () -> Unit,
+    state: JoinedPlayersScreenState,
+    paddingFromSystemUi: PaddingValues,
+    eventCallback: (JoinedPlayersScreenEvent) -> Unit
 ) {
+    val tournamentDetails = state.tournamentDetails ?: return
+
     Box(
-        modifier = modifier.verticalScroll(rememberScrollState())
+        modifier = Modifier
+            .padding(paddingFromSystemUi)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = VolleyDimens.DIMEN_32,
+            cornerRadius = 32,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_8.dp)
+                .padding(8.dp)
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
-                modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(20.dp)
             ) {
                 TopBarWithBackButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = VolleyDimens.DIMEN_8.dp),
+                        .padding(bottom = 8.dp),
                     title = stringResource(R.string.players),
-                    onBackNavigationRequested = navigateBack
+                    onBackNavigationRequested = { eventCallback(JoinedPlayersScreenEvent.OnBackClicked) }
                 )
 
-                val players = tournamentDetails.teams[0].players
+                val players = tournamentDetails.teams.firstOrNull()?.players ?: emptyList()
                 val currentPlayersNumber = players.size
 
                 for (i in 1..tournamentDetails.maximumPlayers) {
@@ -100,15 +119,14 @@ private fun PlayersRow(index: Int, player: PlayerShort) {
             color = VolleyColor.White,
             modifier = Modifier
                 .weight(1f)
-                .padding(start = VolleyDimens.DIMEN_8.dp)
+                .padding(start = 8.dp)
         )
 
         Box(
             modifier = Modifier
-                .size(VolleyDimens.DIMEN_32.dp, VolleyDimens.DIMEN_20.dp)
-                .clip(RoundedCornerShape(VolleyDimens.DIMEN_8.dp))
+                .size(32.dp, 20.dp)
+                .clip(RoundedCornerShape(8.dp))
                 .background(VolleyColor.GreyDark)
-
         ) {
             VolleyText.BodyRegular(
                 text = player.level.name.first().toString(),
@@ -128,7 +146,7 @@ private fun PlayersRow(index: Int) {
             color = VolleyColor.White,
             modifier = Modifier
                 .weight(1f)
-                .padding(start = VolleyDimens.DIMEN_8.dp)
+                .padding(start = 8.dp)
         )
     }
 }
@@ -143,11 +161,9 @@ private fun JoinedPlayersScreenPreview() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             JoinedPlayersScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(VolleyDimens.DIMEN_8.dp),
-                tournamentDetails = VolleyMocks.mockTournament,
-                navigateBack = {}
+                state = JoinedPlayersScreenState(tournamentDetails = VolleyMocks.mockTournament),
+                paddingFromSystemUi = PaddingValues(0.dp),
+                eventCallback = {}
             )
         }
     }

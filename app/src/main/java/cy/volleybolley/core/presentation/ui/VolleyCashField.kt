@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 
@@ -33,7 +32,7 @@ object VolleyCashField {
     fun CashField(
         value: String,
         currency: String,
-        inputSymbolLimit: Int = VolleyDimens.DIMEN_6,
+        inputSymbolLimit: Int = 6,
         onValueChanged: (String) -> Unit,
     ) {
         val textStyle = remember {
@@ -43,15 +42,15 @@ object VolleyCashField {
         val widthOfField = getFieldWidth(correctValue)
 
         VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = VolleyDimens.DIMEN_16,
+            cornerRadius = 16,
             modifier = Modifier
-                .sizeIn(minHeight = VolleyDimens.DIMEN_30.dp, minWidth = VolleyDimens.DIMEN_75.dp)
+                .sizeIn(minHeight = 30.dp, minWidth = 75.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_28.dp, VolleyDimens.DIMEN_6.dp)
+                    .padding(28.dp, 6.dp)
             ) {
                 BasicTextField(
                     value = correctValue,
@@ -88,12 +87,12 @@ object VolleyCashField {
 
     private fun getFieldWidth(value: String): Int {
         return if (value.isEmpty()) {
-            VolleyDimens.DIMEN_9
+            9
         } else {
             value.chunked(1).map { symbol ->
                 if (symbol.isDigitsOnly()) symbol.toInt() else 1
             }.fold(0) { accumulator, digit ->
-                val stepValue = if (digit == 1) VolleyDimens.DIMEN_6 else VolleyDimens.DIMEN_10
+                val stepValue = if (digit == 1) 6 else 10
                 accumulator + stepValue
             }
         }

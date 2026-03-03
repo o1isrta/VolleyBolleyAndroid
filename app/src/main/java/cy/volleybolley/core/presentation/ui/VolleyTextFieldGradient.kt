@@ -51,7 +51,6 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
 import cy.volleybolley.core.presentation.ui.component.PreviewContainer
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.CodeField
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldAlert
@@ -72,7 +71,7 @@ object VolleyTextFieldGradient {
         actionOnInputComplete: (String) -> Unit,
     ) {
         TextFieldBaseGradient(
-            height = VolleyDimens.DIMEN_44,
+            height = 44,
             textInputValue = text,
             hint = hint,
             hintTextStyle = GradientFieldLight,
@@ -87,7 +86,7 @@ object VolleyTextFieldGradient {
                     tint = VolleyColor.TextDark
                 )
 
-                Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_8.dp))
+                Spacer(modifier = Modifier.width(8.dp))
             },
             modifier = modifier,
         )
@@ -210,7 +209,7 @@ object VolleyTextFieldGradient {
                         if (index != itemList.lastIndex) {
                             HorizontalDivider(
                                 modifier = Modifier.padding(horizontal = 16.dp),
-                                thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+                                thickness = 1.dp,
                                 color = VolleyColor.TextCalendarLightGrey
                             )
                         }
@@ -253,7 +252,7 @@ object VolleyTextFieldGradient {
                         color = if (alertMessage.isNotEmpty()) VolleyColor.Alert else Color.Unspecified
                     )
 
-                    Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_4.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
                 }
             )
         }
@@ -302,7 +301,7 @@ object VolleyTextFieldGradient {
         actionToTransferContent: (String) -> Unit,
     ) {
         TextFieldBaseGradient(
-            height = VolleyDimens.DIMEN_48,
+            height = 48,
             textInputValue = text,
             fieldTextStyle = GradientFieldMedium,
             hint = hint,
@@ -324,8 +323,8 @@ object VolleyTextFieldGradient {
     @Composable
     private fun TextFieldBaseGradient(
         modifier: Modifier = Modifier,
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
-        height: Int = VolleyDimens.DIMEN_52,
+        cornerRadius: Int = 16,
+        height: Int = 52,
         textInputValue: String = "",
         maxTextLength: Int? = null,
         hint: String,
@@ -370,7 +369,7 @@ object VolleyTextFieldGradient {
                             shape = RoundedCornerShape(cornerRadius.dp)
                         )
                         .border(
-                            width = VolleyDimens.DIMEN_1.dp,
+                            width = 1.dp,
                             brush = if (alertMode) SolidColor(VolleyColor.Alert) else gradientBrush,
                             shape = RoundedCornerShape(cornerRadius.dp)
                         ),
@@ -379,7 +378,7 @@ object VolleyTextFieldGradient {
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(VolleyDimens.DIMEN_16.dp, 0.dp)
+                            .padding(16.dp, 0.dp)
                     ) {
                         composablePrefix()
 
@@ -419,7 +418,7 @@ object VolleyTextFieldGradient {
                 }
 
                 if (alertMode) {
-                    Spacer(Modifier.height(VolleyDimens.DIMEN_4.dp))
+                    Spacer(Modifier.height(4.dp))
                     Text(
                         text = alertMessage,
                         style = GradientFieldAlert,
@@ -458,56 +457,56 @@ private fun PreviewGradientTextFields() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
+            Spacer(modifier = Modifier.height(44.dp))
 
             VolleyTextFieldGradient.SearchField(
-                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp),
+                modifier = Modifier.padding(16.dp),
                 actionToTransferContent = {}
             ) { }
 
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             VolleyTextFieldGradient.SimpleGradientTextField(
                 hint = "Name",
-                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+                modifier = Modifier.padding(16.dp)
             ) { }
 
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             VolleyTextFieldGradient.SimpleGradientTextField(
                 text = "Blablablabla",
                 hint = "Surname",
-                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+                modifier = Modifier.padding(16.dp)
             ) { }
 
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             VolleyTextFieldGradient.PhoneTextField(
                 alertMessage = "",
-                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+                modifier = Modifier.padding(16.dp)
             ) { }
 
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             VolleyTextFieldGradient.PhoneTextField(
                 text = "66 000000",
                 alertMessage = "alarm message!",
-                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+                modifier = Modifier.padding(16.dp)
             ) { }
 
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             VolleyTextFieldGradient.PhoneCodeTextField(
                 alertMessage = "",
-                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+                modifier = Modifier.padding(16.dp)
             ) { }
 
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             VolleyTextFieldGradient.PhoneCodeTextField(
                 text = "623456SOME",
                 alertMessage = "alarm message!",
-                modifier = Modifier.padding(VolleyDimens.DIMEN_16.dp)
+                modifier = Modifier.padding(16.dp)
             ) { }
         }
     }

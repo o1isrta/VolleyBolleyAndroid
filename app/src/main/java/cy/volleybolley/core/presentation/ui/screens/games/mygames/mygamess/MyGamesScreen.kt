@@ -58,7 +58,6 @@ import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvata
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.OutlinedActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 import cy.volleybolley.ui.theme.VolleybolleyTheme
@@ -90,11 +89,11 @@ fun MyGamesScreen(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(
-                        start = VolleyDimens.DIMEN_8.dp,
-                        end = VolleyDimens.DIMEN_8.dp,
-                        top = VolleyDimens.DIMEN_116.dp
+                        start = 8.dp,
+                        end = 8.dp,
+                        top = 116.dp
                     ),
-                cardMinHeight = VolleyDimens.DIMEN_380.dp
+                cardMinHeight = 380.dp
             ) {
                 CardHeader(
                     title = stringResource(R.string.my_games),
@@ -124,7 +123,7 @@ fun MyGamesScreen(
                     text = stringResource(R.string.create_a_game),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(VolleyDimens.DIMEN_44.dp),
+                        .height(44.dp),
                     onClick = { viewModel.obtainEvent(MyGamesAction.ClickCreateGame) }
                 )
             }
@@ -132,9 +131,9 @@ fun MyGamesScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(
-                    start = VolleyDimens.DIMEN_8.dp,
-                    end = VolleyDimens.DIMEN_8.dp,
-                    top = VolleyDimens.DIMEN_8.dp,
+                    start = 8.dp,
+                    end = 8.dp,
+                    top = 8.dp,
                     bottom = 24.dp
                 ),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -203,7 +202,7 @@ fun GameCard(
         }
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
             VolleyText.BodyBold(text = stringResource(R.string.when_label), color = VolleyColor.White)
-            Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.width(8.dp))
             VolleyText.BodyRegular(text = "$dateText, $timeText", color = VolleyColor.White)
         }
 
@@ -222,7 +221,7 @@ fun GameCard(
                 style = VolleyTypography.BodyRegular,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = VolleyDimens.DIMEN_12.dp)
+                    .padding(end = 12.dp)
             )
             MapChipSm { onMapClick(details.courtLocation) }
         }
@@ -241,13 +240,13 @@ fun GameCard(
 private fun MapChipSm(onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(VolleyDimens.DIMEN_10.dp),
+        shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(containerColor = VolleyColor.OrangeHard, contentColor = VolleyColor.White),
         contentPadding = PaddingValues(
-            horizontal = VolleyDimens.DIMEN_8.dp,
-            vertical = VolleyDimens.DIMEN_4.dp
+            horizontal = 8.dp,
+            vertical = 4.dp
         ),
-        modifier = Modifier.height(VolleyDimens.DIMEN_35.dp)
+        modifier = Modifier.height(35.dp)
     ) {
         VolleyText.BodySmall(stringResource(R.string.map), color = VolleyColor.Black)
     }
@@ -261,12 +260,12 @@ private fun CardHeader(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(VolleyDimens.DIMEN_24.dp)
+            .height(24.dp)
     ) {
         Box(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .size(VolleyDimens.DIMEN_24.dp)
+                .size(24.dp)
                 .clickable(onClick = onBack),
             contentAlignment = Alignment.CenterStart
         ) {
@@ -274,7 +273,7 @@ private fun CardHeader(
                 painter = painterResource(R.drawable.ic_back_icon_white),
                 contentDescription = null,
                 tint = VolleyColor.White,
-                modifier = Modifier.size(width = VolleyDimens.DIMEN_18.dp, height = VolleyDimens.DIMEN_24.dp)
+                modifier = Modifier.size(width = 18.dp, height = 24.dp)
             )
         }
         VolleyText.TitleLarge(text = title, color = VolleyColor.White, modifier = Modifier.align(Alignment.Center))
@@ -285,9 +284,9 @@ private fun CardHeader(
 @Composable
 private fun CardShell(
     modifier: Modifier = Modifier,
-    cornerRadiusDp: Int = VolleyDimens.DIMEN_32,
-    innerPadding: Dp = VolleyDimens.DIMEN_20.dp,
-    itemsGap: Dp = VolleyDimens.DIMEN_16.dp,
+    cornerRadiusDp: Int = 32,
+    innerPadding: Dp = 20.dp,
+    itemsGap: Dp = 16.dp,
     cardMinHeight: Dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -319,9 +318,9 @@ private fun LevelPill(text: String) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .height(VolleyDimens.DIMEN_23.dp)
-            .width(VolleyDimens.DIMEN_30.dp)
-            .clip(RoundedCornerShape(VolleyDimens.DIMEN_10.dp))
+            .height(23.dp)
+            .width(30.dp)
+            .clip(RoundedCornerShape(10.dp))
             .background(VolleyColor.GreyDark)
     ) {
         VolleyText.BodyRegular(text, color = VolleyColor.White)

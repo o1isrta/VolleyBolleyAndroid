@@ -38,7 +38,6 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.NavigateFromProfileScreen
@@ -86,14 +85,14 @@ private fun ProfileScreen(
         modifier = modifier
     ) {
         VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = VolleyDimens.DIMEN_32,
+            cornerRadius = 32,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_8.dp)
+                .padding(8.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_20.dp)
+                    .padding(20.dp)
             ) {
                 ProfileComponent(
                     painter = painterResource(R.drawable.ic_ball),
@@ -147,7 +146,7 @@ private fun ProfileScreen(
         Box(
             contentAlignment = Alignment.BottomStart,
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_28.dp, VolleyDimens.DIMEN_20.dp)
+                .padding(28.dp, 20.dp)
                 .weight(1f)
         ) {
             VolleyText.BodyLight(
@@ -219,7 +218,7 @@ private fun ProfileComponent(
             modifier = Modifier
                 .weight(1f)
                 .padding(
-                    horizontal = VolleyDimens.DIMEN_8.dp,
+                    horizontal = 8.dp,
                     vertical = 0.dp
                 )
         )
@@ -231,7 +230,7 @@ private fun ProfileComponentDivider() {
     VolleySimpleComponent.DividerLine(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, VolleyDimens.DIMEN_16.dp)
+            .padding(0.dp, 16.dp)
     )
 }
 
@@ -247,14 +246,14 @@ private fun ProfileDialog(
     ) {
         Card(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_8.dp),
-            shape = RoundedCornerShape(VolleyDimens.DIMEN_32.dp),
+                .padding(8.dp),
+            shape = RoundedCornerShape(32.dp),
             colors = cardColors(containerColor = VolleyColor.Turquoise)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(VolleyDimens.DIMEN_20.dp),
+                    .padding(20.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -264,7 +263,7 @@ private fun ProfileDialog(
                     color = VolleyColor.White
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
+                Spacer(Modifier.height(12.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -278,7 +277,7 @@ private fun ProfileDialog(
                             .weight(1f)
                     )
 
-                    Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+                    Spacer(Modifier.width(8.dp))
 
                     VolleyButton.ActiveButton(
                         text = stringResource(R.string.no),

@@ -47,7 +47,6 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.GradientFieldMedium
@@ -63,8 +62,8 @@ object VolleyTextFieldAttribute {
     @Composable
     fun DatePickerField(
         modifier: Modifier = Modifier,
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
-        height: Int = VolleyDimens.DIMEN_52,
+        cornerRadius: Int = 16,
+        height: Int = 52,
         inputDate: Long?,
         actionForSaveDate: (Long?) -> Unit,
     ) {
@@ -100,11 +99,11 @@ object VolleyTextFieldAttribute {
                         shape = shape
                     )
                     .border(
-                        width = VolleyDimens.DIMEN_1.dp,
+                        width = 1.dp,
                         brush = gradientBrush,
                         shape = shape
                     )
-                    .padding(VolleyDimens.DIMEN_22.dp, 0.dp)
+                    .padding(22.dp, 0.dp)
             ) {
                 Text(
                     text = correctText,
@@ -131,7 +130,7 @@ object VolleyTextFieldAttribute {
         val datePickerState = rememberDatePickerState()
 
         DatePickerDialog(
-            shape = RoundedCornerShape(VolleyDimens.DIMEN_24.dp),
+            shape = RoundedCornerShape(24.dp),
             onDismissRequest = onDismiss,
             confirmButton = {
                 TextButton(onClick = {
@@ -159,7 +158,7 @@ object VolleyTextFieldAttribute {
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(VolleyDimens.DIMEN_24.dp, 0.dp)
+                .padding(24.dp, 0.dp)
         ) {
             DatePicker(
                 title = null,
@@ -194,9 +193,9 @@ object VolleyTextFieldAttribute {
     @Stable
     @Composable
     fun CountField(
-        maximumCount: Int = VolleyDimens.DIMEN_24,
-        minimumCount: Int = VolleyDimens.DIMEN_4,
-        inputCount: Int = VolleyDimens.DIMEN_4,
+        maximumCount: Int = 24,
+        minimumCount: Int = 4,
+        inputCount: Int = 4,
         paddingValues: PaddingValues = PaddingValues(),
         actionToTransferCount: (Int) -> Unit,
     ) {
@@ -216,13 +215,13 @@ object VolleyTextFieldAttribute {
                                 actionToTransferCount(inputCount - 1)
                             }
                     )
-                    Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+                    Spacer(Modifier.width(8.dp))
                 }
 
                 CountTextField(text = inputCount.toString())
 
                 if (inputCount < maximumCount) {
-                    Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+                    Spacer(Modifier.width(8.dp))
                     Icon(
                         painter = painterResource(R.drawable.ic_plus),
                         contentDescription = null,
@@ -241,8 +240,8 @@ object VolleyTextFieldAttribute {
     @Composable
     private fun CountTextField(
         modifier: Modifier = Modifier,
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
-        height: Int = VolleyDimens.DIMEN_40,
+        cornerRadius: Int = 16,
+        height: Int = 40,
         text: String,
     ) {
         val shape = RoundedCornerShape(cornerRadius.dp)
@@ -263,11 +262,11 @@ object VolleyTextFieldAttribute {
                         shape = shape
                     )
                     .border(
-                        width = VolleyDimens.DIMEN_1.dp,
+                        width = 1.dp,
                         brush = gradientBrush,
                         shape = shape
                     )
-                    .padding(VolleyDimens.DIMEN_27.dp, 0.dp)
+                    .padding(27.dp, 0.dp)
             ) {
                 Text(
                     text = text,
@@ -281,7 +280,7 @@ object VolleyTextFieldAttribute {
     @Composable
     fun DurationField(
         modifier: Modifier = Modifier,
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
+        cornerRadius: Int = 16,
         inputTime: VolleyTimeStamp?,
         actionForSaveTime: (VolleyTimeStamp?) -> Unit,
     ) {
@@ -306,10 +305,10 @@ object VolleyTextFieldAttribute {
                     maxLines = 1,
                     modifier = Modifier
                         .padding(
-                            start = VolleyDimens.DIMEN_16.dp,
-                            top = VolleyDimens.DIMEN_13.dp,
-                            end = VolleyDimens.DIMEN_4.dp,
-                            bottom = VolleyDimens.DIMEN_13.dp
+                            start = 16.dp,
+                            top = 13.dp,
+                            end = 4.dp,
+                            bottom = 13.dp
                         )
                 )
 
@@ -319,9 +318,9 @@ object VolleyTextFieldAttribute {
                     maxLines = 1,
                     modifier = Modifier
                         .padding(
-                            start = VolleyDimens.DIMEN_4.dp,
+                            start = 4.dp,
                             top = 0.dp,
-                            end = VolleyDimens.DIMEN_16.dp,
+                            end = 16.dp,
                             bottom = 0.dp
                         )
                 )
@@ -340,7 +339,7 @@ object VolleyTextFieldAttribute {
     @Composable
     fun DurationFieldWithArrows(
         modifier: Modifier = Modifier,
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
+        cornerRadius: Int = 16,
         inputTime: VolleyTimeStamp?,
         actionForSaveTime: (VolleyTimeStamp?) -> Unit,
     ) {
@@ -355,7 +354,7 @@ object VolleyTextFieldAttribute {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp, VolleyDimens.DIMEN_6.dp)
+                    .padding(16.dp, 6.dp)
                     .clickable {
                         showTimePicker = true
                     }
@@ -366,21 +365,21 @@ object VolleyTextFieldAttribute {
                     maxLines = 1,
                     modifier = Modifier
                 )
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_4.dp))
+                Spacer(modifier = Modifier.size(size = 4.dp))
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.width(VolleyDimens.DIMEN_24.dp)
+                    modifier = Modifier.width(24.dp)
                 ) {
                     Image(
                         painter = painterResource(R.drawable.up),
                         contentDescription = null,
                         modifier = Modifier.size(
-                            width = VolleyDimens.DIMEN_8.dp,
-                            height = VolleyDimens.DIMEN_4.dp
+                            width = 8.dp,
+                            height = 4.dp
                         )
                     )
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_4.dp))
+                    Spacer(modifier = Modifier.size(size = 4.dp))
 
                     VolleyText.BodySmall(
                         text = correctAfternoonMark,
@@ -388,13 +387,13 @@ object VolleyTextFieldAttribute {
                         maxLines = 1,
                         modifier = Modifier
                     )
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_4.dp))
+                    Spacer(modifier = Modifier.size(size = 4.dp))
                     Image(
                         painter = painterResource(R.drawable.down),
                         contentDescription = null,
                         modifier = Modifier.size(
-                            width = VolleyDimens.DIMEN_8.dp,
-                            height = VolleyDimens.DIMEN_4.dp
+                            width = 8.dp,
+                            height = 4.dp
                         )
                     )
                 }
@@ -413,9 +412,9 @@ object VolleyTextFieldAttribute {
     /*  @Composable
       fun PaymentField(
           modifier: Modifier = Modifier,
-          width: Int = VolleyDimens.DIMEN_75,
-          height: Int = VolleyDimens.DIMEN_30,
-          cornerRadius: Int = VolleyDimens.DIMEN_16,
+          width: Int = 75,
+          height: Int = 30,
+          cornerRadius: Int = 16,
           inputPayment: Double = 5.0
       ) {
           VolleyContainersRootTransparent.TransparentContainer(
@@ -660,45 +659,45 @@ private fun PreviewGradientTextFields() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
+            Spacer(modifier = Modifier.height(44.dp))
 
             val currentDate = Calendar.getInstance().timeInMillis
             VolleyTextFieldAttribute.DatePickerField(
                 inputDate = currentDate,
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp)
+                    .padding(16.dp)
             ) { }
 
             VolleyTextFieldAttribute.DatePickerField(
                 inputDate = null,
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp)
+                    .padding(16.dp)
             ) { }
 
             VolleyTextFieldAttribute.CountField(
-                paddingValues = PaddingValues(VolleyDimens.DIMEN_16.dp)
+                paddingValues = PaddingValues(16.dp)
             ) { }
 
             VolleyTextFieldAttribute.DurationField(
                 inputTime = null,
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp)
+                    .padding(16.dp)
             ) { }
 
             VolleyTextFieldAttribute.DurationFieldWithArrows(
                 inputTime = null,
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp)
+                    .padding(16.dp)
             ) { }
 
             VolleyTextFieldAttribute.DurationField(
                 inputTime = VolleyTimeStamp(
-                    VolleyDimens.DIMEN_4,
-                    VolleyDimens.DIMEN_20,
+                    4,
+                    20,
                     false
                 ),
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp)
+                    .padding(16.dp)
             ) { }
 
             VolleyTextFieldAttribute.DurationFieldWithArrows(
@@ -708,13 +707,13 @@ private fun PreviewGradientTextFields() {
                     true
                 ),
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp)
+                    .padding(16.dp)
             ) { }
 
             /*VolleyTextFieldAttribute.PaymentField(
                 inputPayment = 6.0,
                 modifier = Modifier
-                       .padding(VolleyDimens.DIMEN_16.dp)
+                       .padding(16.dp)
             )
 
             VolleyTextFieldAttribute.MyTextField(modifier = Modifier.padding(16.dp))

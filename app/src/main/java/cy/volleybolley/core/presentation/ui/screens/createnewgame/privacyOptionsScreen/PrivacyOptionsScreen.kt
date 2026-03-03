@@ -1,7 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen
 
-import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -9,15 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -27,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
@@ -37,191 +33,155 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackA
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.players.domain.model.Player
-import kotlinx.coroutines.flow.collectLatest
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun PrivacyOptionsScreen(
     navController: NavHostController,
-    viewModel: PrivacyOptionsScreenViewModel = viewModel(),
+    viewModel: PrivacyOptionsScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     val context = LocalContext.current
 
-    ObserveUiEffects(viewModel, navController, context)
+    LaunchedEffect(effect) {
+        when (val currentEffect = effect) {
+            is PrivacyOptionsScreenEffect.ShowErrorMessage -> {
+                Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_LONG).show()
+            }
 
+            is PrivacyOptionsScreenEffect.ShowErrorMessageById -> {
+                val errorMessage = context.getString(currentEffect.messageId)
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            }
+
+            is PrivacyOptionsScreenEffect.NavigateBack -> {
+                navController.popBackStack()
+            }
+
+            null -> {}
+        }
+    }
+
+    PrivacyOptionsScreen(
+        state = state,
+        paddingFromSystemUi = paddingFromSystemUi,
+        isPlayerSelected = { player -> viewModel.isPlayerSelected(player) },
+        eventCallback = { viewModel.obtainEvent(it) }
+    )
+}
+
+@Stable
+@Composable
+private fun PrivacyOptionsScreen(
+    state: PrivacyOptionsScreenState,
+    paddingFromSystemUi: PaddingValues,
+    isPlayerSelected: (Player) -> Boolean,
+    eventCallback: (PrivacyOptionsScreenEvent) -> Unit
+) {
     if (state.isLoading) {
         VolleySimpleComponent.LoadingIndicator()
     } else {
-        PrivacyOptionsContent(
-            state = state,
-            paddingFromSystemUi = paddingFromSystemUi,
-            onBackClick = { viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnBackClicked) },
-            onQueryChanged = { newQuery -> viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnQueryChanged(newQuery)) },
-            onAllOrFavoritesSelected = { position ->
-                val isFavorite = position == PrivacyOptionsScreenConstants.FAVORITE_PLAYERS
-                viewModel.obtainEvent(PrivacyOptionsScreenEvent.AllOrFavoritesSelected(isFavorite))
-            },
-            onPlayerSelectionClick = { player ->
-                viewModel.obtainEvent(
-                    PrivacyOptionsScreenEvent.OnPlayerSelectionClick(
-                        player
-                    )
-                )
-            },
-            onAddSelectedClick = { viewModel.obtainEvent(PrivacyOptionsScreenEvent.OnAddSelectedClick) },
-            isPlayerSelected = { player -> viewModel.isPlayerSelected(player) }
-        )
-    }
-}
-
-@Composable
-private fun ObserveUiEffects(
-    viewModel: PrivacyOptionsScreenViewModel,
-    navController: NavHostController,
-    context: Context
-) {
-    val str: String = R.string.privacy_options_screen.toString()
-    LaunchedEffect(viewModel.uiEffect) { // подписываемся на Effect
-        viewModel.uiEffect.collectLatest { effect ->
-            when (effect) {
-                is PrivacyOptionsScreenEffect.ShowErrorMessage -> {
-                    Log.d(str, "ShowError effect triggered: ${effect.message}")
-                    Toast.makeText(context, "Error: ${effect.message}", Toast.LENGTH_LONG).show()
-                }
-
-                PrivacyOptionsScreenEffect.NavigateBack -> {
-                    navController.popBackStack()
-                }
-                // Обработка всех возможных случаев
-                else -> {
-                    // Handle unexpected effect or do nothing.  Log it!
-                    Log.w(str, "Unhandled effect: $effect")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun PrivacyOptionsContent(
-    state: PrivacyOptionsScreenState,
-    paddingFromSystemUi: PaddingValues,
-    onBackClick: () -> Unit,
-    onQueryChanged: (String) -> Unit,
-    onAllOrFavoritesSelected: (Int) -> Unit,
-    onPlayerSelectionClick: (Player) -> Unit,
-    onAddSelectedClick: () -> Unit,
-    isPlayerSelected: (Player) -> Boolean
-) {
-    Column(
-        modifier = Modifier.padding(paddingFromSystemUi)
-    ) {
-        VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = VolleyDimens.DIMEN_32,
-            modifier = Modifier
-                .padding(VolleyDimens.DIMEN_8.dp)
+        Column(
+            modifier = Modifier.padding(paddingFromSystemUi)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = VolleyDimens.DIMEN_20.dp)
+            VolleyContainersRootTransparent.TransparentContainer(
+                cornerRadius = 32,
+                modifier = Modifier.padding(8.dp)
             ) {
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-
-                TitleWithBackArrow(
-                    title = stringResource(R.string.private_game),
-                    modifier = Modifier.fillMaxWidth(),
-                    onBackClick = onBackClick
-                )
-
-                val scrollState = rememberSaveable(saver = ScrollState.Saver) {
-                    ScrollState(0)
-                }
                 Column(
-                    modifier = Modifier
-                        .verticalScroll(scrollState)
+                    modifier = Modifier.padding(horizontal = 20.dp)
                 ) {
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-                    VolleyTextFieldGradient.SearchField(
-                        modifier = Modifier,
-                        text = state.query,
-                        actionToTransferContent = onQueryChanged
-                    ) { }
-
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-                    VolleyButton.SliderButtonsPlayers(
-                        modifier = Modifier.fillMaxWidth(),
-                        checkId = if (state.flagFavorites) {
-                            PrivacyOptionsScreenConstants.FAVORITE_PLAYERS
-                        } else {
-                            PrivacyOptionsScreenConstants.ALL_PLAYERS
-                        },
-                        onSelected = onAllOrFavoritesSelected
+                    TitleWithBackArrow(
+                        title = stringResource(R.string.private_game),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 20.dp),
+                        onBackClick = { eventCallback(PrivacyOptionsScreenEvent.OnBackClicked) }
                     )
 
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-                    // передаем список найденных игроков + выбранных
-                    val filteredPlayers =
-                        filterPlayers(
-                            (state.selectedPlayers union state.playersSearchResult).toList(),
-                            state.flagFavorites
-                        )
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_24.dp),
-                        modifier = Modifier
-                    ) {
-                        filteredPlayers.forEach { player ->
-                            VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
-                                player = player,
-                                isSelected = isPlayerSelected(player),
-                                onAction = {
-                                    onPlayerSelectionClick(player)
-                                }
-                            )
-                        }
+                    val scrollState = rememberSaveable(saver = ScrollState.Saver) {
+                        ScrollState(0)
                     }
+                    Column(
+                        modifier = Modifier.verticalScroll(scrollState)
+                    ) {
+                        VolleyTextFieldGradient.SearchField(
+                            modifier = Modifier.padding(top = 16.dp),
+                            text = state.query,
+                            actionToTransferContent = { eventCallback(PrivacyOptionsScreenEvent.OnQueryChanged(it)) }
+                        ) { }
 
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_24.dp))
-                    VolleyButton.ActiveButton(
-                        modifier = Modifier
-                            .height(VolleyDimens.DIMEN_44.dp)
-                            .align(Alignment.CenterHorizontally)
-                            .fillMaxWidth(),
-                        text = stringResource(R.string.add_selected),
-                        onClick = onAddSelectedClick
-                    )
-                    Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+                        VolleyButton.SliderButtonsPlayers(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            checkId = if (state.flagFavorites) {
+                                PrivacyOptionsScreenConstants.FAVORITE_PLAYERS
+                            } else {
+                                PrivacyOptionsScreenConstants.ALL_PLAYERS
+                            },
+                            onSelected = { position ->
+                                val isFavorites = position == PrivacyOptionsScreenConstants.FAVORITE_PLAYERS
+                                eventCallback(PrivacyOptionsScreenEvent.AllOrFavoritesSelected(isFavorites))
+                            }
+                        )
+
+                        Column(
+                            modifier = Modifier.padding(top = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(24.dp)
+                        ) {
+                            state.filteredPlayers.forEach { player ->
+                                VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
+                                    player = player,
+                                    isSelected = isPlayerSelected(player),
+                                    onAction = { eventCallback(PrivacyOptionsScreenEvent.OnPlayerSelectionClick(player)) }
+                                )
+                            }
+                        }
+
+                        VolleyButton.ActiveButton(
+                            modifier = Modifier
+                                .padding(top = 24.dp)
+                                .height(44.dp)
+                                .align(Alignment.CenterHorizontally)
+                                .fillMaxWidth(),
+                            text = stringResource(R.string.add_selected),
+                            onClick = { eventCallback(PrivacyOptionsScreenEvent.OnAddSelectedClick) }
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-fun filterPlayers(players: List<Player>, flagFavorites: Boolean): List<Player> {
-    // Отображаем всех игроков, если "только избранные" не выбрано
-    return if (flagFavorites) {
-        players.filter { it.isFavorite }
-    } else {
-        players
     }
 }
 
 @Preview
 @Composable
 private fun PrivacyOptionsScreenPreview() {
-    val navController = rememberNavController() // Создаем моковый NavHostController
+    val previewState = PrivacyOptionsScreenState(
+        playersSearchResult = listOf(
+            Player(id = 1, firstName = "John", lastName = "Doe", avatarUrl = null, isFavorite = true, level = "M", gender = "M"),
+            Player(id = 2, firstName = "Jane", lastName = "Smith", avatarUrl = null, isFavorite = false, level = "L", gender = "F")
+        ),
+        filteredPlayers = listOf(
+            Player(id = 1, firstName = "John", lastName = "Doe", avatarUrl = null, isFavorite = true, level = "M", gender = "M"),
+            Player(id = 2, firstName = "Jane", lastName = "Smith", avatarUrl = null, isFavorite = false, level = "L", gender = "F")
+        )
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
     ) {
-        // GameEnteringConditionsScreen(navController = navController)
         PrivacyOptionsScreen(
-            viewModel = PrivacyOptionsScreenViewModelPreview(),
-            navController = navController,
-            paddingFromSystemUi = PaddingValues(0.dp)
+            state = previewState,
+            paddingFromSystemUi = PaddingValues(0.dp),
+            isPlayerSelected = { false },
+            eventCallback = {}
         )
     }
 }

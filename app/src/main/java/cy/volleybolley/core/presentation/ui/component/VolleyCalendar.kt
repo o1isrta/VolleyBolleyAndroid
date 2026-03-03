@@ -48,7 +48,6 @@ import com.kizitonwose.calendar.core.DayPosition
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -102,8 +101,8 @@ object VolleyCalendar { // Calendar Section
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(WIDTH / HEIGHT) // Сохраняем пропорции
-                .background(VolleyColor.White, RoundedCornerShape(VolleyDimens.DIMEN_32.dp))
-                .padding(VolleyDimens.DIMEN_12.dp)
+                .background(VolleyColor.White, RoundedCornerShape(32.dp))
+                .padding(12.dp)
         ) {
             // Заголовок месяца
             MonthHeader(month = calendarState.firstVisibleMonth, calendarState = calendarState)
@@ -216,7 +215,7 @@ fun Day(
             )
             if (isToday) {
                 GradientBorder(
-                    borderWidth = VolleyDimens.DIMEN_2.dp,
+                    borderWidth = 2.dp,
                     gradientColors = listOf(VolleyColor.YellowForGradient, VolleyColor.GreenForGradient)
                 )
             }
@@ -227,7 +226,7 @@ fun Day(
 @Composable
 fun GradientBorder(borderWidth: Dp, gradientColors: List<Color>) {
     val strokeWidthPx = with(LocalDensity.current) { borderWidth.toPx() }
-    val cornerRadius = VolleyDimens.DIMEN_16.dp // Здесь задаем радиус скругления углов (16dp)
+    val cornerRadius = 16.dp // Здесь задаем радиус скругления углов (16dp)
     val cornerRadiusPx = with(LocalDensity.current) { cornerRadius.toPx() }
     val offset = strokeWidthPx / VolleyCalendar.COEFF
 
@@ -329,8 +328,8 @@ private fun MonthNavigationButton(
             painter = painterResource(imageRes),
             contentDescription = contentDescription,
             modifier = Modifier.size(
-                width = VolleyDimens.DIMEN_7.dp,
-                height = VolleyDimens.DIMEN_14.dp
+                width = 7.dp,
+                height = 14.dp
             ),
             colorFilter = ColorFilter.tint(
                 if (isDisabled) VolleyColor.GreyDisabled else VolleyColor.Black
@@ -359,13 +358,13 @@ private fun YearNavigation(
         verticalAlignment = Alignment.CenterVertically
     ) {
         VolleyText.ButtonText(text = "$year")
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_5.dp))
+        Spacer(modifier = Modifier.size(size = 5.dp))
 
         Image(
             painter = painterResource(R.drawable.chevron_down),
             contentDescription = R.string.next_year.toString(),
             modifier = Modifier
-                .size(width = VolleyDimens.DIMEN_14.dp, height = VolleyDimens.DIMEN_7.dp),
+                .size(width = 14.dp, height = 7.dp),
             colorFilter = ColorFilter.tint(
                 if (isDisabled) VolleyColor.GreyDisabled else VolleyColor.Black
             )
@@ -431,7 +430,7 @@ private fun CalendarSectionPreview() {
         modifier = Modifier
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
-            .padding(VolleyDimens.DIMEN_20.dp)
+            .padding(20.dp)
     ) {
         VolleyCalendar.CalendarSection(
             selectedDate = previewDate.value, // LocalDate.of(2025, 10, 20),

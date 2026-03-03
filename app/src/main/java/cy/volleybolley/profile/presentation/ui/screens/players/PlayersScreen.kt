@@ -39,7 +39,6 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEffect.NavigateFromPlayersScreen
@@ -86,14 +85,14 @@ private fun PlayersScreen(
     eventCallback: (PlayersScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
+        cornerRadius = 32,
         modifier = modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
+            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             VolleySimpleComponent.TitleWithBackArrow(
                 title = stringResource(R.string.players),
@@ -101,7 +100,7 @@ private fun PlayersScreen(
                 onBackClick = { eventCallback(ClickOnBackFromPlayers) }
             )
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(Modifier.height(16.dp))
 
             VolleyTextFieldGradient.SearchField(
                 text = state.searchText,
@@ -109,7 +108,7 @@ private fun PlayersScreen(
                 actionOnInputComplete = { playerName -> eventCallback(ClickOnSearchButton(playerName.trim())) }
             )
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(Modifier.height(16.dp))
 
             PlayersListModeSwitch(
                 showAllPlayers = state.showAllPlayers,
@@ -117,7 +116,7 @@ private fun PlayersScreen(
                 onFavoriteClick = { eventCallback(ClickOnFavoritePlayers) },
             )
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(Modifier.height(16.dp))
 
             if (state.players.isEmpty()) {
                 VolleyText.BodyRegular(
@@ -129,7 +128,7 @@ private fun PlayersScreen(
                 LazyColumn {
                     itemsIndexed(state.players) { index, player ->
                         PlayersListItem(player) { playerId -> eventCallback(ClickOnListItem(playerId)) }
-                        if (index < state.players.lastIndex) Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                        if (index < state.players.lastIndex) Spacer(Modifier.height(16.dp))
                     }
                 }
             }
@@ -160,7 +159,7 @@ private fun PlayersListItem(
             )
     ) {
         AvatarSmall(player.avatarUrl)
-        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+        Spacer(Modifier.width(8.dp))
         VolleyText.BodyRegular(
             text = "${player.firstName} ${player.lastName}",
             color = VolleyColor.White,
@@ -169,9 +168,9 @@ private fun PlayersListItem(
             modifier = Modifier
                 .weight(1f)
         )
-        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+        Spacer(Modifier.width(8.dp))
         VolleySimpleComponent.FavoriteMark(isFavorite = player.isFavorite)
-        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+        Spacer(Modifier.width(8.dp))
         LevelContainer(levelValue = player.level)
     }
 }
@@ -182,7 +181,7 @@ private fun AvatarSmall(
 ) {
     VolleyAvatar.CircularAvatar(
         avatar = avatarUrl,
-        size = VolleyDimens.DIMEN_40.dp
+        size = 40.dp
     )
 }
 
@@ -196,12 +195,12 @@ private fun LevelContainer(
         modifier = Modifier
             .padding(paddingValues)
             .size(
-                width = VolleyDimens.DIMEN_30.dp,
-                height = VolleyDimens.DIMEN_23.dp
+                width = 30.dp,
+                height = 23.dp
             )
             .background(
                 color = VolleyColor.GreyDark,
-                shape = RoundedCornerShape(VolleyDimens.DIMEN_10.dp)
+                shape = RoundedCornerShape(10.dp)
             )
     ) {
         VolleyText.BodyRegular(
@@ -215,8 +214,8 @@ private fun LevelContainer(
 @Composable
 private fun PlayersListModeSwitch(
     paddingValues: PaddingValues = PaddingValues(),
-    height: Int = VolleyDimens.DIMEN_32,
-    cornerRadius: Int = VolleyDimens.DIMEN_16,
+    height: Int = 32,
+    cornerRadius: Int = 16,
     showAllPlayers: Boolean,
     onAllClick: () -> Unit,
     onFavoriteClick: () -> Unit,
@@ -239,7 +238,7 @@ private fun PlayersListModeSwitch(
             .fillMaxWidth()
             .background(gradientBrush, shape)
     ) {
-        Row(Modifier.padding(VolleyDimens.DIMEN_2.dp)) {
+        Row(Modifier.padding(2.dp)) {
             ChangedBackgroundBox(
                 text = stringResource(R.string.all_players),
                 shape = shape,
@@ -248,7 +247,7 @@ private fun PlayersListModeSwitch(
                 modifier = Modifier.weight(1f)
             )
 
-            Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.width(8.dp))
 
             ChangedBackgroundBox(
                 text = stringResource(R.string.favorites),

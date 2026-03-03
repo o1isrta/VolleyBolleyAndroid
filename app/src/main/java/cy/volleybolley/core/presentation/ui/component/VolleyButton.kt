@@ -67,7 +67,6 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtons
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.ButtonSText
@@ -1575,7 +1574,7 @@ object VolleyButton {
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_32.dp) // Оставляем фиксированную высоту
+                    .height(32.dp) // Оставляем фиксированную высоту
                     .background(
                         brush = Brush.linearGradient(
                             colors = listOf(
@@ -1585,7 +1584,7 @@ object VolleyButton {
                             start = Offset(x = 0f, y = 0f),
                             end = Offset(x = 0f, y = 100f)
                         ),
-                        shape = RoundedCornerShape(size = VolleyDimens.DIMEN_16.dp),
+                        shape = RoundedCornerShape(size = 16.dp),
                     )
             ) {
                 Row(
@@ -1676,7 +1675,7 @@ object VolleyButton {
     ) {
         Row(
             modifier = modifier,
-            horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             InvitePlayersButton(
                 modifier = Modifier.weight(1f),
@@ -1695,15 +1694,15 @@ object VolleyButton {
         onClick: () -> Unit
     ) {
         Button(
-            modifier = modifier.height(VolleyDimens.DIMEN_180.dp),
+            modifier = modifier.height(180.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = VolleyColor.YellowPro,
             ),
             contentPadding = PaddingValues(
-                top = VolleyDimens.DIMEN_20.dp,
-                start = VolleyDimens.DIMEN_20.dp
+                top = 20.dp,
+                start = 20.dp
             ),
-            shape = RoundedCornerShape(VolleyDimens.DIMEN_32.dp),
+            shape = RoundedCornerShape(32.dp),
             onClick = onClick
         ) {
             Box(
@@ -1716,7 +1715,7 @@ object VolleyButton {
                     contentDescription = null
                 )
                 VolleyText.TitleLarge(
-                    modifier = Modifier.rotate(VolleyDimens.ROTATION_8),
+                    modifier = Modifier.rotate(-8f),
                     text = stringResource(R.string.invite_players),
                     color = VolleyColor.TextDark
                 )
@@ -1730,7 +1729,7 @@ object VolleyButton {
         onClick: () -> Unit
     ) {
         TransparentContainer(
-            modifier = modifier.height(VolleyDimens.DIMEN_180.dp),
+            modifier = modifier.height(180.dp),
         ) {
             Button(
                 modifier = Modifier.fillMaxSize(),
@@ -1738,10 +1737,10 @@ object VolleyButton {
                     containerColor = Color.Transparent,
                 ),
                 contentPadding = PaddingValues(
-                    top = VolleyDimens.DIMEN_20.dp,
-                    start = VolleyDimens.DIMEN_20.dp
+                    top = 20.dp,
+                    start = 20.dp
                 ),
-                shape = RoundedCornerShape(VolleyDimens.DIMEN_32.dp),
+                shape = RoundedCornerShape(32.dp),
                 onClick = onClick
             ) {
                 Box(
@@ -1753,7 +1752,7 @@ object VolleyButton {
                         contentDescription = null
                     )
                     VolleyText.TitleLarge(
-                        modifier = Modifier.rotate(VolleyDimens.ROTATION_8),
+                        modifier = Modifier.rotate(-8f),
                         text = stringResource(R.string.share_link),
                         color = VolleyColor.White
                     )
@@ -1774,15 +1773,15 @@ object VolleyButton {
     ) {
         Button(
             onClick = onClick,
-            modifier = modifier.height(VolleyDimens.DIMEN_56.dp),
+            modifier = modifier.height(56.dp),
             colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
-            shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp),
+            shape = RoundedCornerShape(16.dp),
             contentPadding = PaddingValues(all = 16.dp)
         ) {
             Image(
                 painter = icon,
                 contentDescription = null,
-                modifier = Modifier.size(VolleyDimens.DIMEN_24.dp)
+                modifier = Modifier.size(24.dp)
             )
             VolleyText.BodyBoldMedium(
                 modifier = Modifier.padding(start = 12.dp),

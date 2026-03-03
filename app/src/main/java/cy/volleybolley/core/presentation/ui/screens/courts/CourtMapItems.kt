@@ -24,7 +24,6 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Tran
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.OutlinedActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtMapItems.CourtMapItemWithButton
 import cy.volleybolley.core.presentation.ui.screens.courts.ListItemComponents.DistanceContainer
@@ -49,7 +48,7 @@ object CourtMapItems {
                     contentDescription = stringResource(id = R.string.navigation),
                     tint = VolleyColor.OrangeHard,
                     modifier = Modifier
-                        .padding(end = VolleyDimens.DIMEN_10.dp)
+                        .padding(end = 10.dp)
                 )
                 Column(
                     modifier = Modifier.weight(1f)
@@ -87,7 +86,7 @@ object CourtMapItems {
     ) {
         TransparentContainer(
             modifier = modifier
-                .clip(RoundedCornerShape(VolleyDimens.DIMEN_32.dp))
+                .clip(RoundedCornerShape(32.dp))
                 .background(VolleyColor.TurquoiseDark)
                 .wrapContentHeight(),
             mainContainerAlignment = Alignment.Center
@@ -95,8 +94,8 @@ object CourtMapItems {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(VolleyDimens.DIMEN_20.dp),
-                verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 CourtMapItem(
                     court = court,
@@ -114,7 +113,7 @@ object CourtMapItems {
         onChooseCourt: () -> Unit,
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = modifier.fillMaxWidth()
         ) {
             ActiveButton(

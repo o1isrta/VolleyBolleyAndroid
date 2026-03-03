@@ -24,19 +24,17 @@ open class GameEnteringConditionsScreenViewModel(
     override val tag: String = "GameEnteringConditionsScreenViewModel"
 
     init {
-        // проверяем, есть  ли аккаунт
         obtainEvent(GameEnteringConditionsScreenEvent.CheckIfAccountExists)
-        // Подписка на изменения GameData из репозитория
         viewModelScope.launch {
             gameRepository.gameData
                 .collectLatest { gameDataFromRepo ->
                     uiStateMutable.update { currentState ->
                         currentState.copy(
-                            // Обновляем список игроков из репозитория
                             players = gameDataFromRepo.players,
                             maximumPlayers = gameDataFromRepo.maximumPlayers,
                             perPerson = gameDataFromRepo.perPerson,
-                            accountNumber = gameDataFromRepo.accountNumber
+                            accountNumber = gameDataFromRepo.accountNumber,
+                            isPrivate = gameDataFromRepo.players.isNotEmpty()
                         )
                     }
                 }
@@ -72,11 +70,10 @@ open class GameEnteringConditionsScreenViewModel(
     private fun onPublicSelected() {
         viewModelScope.launch {
             gameRepository.updateGameData { gameData ->
-                gameData.copy(
-                    players = emptyList()
-                )
+                gameData.copy(players = emptyList())
             }
         }
+        uiStateMutable.update { it.copy(isPrivate = false, players = emptyList()) }
     }
 
     private fun onPrivateSelected() {
@@ -102,12 +99,13 @@ open class GameEnteringConditionsScreenViewModel(
     }
 
     private fun onRemovePlayer(index: Int) {
-        val current = uiStateMutable.value
-        if (index in current.players.indices) {
-            val newPlayers = current.players.toMutableList().apply { removeAt(index) }
-            uiStateMutable.value = current.copy(players = newPlayers)
-        } else {
-            uiStateMutable.value = current.copy(errorMessage = "Invalid player index: $index")
+        uiStateMutable.update { current ->
+            if (index in current.players.indices) {
+                val newPlayers = current.players.toMutableList().apply { removeAt(index) }
+                current.copy(players = newPlayers, isPrivate = newPlayers.isNotEmpty())
+            } else {
+                current.copy(errorMessage = "Invalid player index: $index")
+            }
         }
     }
 

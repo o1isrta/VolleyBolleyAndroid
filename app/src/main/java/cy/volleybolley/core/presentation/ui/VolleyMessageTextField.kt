@@ -40,7 +40,6 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Root
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField.MessageContainer
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
@@ -50,7 +49,7 @@ object VolleyMessageTextField {
     fun MessageField(
         modifier: Modifier = Modifier,
         textInput: String,
-        maxLength: Int = VolleyDimens.DIMEN_160,
+        maxLength: Int = 160,
         hint: String,
         actionToTransferContent: (String) -> Unit,
     ) {
@@ -63,7 +62,7 @@ object VolleyMessageTextField {
                 // чтобы backgroundHeight учитывал их обеих
                 Box(
                     modifier = Modifier
-                        .padding(horizontal = VolleyDimens.DIMEN_16.dp)
+                        .padding(horizontal = 16.dp)
                         .fillMaxSize()
                 ) {
                     MessageTextField(
@@ -75,8 +74,8 @@ object VolleyMessageTextField {
                         },
                         modifier = Modifier
                             .padding(
-                                top = VolleyDimens.DIMEN_16.dp,
-                                bottom = VolleyDimens.DIMEN_34.dp
+                                top = 16.dp,
+                                bottom = 34.dp
                             )
                             .fillMaxWidth()
                     )
@@ -88,7 +87,7 @@ object VolleyMessageTextField {
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .padding(
-                                bottom = VolleyDimens.DIMEN_16.dp
+                                bottom = 16.dp
                             )
                     )
                 }
@@ -137,11 +136,11 @@ object VolleyMessageTextField {
     @Composable
     fun MessageContainer(
         modifier: Modifier = Modifier,
-        blurRadius: Int = VolleyDimens.DIMEN_24,
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
+        blurRadius: Int = 24,
+        cornerRadius: Int = 16,
         mainContainerAlignment: Alignment = Alignment.TopStart,
         contentContainerAlignment: Alignment = Alignment.TopStart,
-        minHeight: Dp = VolleyDimens.DIMEN_90.dp,
+        minHeight: Dp = 90.dp,
         content: @Composable BoxScope.() -> Unit
     ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
@@ -169,8 +168,8 @@ object VolleyMessageTextField {
     @Composable
     private fun MessageFieldBlurContainer(
         modifier: Modifier = Modifier,
-        blurRadius: Int = VolleyDimens.DIMEN_24,
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
+        blurRadius: Int = 24,
+        cornerRadius: Int = 16,
         mainContainerAlignment: Alignment = Alignment.TopStart,
         contentContainerAlignment: Alignment = Alignment.TopStart,
         minHeight: Dp,
@@ -193,7 +192,7 @@ object VolleyMessageTextField {
                     .background(VolleyColor.White.copy(alpha = 0.08f))
                     .blur(blurRadius.dp)
                     .border(
-                        width = VolleyDimens.DIMEN_4.dp,
+                        width = 4.dp,
                         color = VolleyColor.White.copy(alpha = 0.2f),
                         shape = shape
                     )
@@ -214,7 +213,7 @@ object VolleyMessageTextField {
     @Composable
     private fun MessageFieldGradientContainer(
         modifier: Modifier = Modifier,
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
+        cornerRadius: Int = 16,
         mainContainerAlignment: Alignment = Alignment.TopStart,
         contentContainerAlignment: Alignment = Alignment.TopStart,
         minHeight: Dp,
@@ -247,7 +246,7 @@ object VolleyMessageTextField {
                         )
                     )
                     .border(
-                        width = VolleyDimens.DIMEN_1.dp,
+                        width = 1.dp,
                         color = VolleyColor.White.copy(alpha = VolleyUiUtil.GRADIENT_BORDER_ALPHA),
                         shape = shape
                     )
@@ -297,13 +296,13 @@ object VolleyMessageTextField {
 
         MessageContainer(
             modifier = modifier,
-            minHeight = VolleyDimens.DIMEN_52.dp
+            minHeight = 52.dp
         ) {
             VolleyText.BodyRegular(
                 text = limited,
                 color = VolleyColor.White,
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_16.dp)
+                    .padding(16.dp)
                     .fillMaxWidth(),
                 textAlign = TextAlign.Start
             )
@@ -320,30 +319,30 @@ private fun PreviewMessageField() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_44.dp))
+            Spacer(modifier = Modifier.height(44.dp))
 
             VolleyMessageTextField.MessageField(
                 hint = "Some hint...",
                 textInput = "",
                 modifier = Modifier
-                    .height(VolleyDimens.DIMEN_106.dp)
-                    .padding(VolleyDimens.DIMEN_20.dp, 0.dp)
+                    .height(106.dp)
+                    .padding(20.dp, 0.dp)
             ) { }
 
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             VolleyMessageTextField.MessageField(
                 hint = "Some hint...",
                 textInput = stringResource(R.string.lorem_ipsum),
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_20.dp, 0.dp)
+                    .padding(20.dp, 0.dp)
             ) { }
 
-            Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             MessageContainer(
                 modifier = Modifier
-                    .padding(VolleyDimens.DIMEN_20.dp, 0.dp)
+                    .padding(20.dp, 0.dp)
                     .fillMaxWidth()
             ) {
                 VolleyText.BodySmall(

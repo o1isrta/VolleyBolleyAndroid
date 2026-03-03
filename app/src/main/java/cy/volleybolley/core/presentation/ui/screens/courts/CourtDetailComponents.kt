@@ -21,7 +21,6 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtDetailComponents.CourtDetailsContentWithButton
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtDetailComponents.CourtItemDetails
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtDetailComponents.CourtMapItemDetail
@@ -43,8 +42,8 @@ object CourtDetailComponents {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = VolleyDimens.DIMEN_16.dp)
-                .clip(RoundedCornerShape(VolleyDimens.DIMEN_16.dp))
+                .padding(top = 16.dp)
+                .clip(RoundedCornerShape(16.dp))
                 .animateContentSize()
         ) {
             CourtListItem(
@@ -80,8 +79,8 @@ object CourtDetailComponents {
                 onClick = onChooseCourt,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = VolleyDimens.DIMEN_16.dp)
-                    .height(VolleyDimens.DIMEN_44.dp),
+                    .padding(vertical = 16.dp)
+                    .height(44.dp),
                 text = stringResource(R.string.choose_this_court),
                 enabled = true,
             )
@@ -98,7 +97,7 @@ object CourtDetailComponents {
     ) {
         TransparentContainer(
             modifier = modifier
-                .clip(RoundedCornerShape(VolleyDimens.DIMEN_32.dp))
+                .clip(RoundedCornerShape(32.dp))
                 .background(VolleyColor.TurquoiseDark)
                 .wrapContentHeight(),
             mainContainerAlignment = Alignment.Center
@@ -106,7 +105,7 @@ object CourtDetailComponents {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(VolleyDimens.DIMEN_20.dp)
+                    .padding(20.dp)
             ) {
                 CourtMapItem(
                     court = court,
@@ -119,7 +118,7 @@ object CourtDetailComponents {
                     court = court,
                 )
                 CourtActionButtons(
-                    modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     onClickDetails = onClickDetails,
                     onChooseCourt = onChooseCourt
                 )
@@ -140,7 +139,7 @@ private fun PreviewComponentContainer() {
             distance = "3.4 km"
         )
         CourtListItem(
-            modifier = Modifier.padding(vertical = VolleyDimens.DIMEN_16.dp),
+            modifier = Modifier.padding(vertical = 16.dp),
             courtName = CourtsMockData.sampleCourts[0].location.courtName,
             locationName = CourtsMockData.sampleCourts[0].location.locationName,
             onClick = {},

@@ -34,7 +34,6 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEffect.NavigateFromEnterPaymentDataScreen
@@ -80,28 +79,28 @@ private fun EnterPaymentDataScreen(
     val headerValue = stringResource(screenPaymentType.getSimpleName())
 
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
+        cornerRadius = 32,
         modifier = modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
+            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             VolleySimpleComponent.TitleWithBackArrow(
                 title = headerValue,
                 modifier = Modifier.fillMaxWidth(),
                 onBackClick = { eventCallback(ClickOnBackFromEnterPaymentData) }
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.height(8.dp))
 
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Spacer(Modifier.height(8.dp))
 
                 OutsideHint(screenPaymentType)
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Spacer(Modifier.height(8.dp))
 
                 PaymentAccField(
                     text = state.accountValue,
@@ -109,14 +108,14 @@ private fun EnterPaymentDataScreen(
                     actionToTransferContent = { newText -> eventCallback(AccountTextChanged(newText)) }
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 VolleyButton.ActiveButton(
                     enabled = state.buttonEnabled,
                     text = stringResource(R.string.save),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(VolleyDimens.DIMEN_44.dp)
+                        .height(44.dp)
                 ) { eventCallback(OnSaveButtonClick) }
             }
         }
@@ -202,14 +201,14 @@ private fun EnterPaymentDataDialog(
     ) {
         Card(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_8.dp),
-            shape = RoundedCornerShape(VolleyDimens.DIMEN_32.dp),
+                .padding(8.dp),
+            shape = RoundedCornerShape(32.dp),
             colors = cardColors(containerColor = VolleyColor.Turquoise)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(VolleyDimens.DIMEN_20.dp),
+                    .padding(20.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -219,7 +218,7 @@ private fun EnterPaymentDataDialog(
                     color = VolleyColor.White
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
+                Spacer(Modifier.height(12.dp))
 
                 VolleyButton.ActiveButton(
                     text = stringResource(R.string.done),
@@ -255,7 +254,7 @@ private fun PreviewEnterPaymentDataScreen() {
                     eventCallback = {},
                     navigateAction = {}
                 )
-                Spacer(Modifier.height(VolleyDimens.DIMEN_30.dp))
+                Spacer(Modifier.height(30.dp))
                 EnterPaymentDataScreen(
                     screenPaymentType = PaymentType.REVOLUT,
                     state = stateRevolut,
@@ -289,7 +288,7 @@ private fun PreviewEnterPaymentDataScreen2() {
                     eventCallback = {},
                     navigateAction = {}
                 )
-                Spacer(Modifier.height(VolleyDimens.DIMEN_30.dp))
+                Spacer(Modifier.height(30.dp))
                 EnterPaymentDataScreen(
                     screenPaymentType = PaymentType.THAIBANK,
                     state = stateThai,

@@ -23,7 +23,6 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 
 @Composable
@@ -33,9 +32,9 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
             .padding(
-                top = VolleyDimens.DIMEN_38.dp,
-                start = VolleyDimens.DIMEN_16.dp,
-                end = VolleyDimens.DIMEN_16.dp
+                top = 38.dp,
+                start = 16.dp,
+                end = 16.dp
             )
     ) {
         VolleyContainersRootTransparent.TransparentContainer(
@@ -43,14 +42,14 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .align(Alignment.TopCenter),
-            cornerRadius = VolleyDimens.DIMEN_32,
+            cornerRadius = 32,
             mainContainerAlignment = Alignment.TopStart,
             contentContainerAlignment = Alignment.TopStart
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(VolleyDimens.DIMEN_20.dp),
+                    .padding(20.dp),
                 horizontalAlignment = Alignment.Start
             ) {
                 VolleyTopBar.TopBarWithBackButton(
@@ -60,7 +59,7 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
                 )
 
                 LevelItem(
-                    modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     prefixResId = R.string.level_light_prefix,
                     descriptionResId = R.string.level_light_description,
                     gradient = Brush.verticalGradient(
@@ -70,7 +69,7 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
                 )
 
                 LevelItem(
-                    modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     prefixResId = R.string.level_medium_prefix,
                     descriptionResId = R.string.level_medium_description,
                     gradient = Brush.verticalGradient(
@@ -80,7 +79,7 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
                 )
 
                 LevelItem(
-                    modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     prefixResId = R.string.level_hard_prefix,
                     descriptionResId = R.string.level_hard_description,
                     gradient = Brush.verticalGradient(
@@ -90,7 +89,7 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
                 )
 
                 LevelItem(
-                    modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     prefixResId = R.string.level_pro_prefix,
                     descriptionResId = R.string.level_pro_description,
                     gradient = Brush.verticalGradient(

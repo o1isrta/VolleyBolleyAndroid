@@ -213,8 +213,18 @@ fun NavHostContainer(
             }
 
             // create tourney
-            composable<BasicTourneySetupRoute> { BasicTourneySetupScreen(/*navController*/) }
-            composable<TourneyEnteringConditionsRoute> { TourneyEnteringConditionsScreen(navController) }
+            composable<BasicTourneySetupRoute> {
+                BasicTourneySetupScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<TourneyEnteringConditionsRoute> {
+                TourneyEnteringConditionsScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
 
             // find game
             composable<JoinTheGameRoute> { backStackEntry ->
@@ -228,11 +238,36 @@ fun NavHostContainer(
             }
 
             // find tourney
-            composable<ChooseTeamRoute> { ChooseTeamScreen(navController) }
-            composable<IndividualPlayersRoute> { IndividualPlayersScreen(navController) }
-            composable<InvitePlayersRoute> { InvitePlayersScreen(navController) }
-            composable<JoinIndividualRoute> { JoinIndividualScreen(navController) }
-            composable<JoinTeamRoute> { JoinTeamScreen(navController) }
+            composable<ChooseTeamRoute> {
+                ChooseTeamScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<IndividualPlayersRoute> {
+                IndividualPlayersScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<InvitePlayersRoute> {
+                InvitePlayersScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<JoinIndividualRoute> {
+                JoinIndividualScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<JoinTeamRoute> {
+                JoinTeamScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
         }
 
         // Game Home nested graph
@@ -245,21 +280,71 @@ fun NavHostContainer(
             }
 
             // archive
-            composable<ArchiveRoute> { ArchiveScreen(navController) }
-            composable<PastGameRoute> { PastGameScreen(navController) }
-            composable<PastTourneyRoute> { PastTourneyScreen(navController) }
-            composable<TeamsRoute> { TeamsScreen(navController) }
+            composable<ArchiveRoute> {
+                ArchiveScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<PastGameRoute> {
+                PastGameScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<PastTourneyRoute> {
+                PastTourneyScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<TeamsRoute> {
+                TeamsScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
 
             // game invites
-            composable<GameInvitesRoute> { GameInvitesScreen(navController) }
-            composable<JoinTheTourneyRoute> { JoinTheTourneyScreen(navController) }
+            composable<GameInvitesRoute> {
+                GameInvitesScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<JoinTheTourneyRoute> {
+                JoinTheTourneyScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
 
             // my games
-            composable<ChangeTeamRoute> { ChangeTeamScreen(navController) }
+            composable<ChangeTeamRoute> {
+                ChangeTeamScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
             composable<MyGamesRoute> { MyGamesScreen(navController) }
-            composable<ManagePlayersRoute> { ManagePlayersScreen(navController) }
-            composable<MyGameRoute> { MyGameScreen(navController) }
-            composable<MyTourneyRoute> { MyTourneyScreen(navController) }
+            composable<ManagePlayersRoute> {
+                ManagePlayersScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<MyGameRoute> {
+                MyGameScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<MyTourneyRoute> {
+                MyTourneyScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
 
             // upcoming games
             composable<JoinedPlayersRoute> { backStackEntry ->
@@ -272,9 +357,25 @@ fun NavHostContainer(
                     tournamentDetails = tournamentDetails,
                 )
             }
-            composable<UpcomingGameDetailsRoute> { UpcomingGameDetailsScreen(navController) }
-            composable<UpcomingGamesRoute> { UpcomingGamesScreen(navController) }
-            composable<UpcomingTourneyDetailsRoute> { UpcomingTourneyDetailsScreen(navController) }
+            composable<UpcomingGameDetailsRoute> {
+                UpcomingGameDetailsScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<UpcomingGamesRoute> {
+                UpcomingGamesScreen(
+                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
+            composable<UpcomingTourneyDetailsRoute> {
+                UpcomingTourneyDetailsScreen(
+                    navController = navController,
+                    tournamentDetails = null,
+                    paddingFromSystemUi = paddingFromSystemUi
+                )
+            }
         }
 
         // Profile nested graph

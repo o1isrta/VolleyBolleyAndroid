@@ -25,7 +25,6 @@ import com.google.android.gms.maps.model.LatLng
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtonsMap
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.ListContent
 import cy.volleybolley.core.presentation.ui.screens.courts.MapScreenComponents.MapScreen
 import cy.volleybolley.courts.presentation.model.CourtUi
@@ -73,7 +72,7 @@ object CourtsComponents {
                         selectedCourt = selectedCourt,
                         onClick = onListCourtClick,
                         onChooseCourt = onCourtChoose,
-                        modifier = Modifier.padding(top = VolleyDimens.DIMEN_40.dp)
+                        modifier = Modifier.padding(top = 40.dp)
                     )
                 }
             }
@@ -84,7 +83,7 @@ object CourtsComponents {
                 onBackNavigationRequested = onBackNavigationRequested,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(VolleyDimens.DIMEN_8.dp)
+                    .padding(8.dp)
             )
         }
     }
@@ -103,7 +102,7 @@ private fun MapListTopBar(
     ) {
         IconButton(
             onClick = onBackNavigationRequested,
-            modifier = Modifier.size(VolleyDimens.DIMEN_24.dp)
+            modifier = Modifier.size(24.dp)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_back),
@@ -120,8 +119,8 @@ private fun MapListTopBar(
             onTabSelected = { tabId -> onTabSelected(tabId == 1) },
             modifier = Modifier
                 .size(
-                    width = VolleyDimens.DIMEN_204.dp,
-                    height = VolleyDimens.DIMEN_32.dp
+                    width = 204.dp,
+                    height = 32.dp
                 )
         )
 

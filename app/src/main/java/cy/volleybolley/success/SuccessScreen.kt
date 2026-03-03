@@ -32,7 +32,6 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.Tran
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.navigation.HomeRoute
 import cy.volleybolley.core.presentation.ui.navigation.InvitePlayersRoute
@@ -96,16 +95,16 @@ private fun SuccessScreen(
         Column {
             TransparentContainer(
                 modifier = Modifier.padding(
-                    start = VolleyDimens.DIMEN_8.dp,
-                    end = VolleyDimens.DIMEN_8.dp,
-                    top = VolleyDimens.DIMEN_8.dp
+                    start = 8.dp,
+                    end = 8.dp,
+                    top = 8.dp
                 ),
-                cornerRadius = VolleyDimens.DIMEN_32,
+                cornerRadius = 32,
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(VolleyDimens.DIMEN_20.dp)
+                        .padding(20.dp)
                 ) {
                     val paymentAccount = if (state.event.paymentAccount == null) {
                         PaymentType.CASH.nameValue.lowercase()
@@ -127,7 +126,7 @@ private fun SuccessScreen(
                         painterResource = R.drawable.ic_geo,
                         title = state.event.locationName,
                         text = state.event.locationPlace,
-                        iconSize = VolleyDimens.DIMEN_16.dp
+                        iconSize = 16.dp
                     )
                     RowIconText(
                         painterResource = R.drawable.ic_clock,
@@ -148,8 +147,8 @@ private fun SuccessScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                top = VolleyDimens.DIMEN_16.dp,
-                                bottom = VolleyDimens.DIMEN_8.dp
+                                top = 16.dp,
+                                bottom = 8.dp
                             ),
                         text = stringResource(R.string.done),
                     ) {
@@ -159,10 +158,10 @@ private fun SuccessScreen(
             }
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 VolleyButton.GroupInvitesButtons(
-                    modifier = Modifier.padding(VolleyDimens.DIMEN_8.dp),
+                    modifier = Modifier.padding(8.dp),
                     onInvitePlayersClick = {
                         eventCallback(SuccessEvent.OnInvitePlayers)
                     },
@@ -193,14 +192,14 @@ private fun RowIconText(
     title: String,
     text: String,
     modifier: Modifier = Modifier,
-    iconSize: Dp = VolleyDimens.DIMEN_24.dp,
+    iconSize: Dp = 24.dp,
 ) {
     Row(
-        modifier = modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+        modifier = modifier.padding(top = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            modifier = Modifier.size(VolleyDimens.DIMEN_24.dp),
+            modifier = Modifier.size(24.dp),
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -210,7 +209,7 @@ private fun RowIconText(
             )
         }
         Column(
-            modifier = Modifier.padding(start = VolleyDimens.DIMEN_8.dp)
+            modifier = Modifier.padding(start = 8.dp)
         ) {
             VolleyText.BodyBold(text = title, color = VolleyColor.White)
             VolleyText.BodyLight(text = text, color = VolleyColor.White)

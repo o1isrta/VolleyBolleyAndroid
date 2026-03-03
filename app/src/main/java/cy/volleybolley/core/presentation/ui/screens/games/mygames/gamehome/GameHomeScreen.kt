@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,35 +36,53 @@ import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.ui.theme.VolleybolleyTheme
-import kotlinx.coroutines.flow.collectLatest
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun GameHomeScreen(
     navController: NavHostController,
     finisher: () -> Unit = {},
-    viewModel: GameHomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: GameHomeViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
-    LaunchedEffect(Unit) {
-        viewModel.uiEffect.collectLatest { effect ->
-            when (effect) {
-                is GameHomeEffect.Navigate -> navController.navigate(effect.route)
-                null -> Unit
-            }
+    LaunchedEffect(effect) {
+        when (val currentEffect = effect) {
+            is GameHomeEffect.Navigate -> navController.navigate(currentEffect.route)
+            null -> {}
         }
     }
 
+    GameHomeContent(
+        state = state,
+        onMyGamesClick = { viewModel.obtainEvent(GameHomeAction.ClickMyGames) },
+        onUpcomingGamesClick = { viewModel.obtainEvent(GameHomeAction.ClickUpcomingGames) },
+        onInvitesClick = { viewModel.obtainEvent(GameHomeAction.ClickInvites) },
+        onArchiveClick = { viewModel.obtainEvent(GameHomeAction.ClickArchive) },
+        onBack = { finisher() }
+    )
+}
+
+@Stable
+@Composable
+private fun GameHomeContent(
+    state: GameHomeState,
+    onMyGamesClick: () -> Unit,
+    onUpcomingGamesClick: () -> Unit,
+    onInvitesClick: () -> Unit,
+    onArchiveClick: () -> Unit,
+    onBack: () -> Unit
+) {
     Box(Modifier.fillMaxSize()) {
         GlassCard {
             MenuItem(
                 text = stringResource(R.string.my_games),
-                onClick = { viewModel.obtainEvent(GameHomeAction.ClickMyGames) }
+                onClick = onMyGamesClick
             )
-            HorizontalDivider(thickness = VolleyDimens.DIMEN_1.dp, color = VolleyColor.White)
+            HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
 
             // Upcoming games — подзаголовок только если есть дата
             val upcomingSubtitle =
@@ -76,9 +95,9 @@ fun GameHomeScreen(
             MenuItemWithSubtitle(
                 title = stringResource(R.string.upcoming_games),
                 subtitle = upcomingSubtitle,
-                onClick = { viewModel.obtainEvent(GameHomeAction.ClickUpcomingGames) }
+                onClick = onUpcomingGamesClick
             )
-            HorizontalDivider(thickness = VolleyDimens.DIMEN_1.dp, color = VolleyColor.White)
+            HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
 
             // Game invites — бейдж только если invites > 0
             MenuItem(
@@ -88,34 +107,34 @@ fun GameHomeScreen(
                         CountBadge(text = state.invites.toString())
                     }
                 },
-                onClick = { viewModel.obtainEvent(GameHomeAction.ClickInvites) }
+                onClick = onInvitesClick
             )
-            HorizontalDivider(thickness = VolleyDimens.DIMEN_1.dp, color = VolleyColor.White)
+            HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
 
             MenuItem(
                 text = stringResource(R.string.archive),
-                onClick = { viewModel.obtainEvent(GameHomeAction.ClickArchive) }
+                onClick = onArchiveClick
             )
         }
     }
-    BackHandler { finisher() }
+    BackHandler { onBack() }
 }
 
 @Composable
 private fun GlassCard(
     modifier: Modifier = Modifier,
-    cornerRadiusDp: Int = VolleyDimens.DIMEN_32,
-    innerPadding: Dp = VolleyDimens.DIMEN_20.dp,
-    itemsGap: Dp = VolleyDimens.DIMEN_16.dp,
-    height: Dp = VolleyDimens.DIMEN_240.dp,
+    cornerRadiusDp: Int = 32,
+    innerPadding: Dp = 20.dp,
+    itemsGap: Dp = 16.dp,
+    height: Dp = 240.dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
         modifier = modifier
             .padding(
-                start = VolleyDimens.DIMEN_8.dp,
-                end = VolleyDimens.DIMEN_8.dp,
-                top = VolleyDimens.DIMEN_8.dp
+                start = 8.dp,
+                end = 8.dp,
+                top = 8.dp
             ),
         cornerRadius = cornerRadiusDp,
         mainContainerAlignment = Alignment.TopStart,
@@ -147,15 +166,16 @@ private fun MenuItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = VolleyDimens.DIMEN_16.dp)
+            .heightIn(min = 16.dp)
             .clickable(role = Role.Button, onClick = onClick),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         VolleyText.BodyRegular(text = text, color = VolleyColor.White)
         if (trailing != null) {
-            Spacer(Modifier.width(VolleyDimens.DIMEN_4.dp))
-            trailing()
+            Box(modifier = Modifier.padding(start = 4.dp)) {
+                trailing()
+            }
         }
     }
 }
@@ -169,7 +189,7 @@ private fun MenuItemWithSubtitle(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = VolleyDimens.DIMEN_16.dp)
+            .heightIn(min = 16.dp)
             .clickable(role = Role.Button, onClick = onClick)
     ) {
         VolleyText.BodyRegular(text = title, color = VolleyColor.White)
@@ -184,18 +204,18 @@ private fun CountBadge(
     text: String,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(VolleyDimens.DIMEN_10.dp)
+    val shape = RoundedCornerShape(10.dp)
     Box(
         modifier = modifier
             .defaultMinSize(
-                minWidth = VolleyDimens.DIMEN_26.dp,
-                minHeight = VolleyDimens.DIMEN_27.dp
+                minWidth = 26.dp,
+                minHeight = 27.dp
             )
             .clip(shape)
             .background(VolleyColor.OrangeHard)
             .padding(
-                horizontal = VolleyDimens.DIMEN_8.dp,
-                vertical = VolleyDimens.DIMEN_4.dp
+                horizontal = 8.dp,
+                vertical = 4.dp
             ),
         contentAlignment = Alignment.Center
     ) {
@@ -221,7 +241,7 @@ private fun GameHomeScreenPreview() {
                         text = stringResource(R.string.my_games),
                         onClick = { /* no-op in preview */ }
                     )
-                    HorizontalDivider(thickness = VolleyDimens.DIMEN_1.dp, color = VolleyColor.White)
+                    HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
 
                     val upcomingSubtitle =
                         if (fakeState.upcomingGame.isNotBlank()) {
@@ -235,7 +255,7 @@ private fun GameHomeScreenPreview() {
                         subtitle = upcomingSubtitle,
                         onClick = { /* no-op in preview */ }
                     )
-                    HorizontalDivider(thickness = VolleyDimens.DIMEN_1.dp, color = VolleyColor.White)
+                    HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
 
                     MenuItem(
                         text = stringResource(R.string.game_invites),
@@ -244,7 +264,7 @@ private fun GameHomeScreenPreview() {
                         },
                         onClick = { /* no-op in preview */ }
                     )
-                    HorizontalDivider(thickness = VolleyDimens.DIMEN_1.dp, color = VolleyColor.White)
+                    HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
 
                     MenuItem(
                         text = stringResource(R.string.archive),

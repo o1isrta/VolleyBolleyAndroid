@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.Level
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.CreateNewGameRepository
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.FakeCreateNewGameRepository
@@ -31,7 +30,7 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     private var timeChangeJob: Job? = null
 
     companion object {
-        const val MAX_LENGTH = VolleyDimens.DIMEN_160
+        const val MAX_LENGTH = 160
         const val DEBOUNCE_DELAY_300MS = 300L
         const val MINIMUM_GAME_DURATION_MINUTES = 60
         const val MAXIMUM_GAME_DURATION_MINUTES = 240

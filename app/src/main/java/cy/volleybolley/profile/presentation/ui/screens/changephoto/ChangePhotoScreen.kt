@@ -52,7 +52,6 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEffect.NavigateFromChangePhotoScreen
@@ -163,29 +162,29 @@ private fun ChangePhotoScreen(
     }
 
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
+        cornerRadius = 32,
         modifier = modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
+            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             VolleySimpleComponent.TitleWithBackArrow(
                 title = stringResource(R.string.change_photo),
                 modifier = Modifier.fillMaxWidth(),
                 onBackClick = { eventCallback(OnBackFromChangePhotoClick) }
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.height(8.dp))
 
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Spacer(Modifier.height(8.dp))
                 Avatar(
                     modifier = Modifier.fillMaxWidth(),
                     avatarUrl = state.avatarUrl,
                 )
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 Menu(
                     galleryPhotoPicker = galleryPhotoPicker,
@@ -194,14 +193,14 @@ private fun ChangePhotoScreen(
                     eventCallback = eventCallback
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 VolleyButton.ActiveButton(
                     enabled = state.buttonEnabled,
                     text = stringResource(R.string.save),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(VolleyDimens.DIMEN_44.dp)
+                        .height(44.dp)
                 ) { eventCallback(OnSaveButtonClick) }
             }
         }
@@ -227,7 +226,7 @@ private fun Avatar(
         Box {
             VolleyAvatar.CircularAvatar(
                 avatar = avatarUrl,
-                size = VolleyDimens.DIMEN_122.dp
+                size = 122.dp
             )
             Image(
                 painter = painterResource(R.drawable.ic_edit_avatar),
@@ -236,10 +235,10 @@ private fun Avatar(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(
-                        VolleyDimens.DIMEN_0.dp,
-                        VolleyDimens.DIMEN_0.dp,
-                        VolleyDimens.DIMEN_10.dp,
-                        VolleyDimens.DIMEN_6.dp
+                        0.dp,
+                        0.dp,
+                        10.dp,
+                        6.dp
                     )
             )
         }
@@ -262,17 +261,17 @@ private fun Menu(
             )
         )
     }
-    val menuShape = remember { RoundedCornerShape(VolleyDimens.DIMEN_32.dp) }
+    val menuShape = remember { RoundedCornerShape(32.dp) }
 
     Column(
         modifier = Modifier
             .background(VolleyColor.White, menuShape)
             .border(
-                width = VolleyDimens.DIMEN_1.dp,
+                width = 1.dp,
                 brush = gradientBrush,
                 shape = menuShape
             )
-            .padding(VolleyDimens.DIMEN_20.dp)
+            .padding(20.dp)
     ) {
         MenuComponent(
             painter = painterResource(R.drawable.ic_photo_gallery),
@@ -331,8 +330,8 @@ private fun MenuComponent(
             modifier = Modifier
                 .weight(1f)
                 .padding(
-                    horizontal = VolleyDimens.DIMEN_8.dp,
-                    vertical = VolleyDimens.DIMEN_0.dp
+                    horizontal = 8.dp,
+                    vertical = 0.dp
                 )
         )
     }
@@ -343,7 +342,7 @@ private fun ChangePhotoScreenDivider() {
     VolleySimpleComponent.DividerLine(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_0.dp, VolleyDimens.DIMEN_16.dp)
+            .padding(0.dp, 16.dp)
     )
 }
 

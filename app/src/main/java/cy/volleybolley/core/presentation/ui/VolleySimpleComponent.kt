@@ -33,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.players.domain.model.Player
 
@@ -67,7 +66,7 @@ object VolleySimpleComponent {
 
             Box(
                 modifier = Modifier
-                    .size(VolleyDimens.DIMEN_24.dp)
+                    .size(24.dp)
                     .align(Alignment.CenterStart)
                     .clickable(
                         interactionSource = null,
@@ -101,10 +100,10 @@ object VolleySimpleComponent {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
-                .clip(RoundedCornerShape(VolleyDimens.DIMEN_10.dp))
+                .clip(RoundedCornerShape(10.dp))
                 .background(VolleyColor.GreyDark)
-                .height(VolleyDimens.DIMEN_23.dp)
-                .width(VolleyDimens.DIMEN_30.dp)
+                .height(23.dp)
+                .width(30.dp)
         ) {
             VolleyText.BodyRegular(level, color = VolleyColor.White)
         }
@@ -123,7 +122,7 @@ object VolleySimpleComponent {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = VolleyDimens.DIMEN_23.dp)
+                .heightIn(min = 23.dp)
         ) {
             VolleyText.BodyRegular(
                 text = player.firstName + " " + player.lastName,
@@ -135,16 +134,16 @@ object VolleySimpleComponent {
                 horizontalArrangement = Arrangement.End
             ) {
                 LevelBadge(player.level)
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
+                Spacer(modifier = Modifier.size(size = 8.dp))
                 IconButton(
                     onClick = onAction,
-                    modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+                    modifier = Modifier.size(21.dp)
                 ) {
                     Icon(
                         painter = icon,
                         contentDescription = null,
                         tint = Color.Unspecified,
-                        modifier = Modifier.size(VolleyDimens.DIMEN_21.dp)
+                        modifier = Modifier.size(21.dp)
                     )
                 }
             }
@@ -176,10 +175,10 @@ object VolleySimpleComponent {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = VolleyDimens.DIMEN_23.dp)
+                .heightIn(min = 23.dp)
         ) {
             FavoriteMark(player.isFavorite)
-            Spacer(modifier = Modifier.width(VolleyDimens.DIMEN_8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             val icon = if (isSelected) {
                 painterResource(R.drawable.ic_payment_checkbox_fill) // Замените на вашу выбранную иконку
             } else {
@@ -198,8 +197,8 @@ object VolleySimpleComponent {
         )
         Icon(
             modifier = Modifier
-                .size(VolleyDimens.DIMEN_20.dp)
-                .padding(VolleyDimens.DIMEN_1.dp),
+                .size(20.dp)
+                .padding(1.dp),
             contentDescription = null,
             painter = painter,
             tint = VolleyColor.OrangeHard
@@ -229,17 +228,17 @@ private fun PreviewTitleWithBackArrow() {
                     title = "Title",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(VolleyDimens.DIMEN_20.dp)
+                        .padding(20.dp)
                 )
                 VolleySimpleComponent.TitleWithBackArrow(
                     title = "Some long title",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(VolleyDimens.DIMEN_20.dp)
+                        .padding(20.dp)
                 )
                 VolleySimpleComponent.DividerLine(
                     modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_20.dp)
+                        .padding(20.dp)
                         .fillMaxWidth()
                 )
             }
@@ -261,22 +260,22 @@ private fun PreviewLevelBadge() {
                 VolleySimpleComponent.LevelBadge(
                     LEVEL_HIGH,
                     modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_20.dp)
+                        .padding(20.dp)
                 )
                 VolleySimpleComponent.LevelBadge(
                     LEVEL_MEDIUM,
                     modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_20.dp)
+                        .padding(20.dp)
                 )
                 VolleySimpleComponent.LevelBadge(
                     LEVEL_LIGHT,
                     modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_20.dp)
+                        .padding(20.dp)
                 )
                 VolleySimpleComponent.LevelBadge(
                     LEVEL_PRO,
                     modifier = Modifier
-                        .padding(VolleyDimens.DIMEN_20.dp)
+                        .padding(20.dp)
                 )
             }
         }
@@ -305,8 +304,8 @@ private fun PreviewPlayerRowWithRemoveList() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             Column(
-                modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp),
-                verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 players.forEachIndexed { index, player ->
                     VolleySimpleComponent.PlayerRowWithRemove(
@@ -330,8 +329,8 @@ private fun PreviewPlayerRowWithSelectAndFavoriteList() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             Column(
-                modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp),
-                verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
                     player = players[0],

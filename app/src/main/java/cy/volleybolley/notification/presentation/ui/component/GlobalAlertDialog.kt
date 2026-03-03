@@ -25,7 +25,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyBold
 import cy.volleybolley.core.presentation.ui.model.VolleyText.ButtonText
 import cy.volleybolley.core.presentation.ui.model.VolleyText.TitleLarge
@@ -52,11 +51,11 @@ fun GlobalAlertDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = VolleyDimens.DIMEN_8.dp)
+                    .padding(horizontal = 8.dp)
                     .wrapContentHeight()
-                    .clip(RoundedCornerShape(VolleyDimens.DIMEN_24.dp))
+                    .clip(RoundedCornerShape(24.dp))
                     .background(VolleyColor.Turquoise)
-                    .padding(VolleyDimens.DIMEN_20.dp),
+                    .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TitleLarge(
@@ -64,7 +63,7 @@ fun GlobalAlertDialog(
                     color = VolleyColor.White,
                 )
 
-                Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 BodyBold(
                     text = dialog.message,
@@ -72,23 +71,23 @@ fun GlobalAlertDialog(
                     modifier = Modifier.align(Alignment.Start)
                 )
 
-                Spacer(modifier = Modifier.height(VolleyDimens.DIMEN_28.dp))
+                Spacer(modifier = Modifier.height(28.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .clip(RoundedCornerShape(VolleyDimens.DIMEN_16.dp))
+                            .clip(RoundedCornerShape(16.dp))
                             .border(
-                                width = VolleyDimens.DIMEN_1.dp,
+                                width = 1.dp,
                                 color = VolleyColor.YellowPro,
-                                shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp)
+                                shape = RoundedCornerShape(16.dp)
                             )
                             .clickable(onClick = onDismiss)
-                            .padding(vertical = VolleyDimens.DIMEN_12.dp),
+                            .padding(vertical = 12.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         ButtonText(
@@ -100,10 +99,10 @@ fun GlobalAlertDialog(
                     Box(
                         modifier = Modifier
                             .weight(2f)
-                            .clip(RoundedCornerShape(VolleyDimens.DIMEN_16.dp))
+                            .clip(RoundedCornerShape(16.dp))
                             .background(VolleyColor.YellowPro)
                             .clickable(onClick = onConfirm)
-                            .padding(vertical = VolleyDimens.DIMEN_12.dp),
+                            .padding(vertical = 12.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         ButtonText(

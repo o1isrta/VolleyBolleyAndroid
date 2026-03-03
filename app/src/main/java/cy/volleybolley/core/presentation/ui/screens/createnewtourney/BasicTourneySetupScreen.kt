@@ -1,278 +1,486 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewtourney
 
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-
-/*const val DEFAULT_START_HOUR = 14
-const val DEFAULT_START_MINUTES = 0
-const val DEFAULT_FINISH_HOUR = 15
-const val DEFAULT_FINISH_MINUTES = 0*/
-
-@Composable
-fun BasicTourneySetupScreen(/*navController: NavHostController*/) {
-    val scrollState = rememberScrollState() // Состояние скролла
-    /* Column(
-         modifier = Modifier
-             .verticalScroll(scrollState)
-     ) {
-         VolleyContainersRootTransparent.TransparentContainer(
-             cornerRadius = VolleyDimens.DIMEN_32,
-             modifier = Modifier
-                 .padding(VolleyDimens.DIMEN_8.dp)
-         ) {
-             BasicTourneySetupScreenContent()
-         }
-         VolleyButton.ActiveButton(
-             modifier = Modifier
-                 .padding(
-                     VolleyDimens.DIMEN_8.dp,
-                     VolleyDimens.DIMEN_8.dp,
-                     VolleyDimens.DIMEN_8.dp,
-                     VolleyDimens.DIMEN_16.dp
-                 )
-                 .height(VolleyDimens.DIMEN_44.dp)
-                 .align(Alignment.CenterHorizontally)
-                 .fillMaxWidth(),
-             text = stringResource(R.string.next_game),
-             onClick = {}
-         )
-     }*/
-}
-
-/*@Composable
-fun HorizontalLine() {
-    HorizontalDivider(
-        modifier = Modifier,
-        color = VolleyColor.Divider,
-        thickness = VolleyDimens.DIMEN_1.dp
-    )
-}*/
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import cy.volleybolley.R
+import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
+import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
+import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
+import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
+import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
+import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
+import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
+import cy.volleybolley.core.presentation.ui.navigation.SearchCourtRoute
+import cy.volleybolley.core.presentation.ui.navigation.TourneyEnteringConditionsRoute
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Gender
+import cy.volleybolley.courts.domain.model.Court
+import cy.volleybolley.courts.domain.model.Location
+import org.koin.compose.viewmodel.koinViewModel
+import java.time.LocalDate
 
 @Composable
-fun BasicTourneySetupScreenContent() { /*
-    Column(
-        modifier = Modifier
-            .padding(horizontal = VolleyDimens.DIMEN_20.dp)
-    ) {
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
+fun BasicTourneySetupScreen(
+    navController: NavHostController,
+    viewModel: BasicTourneySetupScreenViewModel = koinViewModel(),
+    paddingFromSystemUi: PaddingValues
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
+    val showCalendar by viewModel.showCalendar.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
-        TitleWithBackArrow(
-            title = stringResource(R.string.create_a_tourney),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleyText.TitleMedium(
-            text = stringResource(R.string.your_message),
-            modifier = Modifier.fillMaxWidth(),
-            color = VolleyColor.White
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleyMessageTextField.MessageField(
-            hint = stringResource(R.string.leave_a_note_for_players),
-            textInput = "",
-            modifier = Modifier
-        ) { }
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        HorizontalLine()
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleyText.TitleMedium(
-            text = stringResource(R.string.place),
-            modifier = Modifier.fillMaxWidth(),
-            color = VolleyColor.White
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .height(VolleyDimens.DIMEN_44.dp)
-                .fillMaxWidth()
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .weight(1f), // Важно!  Занимает только часть доступного пространства,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_mark_yellow),
-                    contentDescription = null,
-                )
-                Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-                Column(
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    VolleyText.BodyBold(
-                        text = "Karon Beach Club",
-                        modifier = Modifier,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = VolleyColor.White
-                    )
-                    VolleyText.BodyLight(
-                        text = "Patak Rd, Mueang Phuket",
-                        modifier = Modifier,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = VolleyColor.White
-                    )
-                }
+    LaunchedEffect(effect) {
+        when (val currentEffect = effect) {
+            is BasicTourneySetupScreenEffect.NavigateToCreatePlace -> {
+                navController.navigate(SearchCourtRoute)
             }
 
-            VolleyButton.ActiveGradientButton(
-                modifier = Modifier,
-                text = "Create"
-            ) { }
+            is BasicTourneySetupScreenEffect.NavigateBack -> {
+                navController.popBackStack()
+            }
+
+            is BasicTourneySetupScreenEffect.NavigateNextStep -> {
+                navController.navigate(TourneyEnteringConditionsRoute)
+            }
+
+            is BasicTourneySetupScreenEffect.ShowErrorMessage -> {
+                Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_SHORT).show()
+            }
+
+            is BasicTourneySetupScreenEffect.ShowErrorMessageById -> {
+                val errorMessage = context.getString(currentEffect.messageId)
+                Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
+            }
+
+            null -> {}
         }
+    }
 
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+    BasicTourneySetupScreen(
+        state = state,
+        paddingFromSystemUi = paddingFromSystemUi,
+        showCalendar = showCalendar,
+        isSameDay = { date1, date2 -> viewModel.isSameDay(date1, date2) },
+        eventCallback = { viewModel.obtainEvent(it) }
+    )
+}
 
-        HorizontalLine()
+@Stable
+@Composable
+private fun BasicTourneySetupScreen(
+    state: BasicTourneySetupScreenState,
+    paddingFromSystemUi: PaddingValues,
+    showCalendar: Boolean,
+    isSameDay: (LocalDate, LocalDate) -> Boolean,
+    eventCallback: (BasicTourneySetupScreenEvent) -> Unit
+) {
+    val scrollState = rememberSaveable(saver = ScrollState.Saver) {
+        ScrollState(0)
+    }
 
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleyText.TitleMedium(
-            text = stringResource(R.string.date),
-            modifier = Modifier.fillMaxWidth(),
-            color = VolleyColor.White
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-        VolleyButton.GroupButtonsForDate2(
-            checkId = 1,
-            modifier = Modifier,
-            onSelected = {}
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_10.dp))
-
-        // здесь будет календарь
-
-        VolleyText.BodyBold(
-            text = stringResource(R.string.game_duration),
-            modifier = Modifier,
-            color = VolleyColor.White
-        )
-
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier.fillMaxWidth()
+    if (state.isLoading) {
+        VolleySimpleComponent.LoadingIndicator()
+    } else {
+        Column(
+            modifier = Modifier.padding(paddingFromSystemUi)
         ) {
-            VolleyText.BodyRegular(
-                text = stringResource(R.string.from),
-                modifier = Modifier,
-                color = VolleyColor.White
+            VolleyContainersRootTransparent.TransparentContainer(
+                cornerRadius = 32,
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                ) {
+                    TitleWithBackArrow(
+                        title = stringResource(R.string.create_a_tourney),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 20.dp),
+                        onBackClick = { eventCallback(BasicTourneySetupScreenEvent.OnBackClicked) }
+                    )
+
+                    Column(
+                        modifier = Modifier.verticalScroll(scrollState)
+                    ) {
+                        MessageSection(
+                            message = state.message,
+                            onMessageChanged = { eventCallback(BasicTourneySetupScreenEvent.MessageChanged(it)) }
+                        )
+
+                        VolleySimpleComponent.DividerLine(
+                            Modifier.padding(top = 16.dp)
+                        )
+
+                        PlaceSection(
+                            placeCourt = state.placeCourt,
+                            onChangeClick = { eventCallback(BasicTourneySetupScreenEvent.OnChangeClick) }
+                        )
+
+                        VolleySimpleComponent.DividerLine(
+                            Modifier.padding(top = 16.dp)
+                        )
+
+                        DateSection(
+                            date = state.date,
+                            showCalendar = showCalendar,
+                            isSameDay = isSameDay,
+                            onTodayClicked = { eventCallback(BasicTourneySetupScreenEvent.OnTodayClicked) },
+                            onPickDateClicked = { eventCallback(BasicTourneySetupScreenEvent.OnPickDateClicked) },
+                            onDateSelected = { eventCallback(BasicTourneySetupScreenEvent.DateSelected(it)) }
+                        )
+
+                        TimeSection(
+                            startTime = state.startTime,
+                            finishTime = state.finishTime,
+                            onStartTimeChanged = { eventCallback(BasicTourneySetupScreenEvent.StartTimeChanged(it)) },
+                            onFinishTimeChanged = { eventCallback(BasicTourneySetupScreenEvent.FinishTimeChanged(it)) }
+                        )
+
+                        VolleySimpleComponent.DividerLine(
+                            Modifier.padding(top = 16.dp)
+                        )
+
+                        TourneyTypeSection(
+                            tourneyType = state.tourneyType,
+                            onTourneyTypeSelected = { eventCallback(BasicTourneySetupScreenEvent.TourneyTypeSelected(it)) }
+                        )
+
+                        VolleySimpleComponent.DividerLine(
+                            Modifier.padding(top = 16.dp)
+                        )
+
+                        GenderSection(
+                            gender = state.gender,
+                            onGenderSelected = { eventCallback(BasicTourneySetupScreenEvent.GenderSelected(it)) }
+                        )
+
+                        VolleySimpleComponent.DividerLine(
+                            Modifier.padding(top = 16.dp)
+                        )
+
+                        LevelSection(
+                            levels = state.levels,
+                            onPlayerLevelSelected = { eventCallback(BasicTourneySetupScreenEvent.PlayerLevelSelected(it)) }
+                        )
+
+                        VolleyButton.ActiveButton(
+                            modifier = Modifier
+                                .padding(top = 16.dp, bottom = 20.dp)
+                                .height(44.dp)
+                                .fillMaxWidth(),
+                            text = stringResource(R.string.next_step),
+                            onClick = { eventCallback(BasicTourneySetupScreenEvent.OnNextStepClick) }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MessageSection(
+    message: String,
+    onMessageChanged: (String) -> Unit
+) {
+    VolleyText.TitleMedium(
+        text = stringResource(R.string.your_message),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        color = VolleyColor.White
+    )
+
+    VolleyMessageTextField.MessageField(
+        modifier = Modifier
+            .padding(top = 16.dp)
+            .height(106.dp),
+        hint = stringResource(R.string.leave_a_note_for_players),
+        textInput = message,
+        actionToTransferContent = onMessageChanged
+    )
+}
+
+@Composable
+private fun PlaceSection(
+    placeCourt: Court,
+    onChangeClick: () -> Unit
+) {
+    VolleyText.TitleMedium(
+        text = stringResource(R.string.place),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        color = VolleyColor.White
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp)
+            .height(44.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Image(
+                painter = painterResource(R.drawable.ic_mark_yellow),
+                contentDescription = null
             )
 
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-
-            VolleyTextFieldAttribute.DurationFieldWithArrows(
-                inputTime = VolleyTimeStamp(
-                    DEFAULT_START_HOUR,
-                    DEFAULT_START_MINUTES,
-                    true
+            Column(
+                modifier = Modifier.padding(start = 8.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                VolleyText.BodyBold(
+                    text = placeCourt.location.courtName,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = VolleyColor.White
                 )
-            ) { }
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-
-            VolleyText.BodyRegular(
-                text = stringResource(R.string.to),
-                modifier = Modifier,
-                color = VolleyColor.White
-            )
-
-            Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_8.dp))
-
-            VolleyTextFieldAttribute.DurationFieldWithArrows(
-                inputTime = VolleyTimeStamp(
-                    DEFAULT_FINISH_HOUR,
-                    DEFAULT_FINISH_MINUTES,
-                    true
+                VolleyText.BodyLight(
+                    text = placeCourt.location.locationName,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = VolleyColor.White
                 )
-            ) { }
+            }
         }
 
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-        HorizontalLine()
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+        VolleyButton.ActiveGradientButton(
+            text = stringResource(R.string.change),
+            onClick = onChangeClick
+        )
+    }
+}
 
-        VolleyText.TitleMedium(
-            text = stringResource(R.string.tourney_type),
-            modifier = Modifier.fillMaxWidth(),
+@Composable
+private fun DateSection(
+    date: LocalDate,
+    showCalendar: Boolean,
+    isSameDay: (LocalDate, LocalDate) -> Boolean,
+    onTodayClicked: () -> Unit,
+    onPickDateClicked: () -> Unit,
+    onDateSelected: (LocalDate) -> Unit
+) {
+    VolleyText.TitleMedium(
+        text = stringResource(R.string.date),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        color = VolleyColor.White
+    )
+
+    VolleyButton.GroupButtonsForDate2(
+        modifier = Modifier.padding(top = 12.dp),
+        checkId = if (isSameDay(date, LocalDate.now())) 1 else 2,
+        onSelected = { position ->
+            when (position) {
+                1 -> onTodayClicked()
+                2 -> onPickDateClicked()
+            }
+        }
+    )
+
+    if (showCalendar) {
+        Box(modifier = Modifier.padding(top = 10.dp)) {
+            VolleyCalendar.GameCalendar(
+                selectedDate = date,
+                onDateSelected = onDateSelected
+            )
+        }
+    }
+}
+
+@Composable
+private fun TimeSection(
+    startTime: VolleyTimeStamp?,
+    finishTime: VolleyTimeStamp?,
+    onStartTimeChanged: (VolleyTimeStamp?) -> Unit,
+    onFinishTimeChanged: (VolleyTimeStamp?) -> Unit
+) {
+    VolleyText.BodyBold(
+        text = stringResource(R.string.game_duration),
+        modifier = Modifier.padding(top = 8.dp),
+        color = VolleyColor.White
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        VolleyText.BodyRegular(
+            text = stringResource(R.string.from),
             color = VolleyColor.White
         )
 
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-        VolleyButton.GroupButtonsForTourneyType(
-            modifier = Modifier,
-            onSelected = {}
+        VolleyTextFieldAttribute.DurationFieldWithArrows(
+            modifier = Modifier.padding(start = 8.dp),
+            inputTime = startTime,
+            actionForSaveTime = onStartTimeChanged
         )
 
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-        HorizontalLine()
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-
-        VolleyText.TitleMedium(
-            text = stringResource(R.string.gender),
-            modifier = Modifier.fillMaxWidth(),
+        VolleyText.BodyRegular(
+            modifier = Modifier.padding(start = 8.dp),
+            text = stringResource(R.string.to),
             color = VolleyColor.White
         )
 
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
-
-        VolleyButton.GroupButtonsForGender3(
-            modifier = Modifier,
-            onSelected = {}
+        VolleyTextFieldAttribute.DurationFieldWithArrows(
+            modifier = Modifier.padding(start = 8.dp),
+            inputTime = finishTime,
+            actionForSaveTime = onFinishTimeChanged
         )
+    }
+}
 
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
-        HorizontalLine()
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_16.dp))
+@Composable
+private fun TourneyTypeSection(
+    tourneyType: TourneyType,
+    onTourneyTypeSelected: (TourneyType) -> Unit
+) {
+    VolleyText.TitleMedium(
+        text = stringResource(R.string.tourney_type),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        color = VolleyColor.White
+    )
 
-        VolleyText.TitleMedium(
-            text = stringResource(R.string.player_level),
-            modifier = Modifier.fillMaxWidth(),
-            color = VolleyColor.White
-        )
+    VolleyButton.GroupButtonsForTourneyType(
+        modifier = Modifier.padding(top = 12.dp),
+        onSelected = { position ->
+            val type = when (position) {
+                1 -> TourneyType.SINGLE_ELIMINATION
+                2 -> TourneyType.DOUBLE_ELIMINATION
+                3 -> TourneyType.ROUND_ROBIN
+                else -> null
+            }
+            type?.let { onTourneyTypeSelected(it) }
+        }
+    )
+}
 
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_12.dp))
+@Composable
+private fun GenderSection(
+    gender: Gender,
+    onGenderSelected: (Gender) -> Unit
+) {
+    VolleyText.TitleMedium(
+        text = stringResource(R.string.gender),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        color = VolleyColor.White
+    )
 
-        VolleyButton.GroupButtonsForLevelMulti(
-            checkedLevels = setOf(Level.Hard),
-            modifier = Modifier,
-            onSelected = {}
-        )
+    VolleyButton.GroupButtonsForGender3(
+        modifier = Modifier.padding(top = 12.dp),
+        checkId = when (gender) {
+            Gender.Mix -> 1
+            Gender.Men -> 2
+            Gender.Women -> 3
+        },
+        onSelected = { position ->
+            val selectedGender = when (position) {
+                1 -> Gender.Mix
+                2 -> Gender.Men
+                3 -> Gender.Women
+                else -> null
+            }
+            selectedGender?.let { onGenderSelected(it) }
+        }
+    )
+}
 
-        Spacer(modifier = Modifier.size(size = VolleyDimens.DIMEN_20.dp))
-    }*/
+@Composable
+private fun LevelSection(
+    levels: Set<cy.volleybolley.core.presentation.ui.model.Level>,
+    onPlayerLevelSelected: (Set<cy.volleybolley.core.presentation.ui.model.Level>) -> Unit
+) {
+    VolleyText.TitleMedium(
+        text = stringResource(R.string.player_level),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        color = VolleyColor.White
+    )
+
+    VolleyButton.GroupButtonsForLevelMulti(
+        modifier = Modifier.padding(top = 12.dp),
+        checkedLevels = levels,
+        onSelected = onPlayerLevelSelected
+    )
 }
 
 @Preview
 @Composable
 private fun BasicTourneySetupScreenPreview() {
-    /*    val navController = rememberNavController() // Создаем моковый NavHostController
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            BasicTourneySetupScreen(*//*navController = navController*//*)
-    }*/
+    val previewState = BasicTourneySetupScreenState(
+        placeCourt = Court(
+            courtId = 1,
+            price = "1$",
+            description = "Karon Beach Club: Patak Rd, Mueang Phuket",
+            location = Location(
+                longitude = 55.0,
+                latitude = 56.0,
+                courtName = "Karon Beach Club",
+                locationName = "Patak Rd, Mueang Phuket"
+            ),
+            contacts = listOf(),
+            photo = "",
+            tags = listOf()
+        )
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(VolleyColor.TurquoiseDark)
+    ) {
+        BasicTourneySetupScreen(
+            state = previewState,
+            paddingFromSystemUi = PaddingValues(0.dp),
+            showCalendar = true,
+            isSameDay = { _, _ -> false },
+            eventCallback = {}
+        )
+    }
 }

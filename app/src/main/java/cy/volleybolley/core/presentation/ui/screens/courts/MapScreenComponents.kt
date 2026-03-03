@@ -40,7 +40,6 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtDetailComponents.CourtMapItemDetail
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtMapItems.CourtMapItemWithButton
 import cy.volleybolley.core.presentation.ui.screens.courts.MapScreenComponents.MapScreenContent
@@ -178,7 +177,7 @@ object MapScreenComponents {
                         exit = fadeOut() + slideOutVertically()
                     ) {
                         val modifier = Modifier
-                            .padding(VolleyDimens.DIMEN_8.dp)
+                            .padding(8.dp)
 
                         if (showDetails) {
                             CourtMapItemDetail(
