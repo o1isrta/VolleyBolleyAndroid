@@ -10,9 +10,13 @@ import cy.volleybolley.auth.data.FirebaseResendCodeToken
 import cy.volleybolley.auth.phone.domain.ResendCodeToken
 import java.util.concurrent.TimeUnit
 
+
 class PhoneAuthHelper(
     private val auth: FirebaseAuth,
 ) {
+    companion object {
+        const val SECONDS_30 = 30L
+    }
 
     fun sendCode(
         activity: Activity,
@@ -41,7 +45,7 @@ class PhoneAuthHelper(
 
         val options = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber(phone)
-            .setTimeout(30L, TimeUnit.SECONDS)
+            .setTimeout(SECONDS_30, TimeUnit.SECONDS)
             .setActivity(activity)
             .setCallbacks(callbacks)
 

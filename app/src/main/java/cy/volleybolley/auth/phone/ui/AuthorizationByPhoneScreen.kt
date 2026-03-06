@@ -1,6 +1,5 @@
 package cy.volleybolley.auth.phone.ui
 
-import VolleyballProgressIndicator
 import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -16,7 +15,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.auth.phone.ui.presentation.AuthorizationByPhoneViewModel
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEffect
-import cy.volleybolley.auth.ui.phone.AuthorizationByPhoneContent
+import cy.volleybolley.core.presentation.ui.VolleyballProgressIndicator
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
@@ -36,12 +35,12 @@ fun AuthorizationByPhoneScreen(
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
-        when (val e = effect) {
+        when (val phoneEffect = effect) {
             is AuthorizationByPhoneEffect.RequestSendCode -> {
                 phoneAuthHelper.sendCode(
                     activity = activity,
-                    phone = e.phone,
-                    resendToken = e.resendToken,
+                    phone = phoneEffect.phone,
+                    resendToken = phoneEffect.resendToken,
                     onCodeSent = { verificationId, token ->
                         viewModel.onCodeSent(verificationId, token)
                     },
@@ -53,8 +52,8 @@ fun AuthorizationByPhoneScreen(
 
             is AuthorizationByPhoneEffect.RequestVerifyCode -> {
                 phoneAuthHelper.verifyCode(
-                    verificationId = e.verificationId,
-                    code = e.code,
+                    verificationId = phoneEffect.verificationId,
+                    code = phoneEffect.code,
                     onSuccess = { idToken ->
                         if (idToken != null) {
                             viewModel.onAuthorized(idToken)
@@ -69,7 +68,7 @@ fun AuthorizationByPhoneScreen(
             }
 
             is AuthorizationByPhoneEffect.NavigateToRegistration -> {
-                onSuccessGetNotRegisterUser(e.userJson)
+                onSuccessGetNotRegisterUser(phoneEffect.userJson)
             }
 
             is AuthorizationByPhoneEffect.NavigateHome -> {
@@ -77,13 +76,12 @@ fun AuthorizationByPhoneScreen(
             }
 
             is AuthorizationByPhoneEffect.ShowError -> {
-                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, phoneEffect.message, Toast.LENGTH_SHORT).show()
             }
 
             null -> Unit
         }
     }
-
 
     Box(modifier = Modifier.fillMaxSize()) {
         AuthorizationByPhoneContent(

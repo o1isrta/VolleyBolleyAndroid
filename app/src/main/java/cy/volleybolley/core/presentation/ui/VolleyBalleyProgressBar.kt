@@ -1,3 +1,5 @@
+package cy.volleybolley.core.presentation.ui
+
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -18,7 +20,7 @@ import cy.volleybolley.R
 @Composable
 fun VolleyballProgressIndicator(
     modifier: Modifier = Modifier,
-    size: Dp = 120.dp,
+    size: Dp = 100.dp,
     durationMillis: Int = 1000
 ) {
     val rotation = remember { Animatable(0f) }

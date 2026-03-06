@@ -21,7 +21,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import kotlin.coroutines.cancellation.CancellationException
 
 class AuthorizationByPhoneViewModel(
     private val phoneTokenAuthUseCase: PhoneTokenAuthUseCase,
@@ -36,6 +35,8 @@ class AuthorizationByPhoneViewModel(
     ) {
     private companion object {
         const val RESEND_TIMEOUT_SECONDS = 30
+        const val CODE_LENGTH = 6
+        const val ONE_SECOND = 1000L
     }
 
     private var resendTimerJob: Job? = null
@@ -44,7 +45,6 @@ class AuthorizationByPhoneViewModel(
 
     override fun obtainEvent(event: AuthorizationByPhoneEvent) {
         when (event) {
-
             is AuthorizationByPhoneEvent.TypePhone -> {
                 val isValid = PhoneValidator.isValidPhoneNumber(event.phone)
                 uiStateMutable.update {
@@ -105,12 +105,12 @@ class AuthorizationByPhoneViewModel(
         val state = uiState.value
         val verificationId = state.verificationId ?: return
 
-        if (state.code.isBlank()) {
-            return
-        }
+        val code = state.code
 
-        if (state.code.length < 6) {
-            uiStateMutable.update { it.copy(isCodeInputError = true) }
+        if (code.isBlank() || code.length < CODE_LENGTH) {
+            if (code.length < CODE_LENGTH && code.isNotBlank()) {
+                uiStateMutable.update { it.copy(isCodeInputError = true) }
+            }
             return
         }
 
@@ -157,30 +157,18 @@ class AuthorizationByPhoneViewModel(
         resendTimerJob?.cancel()
 
         resendTimerJob = viewModelScope.launch {
-            try {
-                for (seconds in RESEND_TIMEOUT_SECONDS downTo 1) {
-                    uiStateMutable.update {
-                        it.copy(remainingResendTime = seconds)
-                    }
-                    delay(1000)
-                }
-
+            for (seconds in RESEND_TIMEOUT_SECONDS downTo 1) {
                 uiStateMutable.update {
-                    it.copy(
-                        remainingResendTime = 0,
-                        isResendEnabled = true,
-                    )
+                    it.copy(remainingResendTime = seconds)
                 }
+                delay(ONE_SECOND)
+            }
 
-            } catch (e: CancellationException) {
-
-            } catch (t: Throwable) {
-                uiStateMutable.update {
-                    it.copy(
-                        remainingResendTime = 0,
-                        isResendEnabled = true,
-                    )
-                }
+            uiStateMutable.update {
+                it.copy(
+                    remainingResendTime = 0,
+                    isResendEnabled = true,
+                )
             }
         }
     }

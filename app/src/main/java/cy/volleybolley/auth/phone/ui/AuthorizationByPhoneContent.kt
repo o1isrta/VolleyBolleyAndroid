@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.ui.phone
+package cy.volleybolley.auth.phone.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,11 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
-import cy.volleybolley.auth.phone.ui.VerifyCodeBlock
-import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
-import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEvent
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneState
+import cy.volleybolley.auth.ui.phone.PhoneInputBlock
+import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
+import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 
 @Stable
 @Composable
@@ -38,7 +38,6 @@ fun AuthorizationByPhoneContent(
                 .padding(20.dp)
                 .fillMaxWidth()
         ) {
-
             VolleyTopBar.TopBarWithBackButton(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.registration),

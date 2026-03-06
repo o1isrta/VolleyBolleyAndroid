@@ -14,7 +14,7 @@ data class AuthorizationByPhoneState(
     val isCodeInputError: Boolean = false,
 
     val verificationId: String? = null,
-    var resendToken: ResendCodeToken? = null,
+    val resendToken: ResendCodeToken? = null,
 
     val isResendVisible: Boolean = false,
     val isResendEnabled: Boolean = false,
