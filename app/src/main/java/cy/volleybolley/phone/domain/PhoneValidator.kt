@@ -18,12 +18,15 @@ object PhoneValidator {
             phoneNumber.startsWith(RUS) -> {
                 phoneNumber.length == RUS_PHONE_LENGTH
             }
+
             phoneNumber.startsWith(CYP) -> {
                 phoneNumber.length in CYP_PHONE_LENGTH_MIN..CYP_PHONE_LENGTH_MAX
             }
+
             phoneNumber.startsWith(THA) -> {
                 phoneNumber.length in THA_PHONE_LENGTH_MIN..THA_PHONE_LENGTH_MAX
             }
+
             else -> phoneNumber.length in MIN_WORLD_PHONE_LENGTH..MAX_WORLD_PHONE_LENGTH
         }
     }

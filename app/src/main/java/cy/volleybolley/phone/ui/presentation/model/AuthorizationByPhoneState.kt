@@ -1,7 +1,7 @@
 package cy.volleybolley.phone.ui.presentation.model
 
-import cy.volleybolley.phone.domain.ResendCodeToken
 import cy.volleybolley.core.presentation.base.UiState
+import cy.volleybolley.phone.domain.ResendCodeToken
 
 data class AuthorizationByPhoneState(
     val isLoading: Boolean = false,

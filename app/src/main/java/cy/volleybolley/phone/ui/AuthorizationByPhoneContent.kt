@@ -10,10 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
-import cy.volleybolley.phone.ui.presentation.model.AuthorizationByPhoneEvent
-import cy.volleybolley.phone.ui.presentation.model.AuthorizationByPhoneState
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
+import cy.volleybolley.phone.ui.presentation.model.AuthorizationByPhoneEvent
+import cy.volleybolley.phone.ui.presentation.model.AuthorizationByPhoneState
 
 @Stable
 @Composable

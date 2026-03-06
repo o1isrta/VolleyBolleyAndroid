@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cy.volleybolley.core.presentation.ui.VolleyballProgressIndicator
 import cy.volleybolley.phone.ui.presentation.AuthorizationByPhoneViewModel
 import cy.volleybolley.phone.ui.presentation.model.AuthorizationByPhoneEffect
-import cy.volleybolley.core.presentation.ui.VolleyballProgressIndicator
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 

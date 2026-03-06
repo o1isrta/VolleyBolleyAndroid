@@ -1,7 +1,7 @@
 package cy.volleybolley.phone.ui.presentation.model
 
-import cy.volleybolley.phone.domain.ResendCodeToken
 import cy.volleybolley.core.presentation.base.UiEffect
+import cy.volleybolley.phone.domain.ResendCodeToken
 
 sealed interface AuthorizationByPhoneEffect : UiEffect {
     data class RequestSendCode(
@@ -13,6 +13,7 @@ sealed interface AuthorizationByPhoneEffect : UiEffect {
         val verificationId: String,
         val code: String
     ) : AuthorizationByPhoneEffect
+
     data class NavigateToRegistration(val userJson: String) : AuthorizationByPhoneEffect
     object NavigateHome : AuthorizationByPhoneEffect
     data class ShowError(val message: String) : AuthorizationByPhoneEffect
