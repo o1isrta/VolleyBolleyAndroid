@@ -12,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
-import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEvent
 import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneState
+import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
+import cy.volleybolley.core.presentation.ui.component.VolleyButton
 
 @Composable
 fun PhoneInputBlock(
@@ -43,7 +43,8 @@ fun PhoneInputBlock(
         actionToTransferContent = { newValue ->
             phoneInput = newValue
             eventCallback(AuthorizationByPhoneEvent.TypePhone(newValue))
-        })
+        }
+    )
 
     VolleyButton.ActiveButton(
         modifier = Modifier

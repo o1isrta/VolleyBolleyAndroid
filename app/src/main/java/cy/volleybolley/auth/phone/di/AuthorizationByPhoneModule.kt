@@ -17,15 +17,18 @@ val authorizationByPhoneModule = module {
         PhoneAuthHelper(get())
     }
 
-
     single<PhoneTokenAuthUseCase> {
         PhoneTokenAuthUseCaseImpl(get())
     }
 
-    viewModel { AuthorizationByPhoneViewModel(get(),
-        get(),
-        get(),
-        get(),
-        get(),
-        get()) }
+    viewModel {
+        AuthorizationByPhoneViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
 }

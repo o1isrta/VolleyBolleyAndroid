@@ -25,7 +25,6 @@ fun VerifyCodeBlock(
     state: AuthorizationByPhoneState,
     eventCallback: (AuthorizationByPhoneEvent) -> Unit
 ) {
-
     var codeInput by rememberSaveable { mutableStateOf(state.code) }
 
     LaunchedEffect(state.code) {
@@ -85,8 +84,10 @@ fun VerifyCodeBlock(
     )
 }
 
+private const val SIXTY = 60
+
 private fun formatSeconds(seconds: Int): String {
-    val minutes = seconds / 60
-    val remainingSeconds = seconds % 60
+    val minutes = seconds / SIXTY
+    val remainingSeconds = seconds % SIXTY
     return "%02d:%02d".format(minutes, remainingSeconds)
 }

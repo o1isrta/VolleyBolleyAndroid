@@ -10,7 +10,6 @@ import cy.volleybolley.auth.data.FirebaseResendCodeToken
 import cy.volleybolley.auth.phone.domain.ResendCodeToken
 import java.util.concurrent.TimeUnit
 
-
 class PhoneAuthHelper(
     private val auth: FirebaseAuth,
 ) {
