@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.ui.phone
+package cy.volleybolley.auth.phone.ui
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
