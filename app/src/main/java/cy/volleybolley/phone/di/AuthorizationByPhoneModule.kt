@@ -1,10 +1,10 @@
-package cy.volleybolley.auth.phone.di
+package cy.volleybolley.phone.di
 
 import com.google.firebase.auth.FirebaseAuth
-import cy.volleybolley.auth.phone.domain.PhoneTokenAuthUseCase
-import cy.volleybolley.auth.phone.domain.impl.PhoneTokenAuthUseCaseImpl
-import cy.volleybolley.auth.phone.ui.PhoneAuthHelper
-import cy.volleybolley.auth.phone.ui.presentation.AuthorizationByPhoneViewModel
+import cy.volleybolley.phone.domain.PhoneTokenAuthUseCase
+import cy.volleybolley.phone.domain.impl.PhoneTokenAuthUseCaseImpl
+import cy.volleybolley.phone.ui.PhoneAuthHelper
+import cy.volleybolley.phone.ui.presentation.AuthorizationByPhoneViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

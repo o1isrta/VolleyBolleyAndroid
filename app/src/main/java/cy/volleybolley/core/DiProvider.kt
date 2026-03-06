@@ -2,7 +2,7 @@ package cy.volleybolley.core
 
 import cy.volleybolley.auth.di.authorizationModule
 import cy.volleybolley.core.di.coreModule
-import cy.volleybolley.auth.phone.di.authorizationByPhoneModule
+import cy.volleybolley.phone.di.authorizationByPhoneModule
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.di.launchModule
 import cy.volleybolley.courts.di.courtsModule
 import cy.volleybolley.games.di.gamesModule

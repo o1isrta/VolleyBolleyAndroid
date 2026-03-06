@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.phone.domain
+package cy.volleybolley.phone.domain
 
 object PhoneValidator {
     private const val RUS = "7"

@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.phone.domain
+package cy.volleybolley.phone.domain
 
 import cy.volleybolley.auth.domain.models.LoginData
 import cy.volleybolley.core.domain.model.ErrorType

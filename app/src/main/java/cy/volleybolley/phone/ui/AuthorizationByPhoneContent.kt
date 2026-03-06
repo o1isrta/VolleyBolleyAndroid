@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.phone.ui
+package cy.volleybolley.phone.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
-import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEvent
-import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneState
+import cy.volleybolley.phone.ui.presentation.model.AuthorizationByPhoneEvent
+import cy.volleybolley.phone.ui.presentation.model.AuthorizationByPhoneState
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 

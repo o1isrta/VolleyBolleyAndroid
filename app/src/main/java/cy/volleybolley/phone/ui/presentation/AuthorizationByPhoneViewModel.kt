@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.phone.ui.presentation
+package cy.volleybolley.phone.ui.presentation
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.auth.domain.api.usecase.SaveAccessTokenUseCase
@@ -7,12 +7,12 @@ import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenTimestampUseCase
 import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenUseCase
 import cy.volleybolley.auth.domain.models.LoginData
-import cy.volleybolley.auth.phone.domain.PhoneTokenAuthUseCase
-import cy.volleybolley.auth.phone.domain.PhoneValidator
-import cy.volleybolley.auth.phone.domain.ResendCodeToken
-import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEffect
-import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEvent
-import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneState
+import cy.volleybolley.phone.domain.PhoneTokenAuthUseCase
+import cy.volleybolley.phone.domain.PhoneValidator
+import cy.volleybolley.phone.domain.ResendCodeToken
+import cy.volleybolley.phone.ui.presentation.model.AuthorizationByPhoneEffect
+import cy.volleybolley.phone.ui.presentation.model.AuthorizationByPhoneEvent
+import cy.volleybolley.phone.ui.presentation.model.AuthorizationByPhoneState
 import cy.volleybolley.core.domain.model.onFailure
 import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel

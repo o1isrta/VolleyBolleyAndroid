@@ -1,8 +1,8 @@
-package cy.volleybolley.auth.phone.domain.impl
+package cy.volleybolley.phone.domain.impl
 
 import cy.volleybolley.auth.domain.api.AuthRepository
 import cy.volleybolley.auth.domain.models.LoginData
-import cy.volleybolley.auth.phone.domain.PhoneTokenAuthUseCase
+import cy.volleybolley.phone.domain.PhoneTokenAuthUseCase
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 

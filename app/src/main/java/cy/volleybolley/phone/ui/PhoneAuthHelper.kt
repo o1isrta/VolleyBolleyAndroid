@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.phone.ui
+package cy.volleybolley.phone.ui
 
 import android.app.Activity
 import com.google.firebase.FirebaseException
@@ -7,7 +7,7 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import cy.volleybolley.auth.data.FirebaseResendCodeToken
-import cy.volleybolley.auth.phone.domain.ResendCodeToken
+import cy.volleybolley.phone.domain.ResendCodeToken
 import java.util.concurrent.TimeUnit
 
 class PhoneAuthHelper(

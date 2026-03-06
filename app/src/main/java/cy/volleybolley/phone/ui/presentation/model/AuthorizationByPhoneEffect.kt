@@ -1,6 +1,6 @@
-package cy.volleybolley.auth.phone.ui.presentation.model
+package cy.volleybolley.phone.ui.presentation.model
 
-import cy.volleybolley.auth.phone.domain.ResendCodeToken
+import cy.volleybolley.phone.domain.ResendCodeToken
 import cy.volleybolley.core.presentation.base.UiEffect
 
 sealed interface AuthorizationByPhoneEffect : UiEffect {
