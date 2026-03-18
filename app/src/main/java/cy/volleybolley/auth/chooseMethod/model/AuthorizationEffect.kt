@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.ui.screens.authorization
+package cy.volleybolley.auth.chooseMethod.model
 
 import cy.volleybolley.core.presentation.base.UiEffect
 

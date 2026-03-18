@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.ui.screens.authorization
+package cy.volleybolley.auth.chooseMethod
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -29,13 +29,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
-import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.NavigateToHome
-import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.NavigateToRegistration
-import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.ShowToast
-import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.ContinueWithFacebookClicked
-import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleSignInFailed
-import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleSignInStarted
-import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleTokenReceived
+import cy.volleybolley.auth.chooseMethod.model.AuthorizationEffect.NavigateToHome
+import cy.volleybolley.auth.chooseMethod.model.AuthorizationEffect.NavigateToRegistration
+import cy.volleybolley.auth.chooseMethod.model.AuthorizationEffect.ShowToast
+import cy.volleybolley.auth.chooseMethod.model.AuthorizationEvent
+import cy.volleybolley.auth.chooseMethod.model.AuthorizationEvent.ContinueWithFacebookClicked
+import cy.volleybolley.auth.chooseMethod.model.AuthorizationEvent.GoogleSignInFailed
+import cy.volleybolley.auth.chooseMethod.model.AuthorizationEvent.GoogleSignInStarted
+import cy.volleybolley.auth.chooseMethod.model.AuthorizationEvent.GoogleTokenReceived
+import cy.volleybolley.auth.chooseMethod.model.AuthorizationState
 import cy.volleybolley.core.domain.VolleyFeature
 import cy.volleybolley.core.presentation.ui.component.ScreenPreviewContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -193,7 +195,7 @@ private fun BottomSheetWithSignButtons(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO, widthDp = 2000, heightDp = 500)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewAuthorizationScreen() {
     ScreenPreviewContainer {

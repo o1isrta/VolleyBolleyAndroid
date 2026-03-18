@@ -48,8 +48,8 @@ import cy.volleybolley.auth.domain.impl.usecase.SaveIsRegisteredUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.SavePersonalDataUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.SaveRefreshTokenTimestampUseCaseImpl
 import cy.volleybolley.auth.domain.impl.usecase.SaveRefreshTokenUseCaseImpl
-import cy.volleybolley.auth.ui.google.GoogleSignInHelper
-import cy.volleybolley.auth.ui.screens.authorization.AuthorizationViewModel
+import cy.volleybolley.auth.chooseMethod.util.GoogleSignInHelper
+import cy.volleybolley.auth.chooseMethod.AuthorizationViewModel
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.di.HttpClientQualifier
 import cy.volleybolley.core.di.PrefsQualifier
@@ -57,23 +57,20 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-private const val TOKEN_PREFS_NAME = "token_prefs"
-private const val USER_PREFS_NAME = "user_prefs"
-
 val authorizationModule = module {
     // SharedPreferences for tokens (use EncryptedSharedPreferences in production)
-    single(PrefsQualifier.ENCRYPTED.qualifier) {
-        get<Context>().getSharedPreferences(TOKEN_PREFS_NAME, Context.MODE_PRIVATE)
+    single(PrefsQualifier.ENCRYPTED_TOKENS.qualifier) {
+        get<Context>().getSharedPreferences(PrefsQualifier.ENCRYPTED_TOKENS.fileName, Context.MODE_PRIVATE)
     }
 
     // Regular SharedPreferences for user data
     single(PrefsQualifier.USER.qualifier) {
-        get<Context>().getSharedPreferences(USER_PREFS_NAME, Context.MODE_PRIVATE)
+        get<Context>().getSharedPreferences(PrefsQualifier.USER.fileName, Context.MODE_PRIVATE)
     }
 
     // Storage implementations
     single<TokenStorage> {
-        TokenStorageImpl(get(PrefsQualifier.ENCRYPTED.qualifier))
+        TokenStorageImpl(get(PrefsQualifier.ENCRYPTED_TOKENS.qualifier))
     }
     single<UserStorage> {
         UserStorageImpl(get(PrefsQualifier.USER.qualifier), get())

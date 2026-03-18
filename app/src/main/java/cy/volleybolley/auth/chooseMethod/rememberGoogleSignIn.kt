@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.ui.screens.authorization
+package cy.volleybolley.auth.chooseMethod
 
 import android.widget.Toast
 import androidx.compose.runtime.Composable
@@ -7,8 +7,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import cy.volleybolley.R
-import cy.volleybolley.auth.ui.google.GoogleSignInHelper
-import cy.volleybolley.auth.ui.google.GoogleSignInHelper.GoogleSignInResult
+import cy.volleybolley.auth.chooseMethod.util.GoogleSignInHelper
+import cy.volleybolley.auth.chooseMethod.util.GoogleSignInHelper.GoogleSignInResult
 import kotlinx.coroutines.launch
 
 /**

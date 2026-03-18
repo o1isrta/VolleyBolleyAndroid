@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.ui.google
+package cy.volleybolley.auth.chooseMethod.util
 
 import android.content.Context
 import androidx.credentials.Credential
@@ -14,7 +14,7 @@ import cy.volleybolley.core.util.VolleyLog
 import io.ktor.utils.io.CancellationException
 
 class GoogleSignInHelper(context: Context) {
-    private val credentialManager = CredentialManager.create(context)
+    private val credentialManager = CredentialManager.Companion.create(context)
     private val clientId = context.getString(R.string.default_web_client_id)
     private val googleIdOptionAuthorized = GetGoogleIdOption.Builder()
         .setFilterByAuthorizedAccounts(true)
@@ -66,7 +66,7 @@ class GoogleSignInHelper(context: Context) {
 
     private fun extractTokenFromCredential(credential: Credential): GoogleSignInResult {
         return try {
-            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+            val googleIdTokenCredential = GoogleIdTokenCredential.Companion.createFrom(credential.data)
             VolleyLog.v(TAG, "Token extracted successfully")
             GoogleSignInResult.Success(googleIdTokenCredential.idToken)
         } catch (e: Exception) {

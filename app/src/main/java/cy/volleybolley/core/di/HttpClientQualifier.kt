@@ -17,10 +17,3 @@ enum class HttpClientQualifier(val value: String) {
 
     val qualifier get() = named(value)
 }
-
-enum class PrefsQualifier(val value: String) {
-    ENCRYPTED("encrypted"),      // For tokens - secure storage
-    USER("user");              // For user data - regular storage
-
-    val qualifier get() = named(value)
-}
