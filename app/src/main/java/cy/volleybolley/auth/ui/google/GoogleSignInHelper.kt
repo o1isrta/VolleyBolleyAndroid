@@ -1,84 +1,84 @@
 package cy.volleybolley.auth.ui.google
 
 import android.content.Context
-import android.content.Intent
-import android.content.IntentSender
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.common.api.ApiException
+import androidx.credentials.Credential
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialCancellationException
+import androidx.credentials.exceptions.GetCredentialException
+import androidx.credentials.exceptions.NoCredentialException
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugLog
 import cy.volleybolley.core.util.VolleyLog
 import io.ktor.utils.io.CancellationException
-import kotlinx.coroutines.tasks.await
 
 class GoogleSignInHelper(context: Context) {
-    private val oneTapClient = Identity.getSignInClient(context)
+    private val credentialManager = CredentialManager.create(context)
     private val clientId = context.getString(R.string.default_web_client_id)
-
-    private val signInRequestAuthorized = BeginSignInRequest.builder()
-        .setGoogleIdTokenRequestOptions(
-            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                .setSupported(true)
-                .setServerClientId(clientId)
-                .setFilterByAuthorizedAccounts(true)
-                .build()
-        )
+    private val googleIdOptionAuthorized = GetGoogleIdOption.Builder()
+        .setFilterByAuthorizedAccounts(true)
+        .setServerClientId(clientId)
+        .setAutoSelectEnabled(false)
+        .build()
+    private val googleIdOptionAll = GetGoogleIdOption.Builder()
+        .setFilterByAuthorizedAccounts(false)
+        .setServerClientId(clientId)
         .setAutoSelectEnabled(false)
         .build()
 
-    private val signInRequestAll = BeginSignInRequest.builder()
-        .setGoogleIdTokenRequestOptions(
-            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                .setSupported(true)
-                .setServerClientId(clientId)
-                .setFilterByAuthorizedAccounts(false)
+    suspend fun signIn(activityContext: Context): GoogleSignInResult {
+        return try {
+            VolleyLog.v(TAG, "Trying with authorized accounts only...")
+
+            val authorizedRequest = GetCredentialRequest.Builder()
+                .addCredentialOption(googleIdOptionAuthorized)
                 .build()
-        )
-        .setAutoSelectEnabled(false)
-        .build()
 
-    suspend fun signIn(): IntentSender? {
-        var intentSender: IntentSender? = null
-
-        try {
-            VolleyLog.v(TAG, "🚀 Trying with authorized accounts only...")
-
-            intentSender = try {
-                val result = oneTapClient.beginSignIn(signInRequestAuthorized).await()
+            try {
+                val result = credentialManager.getCredential(activityContext, authorizedRequest)
                 VolleyLog.v(TAG, "Success with authorized accounts")
-                result.pendingIntent.intentSender
-            } catch (e: ApiException) {
-                VolleyLog.e(TAG, "No authorized accounts, trying all accounts...", e)
+                extractTokenFromCredential(result.credential)
+            } catch (e: NoCredentialException) {
+                VolleyLog.v(TAG, "No authorized accounts, trying all accounts...", e)
 
-                val result = oneTapClient.beginSignIn(signInRequestAll).await()
+                val allAccountsRequest = GetCredentialRequest.Builder()
+                    .addCredentialOption(googleIdOptionAll)
+                    .build()
+
+                val result = credentialManager.getCredential(activityContext, allAccountsRequest)
                 VolleyLog.v(TAG, "Success with all accounts")
-                result.pendingIntent.intentSender
+                extractTokenFromCredential(result.credential)
             }
-        } catch (e: ApiException) {
-            VolleyLog.e(TAG, "Both attempts failed: statusCode=${e.statusCode}, message=${e.message}", e)
+        } catch (e: GetCredentialCancellationException) {
+            VolleyLog.v(TAG, "User cancelled sign-in", e)
+            GoogleSignInResult.Cancelled
+        } catch (e: GetCredentialException) {
+            VolleyLog.e(TAG, "Sign-in failed: ${e.javaClass.simpleName}, message=${e.message}", e)
+            GoogleSignInResult.Failure
         } catch (e: CancellationException) {
             throw e
+        } catch (e: Exception) {
+            VolleyLog.e(TAG, "Unexpected error: ${e.message}", e)
+            GoogleSignInResult.Failure
         }
-
-        return intentSender
     }
 
-    fun extractGoogleIdToken(intent: Intent?): String? = try {
-        showDebugLog(TAG, "Extracting ID token from intent...")
-        val credential = oneTapClient.getSignInCredentialFromIntent(intent)
-        val token = credential.googleIdToken
-
-        if (token != null) {
+    private fun extractTokenFromCredential(credential: Credential): GoogleSignInResult {
+        return try {
+            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
             VolleyLog.v(TAG, "Token extracted successfully")
-        } else {
-            VolleyLog.v(TAG, "Token is null!")
+            GoogleSignInResult.Success(googleIdTokenCredential.idToken)
+        } catch (e: Exception) {
+            VolleyLog.e(TAG, "Token extraction failed: ${e.message}", e)
+            GoogleSignInResult.Failure
         }
+    }
 
-        token
-    } catch (e: ApiException) {
-        VolleyLog.e(TAG, "xtract failed: statusCode=${e.statusCode}, message=${e.message}", e)
-        null
+    sealed interface GoogleSignInResult {
+        data class Success(val idToken: String) : GoogleSignInResult
+        data object Cancelled : GoogleSignInResult
+        data object Failure : GoogleSignInResult
     }
 
     private companion object {

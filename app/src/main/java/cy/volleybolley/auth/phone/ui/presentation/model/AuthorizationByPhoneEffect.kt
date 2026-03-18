@@ -13,7 +13,7 @@ sealed interface AuthorizationByPhoneEffect : UiEffect {
         val verificationId: String,
         val code: String
     ) : AuthorizationByPhoneEffect
-    data class NavigateToRegistration(val userJson: String) : AuthorizationByPhoneEffect
+    object NavigateToRegistration : AuthorizationByPhoneEffect
     object NavigateHome : AuthorizationByPhoneEffect
     data class ShowError(val message: String) : AuthorizationByPhoneEffect
 }

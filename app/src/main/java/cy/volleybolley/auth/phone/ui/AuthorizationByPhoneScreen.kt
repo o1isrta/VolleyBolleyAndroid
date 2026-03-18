@@ -25,8 +25,8 @@ fun AuthorizationByPhoneScreen(
     phoneAuthHelper: PhoneAuthHelper = koinInject(),
     paddingFromSystemUi: PaddingValues,
     onBackNavigationRequested: () -> Unit,
-    onSuccessGetNotRegisterUser: (String) -> Unit,
-    onSuccessGetRegisterUser: () -> Unit,
+    onNavigateToRegistration: () -> Unit,
+    onNavigateToHome: () -> Unit,
 ) {
     val context = LocalContext.current
     val activity = context as Activity
@@ -68,11 +68,11 @@ fun AuthorizationByPhoneScreen(
             }
 
             is AuthorizationByPhoneEffect.NavigateToRegistration -> {
-                onSuccessGetNotRegisterUser(e.userJson)
+                onNavigateToRegistration()
             }
 
             is AuthorizationByPhoneEffect.NavigateHome -> {
-                onSuccessGetRegisterUser()
+                onNavigateToHome()
             }
 
             is AuthorizationByPhoneEffect.ShowError -> {

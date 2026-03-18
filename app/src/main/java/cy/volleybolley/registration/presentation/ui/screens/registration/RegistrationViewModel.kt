@@ -1,11 +1,11 @@
 package cy.volleybolley.registration.presentation.ui.screens.registration
 
+import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
 import cy.volleybolley.core.domain.model.onFailure
 import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
-import cy.volleybolley.profile.domain.model.PersonalData
 import cy.volleybolley.referencedata.domain.api.GetCountriesUseCase
 import cy.volleybolley.referencedata.domain.model.Country
 import cy.volleybolley.registration.domain.UserRegistrationUseCase
@@ -20,23 +20,24 @@ import cy.volleybolley.registration.presentation.ui.screens.registration.Registr
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.NameChanged
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.SurnameChanged
 import kotlinx.coroutines.flow.update
-import kotlinx.serialization.json.Json
 
 class RegistrationViewModel(
     private val getCountriesUseCase: GetCountriesUseCase,
     private val userRegistrationUseCase: UserRegistrationUseCase,
+    private val getPersonalDataUseCase: GetPersonalDataUseCase,
     private val savePersonalDataUseCase: SavePersonalDataUseCase,
-    json: Json,
-    userData: String,
 ) : BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(
     initialState = RegistrationState()
 ) {
     override val tag = RegistrationViewModel::class.simpleName.orEmpty()
 
     init {
-        val personalData: PersonalData = json.decodeFromString(userData)
+        loadInitialData()
+    }
 
-        // Get countries
+    private fun loadInitialData() {
+        val personalData = getPersonalDataUseCase.execute().value
+
         launchSafe(
             onError = { throwable ->
                 sendUiEffect(ShowToast("Failed to load countries"))
@@ -53,8 +54,8 @@ class RegistrationViewModel(
                     )
                     uiStateMutable.update {
                         it.copy(
-                            name = personalData.firstName,
-                            surname = personalData.lastName,
+                            name = personalData?.firstName ?: "",
+                            surname = personalData?.lastName ?: "",
                             countryList = countries,
                             selectedCountry = countries.firstOrNull(),
                             cityList = countries.firstOrNull()?.cities ?: emptyList()
@@ -65,8 +66,8 @@ class RegistrationViewModel(
                     sendUiEffect(ShowToast("Failed to load countries"))
                     uiStateMutable.update {
                         it.copy(
-                            name = personalData.firstName,
-                            surname = personalData.lastName
+                            name = personalData?.firstName ?: "",
+                            surname = personalData?.lastName ?: ""
                         )
                     }
                 }

@@ -47,8 +47,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AuthorizationScreen(
     onNavigateToRegisterByPhoneRequested: () -> Unit,
-    onSuccessGetNotRegisterUser: (String) -> Unit,
-    onSuccessGetRegisterUser: () -> Unit,
+    onNavigateToRegistration: () -> Unit,
+    onNavigateToHome: () -> Unit,
     paddingFromSystemUi: PaddingValues,
     viewModel: AuthorizationViewModel = koinViewModel()
 ) {
@@ -64,8 +64,8 @@ fun AuthorizationScreen(
 
     LaunchedEffect(effect) {
         when (effect) {
-            is NavigateToRegistration -> onSuccessGetNotRegisterUser(effect.user)
-            is NavigateToHome -> onSuccessGetRegisterUser()
+            is NavigateToRegistration -> onNavigateToRegistration()
+            is NavigateToHome -> onNavigateToHome()
             is ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             null -> { }
         }

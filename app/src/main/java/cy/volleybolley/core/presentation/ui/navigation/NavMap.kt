@@ -27,7 +27,7 @@ object OnboardingRoute : NavMap
 object AuthorizationRoute : NavMap
 
 @Serializable
-data class RegistrationRoute(val user: String = "") : NavMap
+object RegistrationRoute : NavMap
 
 @Serializable
 object AuthorizationByPhoneRoute : NavMap

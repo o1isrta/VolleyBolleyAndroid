@@ -1,5 +1,6 @@
 package cy.volleybolley.auth.domain.api
 
+import cy.volleybolley.auth.domain.models.LoginData
 import cy.volleybolley.profile.domain.model.PersonalData
 import kotlinx.coroutines.flow.StateFlow
 
@@ -23,7 +24,9 @@ interface LoginDataRepository {
 
     // Personal data
     suspend fun savePersonalData(personalData: PersonalData)
-//    suspend fun getPersonalData(): PersonalData?
+
+    // Save all login data at once
+    suspend fun saveLoginData(loginData: LoginData)
 
     suspend fun clearAll()
 }

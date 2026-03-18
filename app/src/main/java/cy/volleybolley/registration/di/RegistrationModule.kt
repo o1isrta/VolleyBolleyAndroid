@@ -27,13 +27,12 @@ val registrationModule = module {
         UserRegistrationUseCase(repository = get())
     }
 
-    viewModel { (userData: String) ->
+    viewModel {
         RegistrationViewModel(
             getCountriesUseCase = get(),
             userRegistrationUseCase = get(),
-            savePersonalDataUseCase = get(),
-            json = get(),
-            userData = userData
+            getPersonalDataUseCase = get(),
+            savePersonalDataUseCase = get()
         )
     }
 }

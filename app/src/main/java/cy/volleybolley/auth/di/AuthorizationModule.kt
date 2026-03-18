@@ -50,8 +50,8 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val authorizationModule = module {
-    single<LoginDataRepository> { LoginDataRepositoryImpl(get(), get()) }
     single<RefreshTokenTimestampRepository> { RefreshTokenTimestampRepositoryImpl(get()) }
+    single<LoginDataRepository> { LoginDataRepositoryImpl(get(), get(), get()) }
 
     // Authenticated status
     single<GetAuthenticatedStatusUseCase> { GetAuthenticatedStatusUseCaseImpl(get()) }
@@ -85,7 +85,7 @@ val authorizationModule = module {
     }
 
     factory<AuthRepository> { AuthRepositoryImpl(get(named(HttpClientQualifier.AUTH.value))) }
-    single<GoogleTokenAuthUseCase> { GoogleTokenAuthUseCaseImpl(get()) }
+    single<GoogleTokenAuthUseCase> { GoogleTokenAuthUseCaseImpl(get(), get()) }
 
     single {
         GoogleSignInHelper(
@@ -94,6 +94,6 @@ val authorizationModule = module {
     }
 
     viewModel {
-        AuthorizationViewModel(get(), get(), get(), get(), get(), get())
+        AuthorizationViewModel(get())
     }
 }

@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.koin.compiler)
 }
 
 android {
@@ -122,7 +121,9 @@ dependencies {
     implementation(libs.bundles.firebase.fcm)
     implementation(libs.androidx.navigation.compose)
 
-    implementation(libs.play.services.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.google.id)
     implementation(libs.firebase.auth)
     implementation(platform(libs.firebase.bom))
 

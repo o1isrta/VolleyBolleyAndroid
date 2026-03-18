@@ -1,12 +1,6 @@
 package cy.volleybolley.auth.phone.ui.presentation
 
 import androidx.lifecycle.viewModelScope
-import cy.volleybolley.auth.domain.api.usecase.SaveAccessTokenUseCase
-import cy.volleybolley.auth.domain.api.usecase.SaveIsRegisteredUseCase
-import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
-import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenTimestampUseCase
-import cy.volleybolley.auth.domain.api.usecase.SaveRefreshTokenUseCase
-import cy.volleybolley.auth.domain.models.LoginData
 import cy.volleybolley.auth.phone.domain.PhoneTokenAuthUseCase
 import cy.volleybolley.auth.phone.domain.PhoneValidator
 import cy.volleybolley.auth.phone.domain.ResendCodeToken
@@ -20,20 +14,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import kotlin.coroutines.cancellation.CancellationException
 
 class AuthorizationByPhoneViewModel(
-    private val phoneTokenAuthUseCase: PhoneTokenAuthUseCase,
-    private val saveAccessTokenUseCase: SaveAccessTokenUseCase,
-    private val saveRefreshTokenUseCase: SaveRefreshTokenUseCase,
-    private val saveRefreshTokenTimestampUseCase: SaveRefreshTokenTimestampUseCase,
-    private val savePersonalDataUseCase: SavePersonalDataUseCase,
-    private val saveIsRegisteredUseCase: SaveIsRegisteredUseCase
-) :
-    BaseViewModel<AuthorizationByPhoneState, AuthorizationByPhoneEvent, AuthorizationByPhoneEffect>(
-        initialState = AuthorizationByPhoneState()
-    ) {
+    private val phoneTokenAuthUseCase: PhoneTokenAuthUseCase
+) : BaseViewModel<AuthorizationByPhoneState, AuthorizationByPhoneEvent, AuthorizationByPhoneEffect>(
+    initialState = AuthorizationByPhoneState()
+) {
     private companion object {
         const val RESEND_TIMEOUT_SECONDS = 30
     }
@@ -145,14 +132,6 @@ class AuthorizationByPhoneViewModel(
         )
     }
 
-    private suspend fun saveLoginData(loginData: LoginData) {
-        saveRefreshTokenUseCase.execute(loginData.refreshToken)
-        saveAccessTokenUseCase.execute(loginData.accessToken)
-        saveRefreshTokenTimestampUseCase.execute(System.currentTimeMillis())
-        savePersonalDataUseCase.execute(loginData.userPersonalData)
-        saveIsRegisteredUseCase.execute(loginData.isRegistered)
-    }
-
     private fun startResendTimer() {
         resendTimerJob?.cancel()
 
@@ -212,14 +191,11 @@ class AuthorizationByPhoneViewModel(
                 uiStateMutable.update { it.copy(isLoading = false) }
 
                 result
-                    .onSuccess { loginData ->
-                        saveLoginData(loginData)
-
-                        if (loginData.isRegistered) {
+                    .onSuccess { authResult ->
+                        if (authResult.isRegistered) {
                             uiEffectMutable.trySend(AuthorizationByPhoneEffect.NavigateHome)
                         } else {
-                            val userJson = Json.encodeToString(loginData.userPersonalData)
-                            uiEffectMutable.trySend(AuthorizationByPhoneEffect.NavigateToRegistration(userJson))
+                            uiEffectMutable.trySend(AuthorizationByPhoneEffect.NavigateToRegistration)
                         }
                     }
                     .onFailure {

@@ -100,17 +100,12 @@ fun NavHostContainer(
             AuthorizationScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
                 onNavigateToRegisterByPhoneRequested = { navController.navigate(AuthorizationByPhoneRoute) },
-                onSuccessGetNotRegisterUser = { user ->
-                    navController.navigate(RegistrationRoute(user))
-                },
-                onSuccessGetRegisterUser = { navController.navigate(HomeRoute) }
+                onNavigateToRegistration = { navController.navigate(RegistrationRoute) },
+                onNavigateToHome = { navController.navigate(HomeRoute) }
             )
         }
-        composable<RegistrationRoute> { backStackEntry ->
-            val userData = backStackEntry.toRoute<RegistrationRoute>().user
-            val viewModel = koinViewModel<RegistrationViewModel> {
-                parametersOf(userData)
-            }
+        composable<RegistrationRoute> {
+            val viewModel = koinViewModel<RegistrationViewModel>()
 
             RegistrationScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
@@ -127,10 +122,8 @@ fun NavHostContainer(
             AuthorizationByPhoneScreen(
                 paddingFromSystemUi = paddingFromSystemUi,
                 onBackNavigationRequested = { navController.popBackStack() },
-                onSuccessGetNotRegisterUser = { user ->
-                    navController.navigate(RegistrationRoute(user))
-                },
-                onSuccessGetRegisterUser = { navController.navigate(HomeRoute) }
+                onNavigateToRegistration = { navController.navigate(RegistrationRoute) },
+                onNavigateToHome = { navController.navigate(HomeRoute) }
             )
         }
 

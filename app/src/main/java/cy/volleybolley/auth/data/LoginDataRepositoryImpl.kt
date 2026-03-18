@@ -3,6 +3,8 @@ package cy.volleybolley.auth.data
 import android.content.Context
 import androidx.core.content.edit
 import cy.volleybolley.auth.domain.api.LoginDataRepository
+import cy.volleybolley.auth.domain.api.RefreshTokenTimestampRepository
+import cy.volleybolley.auth.domain.models.LoginData
 import cy.volleybolley.profile.domain.model.PersonalData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +13,8 @@ import kotlinx.serialization.json.Json
 
 class LoginDataRepositoryImpl(
     context: Context,
-    private val json: Json
+    private val json: Json,
+    private val refreshTokenTimestampRepository: RefreshTokenTimestampRepository
 ) : LoginDataRepository {
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
@@ -88,6 +91,15 @@ class LoginDataRepositoryImpl(
         return personalDataJson?.let { json.decodeFromString<PersonalData>(it) }
     }
 
+    // Save all login data at once - single responsibility for complete login data persistence
+    override suspend fun saveLoginData(loginData: LoginData) {
+        saveAccessToken(loginData.accessToken)
+        saveRefreshToken(loginData.refreshToken)
+        savePersonalData(loginData.userPersonalData)
+        saveIsRegistered(loginData.isRegistered)
+        refreshTokenTimestampRepository.saveRefreshTokenTimestamp(System.currentTimeMillis())
+    }
+
     override suspend fun clearAll() {
         sharedPrefs.edit {
             remove(KEY_ACCESS_TOKEN)
@@ -95,6 +107,8 @@ class LoginDataRepositoryImpl(
             remove(KEY_IS_REGISTERED)
             remove(KEY_PERSONAL_DATA)
         }
+        refreshTokenTimestampRepository.clearRefreshTokenTimestamp()
         _isAuthenticated.value = false
+        _personalData.value = null
     }
 }
