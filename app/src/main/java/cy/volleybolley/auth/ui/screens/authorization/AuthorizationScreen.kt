@@ -82,7 +82,7 @@ fun AuthorizationScreen(
 
 @Stable
 @Composable
-fun AuthorizationScreen(
+private fun AuthorizationScreen(
     paddingFromSystemUi: PaddingValues,
     state: AuthorizationState,
     onNavigateToRegisterByPhoneRequested: () -> Unit,

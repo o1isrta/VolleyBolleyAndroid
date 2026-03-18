@@ -17,6 +17,7 @@ import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import org.koin.core.component.KoinComponent
 import org.koin.java.KoinJavaComponent.inject
+import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 
 abstract class KtorNetworkClient<SealedRequest, SealedResponse>(

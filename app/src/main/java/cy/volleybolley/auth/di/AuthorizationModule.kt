@@ -1,5 +1,6 @@
 package cy.volleybolley.auth.di
 
+import android.content.Context
 import cy.volleybolley.auth.data.AuthRepositoryImpl
 import cy.volleybolley.auth.data.LoginDataRepositoryImpl
 import cy.volleybolley.auth.data.RefreshTokenTimestampRepositoryImpl
@@ -45,13 +46,27 @@ import cy.volleybolley.auth.ui.google.GoogleSignInHelper
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationViewModel
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.di.HttpClientQualifier
+import cy.volleybolley.core.di.PrefsQualifier
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
+private const val AUTH_PREFS_NAME = "auth_prefs"
+
 val authorizationModule = module {
+    // SharedPreferences for auth data with qualifier
+    single(PrefsQualifier.AUTH.qualifier) {
+        get<Context>().getSharedPreferences(AUTH_PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
     single<RefreshTokenTimestampRepository> { RefreshTokenTimestampRepositoryImpl(get()) }
-    single<LoginDataRepository> { LoginDataRepositoryImpl(get(), get(), get()) }
+    single<LoginDataRepository> {
+        LoginDataRepositoryImpl(
+            sharedPrefs = get(PrefsQualifier.AUTH.qualifier),
+            json = get(),
+            refreshTokenTimestampRepository = get()
+        )
+    }
 
     // Authenticated status
     single<GetAuthenticatedStatusUseCase> { GetAuthenticatedStatusUseCaseImpl(get()) }

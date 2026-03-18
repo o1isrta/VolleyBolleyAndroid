@@ -1,6 +1,6 @@
 package cy.volleybolley.auth.data
 
-import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.edit
 import cy.volleybolley.auth.domain.api.LoginDataRepository
 import cy.volleybolley.auth.domain.api.RefreshTokenTimestampRepository
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.json.Json
 
 class LoginDataRepositoryImpl(
-    context: Context,
+    private val sharedPrefs: SharedPreferences,
     private val json: Json,
     private val refreshTokenTimestampRepository: RefreshTokenTimestampRepository
 ) : LoginDataRepository {
@@ -21,10 +21,7 @@ class LoginDataRepositoryImpl(
         private const val KEY_REFRESH_TOKEN = "refresh_token"
         private const val KEY_IS_REGISTERED = "is_registered"
         private const val KEY_PERSONAL_DATA = "personal_data"
-        private const val APP_PREFS = "app_prefs"
     }
-
-    private val sharedPrefs = context.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE)
 
     // StateFlow for runtime refreshToken check and throw user to AuthScreen
     private val _isAuthenticated = MutableStateFlow(
