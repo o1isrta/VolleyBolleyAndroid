@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -1764,25 +1765,38 @@ object VolleyButton {
     @Composable
     @Stable
     fun ActiveButtonWithLeadingIcon(
-        modifier: Modifier = Modifier,
         backgroundColor: Color,
         icon: Painter,
         text: String,
         textColor: Color,
+        modifier: Modifier = Modifier,
+        isLoading: Boolean = false,
         onClick: () -> Unit
     ) {
         Button(
             onClick = onClick,
+            enabled = !isLoading,
             modifier = modifier.height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = backgroundColor,
+                disabledContainerColor = backgroundColor
+            ),
             shape = RoundedCornerShape(16.dp),
             contentPadding = PaddingValues(all = 16.dp)
         ) {
-            Image(
-                painter = icon,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = Color.Black,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Image(
+                    painter = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
             VolleyText.BodyBoldMedium(
                 modifier = Modifier.padding(start = 12.dp),
                 text = text,

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
@@ -24,18 +26,17 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
+import cy.volleybolley.core.presentation.ui.util.safeTopPadding
 
+@Stable
 @Composable
 fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
-            .padding(
-                top = 38.dp,
-                start = 16.dp,
-                end = 16.dp
-            )
+            .safeTopPadding(extraTopPadding = 38.dp)
+            .padding(horizontal = 16.dp)
     ) {
         VolleyContainersRootTransparent.TransparentContainer(
             modifier = Modifier
@@ -102,13 +103,15 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
     }
 }
 
+@Stable
 @Composable
 private fun LevelItem(modifier: Modifier = Modifier, prefixResId: Int, descriptionResId: Int, gradient: Brush) {
     val annotated = buildAnnotatedString {
         withStyle(style = SpanStyle(brush = gradient, fontWeight = FontWeight.Bold)) {
             append(stringResource(id = prefixResId))
         }
-        append(" " + stringResource(id = descriptionResId))
+        append(' ')
+        append(stringResource(id = descriptionResId))
     }
 
     Text(
@@ -119,7 +122,7 @@ private fun LevelItem(modifier: Modifier = Modifier, prefixResId: Int, descripti
     )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun AboutLevelsScreenPreview() {
     AboutLevelsScreen { }

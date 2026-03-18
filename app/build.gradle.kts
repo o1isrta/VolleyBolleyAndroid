@@ -1,12 +1,14 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.serialization)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.koin.compiler)
 }
 
 android {
@@ -53,6 +55,7 @@ android {
 
     buildTypes {
         release {
+            buildConfigField("Boolean", "IS_LOG_ENABLED", "false")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -61,6 +64,7 @@ android {
             )
         }
         debug {
+            buildConfigField("Boolean", "IS_LOG_ENABLED", "true")
             signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false
             isShrinkResources = false
@@ -79,12 +83,16 @@ android {
 
         isCoreLibraryDesugaringEnabled = true
     }
-    kotlinOptions {
-        jvmTarget = javaVersion
-    }
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+}
+
+kotlin {
+    compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_2_3
+        jvmTarget = JvmTarget.fromTarget(libs.versions.javaVersion.get())
     }
 }
 
@@ -108,11 +116,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(platform(libs.koin.bom))
     implementation(libs.bundles.koin.di)
     implementation(libs.bundles.ktor.client)
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.bundles.firebase.fcm)
-    ksp(libs.koin.ksp.compiler)
+    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.play.services.auth)
     implementation(libs.firebase.auth)

@@ -2,10 +2,9 @@ package cy.volleybolley.auth.ui.screens.authorization
 
 import cy.volleybolley.core.presentation.base.UiEvent
 
-sealed class AuthorizationEvent : UiEvent {
-    object ContinueWithGoogleClicked : AuthorizationEvent()
-    object ContinueWithFacebookClicked : AuthorizationEvent()
-    data class GoogleTokenReceived(val googleIdToken: String?) : AuthorizationEvent()
-    object GoogleSignInCancelled : AuthorizationEvent()
-    object GoogleSignInFailed : AuthorizationEvent()
+sealed interface AuthorizationEvent : UiEvent {
+    object ContinueWithFacebookClicked : AuthorizationEvent
+    object GoogleSignInStarted : AuthorizationEvent
+    class GoogleTokenReceived(val googleIdToken: String) : AuthorizationEvent
+    object GoogleSignInFailed : AuthorizationEvent
 }

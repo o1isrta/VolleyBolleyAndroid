@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.PreviewContainer
 import cy.volleybolley.core.presentation.ui.component.model.UiLibraryMarker
+import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyBoldMedium
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyBoldSmall
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodyLight
 import cy.volleybolley.core.presentation.ui.model.VolleyText.BodySmall

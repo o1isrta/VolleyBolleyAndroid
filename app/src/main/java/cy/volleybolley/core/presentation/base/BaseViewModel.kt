@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect>(
     initialState: State
 ) : ViewModel() {
-    abstract val tag: String
+    protected open val tag = this.javaClass.simpleName.orEmpty()
 
     /**
      * Входная точка MVI для событий с ui

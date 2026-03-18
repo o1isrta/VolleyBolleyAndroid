@@ -1,10 +1,6 @@
 package cy.volleybolley.auth.ui.screens.authorization
 
-import android.app.Activity
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -28,26 +24,24 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
-import cy.volleybolley.auth.ui.google.GoogleSignInHelper
-import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.LaunchGoogleSignIn
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.NavigateToHome
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.NavigateToRegistration
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEffect.ShowToast
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.ContinueWithFacebookClicked
-import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.ContinueWithGoogleClicked
-import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleSignInCancelled
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleSignInFailed
+import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleSignInStarted
 import cy.volleybolley.auth.ui.screens.authorization.AuthorizationEvent.GoogleTokenReceived
 import cy.volleybolley.core.domain.VolleyFeature
 import cy.volleybolley.core.presentation.ui.component.ScreenPreviewContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil.showDebugLog
+import cy.volleybolley.core.presentation.ui.util.safeTopPadding
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -56,89 +50,43 @@ fun AuthorizationScreen(
     onSuccessGetNotRegisterUser: (String) -> Unit,
     onSuccessGetRegisterUser: () -> Unit,
     paddingFromSystemUi: PaddingValues,
-    viewModel: AuthorizationViewModel = koinViewModel(),
+    viewModel: AuthorizationViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
-    val screenTag: String = stringResource(R.string.auth_screen_log_tag)
-    val errorTitle: String = stringResource(R.string.auth_error_no_google_acc_on_device)
-
+    val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
     val context = LocalContext.current
-    val googleSignInHelper = GoogleSignInHelper(context)
 
-    val googleSignInLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartIntentSenderForResult()
-    ) { result ->
-        when (result.resultCode) {
-            Activity.RESULT_OK -> {
-                val googleIdToken = googleSignInHelper.extractGoogleIdToken(result.data)
-                viewModel.obtainEvent(GoogleTokenReceived(googleIdToken))
-            }
-
-            Activity.RESULT_CANCELED -> {
-                viewModel.obtainEvent(GoogleSignInCancelled)
-            }
-
-            else -> {
-                viewModel.obtainEvent(GoogleSignInFailed)
-            }
-        }
-    }
+    val onGoogleSignInClick = rememberGoogleSignIn(
+        onSignInStarted = { viewModel.obtainEvent(GoogleSignInStarted) },
+        onTokenReceived = { viewModel.obtainEvent(GoogleTokenReceived(it)) },
+        onSignInFailed = { viewModel.obtainEvent(GoogleSignInFailed) }
+    )
 
     LaunchedEffect(effect) {
-        showDebugLog(screenTag, "LaunchedEffect triggered: $effect")
-
         when (effect) {
-            is LaunchGoogleSignIn -> {
-                showDebugLog(screenTag, "🚀 Starting Google Sign-In flow")
-                val intentSender = googleSignInHelper.signIn()
-
-                showDebugLog(screenTag, "IntentSender: $intentSender")
-
-                if (intentSender != null) {
-                    showDebugLog(screenTag, "✅ Launching intent...")
-                    googleSignInLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
-                } else {
-                    showDebugLog(screenTag, "❌ IntentSender is null!")
-                    Toast.makeText(context, errorTitle, Toast.LENGTH_SHORT).show()
-                }
-
-                // Reset the effect after processing so that it can be started again
-                viewModel.absorbEffect()
-            }
-
-            is NavigateToRegistration -> {
-                showDebugLog(screenTag, "Navigate to registration")
-                val user = (effect as NavigateToRegistration).user
-                onSuccessGetNotRegisterUser(user)
-            }
-
-            is NavigateToHome -> {
-                onSuccessGetRegisterUser()
-            }
-
-            is ShowToast -> {
-                Toast.makeText(context, (effect as ShowToast).message, Toast.LENGTH_SHORT).show()
-            }
-
-            null -> {
-                showDebugLog(screenTag, "Effect is null")
-            }
+            is NavigateToRegistration -> onSuccessGetNotRegisterUser(effect.user)
+            is NavigateToHome -> onSuccessGetRegisterUser()
+            is ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+            null -> { }
         }
     }
+
     AuthorizationScreen(
         onNavigateToRegisterByPhoneRequested = onNavigateToRegisterByPhoneRequested,
         paddingFromSystemUi = paddingFromSystemUi,
         state = state,
+        onGoogleSignInClick = onGoogleSignInClick,
         eventCallback = { viewModel.obtainEvent(it) }
     )
 }
 
+@Stable
 @Composable
 fun AuthorizationScreen(
     paddingFromSystemUi: PaddingValues,
     state: AuthorizationState,
     onNavigateToRegisterByPhoneRequested: () -> Unit,
+    onGoogleSignInClick: () -> Unit,
     eventCallback: (AuthorizationEvent) -> Unit
 ) {
     Box {
@@ -149,11 +97,7 @@ fun AuthorizationScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        Column(
-            modifier = Modifier
-                .padding(top = paddingFromSystemUi.calculateTopPadding() + 28.dp)
-                .fillMaxSize()
-        ) {
+        Column(modifier = Modifier.safeTopPadding(extraTopPadding = 28.dp).fillMaxSize()) {
             VolleyText.TitleXLAlt(
                 text = stringResource(id = R.string.sign_up),
                 color = VolleyColor.White,
@@ -166,14 +110,14 @@ fun AuthorizationScreen(
                 maxLines = 4
             )
             Spacer(modifier = Modifier.weight(1f))
-            if (state.isLoading.not()) {
-                BottomSheetWithSignButtons(
-                    modifier = Modifier.fillMaxWidth(),
-                    paddingFromSystemUi = paddingFromSystemUi,
-                    onNavigateToRegisterByPhoneRequested = onNavigateToRegisterByPhoneRequested,
-                    eventCallback = eventCallback
-                )
-            }
+            BottomSheetWithSignButtons(
+                modifier = Modifier.fillMaxWidth(),
+                paddingFromSystemUi = paddingFromSystemUi,
+                isGoogleLoading = state.isGoogleLoading,
+                onNavigateToRegisterByPhoneRequested = onNavigateToRegisterByPhoneRequested,
+                onGoogleSignInClick = onGoogleSignInClick,
+                eventCallback = eventCallback
+            )
         }
     }
 }
@@ -183,7 +127,9 @@ fun AuthorizationScreen(
 private fun BottomSheetWithSignButtons(
     modifier: Modifier = Modifier,
     paddingFromSystemUi: PaddingValues,
+    isGoogleLoading: Boolean,
     onNavigateToRegisterByPhoneRequested: () -> Unit,
+    onGoogleSignInClick: () -> Unit,
     eventCallback: (AuthorizationEvent) -> Unit
 ) {
     Column(
@@ -203,7 +149,6 @@ private fun BottomSheetWithSignButtons(
             ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        @Suppress("KotlinConstantConditions")
         if (VolleyFeature.IS_AUTH_BY_PHONE_AVAILABLE) {
             Button(
                 onClick = onNavigateToRegisterByPhoneRequested,
@@ -220,7 +165,6 @@ private fun BottomSheetWithSignButtons(
                 )
             }
         }
-        @Suppress("KotlinConstantConditions")
         if (VolleyFeature.IS_AUTH_BY_GOOGLE_AVAILABLE) {
             VolleyButton.ActiveButtonWithLeadingIcon(
                 modifier = Modifier
@@ -230,10 +174,10 @@ private fun BottomSheetWithSignButtons(
                 icon = painterResource(R.drawable.ic_google_placeholder),
                 text = stringResource(R.string.continue_with_google),
                 textColor = VolleyColor.TextDark,
-                onClick = { eventCallback(ContinueWithGoogleClicked) }
+                isLoading = isGoogleLoading,
+                onClick = onGoogleSignInClick
             )
         }
-        @Suppress("KotlinConstantConditions")
         if (VolleyFeature.IS_AUTH_BY_FACEBOOK_AVAILABLE) {
             VolleyButton.ActiveButtonWithLeadingIcon(
                 modifier = Modifier
@@ -249,7 +193,7 @@ private fun BottomSheetWithSignButtons(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewAuthorizationScreen() {
     ScreenPreviewContainer {
@@ -257,6 +201,7 @@ private fun PreviewAuthorizationScreen() {
             onNavigateToRegisterByPhoneRequested = {},
             paddingFromSystemUi = PaddingValues(0.dp),
             state = AuthorizationState(),
+            onGoogleSignInClick = {},
             eventCallback = {}
         )
     }
