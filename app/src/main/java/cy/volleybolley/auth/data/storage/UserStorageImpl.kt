@@ -10,12 +10,6 @@ class UserStorageImpl(
     private val prefs: SharedPreferences,
     private val json: Json
 ) : UserStorage {
-
-    companion object {
-        private const val KEY_IS_REGISTERED = "is_registered"
-        private const val KEY_PERSONAL_DATA = "personal_data"
-    }
-
     override suspend fun savePersonalData(data: PersonalData) {
         prefs.edit { putString(KEY_PERSONAL_DATA, json.encodeToString(data)) }
     }
@@ -37,10 +31,15 @@ class UserStorageImpl(
         return prefs.getBoolean(KEY_IS_REGISTERED, false)
     }
 
-    override suspend fun clearUserData() {
+    override suspend fun clear() {
         prefs.edit {
             remove(KEY_IS_REGISTERED)
             remove(KEY_PERSONAL_DATA)
         }
+    }
+
+    private companion object {
+        const val KEY_IS_REGISTERED = "is_registered"
+        const val KEY_PERSONAL_DATA = "personal_data"
     }
 }

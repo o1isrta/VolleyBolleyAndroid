@@ -1,5 +1,5 @@
 package cy.volleybolley.auth.domain.models
 
-data class AuthResult(
+class AuthResult(
     val isRegistered: Boolean
 )

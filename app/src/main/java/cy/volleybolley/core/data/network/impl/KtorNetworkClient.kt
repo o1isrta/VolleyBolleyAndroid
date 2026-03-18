@@ -1,31 +1,29 @@
 package cy.volleybolley.core.data.network.impl
 
-import android.util.Log
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.data.network.model.Response
 import cy.volleybolley.core.data.network.model.StatusCode
+import cy.volleybolley.core.util.VolleyLog
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.encodedPath
 import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
+import okio.IOException
 import org.koin.core.component.KoinComponent
 import org.koin.java.KoinJavaComponent.inject
-import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 
 abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
     private val lazyHttpClient: Lazy<HttpClient> = inject(HttpClient::class.java)
 ) : KoinComponent, NetworkClient<SealedRequest, SealedResponse> {
 
-    protected val httpClient: HttpClient
-        get() = lazyHttpClient.value
+    protected val httpClient: HttpClient get() = lazyHttpClient.value
 
     override suspend fun getResponse(sealedRequest: SealedRequest): Response<SealedResponse> {
         return runCatching {
@@ -34,12 +32,10 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
                 httpResponse = sendRequestByType(sealedRequest)
             )
         }.onFailure { error ->
-            if (BuildConfig.DEBUG) {
-                Log.e(NETWORK_CLIENT_TAG, "error in getResponse() -> $error", error)
-            }
-
-            if (error is CancellationException) {
-                throw CancellationException()
+            when (error) {
+                is IOException -> return Response(resultCode = StatusCode(StatusCode.NO_CONNECTION))
+                is CancellationException -> throw CancellationException()
+                else -> VolleyLog.e(TAG, "error in getResponse() -> $error", error)
             }
         }.getOrNull() ?: Response()
     }
@@ -48,14 +44,6 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
         requestType: SealedRequest,
         httpResponse: HttpResponse
     ): Response<SealedResponse> {
-        if (BuildConfig.DEBUG) {
-            Log.v(
-                NETWORK_CLIENT_TAG,
-                "Response body = ${httpResponse.bodyAsText()}, Response status = ${httpResponse.status.value} " +
-                    httpResponse.status.description
-            )
-        }
-
         return if (httpResponse.status.isSuccess()) {
             Response(
                 isSuccess = true,
@@ -76,7 +64,6 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
             val basePath = encodedPath.removeSuffix("/")
             encodedPath = "$basePath$path"
         }
-        Log.v(NETWORK_CLIENT_TAG, "→ FINAL URL = ${this.url.buildString()}")
         body?.let {
             contentType(ContentType.Application.Json)
             setBody(body)
@@ -90,7 +77,7 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
         httpResponse: HttpResponse
     ): SealedResponse
 
-    companion object {
-        const val NETWORK_CLIENT_TAG = "NETWORK_TAG"
+    private companion object {
+        val TAG = KtorNetworkClient::class.simpleName.orEmpty()
     }
 }

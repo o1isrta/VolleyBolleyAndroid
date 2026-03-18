@@ -33,32 +33,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
-import cy.volleybolley.auth.domain.api.usecase.CheckRefreshTokenExpirationUseCase
-import cy.volleybolley.auth.domain.api.usecase.ClearAllLoginDataUseCase
-import cy.volleybolley.auth.domain.api.usecase.GetAuthenticatedStatusUseCase
-import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavGradient
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography.BodyTinyBottomNavWhite
 import cy.volleybolley.core.presentation.ui.navigation.AuthorizationRoute
+import cy.volleybolley.core.presentation.ui.navigation.GameHomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.HomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.LaunchRoute
-import cy.volleybolley.core.presentation.ui.navigation.GameHomeTopLevelRoute
 import cy.volleybolley.core.presentation.ui.navigation.NavHostContainer
 import cy.volleybolley.core.presentation.ui.navigation.OnboardingRoute
 import cy.volleybolley.core.presentation.ui.navigation.ProfileTopLevelRoute
@@ -69,14 +64,10 @@ import cy.volleybolley.notification.presentation.ui.component.GlobalAlertDialog
 import cy.volleybolley.notification.presentation.ui.component.resolveNotificationRoute
 import cy.volleybolley.profile.domain.model.PersonalData
 import cy.volleybolley.ui.theme.VolleybolleyTheme
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainActivityViewModel by viewModel()
-    private val checkRefreshTokenExpirationUseCase: CheckRefreshTokenExpirationUseCase by inject()
-    private val clearAllLoginDataUseCase: ClearAllLoginDataUseCase by inject()
     private val requestNotificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -159,14 +150,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStop() {
         super.onStop()
-        lifecycleScope.launch {
-            val shouldLogout = checkRefreshTokenExpirationUseCase.execute()
-            if (shouldLogout) {
-                clearAllLoginDataUseCase.execute()
-                // Navigation to the authorization screen will happen automatically
-                // via Flow IsAuthenticated in the RootContainer
-            }
-        }
+        viewModel.obtainEvent(MainActivityEvent.OnStop)
     }
 }
 
@@ -179,29 +163,19 @@ private fun isAuthRoute(route: String): Boolean {
 
 @Composable
 fun RootContainer(
-    getAuthenticatedStatusUseCase: GetAuthenticatedStatusUseCase = org.koin.compose.koinInject(),
-    getPersonalDataUseCase: GetPersonalDataUseCase = org.koin.compose.koinInject(),
-    state: MainActivityState = MainActivityState(),
+    state: MainActivityState,
     onDismissDialog: () -> Unit = {},
     onRequestPermission: () -> Unit = {},
     content: @Composable (PaddingValues, NavHostController) -> Unit
 ) {
     val navController = rememberNavController()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
-    val currentDestinationRoute = currentDestination?.route ?: ""
+    val currentDestinationRoute = currentDestination?.route.orEmpty()
     val showBottomNav = NoBarsRoutes.showBottomBar(currentDestinationRoute)
     val showTopBar = NoBarsRoutes.showTopBar(currentDestinationRoute)
 
-    // Automatic navigation to the authorization screen during logout
-    val isAuthenticated by getAuthenticatedStatusUseCase.execute().collectAsStateWithLifecycle()
-
-    // Observe user personal data
-    val personalData by getPersonalDataUseCase.execute().collectAsStateWithLifecycle()
-
-    LaunchedEffect(isAuthenticated) {
-        // Do not navigate if currentRoute is not already installed.
-        // This is a fix for the first launch.
-        if (currentDestinationRoute.isNotEmpty() && !isAuthenticated && !isAuthRoute(currentDestinationRoute)) {
+    LaunchedEffect(state.isAuthenticated) {
+        if (currentDestinationRoute.isNotEmpty() && !state.isAuthenticated && !isAuthRoute(currentDestinationRoute)) {
             navController.navigate(AuthorizationRoute) {
                 popUpTo(navController.graph.id) { inclusive = true }
             }
@@ -213,7 +187,7 @@ fun RootContainer(
         currentDestination = currentDestination,
         showBottomNav = showBottomNav,
         showTopBar = showTopBar,
-        userData = personalData,
+        userData = state.personalData,
         state = state,
         onDismissDialog = onDismissDialog,
         onRequestPermission = onRequestPermission,
@@ -370,13 +344,12 @@ private fun BottomNavComponent(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 fun PreviewRootContainer() {
-    val fakeState = MainActivityState()
     VolleybolleyTheme {
         RootContainer(
-            state = fakeState,
+            state = MainActivityState(),
             onRequestPermission = {},
             onDismissDialog = {}
         ) { padding, navController ->

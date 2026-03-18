@@ -2,20 +2,16 @@ package cy.volleybolley.core.presentation.ui.screens.authorization.launch
 
 import cy.volleybolley.auth.domain.api.usecase.GetIsRegisteredUseCase
 import cy.volleybolley.auth.domain.api.usecase.GetRefreshTokenUseCase
-import cy.volleybolley.auth.domain.api.usecase.RefreshAccessTokenUseCase
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 
 class LaunchViewModel(
     private val getRefreshTokenUseCase: GetRefreshTokenUseCase,
-    private val refreshAccessTokenUseCase: RefreshAccessTokenUseCase,
     private val getIsRegisteredUseCase: GetIsRegisteredUseCase
 ) : BaseViewModel<LaunchScreenState, LaunchScreenEvent, LaunchScreenEffect>(
     initialState = LaunchScreenState()
 ) {
-    override val tag: String = "LaunchViewModel"
-
     init {
         launchSafe(
             getErrorLogMessage = { throwable ->
@@ -29,7 +25,6 @@ class LaunchViewModel(
                 val isRegistered = getIsRegisteredUseCase.execute()
 
                 if (isRegistered) {
-                    refreshAccessTokenUseCase.execute()
                     sendUiEffect(LaunchScreenEffect.NavigateToHome)
                 } else {
                     sendUiEffect(LaunchScreenEffect.NavigateToOnboarding)

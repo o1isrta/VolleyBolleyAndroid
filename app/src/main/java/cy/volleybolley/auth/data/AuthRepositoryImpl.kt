@@ -1,10 +1,10 @@
 package cy.volleybolley.auth.data
 
-import cy.volleybolley.auth.data.dto.AuthRequestBodyDto
-import cy.volleybolley.auth.data.dto.RefreshAccessTokenRequestBodyDto
-import cy.volleybolley.auth.data.dto.toDomain
+import cy.volleybolley.auth.data.network.model.AuthRequestBodyDto
+import cy.volleybolley.auth.data.network.model.RefreshAccessTokenRequestBodyDto
 import cy.volleybolley.auth.data.network.model.AuthRequest
 import cy.volleybolley.auth.data.network.model.AuthResponse
+import cy.volleybolley.auth.data.network.model.toDomain
 import cy.volleybolley.auth.domain.api.AuthRepository
 import cy.volleybolley.auth.domain.models.LoginData
 import cy.volleybolley.core.data.network.api.NetworkClient
@@ -51,7 +51,6 @@ class AuthRepositoryImpl(private val networkClient: NetworkClient<AuthRequest, A
 
         if (!response.isSuccess) {
             return VolleyResult.Failure(response.resultCode.mapToErrorType())
-
         }
 
         val loginData = (response.body as? AuthResponse.GoogleResponse)?.toDomain()

@@ -2,6 +2,7 @@ package cy.volleybolley.games.di
 
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.di.HttpClientQualifier
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.gamehome.GameHomeViewModel
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.dataholder.TournamentDetailsDataHolder
 import cy.volleybolley.games.data.GameFeedRepositoryImpl
 import cy.volleybolley.games.data.GameParticipationRepositoryImpl
@@ -57,6 +58,7 @@ import cy.volleybolley.games.domain.usecases.tournament.DeclineTournamentInviteU
 import cy.volleybolley.games.domain.usecases.tournament.GetTournamentDetailsUseCaseImpl
 import cy.volleybolley.games.domain.usecases.tournament.InvitePlayersToTournamentUseCaseImpl
 import cy.volleybolley.games.domain.usecases.tournament.JoinTournamentUseCaseImpl
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val gamesModule = module {
@@ -140,4 +142,7 @@ val gamesModule = module {
     single<TournamentDetailsDataHolder> { TournamentDetailsDataHolder() }
 
     // ViewModel
+    viewModel {
+        GameHomeViewModel()
+    }
 }

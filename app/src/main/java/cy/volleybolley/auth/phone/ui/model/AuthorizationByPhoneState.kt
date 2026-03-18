@@ -1,4 +1,4 @@
-package cy.volleybolley.auth.phone.ui.presentation.model
+package cy.volleybolley.auth.phone.ui.model
 
 import cy.volleybolley.auth.phone.domain.ResendCodeToken
 import cy.volleybolley.core.presentation.base.UiState

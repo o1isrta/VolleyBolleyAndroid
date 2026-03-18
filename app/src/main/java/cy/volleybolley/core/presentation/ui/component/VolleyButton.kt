@@ -113,12 +113,13 @@ object VolleyButton {
     fun ActiveButton(
         modifier: Modifier = Modifier,
         enabled: Boolean = true,
+        isLoading: Boolean = false,
         text: String,
         paddingValues: PaddingValues = PaddingValues(16.dp, 12.dp, 16.dp, 12.dp),
         onClick: () -> Unit
     ) {
         Button(
-            enabled = enabled,
+            enabled = enabled && !isLoading,
             modifier = modifier,
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(
@@ -128,15 +129,19 @@ object VolleyButton {
             shape = RoundedCornerShape(16.dp),
             contentPadding = paddingValues
         ) {
-            Text(
-                text = text.uppercase(),
-                color = if (enabled) {
-                    VolleyColor.TextDark
-                } else {
-                    VolleyColor.White
-                },
-                style = ButtonText
-            )
+            if (isLoading) {
+                VolleyProgress.SmallCircularProgress()
+            } else {
+                Text(
+                    text = text.uppercase(),
+                    color = if (enabled) {
+                        VolleyColor.TextDark
+                    } else {
+                        VolleyColor.White
+                    },
+                    style = ButtonText
+                )
+            }
         }
     }
 

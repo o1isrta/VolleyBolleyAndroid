@@ -32,5 +32,6 @@ object DiProvider {
         ratePlayersModule,
         notificationsModule,
         joinTheGameModule,
+        profileModule
     )
 }

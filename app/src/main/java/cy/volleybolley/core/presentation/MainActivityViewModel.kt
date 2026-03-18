@@ -3,6 +3,10 @@ package cy.volleybolley.core.presentation
 import android.util.Log
 import com.google.firebase.FirebaseException
 import com.google.firebase.messaging.FirebaseMessaging
+import cy.volleybolley.auth.domain.api.usecase.CheckRefreshTokenExpirationUseCase
+import cy.volleybolley.auth.domain.api.usecase.ClearAllLoginDataUseCase
+import cy.volleybolley.auth.domain.api.usecase.GetAuthenticatedStatusUseCase
+import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.state.data.DialogData
 import cy.volleybolley.notification.domain.api.permission.NotificationPermissionChecker
@@ -17,17 +21,37 @@ class MainActivityViewModel(
     private val sendDeviceTokenUseCase: SendDeviceTokenUseCase,
     private val fcmTokenStore: FCMTokenStore,
     private val notificationPermissionChecker: NotificationPermissionChecker,
-    isUserAuthorized: Boolean = true,
+    private val getAuthenticatedStatusUseCase: GetAuthenticatedStatusUseCase,
+    private val getPersonalDataUseCase: GetPersonalDataUseCase,
+    private val checkRefreshTokenExpirationUseCase: CheckRefreshTokenExpirationUseCase,
+    private val clearAllLoginDataUseCase: ClearAllLoginDataUseCase
 ) : BaseViewModel<MainActivityState, MainActivityEvent, MainActivityEffect>(
     initialState = MainActivityState()
 ) {
-    override val tag = MainActivityViewModel::class.simpleName ?: "MainActivityVM"
-
     init {
-        if (isUserAuthorized) {
-            updateTokenBasedOnPermission()
-        } else {
-            markReady()
+        loadAuthState()
+    }
+
+    private fun loadAuthState() {
+        launchSafe(
+            getErrorLogMessage = { "Failed to load auth state: $it" }
+        ) {
+            val isAuthenticated = getAuthenticatedStatusUseCase.execute()
+            val personalData = if (isAuthenticated) {
+                getPersonalDataUseCase.execute()
+            } else {
+                null
+            }
+            uiStateMutable.update {
+                it.copy(
+                    isAuthenticated = isAuthenticated,
+                    personalData = personalData,
+                    isReady = true
+                )
+            }
+            if (isAuthenticated) {
+                updateTokenBasedOnPermission()
+            }
         }
     }
 
@@ -43,7 +67,7 @@ class MainActivityViewModel(
             if (hasPermission) {
                 updateFcmTokenIfNeeded()
             }
-            updateUiState(hasPermission)
+            updateNotificationPermissionState(hasPermission)
         }
     }
 
@@ -71,16 +95,9 @@ class MainActivityViewModel(
         }
     }
 
-    private fun markReady() {
-        uiStateMutable.update { it.copy(isReady = true) }
-    }
-
-    private fun updateUiState(hasPermission: Boolean) {
+    private fun updateNotificationPermissionState(hasPermission: Boolean) {
         uiStateMutable.update {
-            it.copy(
-                notificationPermissionGranted = hasPermission,
-                isReady = true
-            )
+            it.copy(notificationPermissionGranted = hasPermission)
         }
     }
 
@@ -90,10 +107,6 @@ class MainActivityViewModel(
                 uiStateMutable.update {
                     it.copy(screen = event.screen, eventId = event.eventId)
                 }
-            }
-
-            is MainActivityEvent.TokenFetchFailed -> {
-                uiStateMutable.update { it.copy(isReady = true) }
             }
 
             is MainActivityEvent.NotificationPermissionChanged -> {
@@ -107,8 +120,25 @@ class MainActivityViewModel(
             is MainActivityEvent.RequestPermission -> {
                 sendUiEffect(MainActivityEffect.RequestNotificationPermission)
             }
+
+            is MainActivityEvent.OnStop -> {
+                checkTokenExpiration()
+            }
         }
     }
+
+    private fun checkTokenExpiration() {
+        launchSafe(
+            getErrorLogMessage = { "Failed to check token expiration: $it" }
+        ) {
+            val shouldLogout = checkRefreshTokenExpirationUseCase.execute()
+            if (shouldLogout) {
+                clearAllLoginDataUseCase.execute()
+                loadAuthState()
+            }
+        }
+    }
+
     fun showNotificationPermissionDialog(title: String, message: String, onConfirm: () -> Unit) {
         uiStateMutable.update {
             it.copy(
@@ -126,8 +156,8 @@ class MainActivityViewModel(
         uiStateMutable.update { it.copy(globalDialog = null) }
     }
 
-    companion object {
-        private const val IO_ERROR_MSG = "Token fetch failed: IO error"
-        private const val FIREBASE_ERROR_MSG = "Token fetch failed: Firebase error"
+    private companion object {
+        const val IO_ERROR_MSG = "Token fetch failed: IO error"
+        const val FIREBASE_ERROR_MSG = "Token fetch failed: Firebase error"
     }
 }

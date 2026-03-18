@@ -1,16 +1,12 @@
 package cy.volleybolley.auth.data
 
-import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.edit
-import cy.volleybolley.auth.domain.api.RefreshTokenTimestampRepository
+import cy.volleybolley.auth.domain.api.RefreshTokenTimestampStorage
 
-class RefreshTokenTimestampRepositoryImpl(context: Context) : RefreshTokenTimestampRepository {
-    companion object {
-        private const val KEY_REFRESH_TOKEN_TIMESTAMP = "refresh_token_timestamp"
-        private const val APP_PREFS = "app_prefs"
-    }
-
-    private val sharedPrefs = context.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE)
+class RefreshTokenTimestampStorageImpl(
+    private val sharedPrefs: SharedPreferences
+) : RefreshTokenTimestampStorage {
 
     override suspend fun saveRefreshTokenTimestamp(timestamp: Long) {
         sharedPrefs.edit {
@@ -23,9 +19,13 @@ class RefreshTokenTimestampRepositoryImpl(context: Context) : RefreshTokenTimest
         return if (timestamp == -1L) null else timestamp
     }
 
-    override suspend fun clearRefreshTokenTimestamp() {
+    override suspend fun clear() {
         sharedPrefs.edit {
             remove(KEY_REFRESH_TOKEN_TIMESTAMP)
         }
+    }
+
+    private companion object {
+        const val KEY_REFRESH_TOKEN_TIMESTAMP = "refresh_token_timestamp"
     }
 }

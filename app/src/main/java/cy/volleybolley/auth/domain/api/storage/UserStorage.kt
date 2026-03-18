@@ -7,5 +7,5 @@ interface UserStorage {
     suspend fun getPersonalData(): PersonalData?
     suspend fun saveIsRegistered(isRegistered: Boolean)
     suspend fun getIsRegistered(): Boolean
-    suspend fun clearUserData()
+    suspend fun clear()
 }

@@ -6,13 +6,9 @@ import cy.volleybolley.core.presentation.ui.navigation.GameInvitesRoute
 import cy.volleybolley.core.presentation.ui.navigation.MyGamesRoute
 import cy.volleybolley.core.presentation.ui.navigation.UpcomingGamesRoute
 
-class GameHomeViewModel :
-    BaseViewModel<GameHomeState, GameHomeAction, GameHomeEffect>(
-        initialState = GameHomeState()
-    ) {
-
-    override val tag: String = "GameHomeVM"
-
+class GameHomeViewModel : BaseViewModel<GameHomeState, GameHomeAction, GameHomeEffect>(
+    initialState = GameHomeState()
+) {
     override fun obtainEvent(event: GameHomeAction) {
         when (event) {
             GameHomeAction.ClickMyGames -> sendUiEffect(GameHomeEffect.Navigate(MyGamesRoute))

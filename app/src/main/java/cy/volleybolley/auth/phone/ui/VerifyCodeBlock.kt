@@ -5,18 +5,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
-import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneEvent
-import cy.volleybolley.auth.phone.ui.presentation.model.AuthorizationByPhoneState
+import cy.volleybolley.auth.phone.ui.model.AuthorizationByPhoneEvent
+import cy.volleybolley.auth.phone.ui.model.AuthorizationByPhoneState
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 
@@ -25,27 +20,17 @@ fun VerifyCodeBlock(
     state: AuthorizationByPhoneState,
     eventCallback: (AuthorizationByPhoneEvent) -> Unit
 ) {
-
-    var codeInput by rememberSaveable { mutableStateOf(state.code) }
-
-    LaunchedEffect(state.code) {
-        if (state.code != codeInput) {
-            codeInput = state.code
-        }
-    }
-
     VolleyTextFieldGradient.PhoneCodeTextField(
         modifier = Modifier
             .padding(top = 16.dp)
             .fillMaxWidth(),
-        text = codeInput,
+        text = state.code,
         alertMessage = if (state.isCodeInputError) {
             stringResource(R.string.invalid_code)
         } else {
             ""
         },
         actionToTransferContent = {
-            codeInput = it
             eventCallback(AuthorizationByPhoneEvent.TypeCode(it))
         }
     )
@@ -77,7 +62,8 @@ fun VerifyCodeBlock(
         modifier = Modifier
             .padding(top = 16.dp)
             .fillMaxWidth(),
-        enabled = state.code.length >= 6 && !state.isLoading,
+        enabled = state.code.length >= 6,
+        isLoading = state.isLoading && state.step == AuthorizationByPhoneState.Step.VERIFY_CODE,
         text = stringResource(R.string.verify),
         onClick = {
             eventCallback(AuthorizationByPhoneEvent.VerifyCodeClicked)

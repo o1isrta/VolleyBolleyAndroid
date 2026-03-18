@@ -36,8 +36,6 @@ class RegistrationViewModel(
     }
 
     private fun loadInitialData() {
-        val personalData = getPersonalDataUseCase.execute().value
-
         launchSafe(
             onError = { throwable ->
                 sendUiEffect(ShowToast("Failed to load countries"))
@@ -46,6 +44,7 @@ class RegistrationViewModel(
                 "Error loading countries: ${throwable.message}"
             }
         ) {
+            val personalData = getPersonalDataUseCase.execute()
             getCountriesUseCase.execute()
                 .onSuccess { countries ->
                     VolleyUiUtil.showDebugLog(
