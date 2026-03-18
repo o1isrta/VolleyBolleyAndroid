@@ -1,8 +1,8 @@
 package cy.volleybolley.core.presentation.base
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cy.volleybolley.core.util.VolleyLog
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -44,12 +44,6 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
         }
     }
 
-    fun absorbEffect() {
-        viewModelScope.launch {
-            uiEffectMutable.send(null)
-        }
-    }
-
     // В этом случае используем общую ошибку для избегания вылетов при недочетах во внешних зависимостях
     @Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException")
     /**
@@ -69,7 +63,7 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
                 if (e is CancellationException) {
                     throw CancellationException()
                 }
-                Log.e(tag, getErrorLogMessage(e), e)
+                VolleyLog.e(tag, getErrorLogMessage(e), e)
                 onError?.invoke(e)
             }
         }

@@ -19,7 +19,8 @@ enum class HttpClientQualifier(val value: String) {
 }
 
 enum class PrefsQualifier(val value: String) {
-    AUTH("auth_prefs");  // Auth data: tokens, personal data, registration status
+    ENCRYPTED("encrypted"),      // For tokens - secure storage
+    USER("user");              // For user data - regular storage
 
     val qualifier get() = named(value)
 }

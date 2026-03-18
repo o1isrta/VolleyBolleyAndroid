@@ -332,7 +332,7 @@ private fun LevelChooser(
     }
 }
 
-@Preview(showBackground = true, heightDp = 1000)
+@Preview(showBackground = true, heightDp = 500, widthDp = 2000)
 @Composable
 private fun RegistrationScreenPreview() {
     ScreenPreviewContainer {

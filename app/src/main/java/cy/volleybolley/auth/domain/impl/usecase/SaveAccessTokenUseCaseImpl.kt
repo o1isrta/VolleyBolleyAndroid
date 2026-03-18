@@ -1,12 +1,12 @@
 package cy.volleybolley.auth.domain.impl.usecase
 
-import cy.volleybolley.auth.domain.api.LoginDataRepository
+import cy.volleybolley.auth.domain.api.storage.TokenStorage
 import cy.volleybolley.auth.domain.api.usecase.SaveAccessTokenUseCase
 
 class SaveAccessTokenUseCaseImpl(
-    private val loginDataRepository: LoginDataRepository
+    private val tokenStorage: TokenStorage
 ) : SaveAccessTokenUseCase {
     override suspend fun execute(accessToken: String) {
-        loginDataRepository.saveAccessToken(accessToken)
+        tokenStorage.saveAccessToken(accessToken)
     }
 }

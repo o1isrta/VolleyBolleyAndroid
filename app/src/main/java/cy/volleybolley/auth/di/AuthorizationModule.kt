@@ -7,9 +7,15 @@ import cy.volleybolley.auth.data.RefreshTokenTimestampRepositoryImpl
 import cy.volleybolley.auth.data.network.AuthNetworkClient
 import cy.volleybolley.auth.data.network.model.AuthRequest
 import cy.volleybolley.auth.data.network.model.AuthResponse
+import cy.volleybolley.auth.data.state.AuthStateHolderImpl
+import cy.volleybolley.auth.data.storage.TokenStorageImpl
+import cy.volleybolley.auth.data.storage.UserStorageImpl
 import cy.volleybolley.auth.domain.api.AuthRepository
 import cy.volleybolley.auth.domain.api.LoginDataRepository
 import cy.volleybolley.auth.domain.api.RefreshTokenTimestampRepository
+import cy.volleybolley.auth.domain.api.state.AuthStateHolder
+import cy.volleybolley.auth.domain.api.storage.TokenStorage
+import cy.volleybolley.auth.domain.api.storage.UserStorage
 import cy.volleybolley.auth.domain.api.usecase.CheckRefreshTokenExpirationUseCase
 import cy.volleybolley.auth.domain.api.usecase.ClearAllLoginDataUseCase
 import cy.volleybolley.auth.domain.api.usecase.ClearTokensUseCase
@@ -51,21 +57,44 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-private const val AUTH_PREFS_NAME = "auth_prefs"
+private const val TOKEN_PREFS_NAME = "token_prefs"
+private const val USER_PREFS_NAME = "user_prefs"
 
 val authorizationModule = module {
-    // SharedPreferences for auth data with qualifier
-    single(PrefsQualifier.AUTH.qualifier) {
-        get<Context>().getSharedPreferences(AUTH_PREFS_NAME, Context.MODE_PRIVATE)
+    // SharedPreferences for tokens (use EncryptedSharedPreferences in production)
+    single(PrefsQualifier.ENCRYPTED.qualifier) {
+        get<Context>().getSharedPreferences(TOKEN_PREFS_NAME, Context.MODE_PRIVATE)
     }
 
-    single<RefreshTokenTimestampRepository> { RefreshTokenTimestampRepositoryImpl(get()) }
-    single<LoginDataRepository> {
-        LoginDataRepositoryImpl(
-            sharedPrefs = get(PrefsQualifier.AUTH.qualifier),
-            json = get(),
-            refreshTokenTimestampRepository = get()
+    // Regular SharedPreferences for user data
+    single(PrefsQualifier.USER.qualifier) {
+        get<Context>().getSharedPreferences(USER_PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
+    // Storage implementations
+    single<TokenStorage> {
+        TokenStorageImpl(get(PrefsQualifier.ENCRYPTED.qualifier))
+    }
+    single<UserStorage> {
+        UserStorageImpl(get(PrefsQualifier.USER.qualifier), get())
+    }
+    single<RefreshTokenTimestampRepository> {
+        RefreshTokenTimestampRepositoryImpl(get())
+    }
+
+    // Auth State Holder (StateFlows)
+    single<AuthStateHolder> {
+        val tokenStorage = get<TokenStorage>()
+        val userStorage = get<UserStorage>()
+        AuthStateHolderImpl(
+            initialAuthenticated = tokenStorage.hasRefreshToken(),
+            initialPersonalData = null // Will be loaded lazily
         )
+    }
+
+    // Repository
+    single<LoginDataRepository> {
+        LoginDataRepositoryImpl(get(), get(), get(), get())
     }
 
     // Authenticated status
@@ -73,10 +102,10 @@ val authorizationModule = module {
 
     // Token Use Cases
     single<SaveAccessTokenUseCase> { SaveAccessTokenUseCaseImpl(get()) }
-    single<SaveRefreshTokenUseCase> { SaveRefreshTokenUseCaseImpl(get()) }
+    single<SaveRefreshTokenUseCase> { SaveRefreshTokenUseCaseImpl(get(), get()) }
     single<GetAccessTokenUseCase> { GetAccessTokenUseCaseImpl(get()) }
     single<GetRefreshTokenUseCase> { GetRefreshTokenUseCaseImpl(get()) }
-    single<ClearTokensUseCase> { ClearTokensUseCaseImpl(get(), get()) }
+    single<ClearTokensUseCase> { ClearTokensUseCaseImpl(get(), get(), get()) }
 
     // Timestamp Use Cases
     single<SaveRefreshTokenTimestampUseCase> { SaveRefreshTokenTimestampUseCaseImpl(get()) }
@@ -91,10 +120,11 @@ val authorizationModule = module {
     single<CheckRefreshTokenExpirationUseCase> { CheckRefreshTokenExpirationUseCaseImpl(get()) }
 
     // PersonalData Use Cases
-    single<SavePersonalDataUseCase> { SavePersonalDataUseCaseImpl(get()) }
+    single<SavePersonalDataUseCase> { SavePersonalDataUseCaseImpl(get(), get()) }
     single<GetPersonalDataUseCase> { GetPersonalDataUseCaseImpl(get()) }
-    single<ClearAllLoginDataUseCase> { ClearAllLoginDataUseCaseImpl(get(), get()) }
+    single<ClearAllLoginDataUseCase> { ClearAllLoginDataUseCaseImpl(get()) }
 
+    // Network
     single<NetworkClient<AuthRequest, AuthResponse>>(HttpClientQualifier.AUTH.qualifier) {
         AuthNetworkClient(lazyHttpClient = inject(HttpClientQualifier.NO_ACCESS_TOKEN.qualifier))
     }

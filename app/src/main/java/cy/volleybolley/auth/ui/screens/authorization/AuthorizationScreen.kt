@@ -193,7 +193,7 @@ private fun BottomSheetWithSignButtons(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO, widthDp = 2000, heightDp = 500)
 @Composable
 private fun PreviewAuthorizationScreen() {
     ScreenPreviewContainer {
