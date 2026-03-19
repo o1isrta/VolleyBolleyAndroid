@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
@@ -40,8 +39,6 @@ import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.navigation.SearchCourtRoute
-import cy.volleybolley.core.presentation.ui.navigation.TourneyEnteringConditionsRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Gender
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
@@ -50,9 +47,11 @@ import java.time.LocalDate
 
 @Composable
 fun BasicTourneySetupScreen(
-    navController: NavHostController,
-    viewModel: BasicTourneySetupScreenViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues
+    paddingFromSystemUi: PaddingValues,
+    onNavigateToSearchCourt: () -> Unit,
+    onNavigateToNextStep: () -> Unit,
+    onNavigateBack: () -> Unit,
+    viewModel: BasicTourneySetupScreenViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -61,17 +60,11 @@ fun BasicTourneySetupScreen(
 
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
-            is BasicTourneySetupScreenEffect.NavigateToCreatePlace -> {
-                navController.navigate(SearchCourtRoute)
-            }
+            is BasicTourneySetupScreenEffect.NavigateToCreatePlace -> onNavigateToSearchCourt()
 
-            is BasicTourneySetupScreenEffect.NavigateBack -> {
-                navController.popBackStack()
-            }
+            is BasicTourneySetupScreenEffect.NavigateBack -> onNavigateBack()
 
-            is BasicTourneySetupScreenEffect.NavigateNextStep -> {
-                navController.navigate(TourneyEnteringConditionsRoute)
-            }
+            is BasicTourneySetupScreenEffect.NavigateNextStep -> onNavigateToNextStep()
 
             is BasicTourneySetupScreenEffect.ShowErrorMessage -> {
                 Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_SHORT).show()

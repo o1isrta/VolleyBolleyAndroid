@@ -30,7 +30,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
@@ -50,24 +49,26 @@ import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerI
 
 @Composable
 fun PlayerProfileScreen(
-    navController: NavHostController,
+    onNavigateBack: (Int?) -> Unit,
     viewModel: PlayerProfileScreenViewModel,
     paddingFromSystemUi: PaddingValues,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    LaunchedEffect(effect) {
+        when (val currentEffect = effect) {
+            is PlayerProfileScreenEffect.NavigateFromPlayerDetailScreen -> {
+                onNavigateBack(currentEffect.playerIdWithChangedFavoriteStatus)
+            }
+            null -> {}
+        }
+    }
+
     PlayerProfileScreen(
         state = state,
-        effect = effect,
         userHoursOffset = 3, // пока нет ручек для хранения профиля пользователя
         eventCallback = { event -> viewModel.obtainEvent(event) },
-        navigateAction = { backPlayerId ->
-            backPlayerId?.let {
-                navController.previousBackStackEntry?.savedStateHandle?.set(BackPlayerIdHolder.PLAYER_ID_KEY, it)
-                navController.popBackStack()
-            } ?: navController.popBackStack()
-        },
         modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
@@ -76,9 +77,7 @@ fun PlayerProfileScreen(
 private fun PlayerProfileScreen(
     modifier: Modifier = Modifier,
     state: PlayerProfileScreenState,
-    effect: PlayerProfileScreenEffect?,
     userHoursOffset: Int,
-    navigateAction: (Int?) -> Unit,
     eventCallback: (PlayerProfileScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
@@ -157,13 +156,6 @@ private fun PlayerProfileScreen(
                 isFavorite = state.playerDetail.isFavorite,
                 onClick = { eventCallback(ClickOnFavoriteManagementButton(!state.playerDetail.isFavorite)) }
             )
-        }
-    }
-
-    LaunchedEffect(effect) {
-        when (effect) {
-            is NavigateFromPlayerDetailScreen -> navigateAction(effect.playerIdWithChangedFavoriteStatus)
-            null -> {}
         }
     }
 }
@@ -327,9 +319,7 @@ private fun PreviewPlayerProfileScreen() {
 
             PlayerProfileScreen(
                 state = state,
-                effect = null,
                 userHoursOffset = 3,
-                navigateAction = {},
                 eventCallback = {}
             )
         }

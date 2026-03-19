@@ -142,7 +142,7 @@ val coreModule = module {
             clearAllLoginDataUseCase = get()
         )
     }
-    viewModel { HomeScreenViewModel() }
+    viewModel { HomeScreenViewModel(notificationPermissionChecker = get()) }
     viewModel { (event: SucceedGame) ->
         SuccessViewModel(
             createdEvent = event

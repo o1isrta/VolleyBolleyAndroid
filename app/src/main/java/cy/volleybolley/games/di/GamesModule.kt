@@ -2,7 +2,27 @@ package cy.volleybolley.games.di
 
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.di.HttpClientQualifier
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.viewmodel.ArchiveViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescreen.viewmodel.PastGameViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.viewmodel.PastTourneyViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.archive.teamsscreen.viewmodel.TeamsScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.GameInvitesScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.JoinTheTourneyScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.findatourney.ChooseTeamScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.findatourney.IndividualPlayersScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.findatourney.InvitePlayersScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinIndividualScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinTeamScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.changeteam.ChangeTeamViewModel
 import cy.volleybolley.core.presentation.ui.screens.games.mygames.gamehome.GameHomeViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.manageplayers.ManagePlayersViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.mygame.MyGameViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess.MyGamesViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.mytourney.MyTourneyViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.JoinedPlayersScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGameDetailsScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingGamesScreenViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.dataholder.TournamentDetailsDataHolder
 import cy.volleybolley.games.data.GameFeedRepositoryImpl
 import cy.volleybolley.games.data.GameParticipationRepositoryImpl
@@ -41,6 +61,7 @@ import cy.volleybolley.games.domain.api.tournament.DeclineTournamentInviteUseCas
 import cy.volleybolley.games.domain.api.tournament.GetTournamentDetailsUseCase
 import cy.volleybolley.games.domain.api.tournament.InvitePlayersToTournamentUseCase
 import cy.volleybolley.games.domain.api.tournament.JoinTournamentUseCase
+import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 import cy.volleybolley.games.domain.usecases.game.CancelGameUseCaseImpl
 import cy.volleybolley.games.domain.usecases.game.CreateGameUseCaseImpl
 import cy.volleybolley.games.domain.usecases.game.DeclineGameInviteUseCaseImpl
@@ -141,8 +162,38 @@ val gamesModule = module {
     // Класс для передачи TournamentDetails с экрана UpcomingTourneyDetails на экран JoinedPlayersScreen
     single<TournamentDetailsDataHolder> { TournamentDetailsDataHolder() }
 
-    // ViewModel
-    viewModel {
-        GameHomeViewModel()
+    // ViewModels - Archive
+    viewModel { ArchiveViewModel() }
+    viewModel { PastGameViewModel() }
+    viewModel { PastTourneyViewModel() }
+    viewModel { TeamsScreenViewModel() }
+
+    // ViewModels - MyGames
+    viewModel { MyGamesViewModel() }
+    viewModel { MyGameViewModel() }
+    viewModel { MyTourneyViewModel() }
+    viewModel { ManagePlayersViewModel() }
+    viewModel { ChangeTeamViewModel() }
+    viewModel { GameHomeViewModel() }
+
+    // ViewModels - UpcomingGames
+    viewModel { UpcomingGamesScreenViewModel() }
+    viewModel { UpcomingGameDetailsScreenViewModel() }
+    viewModel { (tournamentDetails: TournamentDetails?) ->
+        UpcomingTourneyDetailsScreenViewModel(tournamentDetails)
     }
+    viewModel { (tournamentDetails: TournamentDetails?) ->
+        JoinedPlayersScreenViewModel(tournamentDetails)
+    }
+
+    // ViewModels - GameInvites
+    viewModel { GameInvitesScreenViewModel() }
+    viewModel { JoinTheTourneyScreenViewModel() }
+
+    // ViewModels - FindATourney
+    viewModel { ChooseTeamScreenViewModel() }
+    viewModel { JoinTeamScreenViewModel() }
+    viewModel { JoinIndividualScreenViewModel() }
+    viewModel { IndividualPlayersScreenViewModel() }
+    viewModel { InvitePlayersScreenViewModel() }
 }

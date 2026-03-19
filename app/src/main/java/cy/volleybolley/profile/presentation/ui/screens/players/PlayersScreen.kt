@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
@@ -52,7 +51,8 @@ import cy.volleybolley.profile.presentation.ui.screens.players.model.PlayerTemp
 
 @Composable
 fun PlayersScreen(
-    navController: NavHostController,
+    onNavigateToPlayerProfile: (Int) -> Unit,
+    onNavigateBack: () -> Unit,
     viewModel: PlayersScreenViewModel,
     paddingFromSystemUi: PaddingValues,
 ) {
@@ -63,15 +63,24 @@ fun PlayersScreen(
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    LaunchedEffect(effect) {
+        when (val currentEffect = effect) {
+            is PlayersScreenEffect.NavigateFromPlayersScreen -> {
+                val route = currentEffect.route
+                when (route) {
+                    is cy.volleybolley.core.presentation.ui.navigation.PlayerProfileRoute -> {
+                        onNavigateToPlayerProfile(route.playerId)
+                    }
+                    else -> onNavigateBack()
+                }
+            }
+            null -> {}
+        }
+    }
+
     PlayersScreen(
         state = state,
-        effect = effect,
         eventCallback = { event -> viewModel.obtainEvent(event) },
-        navigateAction = { route ->
-            route?.let {
-                navController.navigate(it)
-            } ?: navController.popBackStack()
-        },
         modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
@@ -80,8 +89,6 @@ fun PlayersScreen(
 private fun PlayersScreen(
     modifier: Modifier = Modifier,
     state: PlayersScreenState,
-    effect: PlayersScreenEffect?,
-    navigateAction: (NavMap?) -> Unit,
     eventCallback: (PlayersScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
@@ -132,13 +139,6 @@ private fun PlayersScreen(
                     }
                 }
             }
-        }
-    }
-
-    LaunchedEffect(effect) {
-        when (effect) {
-            is NavigateFromPlayersScreen -> navigateAction(effect.route)
-            null -> {}
         }
     }
 }
@@ -336,8 +336,6 @@ private fun PreviewPlayersScreen() {
             )
             PlayersScreen(
                 state = PlayersScreenState(players = mockPlayers),
-                effect = null,
-                navigateAction = {},
                 eventCallback = {}
             )
         }

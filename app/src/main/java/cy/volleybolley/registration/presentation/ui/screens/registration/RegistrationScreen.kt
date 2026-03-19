@@ -119,6 +119,7 @@ fun RegistrationScreen(
             VolleyButton.ActiveButton(
                 text = stringResource(id = R.string.get_started),
                 enabled = state.isBtnRegistrationEnabled,
+                isLoading = state.isLoading,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(bottom = 20.dp, start = 20.dp, end = 20.dp)

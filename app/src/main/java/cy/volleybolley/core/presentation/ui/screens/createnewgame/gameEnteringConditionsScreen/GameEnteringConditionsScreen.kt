@@ -27,8 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyCashField
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
@@ -38,22 +36,21 @@ import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.PaymentsRoute
-import cy.volleybolley.core.presentation.ui.navigation.PrivacyOptionsRoute
-import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Privacy
 import cy.volleybolley.players.domain.model.Player
+import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.success.SucceedGame
 import cy.volleybolley.success.SucceedGameType
-import cy.volleybolley.profile.domain.model.PaymentType
-import kotlinx.serialization.json.Json
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun GameEnteringConditionsScreen(
-    navController: NavHostController,
-    viewModel: GameEnteringConditionsScreenViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues
+    paddingFromSystemUi: PaddingValues,
+    onNavigateToPayments: () -> Unit,
+    onNavigateToPrivacyOptions: () -> Unit,
+    onNavigateToSuccess: (SucceedGame) -> Unit,
+    onNavigateBack: () -> Unit,
+    viewModel: GameEnteringConditionsScreenViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -65,21 +62,13 @@ fun GameEnteringConditionsScreen(
                 Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_SHORT).show()
             }
 
-            is GameEnteringConditionsScreenEffect.NavigateToPayments -> {
-                navController.navigate(PaymentsRoute)
-            }
+            is GameEnteringConditionsScreenEffect.NavigateToPayments -> onNavigateToPayments()
 
-            is GameEnteringConditionsScreenEffect.NavigateBack -> {
-                navController.popBackStack()
-            }
+            is GameEnteringConditionsScreenEffect.NavigateBack -> onNavigateBack()
 
-            is GameEnteringConditionsScreenEffect.NavigateToSuccess -> {
-                navigateToSuccess(navController)
-            }
+            is GameEnteringConditionsScreenEffect.NavigateToSuccess -> onNavigateToSuccess(createSucceedGame())
 
-            is GameEnteringConditionsScreenEffect.NavigateToPrivacy -> {
-                navController.navigate(PrivacyOptionsRoute)
-            }
+            is GameEnteringConditionsScreenEffect.NavigateToPrivacy -> onNavigateToPrivacyOptions()
 
             null -> {}
         }
@@ -92,8 +81,8 @@ fun GameEnteringConditionsScreen(
     )
 }
 
-private fun navigateToSuccess(navController: NavHostController) {
-    val succeed = SucceedGame(
+private fun createSucceedGame(): SucceedGame {
+    return SucceedGame(
         id = 1213,
         type = SucceedGameType.CreatedGame,
         locationName = "Patak Rd, Mueang Phuket",
@@ -106,8 +95,6 @@ private fun navigateToSuccess(navController: NavHostController) {
         paymentType = PaymentType.CASH,
         paymentAccount = "123 45 6789"
     )
-    val succeedJson = Json.encodeToString(succeed)
-    navController.navigate(SuccessRoute(succeedGame = succeedJson))
 }
 
 @Stable

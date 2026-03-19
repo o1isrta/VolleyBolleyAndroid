@@ -1,15 +1,11 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.CreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.FakeCreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.GameData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -25,18 +21,7 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     BaseViewModel<BasicGameSetupScreenState, BasicGameSetupScreenEvent, BasicGameSetupScreenEffect>(
         BasicGameSetupScreenState()
     ) {
-    override val tag: String = "BasicGameSetupScreenViewModel"
-
     private var timeChangeJob: Job? = null
-
-    companion object {
-        const val MAX_LENGTH = 160
-        const val DEBOUNCE_DELAY_300MS = 300L
-        const val MINIMUM_GAME_DURATION_MINUTES = 60
-        const val MAXIMUM_GAME_DURATION_MINUTES = 240
-        const val HOUR = 60
-    }
-
     // флаг для показа календаря
     private val _showCalendar = MutableStateFlow(false)
     open val showCalendar: StateFlow<Boolean> = _showCalendar.asStateFlow()
@@ -106,8 +91,7 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     }
 
     private fun onChangeClick() {
-        // переход на экран CreatePlace при нажатии на кнопку Change
-        sendUiEffect(BasicGameSetupScreenEffect.NavigateToCreatePlace)
+        sendUiEffect(BasicGameSetupScreenEffect.NavigateBack)
     }
 
     private fun dateSelected(date: LocalDate) {
@@ -256,16 +240,12 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     fun isSameDay(date1: LocalDate, date2: LocalDate): Boolean {
         return date1 == date2
     }
-}
 
-// Специальный ViewModel для Preview
-class BasicGameSetupScreenViewModelPreview : BasicGameSetupScreenViewModel(FakeCreateNewGameRepository(GameData())) {
-    @RequiresApi(Build.VERSION_CODES.O)
-    private val _showCalendarPreview = MutableStateFlow(
-        true
-        // LocalDate.now() == LocalDate.of(2025,11,23)
-    ) // чтобы видно было календарь - поставить сегодняшнюю дату
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override val showCalendar: StateFlow<Boolean> = _showCalendarPreview.asStateFlow()
+    private companion object {
+        const val MAX_LENGTH = 160
+        const val DEBOUNCE_DELAY_300MS = 300L
+        const val MINIMUM_GAME_DURATION_MINUTES = 60
+        const val MAXIMUM_GAME_DURATION_MINUTES = 240
+        const val HOUR = 60
+    }
 }

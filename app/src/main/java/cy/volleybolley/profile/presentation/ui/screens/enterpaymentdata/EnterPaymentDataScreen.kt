@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
@@ -45,24 +44,29 @@ import cy.volleybolley.profile.presentation.ui.screens.payments.model.BackPaymen
 
 @Composable
 fun EnterPaymentDataScreen(
-    navController: NavHostController,
+    onNavigateBack: (String?) -> Unit,
     viewModel: EnterPaymentDataScreenViewModel,
     paddingFromSystemUi: PaddingValues,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    LaunchedEffect(effect) {
+        when (val currentEffect = effect) {
+            is EnterPaymentDataScreenEffect.NavigateFromEnterPaymentDataScreen -> {
+                onNavigateBack(currentEffect.updatedPaymentsJsonString)
+            }
+            is EnterPaymentDataScreenEffect.ShowInfoDialog -> {}
+            null -> {}
+        }
+    }
+
     EnterPaymentDataScreen(
         screenPaymentType = viewModel.originPaymentType,
         state = state,
-        effect = effect,
+        showDialog = effect is EnterPaymentDataScreenEffect.ShowInfoDialog,
+        dialogEffect = effect as? EnterPaymentDataScreenEffect.ShowInfoDialog,
         eventCallback = { event -> viewModel.obtainEvent(event) },
-        navigateAction = { updatedPaymentJsonString ->
-            updatedPaymentJsonString?.let {
-                navController.previousBackStackEntry?.savedStateHandle?.set(BackPaymentsHolder.PAYMENTS_KEY, it)
-                navController.popBackStack()
-            } ?: navController.popBackStack()
-        },
         modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
@@ -72,8 +76,8 @@ private fun EnterPaymentDataScreen(
     modifier: Modifier = Modifier,
     screenPaymentType: PaymentType,
     state: EnterPaymentDataScreenState,
-    effect: EnterPaymentDataScreenEffect?,
-    navigateAction: (String?) -> Unit,
+    showDialog: Boolean,
+    dialogEffect: EnterPaymentDataScreenEffect.ShowInfoDialog?,
     eventCallback: (EnterPaymentDataScreenEvent) -> Unit,
 ) {
     val headerValue = stringResource(screenPaymentType.getSimpleName())
@@ -121,19 +125,11 @@ private fun EnterPaymentDataScreen(
         }
     }
 
-    LaunchedEffect(effect) {
-        when (effect) {
-            is NavigateFromEnterPaymentDataScreen -> navigateAction(effect.updatedPaymentsJsonString)
-            is ShowInfoDialog -> {}
-            null -> {}
-        }
-    }
-
-    if (effect is ShowInfoDialog) {
+    if (showDialog && dialogEffect != null) {
         EnterPaymentDataDialog(
             text = stringResource(R.string.payment_changes_done),
-            onDone = effect.onDoneButtonClick,
-            onDismiss = effect.onDismissClick
+            onDone = dialogEffect.onDoneButtonClick,
+            onDismiss = dialogEffect.onDismissClick
         )
     }
 }
@@ -250,17 +246,17 @@ private fun PreviewEnterPaymentDataScreen() {
                 EnterPaymentDataScreen(
                     screenPaymentType = PaymentType.REVOLUT,
                     state = stateEmpty,
-                    effect = null,
-                    eventCallback = {},
-                    navigateAction = {}
+                    showDialog = false,
+                    dialogEffect = null,
+                    eventCallback = {}
                 )
                 Spacer(Modifier.height(30.dp))
                 EnterPaymentDataScreen(
                     screenPaymentType = PaymentType.REVOLUT,
                     state = stateRevolut,
-                    effect = null,
-                    eventCallback = {},
-                    navigateAction = {}
+                    showDialog = false,
+                    dialogEffect = null,
+                    eventCallback = {}
                 )
             }
         }
@@ -284,17 +280,17 @@ private fun PreviewEnterPaymentDataScreen2() {
                 EnterPaymentDataScreen(
                     screenPaymentType = PaymentType.THAIBANK,
                     state = stateEmpty,
-                    effect = null,
-                    eventCallback = {},
-                    navigateAction = {}
+                    showDialog = false,
+                    dialogEffect = null,
+                    eventCallback = {}
                 )
                 Spacer(Modifier.height(30.dp))
                 EnterPaymentDataScreen(
                     screenPaymentType = PaymentType.THAIBANK,
                     state = stateThai,
-                    effect = null,
-                    eventCallback = {},
-                    navigateAction = {}
+                    showDialog = false,
+                    dialogEffect = null,
+                    eventCallback = {}
                 )
             }
         }

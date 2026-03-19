@@ -24,8 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
@@ -38,9 +36,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun PrivacyOptionsScreen(
-    navController: NavHostController,
-    viewModel: PrivacyOptionsScreenViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues
+    paddingFromSystemUi: PaddingValues,
+    onNavigateBack: () -> Unit,
+    viewModel: PrivacyOptionsScreenViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -58,7 +56,7 @@ fun PrivacyOptionsScreen(
             }
 
             is PrivacyOptionsScreenEffect.NavigateBack -> {
-                navController.popBackStack()
+                onNavigateBack()
             }
 
             null -> {}

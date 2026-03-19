@@ -16,14 +16,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.JoinedPlayersRoute
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.dataholder.TournamentDetailsDataHolder
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 import org.koin.compose.viewmodel.koinViewModel
@@ -31,10 +29,11 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UpcomingTourneyDetailsScreen(
-    navController: NavHostController,
+    paddingFromSystemUi: PaddingValues,
     tournamentDetails: TournamentDetails?,
-    viewModel: UpcomingTourneyDetailsScreenViewModel = koinViewModel { parametersOf(tournamentDetails) },
-    paddingFromSystemUi: PaddingValues
+    onNavigateToJoinedPlayers: (String) -> Unit,
+    onNavigateBack: () -> Unit,
+    viewModel: UpcomingTourneyDetailsScreenViewModel = koinViewModel { parametersOf(tournamentDetails) }
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -42,10 +41,10 @@ fun UpcomingTourneyDetailsScreen(
 
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
-            is UpcomingTourneyDetailsScreenEffect.NavigateBack -> navController.popBackStack()
+            is UpcomingTourneyDetailsScreenEffect.NavigateBack -> onNavigateBack()
             is UpcomingTourneyDetailsScreenEffect.NavigateToJoinedPlayers -> {
                 val key = dataHolder.put(currentEffect.tournamentDetails)
-                navController.navigate(JoinedPlayersRoute(tournamentDetailsHolderKey = key))
+                onNavigateToJoinedPlayers(key)
             }
             null -> {}
         }

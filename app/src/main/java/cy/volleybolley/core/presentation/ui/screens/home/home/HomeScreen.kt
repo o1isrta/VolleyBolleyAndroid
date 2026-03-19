@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.home.home
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,18 +33,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
+import cy.volleybolley.core.presentation.ui.model.state.data.DialogData
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEffect.NavigateToSearchCourt
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEffect.RequestNotificationPermission
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateNewGameClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateTourneyClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnDonateClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnFindGameClick
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnNotificationDialogConfirm
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnNotificationDialogDismiss
 import cy.volleybolley.core.presentation.ui.screens.home.home.model.DigitIcon
+import cy.volleybolley.games.domain.model.event.EventType
+import cy.volleybolley.notification.presentation.ui.component.GlobalAlertDialog
 import org.koin.androidx.compose.koinViewModel
 
 const val HOME_FIND_GAME_TEXT_WEIGHT = 0.6f
@@ -54,23 +58,27 @@ const val HOME_CREATE_GAME_BUTTON_ALPHA = 0.85f
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
-    viewModel: HomeScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues,
-    finisher: () -> Unit,
+    onNavigateToSearchCourt: (EventType) -> Unit,
+    onRequestNotificationPermission: () -> Unit = {},
+    viewModel: HomeScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    LaunchedEffect(effect) {
+        when (effect) {
+            is NavigateToSearchCourt -> onNavigateToSearchCourt(effect.eventType)
+            RequestNotificationPermission -> onRequestNotificationPermission()
+            null -> Unit
+        }
+    }
+
     HomeScreen(
         state = state,
-        effect = effect,
-        navigateAction = { route -> navController.navigate(route) },
         eventCallback = { event -> viewModel.obtainEvent(event) },
         modifier = Modifier.padding(paddingFromSystemUi)
     )
-
-    BackHandler { finisher() }
 }
 
 @Stable
@@ -78,8 +86,6 @@ fun HomeScreen(
 private fun HomeScreen(
     modifier: Modifier = Modifier,
     state: HomeScreenState,
-    effect: HomeScreenEffect?,
-    navigateAction: (NavMap) -> Unit,
     eventCallback: (HomeScreenEvent) -> Unit,
 ) {
     Box(
@@ -128,11 +134,17 @@ private fun HomeScreen(
         }
     }
 
-    LaunchedEffect(effect) {
-        when (effect) {
-            is HomeScreenEffect.NavigateFromHomeScreen -> navigateAction(effect.route)
-            null -> Unit
-        }
+    if (state.showNotificationPermissionDialog) {
+        GlobalAlertDialog(
+            dialog = DialogData(
+                title = stringResource(R.string.notifications),
+                message = stringResource(R.string.notifications_alert_dialog),
+                onConfirm = { eventCallback(OnNotificationDialogConfirm) },
+                onDismiss = { eventCallback(OnNotificationDialogDismiss) }
+            ),
+            onConfirm = { eventCallback(OnNotificationDialogConfirm) },
+            onDismiss = { eventCallback(OnNotificationDialogDismiss) }
+        )
     }
 }
 
@@ -473,8 +485,6 @@ private fun PreviewHomeScreen() {
             )
             HomeScreen(
                 state = state,
-                effect = null,
-                navigateAction = {},
                 eventCallback = {}
             )
         }

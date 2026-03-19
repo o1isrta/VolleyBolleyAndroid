@@ -24,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
@@ -48,7 +47,8 @@ import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalData
 
 @Composable
 fun PersonalDataScreen(
-    navController: NavHostController,
+    onNavigateToChangePhoto: (String?) -> Unit,
+    onNavigateBack: () -> Unit,
     viewModel: PersonalDataScreenViewModel,
     paddingFromSystemUi: PaddingValues,
 ) {
@@ -56,14 +56,23 @@ fun PersonalDataScreen(
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    LaunchedEffect(effect) {
+        when (val currentEffect = effect) {
+            is PersonalDataScreenEffect.NavigateFromPersonalDataScreen -> {
+                val route = currentEffect.route
+                when (route) {
+                    is cy.volleybolley.core.presentation.ui.navigation.ChangePhotoRoute -> {
+                        onNavigateToChangePhoto(route.avatarUrl)
+                    }
+                    else -> onNavigateBack()
+                }
+            }
+            null -> {}
+        }
+    }
+
     PersonalDataScreen(
         state = state,
-        effect = effect,
-        navigateAction = { route ->
-            route?.let {
-                navController.navigate(it)
-            } ?: navController.popBackStack()
-        },
         eventCallback = { event -> viewModel.obtainEvent(event) },
         modifier = Modifier.padding(paddingFromSystemUi)
     )
@@ -73,8 +82,6 @@ fun PersonalDataScreen(
 private fun PersonalDataScreen(
     modifier: Modifier = Modifier,
     state: PersonalDataScreenState,
-    effect: PersonalDataScreenEffect?,
-    navigateAction: (NavMap?) -> Unit,
     eventCallback: (PersonalDataScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
@@ -183,13 +190,6 @@ private fun PersonalDataScreen(
             }
         }
     }
-
-    LaunchedEffect(effect) {
-        when (effect) {
-            is NavigateFromPersonalDataScreen -> navigateAction(effect.route)
-            null -> {}
-        }
-    }
 }
 
 @Composable
@@ -283,9 +283,8 @@ private fun PreviewPersonalDataScreen() {
         ) {
             PersonalDataScreen(
                 state = PersonalDataScreenState(),
-                effect = null,
-                navigateAction = {}
-            ) { }
+                eventCallback = { }
+            )
         }
     }
 }

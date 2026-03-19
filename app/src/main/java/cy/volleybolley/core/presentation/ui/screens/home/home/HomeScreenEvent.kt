@@ -7,4 +7,6 @@ sealed interface HomeScreenEvent : UiEvent {
     data object OnFindGameClick : HomeScreenEvent
     data object OnCreateTourneyClick : HomeScreenEvent
     data object OnDonateClick : HomeScreenEvent
+    data object OnNotificationDialogConfirm : HomeScreenEvent
+    data object OnNotificationDialogDismiss : HomeScreenEvent
 }

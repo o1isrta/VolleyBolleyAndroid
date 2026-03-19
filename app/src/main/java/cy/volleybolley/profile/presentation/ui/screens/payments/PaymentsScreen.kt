@@ -24,13 +24,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
+import cy.volleybolley.core.presentation.ui.navigation.EnterPaymentDataRoute
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.profile.presentation.ui.screens.payments.PaymentsScreenEffect.NavigateFromPaymentsScreen
@@ -40,9 +39,10 @@ import cy.volleybolley.profile.presentation.ui.screens.payments.PaymentsScreenEv
 
 @Composable
 fun PaymentsScreen(
-    navController: NavHostController,
-    viewModel: PaymentsScreenViewModel,
     paddingFromSystemUi: PaddingValues,
+    onNavigateToEnterPaymentData: (paymentTypeName: String, paymentsJsonString: String) -> Unit,
+    onNavigateBack: () -> Unit,
+    viewModel: PaymentsScreenViewModel
 ) {
     LaunchedEffect(Unit) {
         viewModel.handleBackPayments()
@@ -52,9 +52,13 @@ fun PaymentsScreen(
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     LaunchedEffect(effect) {
-        when (effect) {
+        when (val currentEffect = effect) {
             is NavigateFromPaymentsScreen -> {
-                effect.route?.let { navController.navigate(it) } ?: navController.popBackStack()
+                currentEffect.route?.let { route ->
+                    if (route is EnterPaymentDataRoute) {
+                        onNavigateToEnterPaymentData(route.paymentTypeName, route.paymentsJsonString)
+                    }
+                } ?: onNavigateBack()
             }
             null -> {}
         }

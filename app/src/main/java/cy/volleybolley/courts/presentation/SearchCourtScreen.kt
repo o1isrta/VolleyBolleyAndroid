@@ -12,49 +12,36 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import cy.volleybolley.core.presentation.ui.navigation.BasicGameSetupRoute
-import cy.volleybolley.core.presentation.ui.navigation.BasicTourneySetupRoute
 import cy.volleybolley.core.presentation.ui.screens.courts.CourtsComponents.CourtMapListSwitcherScreen
 import cy.volleybolley.games.domain.model.event.EventType
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SearchCourtScreen(
-    navController: NavHostController,
     paddingFromSystemUi: PaddingValues,
+    onNavigateToGameCreation: (EventType) -> Unit,
+    onNavigateBack: () -> Unit,
     viewModel: SearchCourtViewModel,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     val context = LocalContext.current
     var isMapSelected by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        viewModel.uiEffect.collectLatest { effect ->
-            when (effect) {
-                is SearchCourtEffect.ShowError -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-                }
-
-                is SearchCourtEffect.NavigateToGameCreation -> {
-                    when (effect.eventType) {
-                        EventType.GAME -> {
-                            navController.navigate(BasicGameSetupRoute)
-                        }
-
-                        EventType.TOURNAMENT -> {
-                            navController.navigate(BasicTourneySetupRoute)
-                        }
-                    }
-                }
-
-                is SearchCourtEffect.NavigateBack -> {
-                    navController.popBackStack()
-                }
-
-                null -> {}
+    LaunchedEffect(effect) {
+        when (val currentEffect = effect) {
+            is SearchCourtEffect.ShowError -> {
+                Toast.makeText(context, currentEffect.message, Toast.LENGTH_SHORT).show()
             }
+
+            is SearchCourtEffect.NavigateToGameCreation -> onNavigateToGameCreation(currentEffect.eventType)
+
+            is SearchCourtEffect.NavigateBack -> onNavigateBack()
+
+            null -> {}
         }
+    }
+
+    LaunchedEffect(Unit) {
         viewModel.obtainEvent(SearchCourtEvent.LoadSearchCourt)
     }
 

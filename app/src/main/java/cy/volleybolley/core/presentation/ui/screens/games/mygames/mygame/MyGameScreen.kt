@@ -47,8 +47,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
@@ -66,9 +64,9 @@ import java.util.Locale
 // Обёртка для навигации
 @Composable
 fun MyGameScreen(
-    navController: NavHostController,
-    viewModel: MyGameViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues = PaddingValues(0.dp)
+    paddingFromSystemUi: PaddingValues,
+    onNavigateBack: () -> Unit,
+    viewModel: MyGameViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -77,7 +75,7 @@ fun MyGameScreen(
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
             null -> {}
-            is MyGameEffect.NavigateBack -> navController.popBackStack()
+            is MyGameEffect.NavigateBack -> onNavigateBack()
             is MyGameEffect.OpenMap -> openMap(context, currentEffect.location)
             is MyGameEffect.InvitePlayers -> { /* TODO */ }
             is MyGameEffect.ShareLink -> { /* TODO */ }
@@ -484,8 +482,15 @@ private fun openMap(context: Context, location: Location) {
 private fun MyGameScreen_Preview() {
     VolleybolleyTheme {
         Box(Modifier.background(VolleyColor.TurquoiseDark)) {
-            MyGameScreen(
-                navController = rememberNavController()
+            MyGameContent(
+                details = myGameDetailsStub(),
+                paddingFromSystemUi = PaddingValues(0.dp),
+                onBack = {},
+                onOpenMap = {},
+                onInvite = {},
+                onShare = {},
+                onCancel = {},
+                onDeletePlayer = {}
             )
         }
     }

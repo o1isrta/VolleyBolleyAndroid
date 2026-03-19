@@ -36,8 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
@@ -48,16 +46,16 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ChangeTeamScreen(
-    navController: NavHostController,
-    viewModel: ChangeTeamViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues = PaddingValues(0.dp)
+    paddingFromSystemUi: PaddingValues,
+    onNavigateBack: () -> Unit,
+    viewModel: ChangeTeamViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
         when (effect) {
-            is ChangeTeamEffect.NavigateBack -> navController.popBackStack()
+            is ChangeTeamEffect.NavigateBack -> onNavigateBack()
             is ChangeTeamEffect.TeamSelected -> { /* handled internally */ }
             null -> {}
         }
@@ -66,14 +64,14 @@ fun ChangeTeamScreen(
     ChangeTeamContent(
         state = state,
         paddingFromSystemUi = paddingFromSystemUi,
-        onBack = { navController.popBackStack() },
+        onBack = onNavigateBack,
         onSelectTeam = { index -> viewModel.obtainEvent(ChangeTeamAction.SelectTeam(index)) },
         onRemoveMember = { teamIndex, memberIndex ->
             viewModel.obtainEvent(ChangeTeamAction.RemoveMember(teamIndex, memberIndex))
         },
         onConfirm = {
             viewModel.obtainEvent(ChangeTeamAction.ConfirmSelection)
-            navController.popBackStack()
+            onNavigateBack()
         }
     )
 }
@@ -328,7 +326,14 @@ private fun ChangeTeamScreenPreview() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-            ChangeTeamScreen(navController = rememberNavController())
+            ChangeTeamContent(
+                state = ChangeTeamState(),
+                paddingFromSystemUi = PaddingValues(0.dp),
+                onBack = {},
+                onSelectTeam = {},
+                onRemoveMember = { _, _ -> },
+                onConfirm = {}
+            )
         }
     }
 }

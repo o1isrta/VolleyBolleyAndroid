@@ -36,8 +36,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -47,6 +47,11 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect.NavigateBack
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect.NavigateToCreateGame
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect.NavigateToPastGame
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect.NavigateToPastTourney
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect.OpenMap
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.event.ArchiveEvent
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.model.ArchiveState
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.viewmodel.ArchiveViewModel
@@ -60,9 +65,12 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ArchiveScreen(
-    navController: NavHostController,
-    viewModel: ArchiveViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues
+    paddingFromSystemUi: PaddingValues,
+    onNavigateToCreateGame: () -> Unit,
+    onNavigateToPastGame: () -> Unit,
+    onNavigateToPastTourney: () -> Unit,
+    onNavigateBack: () -> Unit,
+    viewModel: ArchiveViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -70,9 +78,11 @@ fun ArchiveScreen(
 
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
-            is ArchiveEffect.Navigate -> navController.navigate(currentEffect.route)
-            is ArchiveEffect.NavigateBack -> navController.popBackStack()
-            is ArchiveEffect.OpenMap -> context.openMap(currentEffect.location)
+            NavigateToCreateGame -> onNavigateToCreateGame()
+            NavigateToPastGame -> onNavigateToPastGame()
+            NavigateToPastTourney -> onNavigateToPastTourney()
+            NavigateBack -> onNavigateBack()
+            is OpenMap -> context.openMap(currentEffect.location)
             null -> {}
         }
     }

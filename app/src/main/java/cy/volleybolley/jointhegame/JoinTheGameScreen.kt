@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.domain.model.PaymentType
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
@@ -52,18 +51,18 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButtonM
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBarWithBackButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
-import cy.volleybolley.core.presentation.ui.navigation.SuccessRoute
 import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.referencedata.domain.model.CurrencyType
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 import kotlinx.serialization.json.Json
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JoinTheGameScreen(
-    navController: NavHostController,
-    viewModel: JoinTheGameViewModel
+    onNavigateBack: () -> Unit,
+    onNavigateToSuccess: (String) -> Unit,
+    viewModel: JoinTheGameViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -75,11 +74,8 @@ fun JoinTheGameScreen(
         JoinTheGameScreen(
             state = state,
             effect = effect,
-            navigationAction = { route ->
-                route?.let {
-                    navController.navigate(route)
-                } ?: navController.popBackStack()
-            },
+            onNavigateBack = onNavigateBack,
+            onNavigateToSuccess = onNavigateToSuccess,
             eventCallback = { event ->
                 viewModel.obtainEvent(event)
             }
@@ -91,7 +87,8 @@ fun JoinTheGameScreen(
 private fun JoinTheGameScreen(
     state: JoinTheGameState,
     effect: JoinTheGameEffect?,
-    navigationAction: (NavMap?) -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToSuccess: (String) -> Unit,
     eventCallback: (JoinTheGameEvent) -> Unit,
 ) {
     val context = LocalContext.current
@@ -100,10 +97,10 @@ private fun JoinTheGameScreen(
         when (effect) {
             JoinTheGameEffect.JoinGame -> {
                 val jsonGame = Json.encodeToString(state.details)
-                navigationAction(SuccessRoute(jsonGame))
+                onNavigateToSuccess(jsonGame)
             }
 
-            JoinTheGameEffect.NavigateBack -> navigationAction(null)
+            JoinTheGameEffect.NavigateBack -> onNavigateBack()
             is JoinTheGameEffect.OpenMap -> openMap(context = context, location = effect.location)
             null -> Unit
         }
@@ -475,7 +472,8 @@ private fun JoinTheGameScreenPreview() {
                     )
                 ),
                 effect = null,
-                navigationAction = {},
+                onNavigateBack = {},
+                onNavigateToSuccess = {},
                 eventCallback = {}
             )
         }

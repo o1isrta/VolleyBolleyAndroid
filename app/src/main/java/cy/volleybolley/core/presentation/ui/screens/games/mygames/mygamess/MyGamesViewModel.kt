@@ -1,9 +1,11 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess
 
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.navigation.BasicGameSetupRoute
-import cy.volleybolley.core.presentation.ui.navigation.MyGameRoute
-import cy.volleybolley.core.presentation.ui.navigation.MyTourneyRoute
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess.MyGamesEffect.NavigateBack
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess.MyGamesEffect.NavigateToCreateGame
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess.MyGamesEffect.NavigateToMyGame
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess.MyGamesEffect.NavigateToMyTourney
+import cy.volleybolley.core.presentation.ui.screens.games.mygames.mygamess.MyGamesEffect.OpenMap
 import java.util.Locale
 
 class MyGamesViewModel :
@@ -13,20 +15,20 @@ class MyGamesViewModel :
 
     override fun obtainEvent(event: MyGamesAction) {
         when (event) {
-            MyGamesAction.ClickBack -> sendUiEffect(MyGamesEffect.NavigateBack)
+            MyGamesAction.ClickBack -> sendUiEffect(NavigateBack)
 
-            MyGamesAction.ClickCreateGame -> sendUiEffect(MyGamesEffect.Navigate(BasicGameSetupRoute))
+            MyGamesAction.ClickCreateGame -> sendUiEffect(NavigateToCreateGame)
 
             is MyGamesAction.ClickDetails -> {
-                val route = when (event.details.gameType.uppercase(Locale.ROOT)) {
-                    "GAME" -> MyGameRoute
-                    "TOURNAMENT" -> MyTourneyRoute
-                    else -> MyGameRoute
+                val effect = when (event.details.gameType.uppercase(Locale.ROOT)) {
+                    "GAME" -> NavigateToMyGame
+                    "TOURNAMENT" -> NavigateToMyTourney
+                    else -> NavigateToMyGame
                 }
-                sendUiEffect(MyGamesEffect.Navigate(route))
+                sendUiEffect(effect)
             }
 
-            is MyGamesAction.ClickMap -> sendUiEffect(MyGamesEffect.OpenMap(event.location))
+            is MyGamesAction.ClickMap -> sendUiEffect(OpenMap(event.location))
 
             MyGamesAction.Refresh -> {
                 // Подтянуть из домейна список игр и hasGames

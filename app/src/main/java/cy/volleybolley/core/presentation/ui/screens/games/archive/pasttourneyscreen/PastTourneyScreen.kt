@@ -33,8 +33,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -43,6 +43,9 @@ import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.effect.PastTourneyEffect
+import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.effect.PastTourneyEffect.NavigateBack
+import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.effect.PastTourneyEffect.NavigateToTeams
+import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.effect.PastTourneyEffect.OpenMap
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.event.PastTourneyEvent
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.model.PastTourneyState
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.viewmodel.PastTourneyViewModel
@@ -57,9 +60,10 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun PastTourneyScreen(
-    navController: NavHostController,
-    viewModel: PastTourneyViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues
+    paddingFromSystemUi: PaddingValues,
+    onNavigateToTeams: () -> Unit,
+    onNavigateBack: () -> Unit,
+    viewModel: PastTourneyViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -67,9 +71,9 @@ fun PastTourneyScreen(
 
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
-            is PastTourneyEffect.NavigateBack -> navController.popBackStack()
-            is PastTourneyEffect.OpenMap -> context.openMap(currentEffect.location)
-            is PastTourneyEffect.Navigate -> navController.navigate(currentEffect.route)
+            NavigateBack -> onNavigateBack()
+            NavigateToTeams -> onNavigateToTeams()
+            is OpenMap -> context.openMap(currentEffect.location)
             null -> {}
         }
     }

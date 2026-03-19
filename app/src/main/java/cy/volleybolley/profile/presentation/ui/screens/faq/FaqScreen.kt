@@ -21,8 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
@@ -37,18 +37,16 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FaqScreen(
-    navController: NavHostController,
-    viewModel: FaqScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues,
+    onNavigateBack: () -> Unit,
+    viewModel: FaqScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     LaunchedEffect(effect) {
         when (effect) {
-            is NavigateFromFaqScreen -> {
-                effect.route?.let { navController.navigate(it) } ?: navController.popBackStack()
-            }
+            is NavigateFromFaqScreen -> onNavigateBack()
             null -> {}
         }
     }

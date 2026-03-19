@@ -15,8 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
@@ -26,16 +24,16 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun UpcomingGamesScreen(
-    navController: NavHostController,
-    viewModel: UpcomingGamesScreenViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues
+    paddingFromSystemUi: PaddingValues,
+    onNavigateBack: () -> Unit,
+    viewModel: UpcomingGamesScreenViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
         when (effect) {
-            is UpcomingGamesScreenEffect.NavigateBack -> navController.popBackStack()
+            is UpcomingGamesScreenEffect.NavigateBack -> onNavigateBack()
             null -> {}
         }
     }

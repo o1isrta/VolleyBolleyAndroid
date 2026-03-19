@@ -10,5 +10,6 @@ data class HomeScreenState(
         latitude = 0.0,
         courtName = "",
         locationName = ""
-    )
+    ),
+    val showNotificationPermissionDialog: Boolean = false
 ) : UiState

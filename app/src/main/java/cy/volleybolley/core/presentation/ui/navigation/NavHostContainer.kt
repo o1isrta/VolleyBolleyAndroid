@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -13,11 +14,8 @@ import cy.volleybolley.auth.phone.ui.AuthorizationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen.BasicGameSetupScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen.BasicGameSetupScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.gameEnteringConditionsScreen.GameEnteringConditionsScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.gameEnteringConditionsScreen.GameEnteringConditionsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen.PrivacyOptionsScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen.PrivacyOptionsScreenViewModel
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.ChooseTeamScreen
@@ -25,9 +23,9 @@ import cy.volleybolley.core.presentation.ui.screens.findatourney.IndividualPlaye
 import cy.volleybolley.core.presentation.ui.screens.findatourney.InvitePlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinIndividualScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.JoinTeamScreen
+import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.ArchiveScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescreen.PastGameScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.PastTourneyScreen
-import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.ArchiveScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.teamsscreen.TeamsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.GameInvitesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.JoinTheTourneyScreen
@@ -43,13 +41,12 @@ import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.Upcoming
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.UpcomingTourneyDetailsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.upcominggames.dataholder.TournamentDetailsDataHolder
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreen
-import cy.volleybolley.success.SucceedGame
-import cy.volleybolley.success.SuccessScreen
-import cy.volleybolley.notification.presentation.NotificationsScreen
 import cy.volleybolley.courts.presentation.SearchCourtScreen
+import cy.volleybolley.games.domain.model.event.EventType
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 import cy.volleybolley.jointhegame.JoinTheGameScreen
 import cy.volleybolley.jointhegame.JoinTheGameViewModel
+import cy.volleybolley.notification.presentation.NotificationsScreen
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreen
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreen
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreen
@@ -71,6 +68,8 @@ import cy.volleybolley.rateplayers.RatePlayersScreen
 import cy.volleybolley.registration.presentation.ui.screens.aboutlevels.AboutLevelsScreen
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationScreen
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationViewModel
+import cy.volleybolley.success.SucceedGame
+import cy.volleybolley.success.SuccessScreen
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -80,16 +79,35 @@ import org.koin.core.parameter.parametersOf
 fun NavHostContainer(
     paddingFromSystemUi: PaddingValues,
     navController: NavHostController,
-    // startDestination: NavMap = LaunchRoute,
-    startDestination: NavMap = HomeTopLevelRoute,
+    startDestination: NavMap = LaunchRoute,
     activityFinisher: () -> Unit,
+    onRequestNotificationPermission: () -> Unit = {},
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
         // authorization
-        composable<LaunchRoute> { LaunchScreen(navController, paddingFromSystemUi) }
+        composable<LaunchRoute> {
+            LaunchScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
+                onNavigateToOnboarding = {
+                    navController.navigate(OnboardingRoute) {
+                        popUpTo(LaunchRoute) { inclusive = true }
+                    }
+                },
+                onNavigateToHome = {
+                    navController.navigate(HomeTopLevelRoute) {
+                        popUpTo(LaunchRoute) { inclusive = true }
+                    }
+                },
+                onNavigateToAuthorization = {
+                    navController.navigate(AuthorizationRoute) {
+                        popUpTo(LaunchRoute) { inclusive = true }
+                    }
+                }
+            )
+        }
         composable<OnboardingRoute> {
             OnboardingScreen(
                 onNextScreenRequested = { navController.navigate(AuthorizationRoute) },
@@ -138,10 +156,13 @@ fun NavHostContainer(
         navigation<HomeTopLevelRoute>(startDestination = HomeRoute) {
             // home
             composable<HomeRoute> {
+                BackHandler { activityFinisher() }
                 HomeScreen(
-                    navController = navController,
                     paddingFromSystemUi = paddingFromSystemUi,
-                    finisher = activityFinisher,
+                    onNavigateToSearchCourt = { eventType ->
+                        navController.navigate(SearchCourtRoute(eventType = eventType))
+                    },
+                    onRequestNotificationPermission = onRequestNotificationPermission
                 )
             }
 
@@ -149,8 +170,14 @@ fun NavHostContainer(
                 val args = backStackEntry.toRoute<SearchCourtRoute>()
                 val eventType = args.eventType
                 SearchCourtScreen(
-                    navController = navController,
                     paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToGameCreation = { type ->
+                        when (type) {
+                            EventType.GAME -> navController.navigate(BasicGameSetupRoute)
+                            EventType.TOURNAMENT -> navController.navigate(BasicTourneySetupRoute)
+                        }
+                    },
+                    onNavigateBack = { navController.popBackStack() },
                     viewModel = koinViewModel {
                         parametersOf(eventType)
                     }
@@ -162,7 +189,7 @@ fun NavHostContainer(
                 val eventId = args.eventId
                 val eventType = args.eventType
                 RatePlayersScreen(
-                    navController = navController,
+                    onNavigateBack = { navController.popBackStack() },
                     viewModel = koinViewModel {
                         parametersOf(eventId, eventType)
                     }
@@ -173,7 +200,17 @@ fun NavHostContainer(
                     backStackEntry.toRoute<SuccessRoute>().succeedGame
                 )
                 SuccessScreen(
-                    navController = navController,
+                    onNavigateToHome = {
+                        navController.navigate(HomeRoute) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = false
+                            }
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToInvitePlayers = { eventId ->
+                        navController.navigate(InvitePlayersRoute(id = eventId))
+                    },
                     viewModel = koinViewModel {
                         parametersOf(event)
                     }
@@ -181,41 +218,46 @@ fun NavHostContainer(
             }
             // create game
             composable<BasicGameSetupRoute> {
-                val viewModel: BasicGameSetupScreenViewModel = koinViewModel()
                 BasicGameSetupScreen(
-                    navController = navController,
-                    viewModel = viewModel,
                     paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToNextStep = { navController.navigate(GameEnteringConditionsRoute) },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<GameEnteringConditionsRoute> {
-                val viewModel: GameEnteringConditionsScreenViewModel = koinViewModel()
                 GameEnteringConditionsScreen(
-                    navController = navController,
-                    viewModel = viewModel,
                     paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToPayments = { navController.navigate(PaymentsRoute) },
+                    onNavigateToPrivacyOptions = { navController.navigate(PrivacyOptionsRoute) },
+                    onNavigateToSuccess = { succeedGame ->
+                        val json = Json.encodeToString(SucceedGame.serializer(), succeedGame)
+                        navController.navigate(SuccessRoute(json))
+                    },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<PrivacyOptionsRoute> {
-                val viewModel: PrivacyOptionsScreenViewModel = koinViewModel()
                 PrivacyOptionsScreen(
-                    navController = navController,
-                    viewModel = viewModel,
                     paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
             // create tourney
             composable<BasicTourneySetupRoute> {
                 BasicTourneySetupScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToSearchCourt = { navController.navigate(SearchCourtRoute(EventType.TOURNAMENT)) },
+                    onNavigateToNextStep = { navController.navigate(TourneyEnteringConditionsRoute) },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<TourneyEnteringConditionsRoute> {
                 TourneyEnteringConditionsScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToPayments = { navController.navigate(PaymentsRoute) },
+                    onNavigateToChangeTeam = { navController.navigate(ChangeTeamRoute) },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
@@ -223,7 +265,10 @@ fun NavHostContainer(
             composable<JoinTheGameRoute> { backStackEntry ->
                 val gameId = backStackEntry.toRoute<JoinTheGameRoute>().gameId
                 JoinTheGameScreen(
-                    navController = navController,
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToSuccess = { succeedGameJson ->
+                        navController.navigate(SuccessRoute(succeedGameJson))
+                    },
                     viewModel = koinViewModel<JoinTheGameViewModel> {
                         parametersOf(gameId)
                     }
@@ -233,31 +278,31 @@ fun NavHostContainer(
             // find tourney
             composable<ChooseTeamRoute> {
                 ChooseTeamScreen(
-                    navController = navController,
+                    onNavigateBack = { navController.popBackStack() },
                     paddingFromSystemUi = paddingFromSystemUi
                 )
             }
             composable<IndividualPlayersRoute> {
                 IndividualPlayersScreen(
-                    navController = navController,
+                    onNavigateBack = { navController.popBackStack() },
                     paddingFromSystemUi = paddingFromSystemUi
                 )
             }
             composable<InvitePlayersRoute> {
                 InvitePlayersScreen(
-                    navController = navController,
+                    onNavigateBack = { navController.popBackStack() },
                     paddingFromSystemUi = paddingFromSystemUi
                 )
             }
             composable<JoinIndividualRoute> {
                 JoinIndividualScreen(
-                    navController = navController,
+                    onNavigateBack = { navController.popBackStack() },
                     paddingFromSystemUi = paddingFromSystemUi
                 )
             }
             composable<JoinTeamRoute> {
                 JoinTeamScreen(
-                    navController = navController,
+                    onNavigateBack = { navController.popBackStack() },
                     paddingFromSystemUi = paddingFromSystemUi
                 )
             }
@@ -266,76 +311,94 @@ fun NavHostContainer(
         // Game Home nested graph
         navigation<GameHomeTopLevelRoute>(startDestination = GameHomeRoute) {
             composable<GameHomeRoute> {
+                BackHandler { activityFinisher() }
                 GameHomeScreen(
-                    navController = navController,
-                    finisher = activityFinisher,
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToMyGames = { navController.navigate(MyGamesRoute) },
+                    onNavigateToUpcomingGames = { navController.navigate(UpcomingGamesRoute) },
+                    onNavigateToInvites = { navController.navigate(GameInvitesRoute) },
+                    onNavigateToArchive = { navController.navigate(ArchiveRoute) }
                 )
             }
 
             // archive
             composable<ArchiveRoute> {
                 ArchiveScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToCreateGame = { navController.navigate(BasicGameSetupRoute) },
+                    onNavigateToPastGame = { navController.navigate(PastGameRoute) },
+                    onNavigateToPastTourney = { navController.navigate(PastTourneyRoute) },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<PastGameRoute> {
                 PastGameScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<PastTourneyRoute> {
                 PastTourneyScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToTeams = { navController.navigate(TeamsRoute) },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<TeamsRoute> {
                 TeamsScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
             // game invites
             composable<GameInvitesRoute> {
                 GameInvitesScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<JoinTheTourneyRoute> {
                 JoinTheTourneyScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
             // my games
             composable<ChangeTeamRoute> {
                 ChangeTeamScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
-            composable<MyGamesRoute> { MyGamesScreen(navController) }
+            composable<MyGamesRoute> {
+                MyGamesScreen(
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToCreateGame = { navController.navigate(BasicGameSetupRoute) },
+                    onNavigateToMyGame = { navController.navigate(MyGameRoute) },
+                    onNavigateToMyTourney = { navController.navigate(MyTourneyRoute) },
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
             composable<ManagePlayersRoute> {
                 ManagePlayersScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<MyGameRoute> {
                 MyGameScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<MyTourneyRoute> {
                 MyTourneyScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToManagePlayers = { navController.navigate(ManagePlayersRoute) },
+                    onNavigateToChangeTeam = { navController.navigate(ChangeTeamRoute) },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
@@ -345,28 +408,31 @@ fun NavHostContainer(
                 val holder: TournamentDetailsDataHolder = koinInject<TournamentDetailsDataHolder>()
                 val tournamentDetails = holder.get<TournamentDetails>(holderKey)
                 JoinedPlayersScreen(
-                    navController = navController,
                     paddingFromSystemUi = paddingFromSystemUi,
                     tournamentDetails = tournamentDetails,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<UpcomingGameDetailsRoute> {
                 UpcomingGameDetailsScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<UpcomingGamesRoute> {
                 UpcomingGamesScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<UpcomingTourneyDetailsRoute> {
                 UpcomingTourneyDetailsScreen(
-                    navController = navController,
+                    paddingFromSystemUi = paddingFromSystemUi,
                     tournamentDetails = null,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    onNavigateToJoinedPlayers = { key ->
+                        navController.navigate(JoinedPlayersRoute(tournamentDetailsHolderKey = key))
+                    },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
         }
@@ -374,33 +440,47 @@ fun NavHostContainer(
         // Profile nested graph
         navigation<ProfileTopLevelRoute>(startDestination = ProfileRoute) {
             composable<ProfileRoute> {
+                BackHandler { activityFinisher() }
                 ProfileScreen(
-                    navController = navController,
                     paddingFromSystemUi = paddingFromSystemUi,
-                    finisher = activityFinisher,
+                    onNavigateToPlayers = { navController.navigate(PlayersRoute) },
+                    onNavigateToPersonalData = { navController.navigate(PersonalDataRoute) },
+                    onNavigateToPayments = { navController.navigate(PaymentsRoute) },
+                    onNavigateToFaq = { navController.navigate(FaqRoute) },
+                    onNavigateToAbout = { navController.navigate(AboutRoute) },
+                    onNavigateToAuthorization = {
+                        navController.navigate(AuthorizationRoute) {
+                            popUpTo(LaunchRoute) { inclusive = true }
+                        }
+                    }
                 )
             }
 
             composable<AboutRoute> {
                 AboutScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
             composable<ChangePhotoRoute> { backStackEntry ->
                 val avatarString = backStackEntry.toRoute<ChangePhotoRoute>().avatarUrl
                 ChangePhotoScreen(
-                    navController = navController,
                     avatarFromPersonalData = avatarString,
+                    onNavigateBack = { newAvatar ->
+                        newAvatar?.let {
+                            navController.previousBackStackEntry?.savedStateHandle?.set(BackAvatarHolder.AVATAR_KEY, it)
+                        }
+                        navController.popBackStack()
+                    },
                     paddingFromSystemUi = paddingFromSystemUi
                 )
             }
 
             composable<FaqRoute> {
                 FaqScreen(
-                    navController = navController,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
@@ -409,9 +489,12 @@ fun NavHostContainer(
                     parametersOf(BackPaymentsHolder(backStackEntry.savedStateHandle))
                 }
                 PaymentsScreen(
-                    navController = navController,
-                    viewModel = viewModel,
-                    paddingFromSystemUi = paddingFromSystemUi
+                    paddingFromSystemUi = paddingFromSystemUi,
+                    onNavigateToEnterPaymentData = { paymentTypeName, paymentsJsonString ->
+                        navController.navigate(EnterPaymentDataRoute(paymentTypeName, paymentsJsonString))
+                    },
+                    onNavigateBack = { navController.popBackStack() },
+                    viewModel = viewModel
                 )
             }
 
@@ -420,7 +503,10 @@ fun NavHostContainer(
                     parametersOf(BackAvatarHolder(backStackEntry.savedStateHandle))
                 }
                 PersonalDataScreen(
-                    navController = navController,
+                    onNavigateToChangePhoto = { avatarUrl ->
+                        navController.navigate(ChangePhotoRoute(avatarUrl = avatarUrl))
+                    },
+                    onNavigateBack = { navController.popBackStack() },
                     viewModel = viewModel,
                     paddingFromSystemUi = paddingFromSystemUi
                 )
@@ -432,7 +518,12 @@ fun NavHostContainer(
                     parametersOf(playerId)
                 }
                 PlayerProfileScreen(
-                    navController = navController,
+                    onNavigateBack = { backPlayerId ->
+                        backPlayerId?.let {
+                            navController.previousBackStackEntry?.savedStateHandle?.set(BackPlayerIdHolder.PLAYER_ID_KEY, it)
+                        }
+                        navController.popBackStack()
+                    },
                     viewModel = viewModel,
                     paddingFromSystemUi = paddingFromSystemUi,
                 )
@@ -443,7 +534,10 @@ fun NavHostContainer(
                     parametersOf(BackPlayerIdHolder(backStackEntry.savedStateHandle))
                 }
                 PlayersScreen(
-                    navController = navController,
+                    onNavigateToPlayerProfile = { playerId ->
+                        navController.navigate(PlayerProfileRoute(playerId = playerId))
+                    },
+                    onNavigateBack = { navController.popBackStack() },
                     viewModel = viewModel,
                     paddingFromSystemUi = paddingFromSystemUi
                 )
@@ -455,7 +549,12 @@ fun NavHostContainer(
                     parametersOf(routeWithArgs.paymentTypeName, routeWithArgs.paymentsJsonString)
                 }
                 EnterPaymentDataScreen(
-                    navController = navController,
+                    onNavigateBack = { updatedPaymentsJsonString ->
+                        updatedPaymentsJsonString?.let {
+                            navController.previousBackStackEntry?.savedStateHandle?.set(BackPaymentsHolder.PAYMENTS_KEY, it)
+                        }
+                        navController.popBackStack()
+                    },
                     viewModel = viewModel,
                     paddingFromSystemUi = paddingFromSystemUi
                 )
@@ -468,10 +567,14 @@ fun NavHostContainer(
             )
         ) { backStackEntry ->
             val route = backStackEntry.toRoute<ShareLinkRoute>()
-            val viewModel = koinViewModel<JoinTheGameViewModel>()
             JoinTheGameScreen(
-                navController = navController,
-                viewModel = viewModel
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToSuccess = { succeedGameJson ->
+                    navController.navigate(SuccessRoute(succeedGameJson))
+                },
+                viewModel = koinViewModel<JoinTheGameViewModel> {
+                    parametersOf(route.id.toIntOrNull())
+                }
             )
         }
     }

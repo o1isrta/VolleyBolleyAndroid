@@ -52,7 +52,12 @@ val profileModule = module {
     factory { DeleteAvatarUseCase(repository = get()) }
 
     // ViewModels Profile flow
-    viewModel { ProfileScreenViewModel(deleteProfileUseCase = get()) }
+    viewModel {
+        ProfileScreenViewModel(
+            deleteProfileUseCase = get(),
+            clearAllLoginDataUseCase = get()
+        )
+    }
     viewModel { (backAvatarHolder: BackAvatarHolder) ->
         PersonalDataScreenViewModel(
             backAvatarHolder = backAvatarHolder,

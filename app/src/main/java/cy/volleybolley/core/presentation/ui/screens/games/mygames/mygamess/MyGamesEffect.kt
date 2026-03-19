@@ -4,6 +4,8 @@ import cy.volleybolley.core.presentation.base.UiEffect
 
 sealed interface MyGamesEffect : UiEffect {
     data object NavigateBack : MyGamesEffect
-    data class Navigate(val route: Any) : MyGamesEffect
+    data object NavigateToCreateGame : MyGamesEffect
+    data object NavigateToMyGame : MyGamesEffect
+    data object NavigateToMyTourney : MyGamesEffect
     data class OpenMap(val location: Location) : MyGamesEffect
 }

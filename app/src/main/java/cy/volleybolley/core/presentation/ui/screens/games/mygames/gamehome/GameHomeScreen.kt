@@ -1,12 +1,12 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.gamehome
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,23 +25,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun GameHomeScreen(
-    navController: NavHostController,
-    finisher: () -> Unit = {},
+    paddingFromSystemUi: PaddingValues,
+    onNavigateToMyGames: () -> Unit,
+    onNavigateToUpcomingGames: () -> Unit,
+    onNavigateToInvites: () -> Unit,
+    onNavigateToArchive: () -> Unit,
     viewModel: GameHomeViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -49,18 +51,21 @@ fun GameHomeScreen(
 
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
-            is GameHomeEffect.Navigate -> navController.navigate(currentEffect.route)
+            is GameHomeEffect.NavigateToMyGames -> onNavigateToMyGames()
+            is GameHomeEffect.NavigateToUpcomingGames -> onNavigateToUpcomingGames()
+            is GameHomeEffect.NavigateToInvites -> onNavigateToInvites()
+            is GameHomeEffect.NavigateToArchive -> onNavigateToArchive()
             null -> {}
         }
     }
 
     GameHomeContent(
         state = state,
+        paddingFromSystemUi = paddingFromSystemUi,
         onMyGamesClick = { viewModel.obtainEvent(GameHomeAction.ClickMyGames) },
         onUpcomingGamesClick = { viewModel.obtainEvent(GameHomeAction.ClickUpcomingGames) },
         onInvitesClick = { viewModel.obtainEvent(GameHomeAction.ClickInvites) },
-        onArchiveClick = { viewModel.obtainEvent(GameHomeAction.ClickArchive) },
-        onBack = { finisher() }
+        onArchiveClick = { viewModel.obtainEvent(GameHomeAction.ClickArchive) }
     )
 }
 
@@ -68,13 +73,15 @@ fun GameHomeScreen(
 @Composable
 private fun GameHomeContent(
     state: GameHomeState,
+    paddingFromSystemUi: PaddingValues,
     onMyGamesClick: () -> Unit,
     onUpcomingGamesClick: () -> Unit,
     onInvitesClick: () -> Unit,
-    onArchiveClick: () -> Unit,
-    onBack: () -> Unit
+    onArchiveClick: () -> Unit
 ) {
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier
+        .padding(top = paddingFromSystemUi.calculateTopPadding())
+        .fillMaxSize()) {
         GlassCard {
             MenuItem(
                 text = stringResource(R.string.my_games),
@@ -115,7 +122,6 @@ private fun GameHomeContent(
             )
         }
     }
-    BackHandler { onBack() }
 }
 
 @Composable
@@ -221,55 +227,17 @@ private fun CountBadge(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun GameHomeScreenPreview() {
-    VolleybolleyTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            val fakeState = GameHomeState(upcomingGame = "March, 10", invites = 2)
-            val navController = rememberNavController()
-
-            Box(Modifier.fillMaxSize()) {
-                GlassCard {
-                    MenuItem(
-                        text = stringResource(R.string.my_games),
-                        onClick = { /* no-op in preview */ }
-                    )
-                    HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
-
-                    val upcomingSubtitle =
-                        if (fakeState.upcomingGame.isNotBlank()) {
-                            stringResource(R.string.next_game, fakeState.upcomingGame)
-                        } else {
-                            ""
-                        }
-
-                    MenuItemWithSubtitle(
-                        title = stringResource(R.string.upcoming_games),
-                        subtitle = upcomingSubtitle,
-                        onClick = { /* no-op in preview */ }
-                    )
-                    HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
-
-                    MenuItem(
-                        text = stringResource(R.string.game_invites),
-                        trailing = {
-                            if (fakeState.invites > 0) CountBadge(text = fakeState.invites.toString())
-                        },
-                        onClick = { /* no-op in preview */ }
-                    )
-                    HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
-
-                    MenuItem(
-                        text = stringResource(R.string.archive),
-                        onClick = { /* no-op in preview */ }
-                    )
-                }
-            }
-        }
+    RootContainerForPreview {
+        GameHomeContent(
+            state = GameHomeState(),
+            paddingFromSystemUi = it,
+            onMyGamesClick = {},
+            onUpcomingGamesClick = {},
+            onInvitesClick = {},
+            onArchiveClick = {}
+        )
     }
 }

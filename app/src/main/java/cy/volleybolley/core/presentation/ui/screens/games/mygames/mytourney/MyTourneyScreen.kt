@@ -45,8 +45,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
@@ -67,9 +65,11 @@ import java.util.Locale
 // Обёртка
 @Composable
 fun MyTourneyScreen(
-    navController: NavHostController,
-    viewModel: MyTourneyViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues = PaddingValues(0.dp)
+    paddingFromSystemUi: PaddingValues,
+    onNavigateToManagePlayers: () -> Unit,
+    onNavigateToChangeTeam: () -> Unit,
+    onNavigateBack: () -> Unit,
+    viewModel: MyTourneyViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -78,8 +78,9 @@ fun MyTourneyScreen(
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
             null -> {}
-            is MyTourneyEffect.NavigateBack -> navController.popBackStack()
-            is MyTourneyEffect.Navigate -> navController.navigate(currentEffect.route)
+            is MyTourneyEffect.NavigateBack -> onNavigateBack()
+            is MyTourneyEffect.NavigateToManagePlayers -> onNavigateToManagePlayers()
+            is MyTourneyEffect.NavigateToChangeTeam -> onNavigateToChangeTeam()
             is MyTourneyEffect.OpenMap -> openMap(context, currentEffect.location)
             is MyTourneyEffect.InvitePlayers -> { /* TODO */ }
             is MyTourneyEffect.ShareLink -> { /* TODO */ }
@@ -448,7 +449,16 @@ private fun openMap(context: Context, location: Location) {
 private fun MyTourneyScreen_Preview() {
     VolleybolleyTheme {
         Box(Modifier.background(VolleyColor.TurquoiseDark)) {
-            MyTourneyScreen(rememberNavController())
+            MyTourneyContent(
+                details = myTourneyStub(),
+                paddingFromSystemUi = PaddingValues(0.dp),
+                onBack = {},
+                onOpenMap = {},
+                onInvite = {},
+                onShare = {},
+                onCancel = {},
+                onPlayersOrTeams = {}
+            )
         }
     }
 }

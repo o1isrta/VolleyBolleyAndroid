@@ -15,9 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
@@ -26,7 +25,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun InvitePlayersScreen(
-    navController: NavHostController,
+    onNavigateBack: () -> Unit,
     viewModel: InvitePlayersScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues
 ) {
@@ -35,7 +34,7 @@ fun InvitePlayersScreen(
 
     LaunchedEffect(effect) {
         when (effect) {
-            is InvitePlayersScreenEffect.NavigateBack -> navController.popBackStack()
+            is InvitePlayersScreenEffect.NavigateBack -> onNavigateBack()
             null -> {}
         }
     }
@@ -87,11 +86,7 @@ private fun InvitePlayersScreen(
 @Preview
 @Composable
 private fun InvitePlayersScreenPreview() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(VolleyColor.TurquoiseDark)
-    ) {
+    RootContainerForPreview {
         InvitePlayersScreen(
             state = InvitePlayersScreenState(),
             paddingFromSystemUi = PaddingValues(0.dp),

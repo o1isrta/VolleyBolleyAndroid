@@ -24,8 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBarWithBackButton
@@ -40,17 +38,17 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun JoinedPlayersScreen(
-    navController: NavHostController,
+    paddingFromSystemUi: PaddingValues,
     tournamentDetails: TournamentDetails?,
-    viewModel: JoinedPlayersScreenViewModel = koinViewModel { parametersOf(tournamentDetails) },
-    paddingFromSystemUi: PaddingValues
+    onNavigateBack: () -> Unit,
+    viewModel: JoinedPlayersScreenViewModel = koinViewModel { parametersOf(tournamentDetails) }
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
         when (effect) {
-            is JoinedPlayersScreenEffect.NavigateBack -> navController.popBackStack()
+            is JoinedPlayersScreenEffect.NavigateBack -> onNavigateBack()
             null -> {}
         }
     }

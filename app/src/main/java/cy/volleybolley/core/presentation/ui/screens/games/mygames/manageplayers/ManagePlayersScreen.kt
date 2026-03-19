@@ -37,8 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
@@ -50,16 +48,16 @@ private const val LEVEL_HIGH = "H"
 
 @Composable
 fun ManagePlayersScreen(
-    navController: NavHostController,
-    viewModel: ManagePlayersViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues = PaddingValues(0.dp)
+    paddingFromSystemUi: PaddingValues,
+    onNavigateBack: () -> Unit,
+    viewModel: ManagePlayersViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
         when (effect) {
-            is ManagePlayersEffect.NavigateBack -> navController.popBackStack()
+            is ManagePlayersEffect.NavigateBack -> onNavigateBack()
             null -> {}
         }
     }
@@ -257,7 +255,11 @@ private fun ManagePlayersScreenPreview() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-            ManagePlayersScreen(rememberNavController())
+            ManagePlayersContent(
+                paddingFromSystemUi = PaddingValues(0.dp),
+                onBack = {},
+                onRemovePlayer = {}
+            )
         }
     }
 }

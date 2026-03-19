@@ -1,6 +1,5 @@
 package cy.volleybolley.profile.presentation.ui.screens.profile
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +19,7 @@ import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,15 +32,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
-import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.NavigateFromProfileScreen
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.NavigateToAbout
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.NavigateToAuthorization
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.NavigateToFaq
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.NavigateToPayments
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.NavigateToPersonalData
+import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.NavigateToPlayers
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.ShowDeleteAccountDialog
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEffect.ShowLogoutDialog
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenEvent.OnAboutClick
@@ -55,119 +59,137 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProfileScreen(
-    navController: NavHostController,
-    viewModel: ProfileScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues,
-    finisher: () -> Unit,
+    onNavigateToPlayers: () -> Unit,
+    onNavigateToPersonalData: () -> Unit,
+    onNavigateToPayments: () -> Unit,
+    onNavigateToFaq: () -> Unit,
+    onNavigateToAbout: () -> Unit,
+    onNavigateToAuthorization: () -> Unit,
+    viewModel: ProfileScreenViewModel = koinViewModel()
 ) {
-    val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
-
-    ProfileScreen(
-        effect = effect,
-        navigateAction = { route ->
-            navController.navigate(route)
-        },
-        eventCallback = { event -> viewModel.obtainEvent(event) },
-        modifier = Modifier.padding(paddingFromSystemUi)
-    )
-
-    BackHandler { finisher() }
-}
-
-@Composable
-private fun ProfileScreen(
-    modifier: Modifier = Modifier,
-    effect: ProfileScreenEffect?,
-    navigateAction: (NavMap) -> Unit,
-    eventCallback: (ProfileScreenEvent) -> Unit,
-) {
-    Column(
-        modifier = modifier
-    ) {
-        VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = 32,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(20.dp)
-            ) {
-                ProfileComponent(
-                    painter = painterResource(R.drawable.ic_ball),
-                    title = stringResource(R.string.profile_players_component),
-                ) { eventCallback(OnPlayersClick) }
-
-                ProfileComponentDivider()
-
-                ProfileComponent(
-                    painter = painterResource(R.drawable.ic_personal_data),
-                    title = stringResource(R.string.profile_personal_data_component),
-                ) { eventCallback(OnPersonalDataClick) }
-
-                ProfileComponentDivider()
-
-                ProfileComponent(
-                    painter = painterResource(R.drawable.ic_payments),
-                    title = stringResource(R.string.profile_payments_component),
-                ) { eventCallback(OnPaymentsClick) }
-
-                ProfileComponentDivider()
-
-                ProfileComponent(
-                    painter = painterResource(R.drawable.ic_support),
-                    title = stringResource(R.string.profile_support_component),
-                ) { eventCallback(OnSupportClick) }
-
-                ProfileComponentDivider()
-
-                ProfileComponent(
-                    painter = painterResource(R.drawable.ic_faq),
-                    title = stringResource(R.string.profile_faq_component),
-                ) { eventCallback(OnFaqClick) }
-
-                ProfileComponentDivider()
-
-                ProfileComponent(
-                    painter = painterResource(R.drawable.ic_about),
-                    title = stringResource(R.string.profile_about_component),
-                ) { eventCallback(OnAboutClick) }
-
-                ProfileComponentDivider()
-
-                ProfileComponent(
-                    painter = painterResource(R.drawable.ic_logout),
-                    title = stringResource(R.string.profile_logout_component),
-                ) { eventCallback(OnLogoutClick) }
-            }
-        }
-
-        Box(
-            contentAlignment = Alignment.BottomStart,
-            modifier = Modifier
-                .padding(28.dp, 20.dp)
-                .weight(1f)
-        ) {
-            VolleyText.BodyLight(
-                text = stringResource(R.string.delete_account),
-                color = VolleyColor.White,
-                modifier = Modifier
-                    .clickable(
-                        interactionSource = null,
-                        indication = null,
-                        onClick = { eventCallback(OnDeleteAccountClick) }
-                    )
-            )
-        }
-    }
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
-        when (effect) {
-            is NavigateFromProfileScreen -> navigateAction(effect.route)
+        when (val currentEffect = effect) {
+            NavigateToPlayers -> onNavigateToPlayers()
+            NavigateToPersonalData -> onNavigateToPersonalData()
+            NavigateToPayments -> onNavigateToPayments()
+            NavigateToFaq -> onNavigateToFaq()
+            NavigateToAbout -> onNavigateToAbout()
+            NavigateToAuthorization -> onNavigateToAuthorization()
             is ShowLogoutDialog -> {}
             is ShowDeleteAccountDialog -> {}
             null -> Unit
+        }
+    }
+
+    ProfileScreen(
+        state = state,
+        effect = effect,
+        eventCallback = { event -> viewModel.obtainEvent(event) },
+        modifier = Modifier.padding(paddingFromSystemUi)
+    )
+}
+
+@Stable
+@Composable
+private fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    state: ProfileScreenState,
+    effect: ProfileScreenEffect?,
+    eventCallback: (ProfileScreenEvent) -> Unit,
+) {
+    Box(modifier = modifier) {
+        Column {
+            VolleyContainersRootTransparent.TransparentContainer(
+                cornerRadius = 32,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(20.dp)
+                ) {
+                    ProfileComponent(
+                        painter = painterResource(R.drawable.ic_ball),
+                        title = stringResource(R.string.profile_players_component),
+                    ) { eventCallback(OnPlayersClick) }
+
+                    ProfileComponentDivider()
+
+                    ProfileComponent(
+                        painter = painterResource(R.drawable.ic_personal_data),
+                        title = stringResource(R.string.profile_personal_data_component),
+                    ) { eventCallback(OnPersonalDataClick) }
+
+                    ProfileComponentDivider()
+
+                    ProfileComponent(
+                        painter = painterResource(R.drawable.ic_payments),
+                        title = stringResource(R.string.profile_payments_component),
+                    ) { eventCallback(OnPaymentsClick) }
+
+                    ProfileComponentDivider()
+
+                    ProfileComponent(
+                        painter = painterResource(R.drawable.ic_support),
+                        title = stringResource(R.string.profile_support_component),
+                    ) { eventCallback(OnSupportClick) }
+
+                    ProfileComponentDivider()
+
+                    ProfileComponent(
+                        painter = painterResource(R.drawable.ic_faq),
+                        title = stringResource(R.string.profile_faq_component),
+                    ) { eventCallback(OnFaqClick) }
+
+                    ProfileComponentDivider()
+
+                    ProfileComponent(
+                        painter = painterResource(R.drawable.ic_about),
+                        title = stringResource(R.string.profile_about_component),
+                    ) { eventCallback(OnAboutClick) }
+
+                    ProfileComponentDivider()
+
+                    ProfileComponent(
+                        painter = painterResource(R.drawable.ic_logout),
+                        title = stringResource(R.string.profile_logout_component),
+                    ) { eventCallback(OnLogoutClick) }
+                }
+            }
+
+            Box(
+                contentAlignment = Alignment.BottomStart,
+                modifier = Modifier
+                    .padding(28.dp, 20.dp)
+                    .weight(1f)
+            ) {
+                VolleyText.BodyLight(
+                    text = stringResource(R.string.delete_account),
+                    color = VolleyColor.White,
+                    modifier = Modifier
+                        .clickable(
+                            interactionSource = null,
+                            indication = null,
+                            onClick = { eventCallback(OnDeleteAccountClick) }
+                        )
+                )
+            }
+        }
+
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(VolleyColor.Black.copy(alpha = 0.5f)),
+                contentAlignment = Alignment.Center
+            ) {
+                VolleyProgress.CircularProgress()
+            }
         }
     }
 
@@ -242,7 +264,11 @@ private fun ProfileDialog(
 ) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(true, true, false)
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true,
+            usePlatformDefaultWidth = false
+        )
     ) {
         Card(
             modifier = Modifier
@@ -302,9 +328,10 @@ private fun PreviewProfileScreen() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             ProfileScreen(
+                state = ProfileScreenState(),
                 effect = null,
-                navigateAction = {}
-            ) { }
+                eventCallback = {}
+            )
         }
     }
 }

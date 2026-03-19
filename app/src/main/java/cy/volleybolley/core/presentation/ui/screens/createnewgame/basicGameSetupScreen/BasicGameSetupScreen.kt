@@ -24,14 +24,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
@@ -44,8 +43,6 @@ import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.navigation.GameEnteringConditionsRoute
-import cy.volleybolley.core.presentation.ui.navigation.SearchCourtRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Gender
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
@@ -54,38 +51,29 @@ import java.time.LocalDate
 
 @Composable
 fun BasicGameSetupScreen(
-    navController: NavHostController,
-    viewModel: BasicGameSetupScreenViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues
+    paddingFromSystemUi: PaddingValues,
+    onNavigateToNextStep: () -> Unit,
+    onNavigateBack: () -> Unit,
+    viewModel: BasicGameSetupScreenViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     val showCalendar by viewModel.showCalendar.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val resources = LocalResources.current
 
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
-            is BasicGameSetupScreenEffect.NavigateToCreatePlace -> {
-                navController.navigate(SearchCourtRoute)
-            }
-
-            is BasicGameSetupScreenEffect.NavigateBack -> {
-                navController.popBackStack()
-            }
-
-            is BasicGameSetupScreenEffect.NavigateNextStep -> {
-                navController.navigate(GameEnteringConditionsRoute)
-            }
-
+            is BasicGameSetupScreenEffect.NavigateBack -> onNavigateBack()
+            is BasicGameSetupScreenEffect.NavigateNextStep -> onNavigateToNextStep()
             is BasicGameSetupScreenEffect.ShowErrorMessage -> {
                 Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_SHORT).show()
             }
 
             is BasicGameSetupScreenEffect.ShowErrorMessageById -> {
-                val errorMessage = context.getString(currentEffect.messageId)
+                val errorMessage = resources.getString(currentEffect.messageId)
                 Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
             }
-
             null -> {}
         }
     }

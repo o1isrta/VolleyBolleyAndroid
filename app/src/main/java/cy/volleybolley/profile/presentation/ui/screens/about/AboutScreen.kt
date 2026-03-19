@@ -22,33 +22,32 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreenEffect.NavigateFromAboutScreen
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreenEvent.OnBackFromAboutClick
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AboutScreen(
-    navController: NavHostController,
-    viewModel: AboutScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues,
+    onNavigateBack: () -> Unit,
+    viewModel: AboutScreenViewModel = koinViewModel()
 ) {
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    LaunchedEffect(effect) {
+        when (effect) {
+            is NavigateFromAboutScreen -> onNavigateBack()
+            null -> {}
+        }
+    }
+
     AboutScreen(
-        effect = effect,
-        navigateAction = { route ->
-            route?.let {
-                navController.navigate(it)
-            } ?: navController.popBackStack()
-        },
         eventCallback = { event -> viewModel.obtainEvent(event) },
         modifier = Modifier.padding(paddingFromSystemUi)
     )
@@ -57,8 +56,6 @@ fun AboutScreen(
 @Composable
 private fun AboutScreen(
     modifier: Modifier = Modifier,
-    effect: AboutScreenEffect?,
-    navigateAction: (NavMap?) -> Unit,
     eventCallback: (AboutScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
@@ -107,13 +104,6 @@ private fun AboutScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-        }
-    }
-
-    LaunchedEffect(effect) {
-        when (effect) {
-            is NavigateFromAboutScreen -> navigateAction(effect.route)
-            null -> {}
         }
     }
 }
@@ -175,8 +165,6 @@ private fun PreviewAboutScreen() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             AboutScreen(
-                effect = null,
-                navigateAction = {},
                 eventCallback = {},
             )
         }

@@ -23,8 +23,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyCashField
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
@@ -34,16 +32,17 @@ import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.PaymentsRoute
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Privacy
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.gameEnteringConditionsScreen.GameEnteringConditionsScreenConstants
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TourneyEnteringConditionsScreen(
-    navController: NavHostController,
-    viewModel: TourneyEnteringConditionsScreenViewModel = koinViewModel(),
-    paddingFromSystemUi: PaddingValues
+    paddingFromSystemUi: PaddingValues,
+    onNavigateToPayments: () -> Unit,
+    onNavigateToChangeTeam: () -> Unit,
+    onNavigateBack: () -> Unit,
+    viewModel: TourneyEnteringConditionsScreenViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -55,21 +54,13 @@ fun TourneyEnteringConditionsScreen(
                 Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_SHORT).show()
             }
 
-            is TourneyEnteringConditionsScreenEffect.NavigateToPayments -> {
-                navController.navigate(PaymentsRoute)
-            }
+            is TourneyEnteringConditionsScreenEffect.NavigateToPayments -> onNavigateToPayments()
 
-            is TourneyEnteringConditionsScreenEffect.NavigateBack -> {
-                navController.popBackStack()
-            }
+            is TourneyEnteringConditionsScreenEffect.NavigateBack -> onNavigateBack()
 
-            is TourneyEnteringConditionsScreenEffect.NavigateToSuccess -> {
-                navController.popBackStack()
-            }
+            is TourneyEnteringConditionsScreenEffect.NavigateToSuccess -> onNavigateBack()
 
-            is TourneyEnteringConditionsScreenEffect.NavigateToChangeTeam -> {
-                // navController.navigate(ChangeTeamRoute)
-            }
+            is TourneyEnteringConditionsScreenEffect.NavigateToChangeTeam -> onNavigateToChangeTeam()
 
             null -> {}
         }

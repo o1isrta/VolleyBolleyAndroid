@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.domain.model.LevelType
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
@@ -40,7 +39,7 @@ import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 @Composable
 fun RatePlayersScreen(
-    navController: NavHostController,
+    onNavigateBack: () -> Unit,
     viewModel: RatePlayersViewModel,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -49,9 +48,7 @@ fun RatePlayersScreen(
     RatePlayersScreen(
         state = state,
         effect = effect,
-        navigateAction = {
-            navController.popBackStack()
-        },
+        navigateAction = onNavigateBack,
         eventCallback = { event ->
             viewModel.obtainEvent(event)
         }

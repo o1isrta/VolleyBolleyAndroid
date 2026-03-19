@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,70 +27,45 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.HomeRoute
-import cy.volleybolley.core.presentation.ui.navigation.InvitePlayersRoute
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 @Composable
 fun SuccessScreen(
-    navController: NavHostController,
+    onNavigateToHome: () -> Unit,
+    onNavigateToInvitePlayers: (Int) -> Unit,
     viewModel: SuccessViewModel
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
-    SuccessScreen(
-        state = state,
-        effect = effect,
-        navigateAction = { route ->
-            when (route) {
-                HomeRoute -> {
-                    navController.navigate(HomeRoute) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = false
-                        }
-                        launchSingleTop = true
-                    }
-                }
-
-                else -> navController.navigate(route)
-            }
-        },
-        eventCallback = { event ->
-            viewModel.obtainEvent(event)
-        }
-    )
-}
-
-@Composable
-private fun SuccessScreen(
-    state: SuccessState,
-    effect: SuccessEffect?,
-    navigateAction: (NavMap) -> Unit,
-    eventCallback: (SuccessEvent) -> Unit,
-) {
-    val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
+    LaunchedEffect(effect) {
         when (effect) {
-            SuccessEffect.CloseScreen -> navigateAction(HomeRoute)
-
-            SuccessEffect.NavigateToInvitePlayers -> navigateAction(
-                InvitePlayersRoute(id = state.event.id)
-            )
-
+            SuccessEffect.CloseScreen -> onNavigateToHome()
+            SuccessEffect.NavigateToInvitePlayers -> onNavigateToInvitePlayers(state.event.id)
             null -> Unit
         }
     }
+
+    SuccessScreen(
+        state = state,
+        eventCallback = { event -> viewModel.obtainEvent(event) }
+    )
+}
+
+@Stable
+@Composable
+private fun SuccessScreen(
+    state: SuccessState,
+    eventCallback: (SuccessEvent) -> Unit,
+) {
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column {
@@ -265,8 +241,6 @@ private fun SuccessScreenPreview() {
             )
             SuccessScreen(
                 state = state,
-                effect = null,
-                navigateAction = {},
                 eventCallback = {}
             )
         }

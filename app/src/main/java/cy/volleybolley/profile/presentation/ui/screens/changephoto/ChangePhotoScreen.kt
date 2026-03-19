@@ -44,7 +44,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
@@ -70,7 +69,7 @@ import java.io.File
 @Composable
 fun ChangePhotoScreen(
     avatarFromPersonalData: String? = null,
-    navController: NavHostController,
+    onNavigateBack: (String?) -> Unit,
     viewModel: ChangePhotoScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues,
 ) {
@@ -134,12 +133,7 @@ fun ChangePhotoScreen(
         cameraPhotoUri = cameraPhotoUri,
         state = state,
         effect = effect,
-        navigateAction = { newAvatar ->
-            newAvatar?.let {
-                navController.previousBackStackEntry?.savedStateHandle?.set(BackAvatarHolder.AVATAR_KEY, it)
-            }
-            navController.popBackStack()
-        },
+        navigateAction = onNavigateBack,
         eventCallback = { event -> viewModel.obtainEvent(event) },
         modifier = Modifier.padding(paddingFromSystemUi)
     )

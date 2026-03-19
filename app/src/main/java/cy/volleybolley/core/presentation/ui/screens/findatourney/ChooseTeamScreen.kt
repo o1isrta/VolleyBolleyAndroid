@@ -15,8 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
@@ -26,7 +24,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ChooseTeamScreen(
-    navController: NavHostController,
+    onNavigateBack: () -> Unit,
     viewModel: ChooseTeamScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues
 ) {
@@ -35,7 +33,7 @@ fun ChooseTeamScreen(
 
     LaunchedEffect(effect) {
         when (effect) {
-            is ChooseTeamScreenEffect.NavigateBack -> navController.popBackStack()
+            is ChooseTeamScreenEffect.NavigateBack -> onNavigateBack()
             null -> {}
         }
     }
@@ -87,6 +85,7 @@ private fun ChooseTeamScreen(
 @Preview
 @Composable
 private fun ChooseTeamScreenPreview() {
+
     Box(
         modifier = Modifier
             .fillMaxSize()

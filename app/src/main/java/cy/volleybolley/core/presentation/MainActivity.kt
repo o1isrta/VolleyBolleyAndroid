@@ -93,22 +93,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            LaunchedEffect(Unit) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                    !viewModel.isNotificationPermissionGranted()
-                ) {
-                    viewModel.showNotificationPermissionDialog(
-                        title = getString(R.string.notifications),
-                        message = getString(R.string.notifications_alert_dialog),
-                        onConfirm = {
-                            viewModel.obtainEvent(MainActivityEvent.RequestPermission)
-                        }
-                    )
-                } else {
-                    viewModel.updateTokenBasedOnPermission()
-                }
-            }
-
             VolleybolleyTheme {
                 RootContainer(
                     state = state,
@@ -120,7 +104,10 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             paddingFromSystemUi = innerPadding,
                             activityFinisher = { finish() },
-                            startDestination = routeNotification ?: LaunchRoute
+                            startDestination = routeNotification ?: LaunchRoute,
+                            onRequestNotificationPermission = {
+                                viewModel.obtainEvent(MainActivityEvent.RequestPermission)
+                            }
                         )
                     }
                 )
@@ -347,18 +334,27 @@ private fun BottomNavComponent(
 @Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 fun PreviewRootContainer() {
+    RootContainerForPreview {}
+}
+
+@Composable
+fun RootContainerForPreview(
+    showTopBar: Boolean = true,
+    showBottomBar: Boolean = true,
+    content: @Composable (PaddingValues) -> Unit
+) {
     VolleybolleyTheme {
         RootContainer(
             state = MainActivityState(),
+            navController = rememberNavController(),
+            showTopBar = showTopBar,
+            showBottomNav = showBottomBar,
             onRequestPermission = {},
-            onDismissDialog = {}
-        ) { padding, navController ->
-            NavHostContainer(
-                navController = navController,
-                paddingFromSystemUi = padding,
-                activityFinisher = {},
-                startDestination = LaunchRoute
-            )
+            onDismissDialog = {},
+            userData = null,
+            currentDestination = null
+        ) { paddingFromSystemUi, _ ->
+            content(paddingFromSystemUi)
         }
     }
 }

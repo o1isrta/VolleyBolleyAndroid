@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -44,14 +45,14 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField.MessageBubble
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
@@ -60,13 +61,17 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.OutlinedActiv
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MyGamesScreen(
-    navController: NavHostController,
-    viewModel: MyGamesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    paddingFromSystemUi: PaddingValues,
+    onNavigateToCreateGame: () -> Unit,
+    onNavigateToMyGame: () -> Unit,
+    onNavigateToMyTourney: () -> Unit,
+    onNavigateBack: () -> Unit,
+    viewModel: MyGamesViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -75,14 +80,30 @@ fun MyGamesScreen(
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
                 null -> Unit
-                MyGamesEffect.NavigateBack -> navController.popBackStack()
-                is MyGamesEffect.Navigate -> navController.navigate(effect.route)
+                MyGamesEffect.NavigateBack -> onNavigateBack()
+                MyGamesEffect.NavigateToCreateGame -> onNavigateToCreateGame()
+                MyGamesEffect.NavigateToMyGame -> onNavigateToMyGame()
+                MyGamesEffect.NavigateToMyTourney -> onNavigateToMyTourney()
                 is MyGamesEffect.OpenMap -> openMap(context, effect.location)
             }
         }
     }
 
-    Box(Modifier.fillMaxSize()) {
+    MyGamesScreen(
+        state = state,
+        paddingFromSystemUi = paddingFromSystemUi,
+        eventCallback = { action -> viewModel.obtainEvent(action) }
+    )
+}
+
+@Stable
+@Composable
+private fun MyGamesScreen(
+    paddingFromSystemUi: PaddingValues,
+    state: MyGamesState,
+    eventCallback: (MyGamesAction) -> Unit
+) {
+    Box(Modifier.padding(top = paddingFromSystemUi.calculateTopPadding()).fillMaxSize()) {
         if (!state.hasGames) {
             // Плейсхолдер
             CardShell(
@@ -97,7 +118,7 @@ fun MyGamesScreen(
             ) {
                 CardHeader(
                     title = stringResource(R.string.my_games),
-                    onBack = { viewModel.obtainEvent(MyGamesAction.ClickBack) }
+                    onBack = { eventCallback(MyGamesAction.ClickBack) }
                 )
 
                 Image(
@@ -124,7 +145,7 @@ fun MyGamesScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(44.dp),
-                    onClick = { viewModel.obtainEvent(MyGamesAction.ClickCreateGame) }
+                    onClick = { eventCallback(MyGamesAction.ClickCreateGame) }
                 )
             }
         } else {
@@ -143,9 +164,9 @@ fun MyGamesScreen(
                         details = details,
                         showHeader = index == 0,
                         cardMinHeight = if (index == 0) 380.dp else 344.dp,
-                        onBack = { viewModel.obtainEvent(MyGamesAction.ClickBack) },
-                        onMapClick = { location -> viewModel.obtainEvent(MyGamesAction.ClickMap(location)) },
-                        onDetailsClick = { d -> viewModel.obtainEvent(MyGamesAction.ClickDetails(d)) }
+                        onBack = { eventCallback(MyGamesAction.ClickBack) },
+                        onMapClick = { location -> eventCallback(MyGamesAction.ClickMap(location)) },
+                        onDetailsClick = { d -> eventCallback(MyGamesAction.ClickDetails(d)) }
                     )
                 }
             }
@@ -337,17 +358,15 @@ private fun openMap(context: Context, location: Location) {
     context.startActivity(chooser)
 }
 
-@Preview(showBackground = true, showSystemUi = true, device = "spec:width=411dp,height=1000dp,dpi=420")
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
-private fun MyGames_Empty_Preview() {
-    VolleybolleyTheme {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            MyGamesScreen(navController = rememberNavController())
-        }
+private fun PreviewMyGames() {
+    RootContainerForPreview {
+        MyGamesScreen(
+            paddingFromSystemUi = it,
+            state = MyGamesState(),
+            eventCallback = {}
+        )
     }
 }
 
