@@ -6,43 +6,35 @@ import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
 import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Gender
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGameRepository) :
-    BaseViewModel<BasicGameSetupScreenState, BasicGameSetupScreenEvent, BasicGameSetupScreenEffect>(
-        BasicGameSetupScreenState()
-    ) {
+class BasicGameSetupScreenViewModel(
+    private val gameRepository: CreateNewGameRepository
+) : BaseViewModel<BasicGameSetupScreenState, BasicGameSetupScreenEvent, BasicGameSetupScreenEffect>(
+    initialState = BasicGameSetupScreenState()
+) {
     private var timeChangeJob: Job? = null
-    // флаг для показа календаря
-    private val _showCalendar = MutableStateFlow(false)
-    open val showCalendar: StateFlow<Boolean> = _showCalendar.asStateFlow()
 
     init {
-        // Используем корутину, чтобы получить начальное значение из uiState
-        viewModelScope.launch {
-            _showCalendar.value = !isSameDay(uiState.value.date, LocalDate.now()) // Инициализация в init
-        }
-        // Подписка на изменения GameData из репозитория
         viewModelScope.launch {
             gameRepository.gameData.collectLatest { gameDataFromRepo ->
-                // Когда GameData в репозитории меняется, обновляем соответствующие части UI State
                 uiStateMutable.update { currentState ->
-                    currentState.copy( // Обновляем нужные поля из GameData
+                    currentState.copy(
                         placeCourt = gameDataFromRepo.placeCourt,
                         date = gameDataFromRepo.date,
                         startTime = gameDataFromRepo.startTime,
                         finishTime = gameDataFromRepo.finishTime,
                         gender = gameDataFromRepo.gender,
-                        levels = gameDataFromRepo.levels
+                        genderButtonIndex = gameDataFromRepo.gender.toButtonIndex(),
+                        levels = gameDataFromRepo.levels,
+                        showCalendar = gameDataFromRepo.date != LocalDate.now()
                     )
                 }
             }
@@ -55,35 +47,19 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
             is BasicGameSetupScreenEvent.OnBackClicked -> onBackClicked()
             is BasicGameSetupScreenEvent.OnChangeClick -> onChangeClick()
             is BasicGameSetupScreenEvent.DateSelected -> dateSelected(event.date)
-
-            is BasicGameSetupScreenEvent.OnPickDateClicked -> {
-                // показываем календарь при нажатии на pick Date
-                _showCalendar.value = true // отображаем календарь, даже если дата сегодня
-            }
-
-            is BasicGameSetupScreenEvent.OnTodayClicked -> {
-                // Скрываем календарь при нажатии "Today" и устанавливаем сегодняшнюю дату
-                uiStateMutable.value = uiStateMutable.value.copy(date = LocalDate.now())
-                _showCalendar.value = false // скрываем календарь
-            }
-
+            is BasicGameSetupScreenEvent.OnPickDateClicked -> onPickDateClicked()
+            is BasicGameSetupScreenEvent.OnTodayClicked -> onTodayClicked()
             is BasicGameSetupScreenEvent.StartTimeChanged -> startTimeChanged(event.time)
             is BasicGameSetupScreenEvent.FinishTimeChanged -> finishTimeChanged(event.time)
-
-            is BasicGameSetupScreenEvent.GenderSelected -> {
-                uiStateMutable.value = uiStateMutable.value.copy(gender = event.gender)
-            }
-
+            is BasicGameSetupScreenEvent.GenderSelected -> genderSelected(event.gender)
             is BasicGameSetupScreenEvent.PlayerLevelSelected -> playerLevelSelected(event.levels)
-
             is BasicGameSetupScreenEvent.OnNextStepClick -> onNextStepClick()
         }
     }
 
     private fun messageChanged(text: String) {
-        // ограничиваем длину в ViewModel — можно бы убрать ограничение в MessageField
         val limited = getLimitedText(MAX_LENGTH, text)
-        uiStateMutable.value = uiStateMutable.value.copy(message = limited)
+        uiStateMutable.update { it.copy(message = limited) }
     }
 
     private fun onBackClicked() {
@@ -94,13 +70,21 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
         sendUiEffect(BasicGameSetupScreenEffect.NavigateBack)
     }
 
+    private fun onPickDateClicked() {
+        uiStateMutable.update { it.copy(showCalendar = true) }
+    }
+
+    private fun onTodayClicked() {
+        uiStateMutable.update { it.copy(date = LocalDate.now(), showCalendar = false) }
+    }
+
     private fun dateSelected(date: LocalDate) {
-        // устанавливаем выбранную дату
         if (!date.isBefore(LocalDate.now())) {
-            uiStateMutable.value = uiStateMutable.value.copy(date = date)
-            // Скрываем календарь только если выбранная дата - сегодня
-            if (isSameDay(date, LocalDate.now())) {
-                _showCalendar.value = false
+            uiStateMutable.update {
+                it.copy(
+                    date = date,
+                    showCalendar = if (date == LocalDate.now()) false else it.showCalendar
+                )
             }
         }
     }
@@ -108,53 +92,46 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
     private fun startTimeChanged(time: VolleyTimeStamp?) {
         timeChangeJob?.cancel()
         timeChangeJob = viewModelScope.launch {
-            delay(DEBOUNCE_DELAY_300MS) // Дебаунс 300ms
-            uiStateMutable.value = uiStateMutable.value.copy(
-                startTime = time
-            )
+            delay(DEBOUNCE_DELAY_300MS)
+            uiStateMutable.update { it.copy(startTime = time) }
         }
     }
 
     private fun finishTimeChanged(time: VolleyTimeStamp?) {
         timeChangeJob?.cancel()
         timeChangeJob = viewModelScope.launch {
-            delay(DEBOUNCE_DELAY_300MS) // Дебаунс 300ms
-            uiStateMutable.value = uiStateMutable.value.copy(
-                finishTime = time
-            )
+            delay(DEBOUNCE_DELAY_300MS)
+            uiStateMutable.update { it.copy(finishTime = time) }
         }
+    }
+
+    private fun genderSelected(gender: Gender) {
+        uiStateMutable.update { it.copy(gender = gender, genderButtonIndex = gender.toButtonIndex()) }
     }
 
     private fun playerLevelSelected(levels: Set<Level>) {
         if (levels.isEmpty()) {
-            sendUiEffect(
-                BasicGameSetupScreenEffect.ShowErrorMessageById(messageId = R.string.please_select_player_level)
-            )
+            sendUiEffect(BasicGameSetupScreenEffect.ShowErrorMessageById(R.string.please_select_player_level))
         } else {
-            uiStateMutable.value = uiStateMutable.value.copy(levels = levels)
+            uiStateMutable.update { it.copy(levels = levels) }
         }
     }
 
     private fun onNextStepClick() {
-        val messageId: Int = validateData()
+        val messageId = validateData()
         if (messageId < 0) {
             nextStep()
         } else {
-            sendUiEffect(
-                BasicGameSetupScreenEffect.ShowErrorMessageById(messageId = messageId)
-            )
+            sendUiEffect(BasicGameSetupScreenEffect.ShowErrorMessageById(messageId))
         }
     }
 
-    private fun nextStep() { // если accountNumber != Null, аккаунт существует
+    private fun nextStep() {
         launchSafe(
-            dispatcher = Dispatchers.IO,
             getErrorLogMessage = { "Error: ${it.message ?: "Unknown error"}" },
             onError = { er ->
                 sendUiEffect(
-                    BasicGameSetupScreenEffect.ShowErrorMessage(
-                        er.message ?: "Failed to check account"
-                    )
+                    BasicGameSetupScreenEffect.ShowErrorMessage(er.message ?: "Failed to check account")
                 )
             }
         ) {
@@ -172,11 +149,9 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
         }
     }
 
-    /** Проверяет собранные на экране данные
-     * */
     private fun validateData(): Int {
-        val startTime = uiStateMutable.value.startTime
-        val finishTime = uiStateMutable.value.finishTime
+        val startTime = uiState.value.startTime
+        val finishTime = uiState.value.finishTime
 
         return when {
             startTime == null || finishTime == null -> R.string.please_select_both_start_and_end_times
@@ -192,37 +167,20 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
         }
     }
 
-    /** Подсчет разницы во времени
-     *
-     */
     private fun calculateDurationMinutes(startTime: VolleyTimeStamp, endTime: VolleyTimeStamp): Int {
         val startTotalMinutes = (startTime.hour +
-            if (startTime.isAfternoon) {
-                VolleyTimeStamp.AFTERNOON_VALUE
-            } else {
-                0
-            }
-            ) * HOUR +
+            if (startTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * HOUR +
             startTime.minutes
 
         val endTotalMinutes = (endTime.hour +
-            if (endTime.isAfternoon) {
-                VolleyTimeStamp.AFTERNOON_VALUE
-            } else {
-                0
-            }
-            ) * HOUR +
+            if (endTime.isAfternoon) VolleyTimeStamp.AFTERNOON_VALUE else 0) * HOUR +
             endTime.minutes
 
         return endTotalMinutes - startTotalMinutes
     }
 
-    /**
-     * Ограничивает текст по длине, не разрубая суррогатные пары.
-     * maxLength — ожидаемый максимальный размер в кодовых единицах (Int).
-     */
     private fun getLimitedText(maxLength: Int, input: String): String {
-        val result = when {
+        return when {
             maxLength <= 0 -> ""
             input.length <= maxLength -> input
             else -> {
@@ -233,12 +191,6 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
                 input.substring(0, end)
             }
         }
-        return result
-    }
-
-    // Вспомогательная ф-ция для сравнения дней
-    fun isSameDay(date1: LocalDate, date2: LocalDate): Boolean {
-        return date1 == date2
     }
 
     private companion object {
@@ -248,4 +200,10 @@ open class BasicGameSetupScreenViewModel(private val gameRepository: CreateNewGa
         const val MAXIMUM_GAME_DURATION_MINUTES = 240
         const val HOUR = 60
     }
+}
+
+private fun Gender.toButtonIndex(): Int = when (this) {
+    Gender.Mix -> GENDER_BUTTON_MIX
+    Gender.Men -> GENDER_BUTTON_MEN
+    Gender.Women -> GENDER_BUTTON_WOMEN
 }

@@ -1,13 +1,11 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewtourney
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyCashField
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
@@ -135,7 +135,7 @@ private fun TourneyEnteringConditionsScreen(
 
                         VolleyButton.ActiveButton(
                             modifier = Modifier
-                                .padding(bottom = 20.dp)
+                                .padding(vertical = 20.dp)
                                 .height(44.dp)
                                 .fillMaxWidth(),
                             text = stringResource(R.string.save_game),
@@ -275,7 +275,7 @@ private fun PaymentSection(
     }
 }
 
-@Preview
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun TourneyEnteringConditionsScreenPreview() {
     val previewState = TourneyEnteringConditionsScreenState(
@@ -284,14 +284,10 @@ private fun TourneyEnteringConditionsScreenPreview() {
         accountNumber = "123 45 6789"
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(VolleyColor.TurquoiseDark)
-    ) {
+    RootContainerForPreview {
         TourneyEnteringConditionsScreen(
             state = previewState,
-            paddingFromSystemUi = PaddingValues(0.dp),
+            paddingFromSystemUi = it,
             eventCallback = {}
         )
     }

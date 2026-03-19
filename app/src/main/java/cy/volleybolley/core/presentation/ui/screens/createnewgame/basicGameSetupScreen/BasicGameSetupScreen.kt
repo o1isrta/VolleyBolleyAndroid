@@ -3,14 +3,11 @@ package cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetu
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,10 +25,12 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
@@ -58,7 +57,6 @@ fun BasicGameSetupScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
-    val showCalendar by viewModel.showCalendar.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val resources = LocalResources.current
 
@@ -67,12 +65,11 @@ fun BasicGameSetupScreen(
             is BasicGameSetupScreenEffect.NavigateBack -> onNavigateBack()
             is BasicGameSetupScreenEffect.NavigateNextStep -> onNavigateToNextStep()
             is BasicGameSetupScreenEffect.ShowErrorMessage -> {
-                Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, currentEffect.message, Toast.LENGTH_SHORT).show()
             }
-
             is BasicGameSetupScreenEffect.ShowErrorMessageById -> {
                 val errorMessage = resources.getString(currentEffect.messageId)
-                Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
             }
             null -> {}
         }
@@ -81,8 +78,6 @@ fun BasicGameSetupScreen(
     BasicGameSetupScreen(
         state = state,
         paddingFromSystemUi = paddingFromSystemUi,
-        showCalendar = showCalendar,
-        isSameDay = { date1, date2 -> viewModel.isSameDay(date1, date2) },
         eventCallback = { viewModel.obtainEvent(it) }
     )
 }
@@ -92,8 +87,6 @@ fun BasicGameSetupScreen(
 private fun BasicGameSetupScreen(
     state: BasicGameSetupScreenState,
     paddingFromSystemUi: PaddingValues,
-    showCalendar: Boolean,
-    isSameDay: (LocalDate, LocalDate) -> Boolean,
     eventCallback: (BasicGameSetupScreenEvent) -> Unit
 ) {
     val scrollState = rememberSaveable(saver = ScrollState.Saver) {
@@ -138,8 +131,7 @@ private fun BasicGameSetupScreen(
 
                         DateSection(
                             date = state.date,
-                            showCalendar = showCalendar,
-                            isSameDay = isSameDay,
+                            showCalendar = state.showCalendar,
                             onTodayClicked = { eventCallback(BasicGameSetupScreenEvent.OnTodayClicked) },
                             onPickDateClicked = { eventCallback(BasicGameSetupScreenEvent.OnPickDateClicked) },
                             onDateSelected = { eventCallback(BasicGameSetupScreenEvent.DateSelected(it)) }
@@ -157,7 +149,7 @@ private fun BasicGameSetupScreen(
                         Spacer(modifier = Modifier.size(size = 16.dp))
 
                         GenderSection(
-                            gender = state.gender,
+                            genderButtonIndex = state.genderButtonIndex,
                             onGenderSelected = { eventCallback(BasicGameSetupScreenEvent.GenderSelected(it)) }
                         )
 
@@ -269,11 +261,11 @@ private fun PlaceSection(
     }
 }
 
+@Stable
 @Composable
 private fun DateSection(
     date: LocalDate,
     showCalendar: Boolean,
-    isSameDay: (LocalDate, LocalDate) -> Boolean,
     onTodayClicked: () -> Unit,
     onPickDateClicked: () -> Unit,
     onDateSelected: (LocalDate) -> Unit
@@ -286,7 +278,7 @@ private fun DateSection(
 
     Spacer(modifier = Modifier.size(size = 12.dp))
     VolleyButton.GroupButtonsForDate2(
-        checkId = if (isSameDay(date, LocalDate.now())) 1 else 2,
+        checkId = if (date == LocalDate.now()) 1 else 2,
         modifier = Modifier,
         onSelected = { position ->
             when (position) {
@@ -356,7 +348,7 @@ private fun TimeSection(
 
 @Composable
 private fun GenderSection(
-    gender: Gender,
+    genderButtonIndex: Int,
     onGenderSelected: (Gender) -> Unit
 ) {
     VolleyText.TitleMedium(
@@ -367,17 +359,13 @@ private fun GenderSection(
 
     Spacer(modifier = Modifier.size(size = 12.dp))
     VolleyButton.GroupButtonsForGender3(
-        checkId = when (gender) {
-            Gender.Mix -> 1
-            Gender.Men -> 2
-            Gender.Women -> 3
-        },
+        checkId = genderButtonIndex,
         modifier = Modifier,
         onSelected = { position ->
             val selectedGender = when (position) {
-                1 -> Gender.Mix
-                2 -> Gender.Men
-                3 -> Gender.Women
+                GENDER_BUTTON_MIX -> Gender.Mix
+                GENDER_BUTTON_MEN -> Gender.Men
+                GENDER_BUTTON_WOMEN -> Gender.Women
                 else -> null
             }
             selectedGender?.let { onGenderSelected(it) }
@@ -416,7 +404,7 @@ private fun NextButtonSection(
     )
 }
 
-@Preview
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun BasicGameSetupScreenPreview() {
     val previewState = BasicGameSetupScreenState(
@@ -433,19 +421,14 @@ private fun BasicGameSetupScreenPreview() {
             contacts = listOf(),
             photo = "",
             tags = listOf()
-        )
+        ),
+        showCalendar = true
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(VolleyColor.TurquoiseDark)
-    ) {
+    RootContainerForPreview {
         BasicGameSetupScreen(
             state = previewState,
-            paddingFromSystemUi = PaddingValues(0.dp),
-            showCalendar = true,
-            isSameDay = { _, _ -> false },
+            paddingFromSystemUi = it,
             eventCallback = {}
         )
     }

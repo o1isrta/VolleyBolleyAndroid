@@ -13,6 +13,10 @@ private const val DEFAULT_START_MINUTE = 0
 private const val DEFAULT_FINISH_HOUR = 4
 private const val DEFAULT_FINISH_MINUTE = 0
 
+const val GENDER_BUTTON_MIX = 1
+const val GENDER_BUTTON_MEN = 2
+const val GENDER_BUTTON_WOMEN = 3
+
 data class BasicGameSetupScreenState(
     val message: String = "",
     val placeCourt: Court = Court(
@@ -33,6 +37,8 @@ data class BasicGameSetupScreenState(
     val startTime: VolleyTimeStamp? = VolleyTimeStamp(DEFAULT_START_HOUR, DEFAULT_START_MINUTE, true),
     val finishTime: VolleyTimeStamp? = VolleyTimeStamp(DEFAULT_FINISH_HOUR, DEFAULT_FINISH_MINUTE, true),
     val gender: Gender = Gender.Mix,
+    val genderButtonIndex: Int = GENDER_BUTTON_MIX,
     val levels: Set<Level> = setOf(Level.Light, Level.Medium, Level.Hard),
+    val showCalendar: Boolean = false,
     val isLoading: Boolean = false
 ) : UiState
