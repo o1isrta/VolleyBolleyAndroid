@@ -103,7 +103,7 @@ private fun MyGamesScreen(
     state: MyGamesState,
     eventCallback: (MyGamesAction) -> Unit
 ) {
-    Box(Modifier.padding(top = paddingFromSystemUi.calculateTopPadding()).fillMaxSize()) {
+    Box(Modifier.padding(paddingFromSystemUi).fillMaxSize()) {
         if (!state.hasGames) {
             // Плейсхолдер
             CardShell(

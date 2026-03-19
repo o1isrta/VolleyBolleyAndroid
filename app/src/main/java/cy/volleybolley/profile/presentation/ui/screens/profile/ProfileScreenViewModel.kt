@@ -27,8 +27,6 @@ class ProfileScreenViewModel(
 ) : BaseViewModel<ProfileScreenState, ProfileScreenEvent, ProfileScreenEffect>(
     initialState = ProfileScreenState()
 ) {
-    override val tag: String = ProfileScreenViewModel::class.simpleName ?: "ProfileScreenViewModel"
-
     override fun obtainEvent(event: ProfileScreenEvent) {
         when (event) {
             OnPlayersClick -> sendUiEffect(NavigateToPlayers)

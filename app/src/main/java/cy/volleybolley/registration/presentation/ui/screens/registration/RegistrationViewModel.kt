@@ -29,8 +29,6 @@ class RegistrationViewModel(
 ) : BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(
     initialState = RegistrationState()
 ) {
-    override val tag = RegistrationViewModel::class.simpleName.orEmpty()
-
     init {
         loadInitialData()
     }

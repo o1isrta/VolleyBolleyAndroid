@@ -32,11 +32,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
@@ -317,23 +319,17 @@ private fun LevelBadge(level: String, modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true, name = "ChangeTeamScreen Preview")
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun ChangeTeamScreenPreview() {
-    VolleybolleyTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            ChangeTeamContent(
-                state = ChangeTeamState(),
-                paddingFromSystemUi = PaddingValues(0.dp),
-                onBack = {},
-                onSelectTeam = {},
-                onRemoveMember = { _, _ -> },
-                onConfirm = {}
-            )
-        }
+    RootContainerForPreview {
+        ChangeTeamContent(
+            state = ChangeTeamState(),
+            paddingFromSystemUi = it,
+            onBack = {},
+            onSelectTeam = {},
+            onRemoveMember = { _, _ -> },
+            onConfirm = {}
+        )
     }
 }

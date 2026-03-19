@@ -25,8 +25,6 @@ open class PrivacyOptionsScreenViewModel(
 ) : BaseViewModel<PrivacyOptionsScreenState, PrivacyOptionsScreenEvent, PrivacyOptionsScreenEffect>(
     PrivacyOptionsScreenState()
 ) {
-    override val tag: String = "PrivacyOptionsScreenViewModel"
-
     private var searchJob: Job? = null
 
     companion object {

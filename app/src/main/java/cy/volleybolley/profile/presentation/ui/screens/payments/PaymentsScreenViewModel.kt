@@ -28,8 +28,6 @@ class PaymentsScreenViewModel(
         uiStateMutable.update { it.copy(payments = VolleyMocks.mockPayments) }
     }
 
-    override val tag: String = PaymentsScreenViewModel::class.simpleName ?: "PaymentsScreenViewModel"
-
     override fun obtainEvent(event: PaymentsScreenEvent) {
         when (event) {
             ClickOnBackFromPayments -> sendUiEffect(

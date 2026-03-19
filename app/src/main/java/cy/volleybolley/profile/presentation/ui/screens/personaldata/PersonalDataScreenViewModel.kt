@@ -45,8 +45,6 @@ class PersonalDataScreenViewModel(
         }
     }
 
-    override val tag: String = PersonalDataScreenViewModel::class.simpleName ?: "PersonalDataScreenViewModel"
-
     override fun obtainEvent(event: PersonalDataScreenEvent) {
         when (event) {
             OnBackFromPersonalDataClick -> sendUiEffect(

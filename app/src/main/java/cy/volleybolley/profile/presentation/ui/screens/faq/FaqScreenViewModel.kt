@@ -15,8 +15,6 @@ class FaqScreenViewModel : BaseViewModel<FaqScreenState, FaqScreenEvent, FaqScre
         uiStateMutable.update { FaqScreenState(faqText = VolleyUiUtil.parseMarkdown(VolleyMocks.MOCK_FAQ)) }
     }
 
-    override val tag: String = FaqScreenViewModel::class.simpleName ?: "FaqScreenViewModel"
-
     override fun obtainEvent(event: FaqScreenEvent) {
         when (event) {
             OnBackFromFaqClick -> sendUiEffect(NavigateFromFaqScreen(null))

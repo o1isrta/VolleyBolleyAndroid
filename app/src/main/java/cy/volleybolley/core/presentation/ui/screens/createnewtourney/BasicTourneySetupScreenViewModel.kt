@@ -24,8 +24,6 @@ open class BasicTourneySetupScreenViewModel(
 ) : BaseViewModel<BasicTourneySetupScreenState, BasicTourneySetupScreenEvent, BasicTourneySetupScreenEffect>(
     BasicTourneySetupScreenState()
 ) {
-    override val tag: String = "BasicTourneySetupScreenViewModel"
-
     private var timeChangeJob: Job? = null
 
     companion object {

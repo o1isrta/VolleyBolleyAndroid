@@ -2,8 +2,6 @@ package cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescree
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,10 +30,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -53,7 +53,6 @@ import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.games.domain.model.entity.Host
 import cy.volleybolley.games.domain.model.entity.PlayerShort
 import cy.volleybolley.games.domain.model.event.game.GameDetails
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -92,8 +91,7 @@ private fun PastGameScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingFromSystemUi)
-            .padding(horizontal = 8.dp)
-            .verticalScroll(rememberScrollState())
+            .padding(8.dp)
     ) {
         when (state) {
             PastGameState.Loading -> ShowLoader()
@@ -120,15 +118,13 @@ private fun ShowPastGameDetails(
     onMapClick: (Location) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 32
-    ) {
+    VolleyContainersRootTransparent.TransparentContainer {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .padding(20.dp)
-                .scrollable(rememberScrollState(), Orientation.Vertical)
         ) {
             PastGameHeader(
                 onBackClick = onBackClick,
@@ -420,9 +416,7 @@ private fun ShowErrorPlaceholder(
     onBackClick: () -> Unit,
     onButtonClick: () -> Unit
 ) {
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 32
-    ) {
+    VolleyContainersRootTransparent.TransparentContainer {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
@@ -504,20 +498,14 @@ private fun ShowLoader(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PastGameScreenPreview() {
-    VolleybolleyTheme {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            PastGameScreen(
-                state = PastGameState.Content(),
-                paddingFromSystemUi = PaddingValues(0.dp),
-                eventCallback = {}
-            )
-        }
+    RootContainerForPreview {
+        PastGameScreen(
+            state = PastGameState.Content(),
+            paddingFromSystemUi = it,
+            eventCallback = {}
+        )
     }
 }

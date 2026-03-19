@@ -8,9 +8,6 @@ import kotlinx.coroutines.flow.update
 class ChangeTeamViewModel : BaseViewModel<ChangeTeamState, ChangeTeamAction, ChangeTeamEffect>(
     initialState = ChangeTeamState()
 ) {
-
-    override val tag: String = "ChangeTeamVM"
-
     private val _state = MutableStateFlow(ChangeTeamState())
     val state = _state.asStateFlow()
 

@@ -8,8 +8,6 @@ import cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescreen
 class PastGameViewModel : BaseViewModel<PastGameState, PastGameEvent, PastGameEffect>(
     initialState = PastGameState.Content()
 ) {
-    override val tag: String = PastGameViewModel::class.simpleName ?: ""
-
     override fun obtainEvent(event: PastGameEvent) {
         when (event) {
             PastGameEvent.OnBackClick -> sendUiEffect(PastGameEffect.NavigateBack)

@@ -29,8 +29,6 @@ class PlayersScreenViewModel(
         uiStateMutable.update { it.copy(players = originAllPlayers) }
     }
 
-    override val tag = PlayersScreenViewModel::class.simpleName ?: "PlayersScreenViewModel"
-
     override fun obtainEvent(event: PlayersScreenEvent) {
         when (event) {
             ClickOnBackFromPlayers -> sendUiEffect(NavigateFromPlayersScreen(null))

@@ -92,7 +92,6 @@ private fun PlayersScreen(
     eventCallback: (PlayersScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 32,
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)

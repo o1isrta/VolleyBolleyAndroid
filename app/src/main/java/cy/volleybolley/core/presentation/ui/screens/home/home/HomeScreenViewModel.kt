@@ -25,8 +25,6 @@ class HomeScreenViewModel(
         checkNotificationPermission()
     }
 
-    override val tag: String = HomeScreenViewModel::class.simpleName ?: "HomeScreenViewModel"
-
     override fun obtainEvent(event: HomeScreenEvent) {
         when (event) {
             OnCreateNewGameClick -> openSearchCourt(EventType.GAME)

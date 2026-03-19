@@ -40,12 +40,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
@@ -156,7 +158,6 @@ private fun ChangePhotoScreen(
     }
 
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 32,
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -363,22 +364,15 @@ private suspend fun convertUriToByteArray(context: Context, uri: Uri): ByteArray
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewChangePhotoScreen() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            ChangePhotoScreen(
-                state = ChangePhotoScreenState(),
-                effect = null,
-                navigateAction = {},
-                eventCallback = {}
-            )
-        }
+    RootContainerForPreview(showTopBar = false) {
+        ChangePhotoScreen(
+            state = ChangePhotoScreenState(),
+            effect = null,
+            navigateAction = {},
+            eventCallback = {}
+        )
     }
 }

@@ -5,8 +5,6 @@ import cy.volleybolley.core.presentation.base.BaseViewModel
 class MyGameViewModel :
     BaseViewModel<MyGameState, MyGameAction, MyGameEffect>(initialState = MyGameState()) {
 
-    override val tag: String = "MyGameVM"
-
     override fun obtainEvent(event: MyGameAction) {
         when (event) {
             MyGameAction.ClickBack -> sendUiEffect(MyGameEffect.NavigateBack)

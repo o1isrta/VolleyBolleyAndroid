@@ -21,10 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBarWithBackButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
@@ -75,15 +77,11 @@ private fun TeamsScreen(
             .verticalScroll(rememberScrollState())
     ) {
         VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = 32,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(8.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(20.dp)
-            ) {
+            Column(modifier = Modifier.padding(20.dp)) {
                 if (state.isIndividual) {
                     PlayersList(
                         modifier = Modifier.fillMaxWidth(),
@@ -242,20 +240,14 @@ private fun PlayerRow(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun TeamsScreenPreview() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            TeamsScreen(
-                state = TeamsScreenState(teams = provideMockTeams()),
-                paddingFromSystemUi = PaddingValues(0.dp),
-                eventCallback = {}
-            )
-        }
+    RootContainerForPreview {
+        TeamsScreen(
+            state = TeamsScreenState(teams = provideMockTeams()),
+            paddingFromSystemUi = it,
+            eventCallback = {}
+        )
     }
 }

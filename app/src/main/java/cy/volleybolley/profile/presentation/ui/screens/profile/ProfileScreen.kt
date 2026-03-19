@@ -27,12 +27,14 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -104,7 +106,6 @@ private fun ProfileScreen(
     Box(modifier = modifier) {
         Column {
             VolleyContainersRootTransparent.TransparentContainer(
-                cornerRadius = 32,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -336,21 +337,14 @@ private fun PreviewProfileScreen() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewProfileDialog() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            ProfileDialog(
-                text = stringResource(R.string.log_out_question),
-                onDismiss = {},
-                onConfirm = {},
-            )
-        }
+    RootContainerForPreview {
+        ProfileDialog(
+            text = stringResource(R.string.log_out_question),
+            onDismiss = {},
+            onConfirm = {},
+        )
     }
 }

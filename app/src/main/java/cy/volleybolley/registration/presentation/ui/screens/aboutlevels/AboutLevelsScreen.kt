@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
@@ -125,5 +126,7 @@ private fun LevelItem(modifier: Modifier = Modifier, prefixResId: Int, descripti
 @Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun AboutLevelsScreenPreview() {
-    AboutLevelsScreen { }
+    RootContainerForPreview(showBottomBar = false, showTopBar = false) {
+        AboutLevelsScreen { }
+    }
 }

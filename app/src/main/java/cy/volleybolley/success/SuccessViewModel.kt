@@ -7,8 +7,6 @@ class SuccessViewModel(
 ) :
     BaseViewModel<SuccessState, SuccessEvent, SuccessEffect>(SuccessState(event = createdEvent)) {
 
-    override val tag: String = SuccessViewModel::class.simpleName ?: ""
-
     override fun obtainEvent(event: SuccessEvent) {
         when (event) {
             SuccessEvent.OnDoneClick -> sendUiEffect(SuccessEffect.CloseScreen)

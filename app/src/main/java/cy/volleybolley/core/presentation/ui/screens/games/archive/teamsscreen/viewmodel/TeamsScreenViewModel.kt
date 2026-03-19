@@ -8,8 +8,6 @@ import cy.volleybolley.core.presentation.ui.screens.games.archive.teamsscreen.mo
 class TeamsScreenViewModel : BaseViewModel<TeamsScreenState, TeamsScreenEvent, TeamsScreenEffect>(
     initialState = TeamsScreenState()
 ) {
-    override val tag: String = "TeamsScreenViewModel"
-
     override fun obtainEvent(event: TeamsScreenEvent) {
         when (event) {
             is TeamsScreenEvent.OnBackClicked -> {

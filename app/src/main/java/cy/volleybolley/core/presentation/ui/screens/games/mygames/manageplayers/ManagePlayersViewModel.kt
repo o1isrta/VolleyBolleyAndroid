@@ -6,9 +6,6 @@ class ManagePlayersViewModel :
     BaseViewModel<ManagePlayersState, ManagePlayersAction, ManagePlayersEffect>(
         initialState = ManagePlayersState()
     ) {
-
-    override val tag: String = "ManagePlayersVM"
-
     override fun obtainEvent(event: ManagePlayersAction) {
         when (event) {
             ManagePlayersAction.ClickBack -> sendUiEffect(ManagePlayersEffect.NavigateBack)

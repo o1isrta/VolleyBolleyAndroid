@@ -19,8 +19,6 @@ open class TourneyEnteringConditionsScreenViewModel(
     >(
     TourneyEnteringConditionsScreenState()
 ) {
-    override val tag: String = "TourneyEnteringConditionsScreenViewModel"
-
     init {
         viewModelScope.launch {
             gameRepository.gameData.collectLatest { gameDataFromRepo ->

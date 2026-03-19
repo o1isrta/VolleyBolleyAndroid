@@ -108,7 +108,6 @@ private fun BasicTourneySetupScreen(
             modifier = Modifier.padding(paddingFromSystemUi)
         ) {
             VolleyContainersRootTransparent.TransparentContainer(
-                cornerRadius = 32,
                 modifier = Modifier.padding(8.dp)
             ) {
                 Column(

@@ -13,9 +13,6 @@ class MyTourneyViewModel :
     BaseViewModel<MyTourneyState, MyTourneyAction, MyTourneyEffect>(
         initialState = MyTourneyState()
     ) {
-
-    override val tag: String = "MyTourneyVM"
-
     override fun obtainEvent(event: MyTourneyAction) {
         when (event) {
             MyTourneyAction.ClickBack -> sendUiEffect(NavigateBack)

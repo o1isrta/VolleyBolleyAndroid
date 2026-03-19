@@ -8,8 +8,6 @@ class JoinedPlayersScreenViewModel(
 ) : BaseViewModel<JoinedPlayersScreenState, JoinedPlayersScreenEvent, JoinedPlayersScreenEffect>(
     initialState = JoinedPlayersScreenState(tournamentDetails = tournamentDetails)
 ) {
-    override val tag: String = "JoinedPlayersScreenViewModel"
-
     override fun obtainEvent(event: JoinedPlayersScreenEvent) {
         when (event) {
             is JoinedPlayersScreenEvent.OnBackClicked -> {

@@ -12,8 +12,6 @@ class PastTourneyViewModel :
     BaseViewModel<PastTourneyState, PastTourneyEvent, PastTourneyEffect>(
         initialState = PastTourneyState.Content()
     ) {
-    override val tag: String = PastTourneyViewModel::class.simpleName ?: ""
-
     override fun obtainEvent(event: PastTourneyEvent) {
         when (event) {
             PastTourneyEvent.OnBackClick -> sendUiEffect(NavigateBack)

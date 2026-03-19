@@ -8,8 +8,6 @@ class UpcomingTourneyDetailsScreenViewModel(
 ) : BaseViewModel<UpcomingTourneyDetailsScreenState, UpcomingTourneyDetailsScreenEvent, UpcomingTourneyDetailsScreenEffect>(
     initialState = UpcomingTourneyDetailsScreenState(tournamentDetails = tournamentDetails)
 ) {
-    override val tag: String = "UpcomingTourneyDetailsScreenViewModel"
-
     override fun obtainEvent(event: UpcomingTourneyDetailsScreenEvent) {
         when (event) {
             is UpcomingTourneyDetailsScreenEvent.OnBackClicked -> {

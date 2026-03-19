@@ -13,16 +13,9 @@ import kotlin.random.Random
 
 open class GameEnteringConditionsScreenViewModel(
     private val gameRepository: CreateNewGameRepository
-) :
-    BaseViewModel<
-        GameEnteringConditionsScreenState,
-        GameEnteringConditionsScreenEvent,
-        GameEnteringConditionsScreenEffect
-        >(
-        GameEnteringConditionsScreenState()
-    ) {
-    override val tag: String = "GameEnteringConditionsScreenViewModel"
-
+) : BaseViewModel<GameEnteringConditionsScreenState, GameEnteringConditionsScreenEvent, GameEnteringConditionsScreenEffect>(
+    GameEnteringConditionsScreenState()
+) {
     init {
         obtainEvent(GameEnteringConditionsScreenEvent.CheckIfAccountExists)
         viewModelScope.launch {

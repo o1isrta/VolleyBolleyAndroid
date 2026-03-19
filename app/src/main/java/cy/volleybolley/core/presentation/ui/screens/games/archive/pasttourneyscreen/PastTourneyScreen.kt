@@ -30,11 +30,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -42,7 +43,6 @@ import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.effect.PastTourneyEffect
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.effect.PastTourneyEffect.NavigateBack
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.effect.PastTourneyEffect.NavigateToTeams
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.effect.PastTourneyEffect.OpenMap
@@ -55,7 +55,6 @@ import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.games.domain.model.entity.Host
 import cy.volleybolley.games.domain.model.entity.Team
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -96,7 +95,7 @@ private fun PastTourneyScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingFromSystemUi)
-            .padding(horizontal = 8.dp)
+            .padding(8.dp)
             .verticalScroll(rememberScrollState())
     ) {
         when (state) {
@@ -126,9 +125,7 @@ private fun ShowPastTourneyDetails(
     onMapClick: () -> Unit,
     onJoinedPlayersClick: () -> Unit
 ) {
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 32
-    ) {
+    VolleyContainersRootTransparent.TransparentContainer {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
@@ -137,8 +134,9 @@ private fun ShowPastTourneyDetails(
         ) {
             VolleyTopBar.TopBarWithBackButton(
                 title = stringResource(R.string.past_tourney),
-                modifier = Modifier.fillMaxWidth()
-            ) { onBackClick }
+                modifier = Modifier.fillMaxWidth(),
+                onBackNavigationRequested = onBackClick
+            )
 
             HostInfoBlock(tourney.host, tourney.message)
             DividerGlass()
@@ -147,8 +145,9 @@ private fun ShowPastTourneyDetails(
                 startTime = tourney.startTime,
                 endTime = tourney.endTime,
                 level = tourney.levels[0],
-                gender = tourney.gender
-            ) { onMapClick }
+                gender = tourney.gender,
+                onMapClick = { onMapClick() }
+            )
             DividerGlass()
             PaymentBlock(
                 paymentType = tourney.paymentType.name,
@@ -159,8 +158,9 @@ private fun ShowPastTourneyDetails(
             DividerGlass()
             JoinedPlayersBlock(
                 isIndividual = tourney.isIndividual,
-                teams = tourney.teams
-            ) { onJoinedPlayersClick }
+                teams = tourney.teams,
+                onButtonClick = onJoinedPlayersClick
+            )
         }
     }
 }
@@ -415,9 +415,7 @@ private fun ShowErrorPlaceholder(
     onBackClick: () -> Unit,
     onButtonClick: () -> Unit,
 ) {
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 32
-    ) {
+    VolleyContainersRootTransparent.TransparentContainer {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
@@ -426,8 +424,9 @@ private fun ShowErrorPlaceholder(
         ) {
             VolleyTopBar.TopBarWithBackButton(
                 title = stringResource(R.string.past_tourney),
-                modifier = Modifier.fillMaxWidth()
-            ) { onBackClick }
+                modifier = Modifier.fillMaxWidth(),
+                onBackNavigationRequested = onBackClick
+            )
             PlaceholderMessage()
             RefreshButton(onButtonClick)
         }
@@ -486,20 +485,14 @@ private fun ShowLoader(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PastTourneyScreenPreview() {
-    VolleybolleyTheme {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            PastTourneyScreen(
-                state = PastTourneyState.Content(),
-                paddingFromSystemUi = PaddingValues(0.dp),
-                eventCallback = {}
-            )
-        }
+    RootContainerForPreview {
+        PastTourneyScreen(
+            state = PastTourneyState.Content(),
+            paddingFromSystemUi = it,
+            eventCallback = {}
+        )
     }
 }

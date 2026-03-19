@@ -13,8 +13,6 @@ import cy.volleybolley.games.domain.model.event.EventType
 
 class ArchiveViewModel :
     BaseViewModel<ArchiveState, ArchiveEvent, ArchiveEffect>(initialState = ArchiveState.Content()) {
-    override val tag: String = ArchiveViewModel::class.simpleName ?: ""
-
     override fun obtainEvent(event: ArchiveEvent) {
         when (event) {
             ArchiveEvent.ClickBack -> sendUiEffect(NavigateBack)

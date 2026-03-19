@@ -40,12 +40,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField.MessageBubble
@@ -444,21 +446,19 @@ private fun openMap(context: Context, location: Location) {
     context.startActivity(chooser)
 }
 
-@Preview(showBackground = true, showSystemUi = true, device = "spec:width=411dp,height=1300dp,dpi=420")
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun MyTourneyScreen_Preview() {
-    VolleybolleyTheme {
-        Box(Modifier.background(VolleyColor.TurquoiseDark)) {
-            MyTourneyContent(
-                details = myTourneyStub(),
-                paddingFromSystemUi = PaddingValues(0.dp),
-                onBack = {},
-                onOpenMap = {},
-                onInvite = {},
-                onShare = {},
-                onCancel = {},
-                onPlayersOrTeams = {}
-            )
-        }
+    RootContainerForPreview {
+        MyTourneyContent(
+            details = myTourneyStub(),
+            paddingFromSystemUi = PaddingValues(0.dp),
+            onBack = {},
+            onOpenMap = {},
+            onInvite = {},
+            onShare = {},
+            onCancel = {},
+            onPlayersOrTeams = {}
+        )
     }
 }

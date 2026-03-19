@@ -58,7 +58,6 @@ private fun ChooseTeamScreen(
             .padding(paddingFromSystemUi)
     ) {
         VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = 32,
             modifier = Modifier.padding(8.dp)
         ) {
             Column(

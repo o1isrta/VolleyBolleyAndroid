@@ -33,11 +33,12 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
@@ -46,7 +47,6 @@ import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
-import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect.NavigateBack
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect.NavigateToCreateGame
 import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.effect.ArchiveEffect.NavigateToPastGame
@@ -105,7 +105,7 @@ private fun ArchiveScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingFromSystemUi)
-            .padding(horizontal = 8.dp)
+            .padding(8.dp)
     ) {
         when (state) {
             ArchiveState.Loading -> ShowLoader()
@@ -174,9 +174,7 @@ private fun ArchiveCard(
     showHeader: Boolean,
     modifier: Modifier = Modifier
 ) {
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 32
-    ) {
+    VolleyContainersRootTransparent.TransparentContainer {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
@@ -371,9 +369,7 @@ private fun ArchivePlaceholder(
     onBackClick: () -> Unit,
     onButtonClick: () -> Unit
 ) {
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 32
-    ) {
+    VolleyContainersRootTransparent.TransparentContainer {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
@@ -451,38 +447,26 @@ private fun ShowLoader(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun ArchiveScreenPreview() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            ArchiveScreen(
-                state = ArchiveState.Content(),
-                paddingFromSystemUi = PaddingValues(0.dp),
-                eventCallback = {}
-            )
-        }
+    RootContainerForPreview {
+        ArchiveScreen(
+            state = ArchiveState.Content(),
+            paddingFromSystemUi = it,
+            eventCallback = {}
+        )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun ArchiveScreenPlaceholderPreview() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            ArchiveScreen(
-                state = ArchiveState.Empty,
-                paddingFromSystemUi = PaddingValues(0.dp),
-                eventCallback = {}
-            )
-        }
+    RootContainerForPreview {
+        ArchiveScreen(
+            state = ArchiveState.Empty,
+            paddingFromSystemUi = it,
+            eventCallback = {}
+        )
     }
 }

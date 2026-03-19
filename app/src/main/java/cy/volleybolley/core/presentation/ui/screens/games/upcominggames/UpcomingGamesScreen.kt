@@ -57,10 +57,7 @@ private fun UpcomingGamesScreen(
             .fillMaxSize()
             .padding(paddingFromSystemUi)
     ) {
-        VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = 32,
-            modifier = Modifier.padding(8.dp)
-        ) {
+        VolleyContainersRootTransparent.TransparentContainer(modifier = Modifier.padding(8.dp)) {
             Column(
                 modifier = Modifier.padding(horizontal = 20.dp)
             ) {

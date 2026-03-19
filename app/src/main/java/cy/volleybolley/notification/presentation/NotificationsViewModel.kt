@@ -13,8 +13,6 @@ class NotificationsViewModel(
     initialState = NotificationsState()
 ) {
 
-    override val tag: String = NotificationsViewModel::class.simpleName ?: "NotificationsVM"
-
     override fun obtainEvent(event: NotificationsEvent) {
         when (event) {
             is NotificationsEvent.LoadNotifications -> loadNotifications()

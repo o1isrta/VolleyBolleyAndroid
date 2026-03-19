@@ -202,7 +202,7 @@ private fun PreviewAuthorizationScreen() {
     RootContainerForPreview(showTopBar = false, showBottomBar = false) {
         AuthorizationScreen(
             onNavigateToRegisterByPhoneRequested = {},
-            paddingFromSystemUi = PaddingValues(0.dp),
+            paddingFromSystemUi = it,
             state = AuthorizationState(),
             onGoogleSignInClick = {},
             eventCallback = {}

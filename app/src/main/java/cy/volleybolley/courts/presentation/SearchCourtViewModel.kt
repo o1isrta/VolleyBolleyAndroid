@@ -16,8 +16,6 @@ class SearchCourtViewModel @Inject constructor(
     private val eventType: EventType,
 ) : BaseViewModel<SearchCourtState, SearchCourtEvent, SearchCourtEffect>(SearchCourtState()) {
 
-    override val tag: String = "SearchCourtViewModel"
-
     override fun obtainEvent(event: SearchCourtEvent) {
         when (event) {
             SearchCourtEvent.LoadSearchCourt -> loadCourts()

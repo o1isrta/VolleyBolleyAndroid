@@ -17,8 +17,6 @@ class JoinTheGameViewModel(
     JoinTheGameState()
 ) {
 
-    override val tag: String = JoinTheGameViewModel::class.simpleName ?: ""
-
     init {
         getGameDetails()
         /*

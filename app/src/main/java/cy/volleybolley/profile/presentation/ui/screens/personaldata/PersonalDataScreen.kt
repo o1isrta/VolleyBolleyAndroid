@@ -85,7 +85,6 @@ private fun PersonalDataScreen(
     eventCallback: (PersonalDataScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 32,
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)

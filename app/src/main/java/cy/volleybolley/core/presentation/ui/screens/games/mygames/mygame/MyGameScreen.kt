@@ -42,12 +42,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField
 import cy.volleybolley.core.presentation.ui.VolleyMessageTextField.MessageBubble
@@ -57,11 +59,9 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupInvitesB
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.OutlinedActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
 
-// Обёртка для навигации
 @Composable
 fun MyGameScreen(
     paddingFromSystemUi: PaddingValues,
@@ -77,9 +77,14 @@ fun MyGameScreen(
             null -> {}
             is MyGameEffect.NavigateBack -> onNavigateBack()
             is MyGameEffect.OpenMap -> openMap(context, currentEffect.location)
-            is MyGameEffect.InvitePlayers -> { /* TODO */ }
-            is MyGameEffect.ShareLink -> { /* TODO */ }
-            is MyGameEffect.CancelGame -> { /* TODO */ }
+            is MyGameEffect.InvitePlayers -> { /* TODO */
+            }
+
+            is MyGameEffect.ShareLink -> { /* TODO */
+            }
+
+            is MyGameEffect.CancelGame -> { /* TODO */
+            }
         }
     }
 
@@ -476,22 +481,21 @@ private fun openMap(context: Context, location: Location) {
 @Preview(
     showBackground = true,
     showSystemUi = true,
-    device = "spec:width=411dp,height=1400dp,dpi=420"
+    device = Devices.PIXEL_9_PRO
 )
 @Composable
 private fun MyGameScreen_Preview() {
-    VolleybolleyTheme {
-        Box(Modifier.background(VolleyColor.TurquoiseDark)) {
-            MyGameContent(
-                details = myGameDetailsStub(),
-                paddingFromSystemUi = PaddingValues(0.dp),
-                onBack = {},
-                onOpenMap = {},
-                onInvite = {},
-                onShare = {},
-                onCancel = {},
-                onDeletePlayer = {}
-            )
-        }
+    RootContainerForPreview {
+        MyGameContent(
+            details = myGameDetailsStub(),
+            paddingFromSystemUi = it,
+            onBack = {},
+            onOpenMap = {},
+            onInvite = {},
+            onShare = {},
+            onCancel = {},
+            onDeletePlayer = {}
+        )
     }
+
 }

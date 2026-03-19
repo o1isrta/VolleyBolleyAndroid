@@ -5,8 +5,6 @@ import cy.volleybolley.core.presentation.base.BaseViewModel
 class UpcomingGamesScreenViewModel : BaseViewModel<UpcomingGamesScreenState, UpcomingGamesScreenEvent, UpcomingGamesScreenEffect>(
     initialState = UpcomingGamesScreenState()
 ) {
-    override val tag: String = "UpcomingGamesScreenViewModel"
-
     override fun obtainEvent(event: UpcomingGamesScreenEvent) {
         when (event) {
             is UpcomingGamesScreenEvent.OnBackClicked -> {

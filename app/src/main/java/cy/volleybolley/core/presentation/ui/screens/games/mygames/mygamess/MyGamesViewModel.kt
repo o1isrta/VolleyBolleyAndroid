@@ -11,8 +11,6 @@ import java.util.Locale
 class MyGamesViewModel :
     BaseViewModel<MyGamesState, MyGamesAction, MyGamesEffect>(initialState = MyGamesState()) {
 
-    override val tag: String = "MyGamesVM"
-
     override fun obtainEvent(event: MyGamesAction) {
         when (event) {
             MyGamesAction.ClickBack -> sendUiEffect(NavigateBack)

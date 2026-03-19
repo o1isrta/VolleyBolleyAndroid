@@ -81,7 +81,6 @@ private fun PlayerProfileScreen(
     eventCallback: (PlayerProfileScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 32,
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -168,9 +167,7 @@ private fun PlayerActivityItem(
     userHoursOffset: Int,
     onMapClick: () -> Unit,
 ) {
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 16,
-    ) {
+    VolleyContainersRootTransparent.TransparentContainer(cornerRadius = 16) {
         Column(
             modifier = Modifier
                 .padding(16.dp, 8.dp)

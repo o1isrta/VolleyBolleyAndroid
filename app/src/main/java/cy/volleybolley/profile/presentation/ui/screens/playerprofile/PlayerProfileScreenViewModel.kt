@@ -26,8 +26,6 @@ class PlayerProfileScreenViewModel(
 ) {
     private val originFavoriteStatus: Boolean
 
-    override val tag: String = PlayerProfileScreenViewModel::class.simpleName ?: "PlayerDetailScreenViewModel"
-
     init {
         // getPlayerDetails(playerId)
         val details = VolleyMocks.mockPlayerDetails.find {

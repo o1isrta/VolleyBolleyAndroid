@@ -76,7 +76,6 @@ private fun JoinedPlayersScreen(
             .verticalScroll(rememberScrollState())
     ) {
         VolleyContainersRootTransparent.TransparentContainer(
-            cornerRadius = 32,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)

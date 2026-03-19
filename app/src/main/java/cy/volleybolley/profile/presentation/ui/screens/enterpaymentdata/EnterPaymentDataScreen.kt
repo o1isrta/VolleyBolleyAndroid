@@ -22,12 +22,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
@@ -56,6 +58,7 @@ fun EnterPaymentDataScreen(
             is EnterPaymentDataScreenEffect.NavigateFromEnterPaymentDataScreen -> {
                 onNavigateBack(currentEffect.updatedPaymentsJsonString)
             }
+
             is EnterPaymentDataScreenEffect.ShowInfoDialog -> {}
             null -> {}
         }
@@ -83,7 +86,6 @@ private fun EnterPaymentDataScreen(
     val headerValue = stringResource(screenPaymentType.getSimpleName())
 
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = 32,
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -229,91 +231,70 @@ private fun EnterPaymentDataDialog(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewEnterPaymentDataScreen() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            val stateEmpty = EnterPaymentDataScreenState()
-            val stateRevolut = EnterPaymentDataScreenState("ManManus", true)
+    RootContainerForPreview {
+        val stateEmpty = EnterPaymentDataScreenState()
+        val stateRevolut = EnterPaymentDataScreenState("ManManus", true)
 
-            Column {
-                EnterPaymentDataScreen(
-                    screenPaymentType = PaymentType.REVOLUT,
-                    state = stateEmpty,
-                    showDialog = false,
-                    dialogEffect = null,
-                    eventCallback = {}
-                )
-                Spacer(Modifier.height(30.dp))
-                EnterPaymentDataScreen(
-                    screenPaymentType = PaymentType.REVOLUT,
-                    state = stateRevolut,
-                    showDialog = false,
-                    dialogEffect = null,
-                    eventCallback = {}
-                )
-            }
+        Column {
+            EnterPaymentDataScreen(
+                screenPaymentType = PaymentType.REVOLUT,
+                state = stateEmpty,
+                showDialog = false,
+                dialogEffect = null,
+                eventCallback = {}
+            )
+            Spacer(Modifier.height(30.dp))
+            EnterPaymentDataScreen(
+                screenPaymentType = PaymentType.REVOLUT,
+                state = stateRevolut,
+                showDialog = false,
+                dialogEffect = null,
+                eventCallback = {}
+            )
         }
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewEnterPaymentDataScreen2() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            val stateEmpty = EnterPaymentDataScreenState()
-            val stateThai = EnterPaymentDataScreenState("564 789 4544", true)
+    RootContainerForPreview {
+        val stateEmpty = EnterPaymentDataScreenState()
+        val stateThai = EnterPaymentDataScreenState("564 789 4544", true)
 
-            Column {
-                EnterPaymentDataScreen(
-                    screenPaymentType = PaymentType.THAIBANK,
-                    state = stateEmpty,
-                    showDialog = false,
-                    dialogEffect = null,
-                    eventCallback = {}
-                )
-                Spacer(Modifier.height(30.dp))
-                EnterPaymentDataScreen(
-                    screenPaymentType = PaymentType.THAIBANK,
-                    state = stateThai,
-                    showDialog = false,
-                    dialogEffect = null,
-                    eventCallback = {}
-                )
-            }
+        Column {
+            EnterPaymentDataScreen(
+                screenPaymentType = PaymentType.THAIBANK,
+                state = stateEmpty,
+                showDialog = false,
+                dialogEffect = null,
+                eventCallback = {}
+            )
+            Spacer(Modifier.height(30.dp))
+            EnterPaymentDataScreen(
+                screenPaymentType = PaymentType.THAIBANK,
+                state = stateThai,
+                showDialog = false,
+                dialogEffect = null,
+                eventCallback = {}
+            )
         }
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewEnterPaymentDataDialog() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            Column {
-                EnterPaymentDataDialog(
-                    text = stringResource(R.string.payment_changes_done),
-                    onDismiss = {},
-                    onDone = {}
-                )
-            }
+    RootContainerForPreview {
+        Column {
+            EnterPaymentDataDialog(
+                text = stringResource(R.string.payment_changes_done),
+                onDismiss = {},
+                onDone = {}
+            )
         }
     }
 }

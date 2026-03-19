@@ -18,8 +18,6 @@ class RatePlayersViewModel(
     initialState = RatePlayersState()
 ) {
 
-    override val tag: String = RatePlayersViewModel::class.simpleName ?: ""
-
     init {
         launchSafe(
             getErrorLogMessage = { throwable ->

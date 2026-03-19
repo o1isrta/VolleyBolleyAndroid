@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.domain.VolleyFeature
 import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
@@ -97,24 +97,29 @@ private fun GameHomeContent(
                     ""
                 }
 
-            MenuItemWithSubtitle(
-                title = stringResource(R.string.upcoming_games),
-                subtitle = upcomingSubtitle,
-                onClick = onUpcomingGamesClick
-            )
-            HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
+            if (VolleyFeature.IS_UPCOMING_GAMES_AVAILABLE) {
+                MenuItemWithSubtitle(
+                    title = stringResource(R.string.upcoming_games),
+                    subtitle = upcomingSubtitle,
+                    onClick = onUpcomingGamesClick
+                )
+                HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
+            }
 
-            // Game invites — бейдж только если invites > 0
-            MenuItem(
-                text = stringResource(R.string.game_invites),
-                trailing = {
-                    if (state.invites > 0) {
-                        CountBadge(text = state.invites.toString())
-                    }
-                },
-                onClick = onInvitesClick
-            )
-            HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
+            if (VolleyFeature.IS_GAME_INVITES_AVAILABLE) {
+                // Game invites — бейдж только если invites > 0
+                MenuItem(
+                    text = stringResource(R.string.game_invites),
+                    trailing = {
+                        if (state.invites > 0) {
+                            CountBadge(text = state.invites.toString())
+                        }
+                    },
+                    onClick = onInvitesClick
+                )
+                HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
+            }
+
 
             MenuItem(
                 text = stringResource(R.string.archive),
@@ -130,34 +135,20 @@ private fun GlassCard(
     cornerRadiusDp: Int = 32,
     innerPadding: Dp = 20.dp,
     itemsGap: Dp = 16.dp,
-    height: Dp = 240.dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        modifier = modifier
-            .padding(
-                start = 8.dp,
-                end = 8.dp,
-                top = 8.dp
-            ),
+        modifier = modifier.padding(8.dp),
         cornerRadius = cornerRadiusDp,
         mainContainerAlignment = Alignment.TopStart,
         contentContainerAlignment = Alignment.TopStart
     ) {
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(height)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                verticalArrangement = Arrangement.spacedBy(itemsGap),
-                horizontalAlignment = Alignment.Start,
-                content = content
-            )
-        }
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(itemsGap),
+            horizontalAlignment = Alignment.Start,
+            content = content
+        )
     }
 }
 
