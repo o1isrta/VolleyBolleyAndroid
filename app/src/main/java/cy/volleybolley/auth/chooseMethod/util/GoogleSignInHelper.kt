@@ -14,7 +14,7 @@ import cy.volleybolley.core.util.VolleyLog
 import io.ktor.utils.io.CancellationException
 
 class GoogleSignInHelper(context: Context) {
-    private val credentialManager = CredentialManager.Companion.create(context)
+    private val credentialManager = CredentialManager.create(context)
     private val clientId = context.getString(R.string.default_web_client_id)
     private val googleIdOptionAuthorized = GetGoogleIdOption.Builder()
         .setFilterByAuthorizedAccounts(true)
@@ -58,19 +58,19 @@ class GoogleSignInHelper(context: Context) {
             GoogleSignInResult.Failure
         } catch (e: CancellationException) {
             throw e
-        } catch (e: Exception) {
-            VolleyLog.e(TAG, "Unexpected error: ${e.message}", e)
+        } catch (expected: Exception) {
+            VolleyLog.e(TAG, "Unexpected error: ${expected.message}", expected)
             GoogleSignInResult.Failure
         }
     }
 
     private fun extractTokenFromCredential(credential: Credential): GoogleSignInResult {
         return try {
-            val googleIdTokenCredential = GoogleIdTokenCredential.Companion.createFrom(credential.data)
+            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
             VolleyLog.v(TAG, "Token extracted successfully")
             GoogleSignInResult.Success(googleIdTokenCredential.idToken)
-        } catch (e: Exception) {
-            VolleyLog.e(TAG, "Token extraction failed: ${e.message}", e)
+        } catch (expected: Exception) {
+            VolleyLog.e(TAG, "Token extraction failed: ${expected.message}", expected)
             GoogleSignInResult.Failure
         }
     }

@@ -26,14 +26,14 @@ import org.koin.compose.viewmodel.koinViewModel
 fun GameInvitesScreen(
     paddingFromSystemUi: PaddingValues,
     onNavigateBack: () -> Unit,
-    viewModel: GameInvitesScreenViewModel = koinViewModel()
+    viewModel: GameInvitesViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
         when (effect) {
-            is GameInvitesScreenEffect.NavigateBack -> onNavigateBack()
+            is GameInvitesEffect.NavigateBack -> onNavigateBack()
             null -> {}
         }
     }
@@ -48,9 +48,9 @@ fun GameInvitesScreen(
 @Stable
 @Composable
 private fun GameInvitesScreen(
-    state: GameInvitesScreenState,
+    state: GameInvitesState,
     paddingFromSystemUi: PaddingValues,
-    eventCallback: (GameInvitesScreenEvent) -> Unit
+    eventCallback: (GameInvitesEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -66,7 +66,7 @@ private fun GameInvitesScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = 20.dp),
-                    onBackClick = { eventCallback(GameInvitesScreenEvent.OnBackClicked) }
+                    onBackClick = { eventCallback(GameInvitesEvent.OnBackClicked) }
                 )
 
                 VolleyText.BodyRegular(
@@ -88,7 +88,7 @@ private fun GameInvitesScreenPreview() {
             .background(VolleyColor.TurquoiseDark)
     ) {
         GameInvitesScreen(
-            state = GameInvitesScreenState(),
+            state = GameInvitesState(),
             paddingFromSystemUi = PaddingValues(0.dp),
             eventCallback = {}
         )

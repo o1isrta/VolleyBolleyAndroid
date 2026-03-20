@@ -54,8 +54,6 @@ import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import java.util.Calendar
 
 const val HOURS_12 = 12
-const val DEFAULT_HOUR = 14
-const val DEFAULT_MINUTES = 0
 
 @UiLibraryMarker
 object VolleyTextFieldAttribute {
@@ -409,75 +407,6 @@ object VolleyTextFieldAttribute {
         }
     }
 
-    /*  @Composable
-      fun PaymentField(
-          modifier: Modifier = Modifier,
-          width: Int = 75,
-          height: Int = 30,
-          cornerRadius: Int = 16,
-          inputPayment: Double = 5.0
-      ) {
-          VolleyContainersRootTransparent.TransparentContainer(
-              cornerRadius = cornerRadius,
-              modifier = modifier //modifier.height(height.dp).width(width.dp),
-          ) {
-                DecimalInputMask(*//*modifier,*//* width, height, inputPayment)
-        }
-    }
-
-    @Composable
-    fun DecimalInputMask(*//*modifier: Modifier, *//*width: Int, height: Int, inputPayment: Double) {
-        var text by remember { mutableStateOf(inputPayment.toString()) }
-
-        Row(
-            modifier = Modifier
-            .height(height.dp)
-            .width(width.dp))
-        {
-            TextField(
-                value = text,
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    unfocusedTextColor = VolleyColor.White,
-                    focusedTextColor = VolleyColor.White
-                ),
-                suffix = {
-                    VolleyText.BodyRegular(
-                        text = stringResource(R.string.dollar),
-                        color = VolleyColor.White,
-                        maxLines = 1,
-                        modifier = Modifier
-                    )
-                },
-                onValueChange = { newText ->
-                    // 1. Удаляем все символы, кроме цифр и точки
-                    val filteredText = newText.replace(Regex("[^0-9.]"), "")
-
-                    // 2. Проверяем количество точек
-                    val dotCount = filteredText.count { it == '.' }
-                    if (dotCount > 1) {
-                        // Если больше одной точки, оставляем только первую
-                        text = text //не меняем значение
-                    } else {
-                        // 3. Если есть точка, проверяем количество знаков после неё
-                        val parts = filteredText.split(".")
-                        if (parts.size == 2 && parts[1].length > 2) {
-                            //Если больше 2 символов оставляем предыдущее значение
-                            text = text
-                        } else {
-                            // 4. Обновляем текст, если все проверки пройдены
-                            text = filteredText
-                        }
-                    }
-                },
-                //label = "",//{ Text("Введите число (до 2 знаков после запятой)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-                modifier = Modifier.padding(0.dp)
-            )
-        }
-    }*/
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun TimePickerDialog(
@@ -521,14 +450,6 @@ object VolleyTextFieldAttribute {
                         )
                         actionForSaveTime(stampOfTime)
                         onDismiss()
-//                        val stampOfTime = VolleyTimeStamp(
-//                            hour = timePickerState.hour,
-//                            minutes = timePickerState.minute,
-//                            isAfternoon = timePickerState.isAfternoon
-//                        )
-//                        Log.d("TimePicker", "Time confirm: $stampOfTime")
-//                        actionForSaveTime(stampOfTime)
-//                        onDismiss()
                     }
                 ) {
                     VolleyText.BodyBold(
@@ -561,93 +482,6 @@ object VolleyTextFieldAttribute {
             }
         )
     }
-
-    /*@Composable
-    fun MyTextField(modifier: Modifier = Modifier) {
-        var text by remember { mutableStateOf("") }
-
-        Box(
-            modifier = modifier
-                .size(width = 75.dp, height = 30.dp) // Сначала задаем размер
-               // .then(modifier) // Потом применяем переданный modifier (который может содержать padding)
-                .background(Color.White, shape = RoundedCornerShape(16.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            BasicTextField(
-                value = text,
-                onValueChange = { newValue ->
-                    if (newValue.matches(Regex("[0-9.]*"))) {
-                        text = newValue
-                    }
-                },
-                textStyle = TextStyle(color = Color.Black, fontSize = 14.sp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                decorationBox = { innerTextField ->
-                    Row(
-                        modifier = Modifier
-                         //   .padding(horizontal = 8.dp)
-                         //   .height(IntrinsicSize.Max),
-                      ,  verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(Modifier.weight(1f)) {
-                            if (text.isEmpty()) {
-                                Text(
-                                    text = "0.0",
-                                    color = Color.LightGray,
-                                    fontSize = 14.sp
-                                )
-                            }
-                            innerTextField()
-                        }
-                        Text(text = "$", color = Color.Black, fontSize = 14.sp)
-                    }
-                },
-                modifier = Modifier
-                    .width(IntrinsicSize.Max),
-                visualTransformation = CurrencyAmountTransformation
-            )
-        }
-    }*/
-
-    /*object CurrencyAmountTransformation : VisualTransformation {
-        override fun filter(text: AnnotatedString): TransformedText {
-            val digitsAndDots = text.text.filter { it.isDigit() || it == '.' }
-            val parts = digitsAndDots.split('.')
-            val integerPart = parts.getOrElse(0) { "" }
-            val decimalPart = parts.getOrElse(1) { "" }
-
-            val formattedIntegerPart = integerPart.reversed().chunked(3).joinToString(",")
-                .reversed()
-
-            val formattedText = if (decimalPart.isNotEmpty()) {
-                "$formattedIntegerPart.$decimalPart"
-            } else {
-                formattedIntegerPart
-            }
-
-            return TransformedText(
-                AnnotatedString(formattedText),
-                object : OffsetMapping {
-                    override fun originalToTransformed(offset: Int): Int {
-                        if (offset <= digitsAndDots.length) {
-                            return formattedText.length
-                        } else {
-                            return formattedText.length
-                        }
-                    }
-
-                    override fun transformedToOriginal(offset: Int): Int {
-                        if (offset <= formattedText.length) {
-                            return digitsAndDots.length
-                        } else {
-                            return digitsAndDots.length
-                        }
-                    }
-                }
-            )
-        }
-    }*/
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -670,8 +504,7 @@ private fun PreviewGradientTextFields() {
 
             VolleyTextFieldAttribute.DatePickerField(
                 inputDate = null,
-                modifier = Modifier
-                    .padding(16.dp)
+                modifier = Modifier.padding(16.dp)
             ) { }
 
             VolleyTextFieldAttribute.CountField(
@@ -680,44 +513,31 @@ private fun PreviewGradientTextFields() {
 
             VolleyTextFieldAttribute.DurationField(
                 inputTime = null,
-                modifier = Modifier
-                    .padding(16.dp)
+                modifier = Modifier.padding(16.dp)
             ) { }
 
             VolleyTextFieldAttribute.DurationFieldWithArrows(
                 inputTime = null,
-                modifier = Modifier
-                    .padding(16.dp)
+                modifier = Modifier.padding(16.dp)
             ) { }
 
             VolleyTextFieldAttribute.DurationField(
                 inputTime = VolleyTimeStamp(
-                    4,
-                    20,
-                    false
+                    hour = 4,
+                    minutes = 20,
+                    isAfternoon = false
                 ),
-                modifier = Modifier
-                    .padding(16.dp)
+                modifier = Modifier.padding(16.dp)
             ) { }
 
             VolleyTextFieldAttribute.DurationFieldWithArrows(
                 inputTime = VolleyTimeStamp(
-                    DEFAULT_HOUR,
-                    DEFAULT_MINUTES,
-                    true
+                    hour = 12,
+                    minutes = 0,
+                    isAfternoon = true
                 ),
-                modifier = Modifier
-                    .padding(16.dp)
+                modifier = Modifier.padding(16.dp)
             ) { }
-
-            /*VolleyTextFieldAttribute.PaymentField(
-                inputPayment = 6.0,
-                modifier = Modifier
-                       .padding(16.dp)
-            )
-
-            VolleyTextFieldAttribute.MyTextField(modifier = Modifier.padding(16.dp))
-           */
         }
     }
 }

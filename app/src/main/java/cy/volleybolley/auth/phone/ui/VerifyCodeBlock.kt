@@ -71,8 +71,9 @@ fun VerifyCodeBlock(
     )
 }
 
+private const val SECONDS_IN_MINUTE = 60
 private fun formatSeconds(seconds: Int): String {
-    val minutes = seconds / 60
-    val remainingSeconds = seconds % 60
+    val minutes = seconds / SECONDS_IN_MINUTE
+    val remainingSeconds = seconds % SECONDS_IN_MINUTE
     return "%02d:%02d".format(minutes, remainingSeconds)
 }

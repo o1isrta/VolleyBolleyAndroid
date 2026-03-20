@@ -1,13 +1,13 @@
 package cy.volleybolley.auth.chooseMethod
 
-import cy.volleybolley.auth.domain.api.usecase.GoogleTokenAuthUseCase
+import cy.volleybolley.auth.chooseMethod.model.AuthorizationEffect
 import cy.volleybolley.auth.chooseMethod.model.AuthorizationEffect.NavigateToHome
 import cy.volleybolley.auth.chooseMethod.model.AuthorizationEffect.NavigateToRegistration
 import cy.volleybolley.auth.chooseMethod.model.AuthorizationEffect.ShowToast
-import cy.volleybolley.auth.chooseMethod.model.AuthorizationEvent.GoogleTokenReceived
-import cy.volleybolley.auth.chooseMethod.model.AuthorizationEffect
 import cy.volleybolley.auth.chooseMethod.model.AuthorizationEvent
+import cy.volleybolley.auth.chooseMethod.model.AuthorizationEvent.GoogleTokenReceived
 import cy.volleybolley.auth.chooseMethod.model.AuthorizationState
+import cy.volleybolley.auth.domain.api.usecase.GoogleTokenAuthUseCase
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import kotlinx.coroutines.flow.update

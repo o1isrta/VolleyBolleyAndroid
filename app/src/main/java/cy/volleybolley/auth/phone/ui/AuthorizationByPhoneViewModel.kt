@@ -82,10 +82,10 @@ class AuthorizationByPhoneViewModel(
                         handleSendCodeError(error)
                     }
             },
-            onError = {
-                VolleyLog.e(tag, "sendCode() UNEXPECTED ERROR: ${it.message}", it)
+            onError = { error ->
+                VolleyLog.e(tag, "sendCode() UNEXPECTED ERROR: ${error.message}", error)
                 uiStateMutable.update { it.copy(isLoading = false) }
-                uiEffectMutable.trySend(AuthorizationByPhoneEffect.ShowError("Unexpected error"))
+                uiEffectMutable.trySend(AuthorizationByPhoneEffect.ShowError(UNEXPECTED_ERROR))
             },
             getErrorLogMessage = { "SendCode: unexpected error -> ${it.message}" }
         )
@@ -125,10 +125,10 @@ class AuthorizationByPhoneViewModel(
                         handleSendCodeError(error)
                     }
             },
-            onError = {
-                VolleyLog.e(tag, "resendCode() UNEXPECTED ERROR: ${it.message}", it)
+            onError = { error ->
+                VolleyLog.e(tag, "resendCode() UNEXPECTED ERROR: ${error.message}", error)
                 uiStateMutable.update { it.copy(isLoading = false, isResendEnabled = true) }
-                uiEffectMutable.trySend(AuthorizationByPhoneEffect.ShowError("Unexpected error"))
+                uiEffectMutable.trySend(AuthorizationByPhoneEffect.ShowError(UNEXPECTED_ERROR))
             },
             getErrorLogMessage = { "ResendCode: unexpected error -> ${it.message}" }
         )
@@ -142,12 +142,7 @@ class AuthorizationByPhoneViewModel(
             return
         }
 
-        if (state.code.isBlank()) {
-            VolleyLog.w(tag, "verifyCode() called but code is blank")
-            return
-        }
-
-        if (state.code.length < 6) {
+        if (state.code.length < SMS_CODE_LENGTH) {
             VolleyLog.d(tag, "verifyCode() code too short: ${state.code.length}")
             uiStateMutable.update { it.copy(isCodeInputError = true) }
             return
@@ -157,10 +152,7 @@ class AuthorizationByPhoneViewModel(
             block = {
                 VolleyLog.d(tag, "verifyCode() starting")
                 uiStateMutable.update { it.copy(isLoading = true) }
-
-                val result = phoneAuthService.verifyCode(verificationId, state.code)
-
-                result
+                phoneAuthService.verifyCode(verificationId, state.code)
                     .onSuccess { idToken ->
                         VolleyLog.i(tag, "verifyCode() SUCCESS, token length=${idToken.length}")
                         onAuthorized(idToken)
@@ -170,10 +162,10 @@ class AuthorizationByPhoneViewModel(
                         handleVerifyCodeError(error)
                     }
             },
-            onError = {
-                VolleyLog.e(tag, "verifyCode() UNEXPECTED ERROR: ${it.message}", it)
+            onError = { error ->
+                VolleyLog.e(tag, "verifyCode() UNEXPECTED ERROR: ${error.message}", error)
                 uiStateMutable.update { it.copy(isLoading = false) }
-                uiEffectMutable.trySend(AuthorizationByPhoneEffect.ShowError("Unexpected error"))
+                uiEffectMutable.trySend(AuthorizationByPhoneEffect.ShowError(UNEXPECTED_ERROR))
             },
             getErrorLogMessage = { "VerifyCode: unexpected error -> ${it.message}" }
         )
@@ -203,8 +195,8 @@ class AuthorizationByPhoneViewModel(
                         uiEffectMutable.trySend(AuthorizationByPhoneEffect.ShowError("Authorization error"))
                     }
             },
-            onError = {
-                VolleyLog.e(tag, "onAuthorized() UNEXPECTED ERROR: ${it.message}", it)
+            onError = { error ->
+                VolleyLog.e(tag, "onAuthorized() UNEXPECTED ERROR: ${error.message}", error)
                 uiStateMutable.update { it.copy(isLoading = false) }
                 uiEffectMutable.trySend(AuthorizationByPhoneEffect.ShowError("Unexpected error during authorization"))
             },
@@ -276,7 +268,7 @@ class AuthorizationByPhoneViewModel(
                 uiStateMutable.update {
                     it.copy(remainingResendTime = seconds)
                 }
-                delay(1000)
+                delay(timeMillis = 1000)
             }
 
             uiStateMutable.update {
@@ -290,5 +282,7 @@ class AuthorizationByPhoneViewModel(
 
     private companion object {
         const val RESEND_TIMEOUT_SECONDS = 30
+        const val UNEXPECTED_ERROR = "Unexpected error"
+        const val SMS_CODE_LENGTH = 6
     }
 }

@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.games.mygames.manageplayers
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -43,7 +42,6 @@ import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 private const val LEVEL_HIGH = "H"

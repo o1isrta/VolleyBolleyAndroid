@@ -1,12 +1,9 @@
 package cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -37,12 +34,9 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.profile.domain.model.PaymentType
-import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEffect.NavigateFromEnterPaymentDataScreen
-import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEffect.ShowInfoDialog
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEvent.AccountTextChanged
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEvent.ClickOnBackFromEnterPaymentData
 import cy.volleybolley.profile.presentation.ui.screens.enterpaymentdata.EnterPaymentDataScreenEvent.OnSaveButtonClick
-import cy.volleybolley.profile.presentation.ui.screens.payments.model.BackPaymentsHolder
 
 @Composable
 fun EnterPaymentDataScreen(
@@ -54,9 +48,9 @@ fun EnterPaymentDataScreen(
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     LaunchedEffect(effect) {
-        when (val currentEffect = effect) {
+        when (effect) {
             is EnterPaymentDataScreenEffect.NavigateFromEnterPaymentDataScreen -> {
-                onNavigateBack(currentEffect.updatedPaymentsJsonString)
+                onNavigateBack(effect.updatedPaymentsJsonString)
             }
 
             is EnterPaymentDataScreenEffect.ShowInfoDialog -> {}
@@ -195,7 +189,11 @@ private fun EnterPaymentDataDialog(
 ) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(true, true, false)
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true,
+            usePlatformDefaultWidth = false
+        )
     ) {
         Card(
             modifier = Modifier

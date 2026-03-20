@@ -84,7 +84,6 @@ private fun ChooseTeamScreen(
 @Preview
 @Composable
 private fun ChooseTeamScreenPreview() {
-
     Box(
         modifier = Modifier
             .fillMaxSize()

@@ -59,7 +59,6 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton.OutlinedActiv
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.OutlinedGradientButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.compose.viewmodel.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -138,7 +137,7 @@ private fun MyTourneyContent(
             minHeight = 380.dp
         ) {
             CardHeader(
-            title = stringResource(R.string.my_tourney),
+                title = stringResource(R.string.my_tourney),
                 onBack = onBack
             )
 

@@ -20,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,8 +31,10 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.PlayersFilter
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
 import cy.volleybolley.players.domain.model.Player
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -39,24 +42,25 @@ import org.koin.compose.viewmodel.koinViewModel
 fun PrivacyOptionsScreen(
     paddingFromSystemUi: PaddingValues,
     onNavigateBack: () -> Unit,
-    viewModel: PrivacyOptionsScreenViewModel = koinViewModel()
+    viewModel: PrivacyOptionsViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     val context = LocalContext.current
+    val resources = LocalResources.current
 
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
-            is PrivacyOptionsScreenEffect.ShowErrorMessage -> {
+            is PrivacyOptionsEffect.ShowErrorMessage -> {
                 Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_LONG).show()
             }
 
-            is PrivacyOptionsScreenEffect.ShowErrorMessageById -> {
-                val errorMessage = context.getString(currentEffect.messageId)
+            is PrivacyOptionsEffect.ShowErrorMessageById -> {
+                val errorMessage = resources.getString(currentEffect.messageId)
                 Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
             }
 
-            is PrivacyOptionsScreenEffect.NavigateBack -> {
+            is PrivacyOptionsEffect.NavigateBack -> {
                 onNavigateBack()
             }
 
@@ -75,10 +79,10 @@ fun PrivacyOptionsScreen(
 @Stable
 @Composable
 private fun PrivacyOptionsScreen(
-    state: PrivacyOptionsScreenState,
+    state: PrivacyOptionsState,
     paddingFromSystemUi: PaddingValues,
     isPlayerSelected: (Player) -> Boolean,
-    eventCallback: (PrivacyOptionsScreenEvent) -> Unit
+    eventCallback: (PrivacyOptionsEvent) -> Unit
 ) {
     if (state.isLoading) {
         VolleySimpleComponent.LoadingIndicator()
@@ -97,7 +101,7 @@ private fun PrivacyOptionsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 20.dp),
-                        onBackClick = { eventCallback(PrivacyOptionsScreenEvent.OnBackClicked) }
+                        onBackClick = { eventCallback(PrivacyOptionsEvent.OnBackClicked) }
                     )
 
                     val scrollState = rememberSaveable(saver = ScrollState.Saver) {
@@ -109,7 +113,7 @@ private fun PrivacyOptionsScreen(
                         VolleyTextFieldGradient.SearchField(
                             modifier = Modifier.padding(top = 16.dp),
                             text = state.query,
-                            actionToTransferContent = { eventCallback(PrivacyOptionsScreenEvent.OnQueryChanged(it)) }
+                            actionToTransferContent = { eventCallback(PrivacyOptionsEvent.OnQueryChanged(it)) }
                         ) { }
 
                         VolleyButton.SliderButtonGroup(
@@ -120,7 +124,9 @@ private fun PrivacyOptionsScreen(
                                 .fillMaxWidth()
                                 .padding(top = 8.dp),
                             onSelect = { filter ->
-                                eventCallback(PrivacyOptionsScreenEvent.AllOrFavoritesSelected(filter == PlayersFilter.Favorites))
+                                eventCallback(PrivacyOptionsEvent.AllOrFavoritesSelected(
+                                    isFavorites = filter == PlayersFilter.Favorites
+                                ))
                             }
                         )
 
@@ -132,7 +138,7 @@ private fun PrivacyOptionsScreen(
                                 VolleySimpleComponent.PlayerRowWithSelectAndFavorite(
                                     player = player,
                                     isSelected = isPlayerSelected(player),
-                                    onAction = { eventCallback(PrivacyOptionsScreenEvent.OnPlayerSelectionClick(player)) }
+                                    onAction = { eventCallback(PrivacyOptionsEvent.OnPlayerSelectionClick(player)) }
                                 )
                             }
                         }
@@ -144,7 +150,7 @@ private fun PrivacyOptionsScreen(
                                 .align(Alignment.CenterHorizontally)
                                 .fillMaxWidth(),
                             text = stringResource(R.string.add_selected),
-                            onClick = { eventCallback(PrivacyOptionsScreenEvent.OnAddSelectedClick) }
+                            onClick = { eventCallback(PrivacyOptionsEvent.OnAddSelectedClick) }
                         )
                     }
                 }
@@ -156,14 +162,46 @@ private fun PrivacyOptionsScreen(
 @Preview
 @Composable
 private fun PrivacyOptionsScreenPreview() {
-    val previewState = PrivacyOptionsScreenState(
+    val previewState = PrivacyOptionsState(
         playersSearchResult = listOf(
-            Player(id = 1, firstName = "John", lastName = "Doe", avatarUrl = null, isFavorite = true, level = "M", gender = "M"),
-            Player(id = 2, firstName = "Jane", lastName = "Smith", avatarUrl = null, isFavorite = false, level = "L", gender = "F")
+            Player(
+                id = 1,
+                firstName = "John",
+                lastName = "Doe",
+                avatarUrl = null,
+                isFavorite = true,
+                level = Level.Medium.displayText.first().toString(),
+                gender = Gender.Men.displayText.first().toString()
+            ),
+            Player(
+                id = 2,
+                firstName = "Jane",
+                lastName = "Smith",
+                avatarUrl = null,
+                isFavorite = false,
+                level = "L",
+                gender = "F"
+            )
         ),
         filteredPlayers = listOf(
-            Player(id = 1, firstName = "John", lastName = "Doe", avatarUrl = null, isFavorite = true, level = "M", gender = "M"),
-            Player(id = 2, firstName = "Jane", lastName = "Smith", avatarUrl = null, isFavorite = false, level = "L", gender = "F")
+            Player(
+                id = 1,
+                firstName = "John",
+                lastName = "Doe",
+                avatarUrl = null,
+                isFavorite = true,
+                level = Level.Medium.displayText.first().toString(),
+                gender = Gender.Men.displayText.first().toString()
+            ),
+            Player(
+                id = 2,
+                firstName = "Jane",
+                lastName = "Smith",
+                avatarUrl = null,
+                isFavorite = false,
+                level = "L",
+                gender = "F"
+            )
         )
     )
 

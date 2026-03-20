@@ -786,7 +786,7 @@ object VolleyButton {
                     contentDescription = null
                 )
                 VolleyText.TitleLarge(
-                    modifier = Modifier.rotate(-8f),
+                    modifier = Modifier.rotate(degrees = -8f),
                     text = stringResource(R.string.invite_players),
                     color = VolleyColor.TextDark
                 )
@@ -824,7 +824,7 @@ object VolleyButton {
                         contentDescription = null
                     )
                     VolleyText.TitleLarge(
-                        modifier = Modifier.rotate(-8f),
+                        modifier = Modifier.rotate(degrees = -8f),
                         text = stringResource(R.string.share_link),
                         color = VolleyColor.White
                     )

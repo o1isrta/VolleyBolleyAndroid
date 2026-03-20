@@ -26,14 +26,14 @@ import org.koin.compose.viewmodel.koinViewModel
 fun JoinTheTourneyScreen(
     paddingFromSystemUi: PaddingValues,
     onNavigateBack: () -> Unit,
-    viewModel: JoinTheTourneyScreenViewModel = koinViewModel()
+    viewModel: JoinTheTourneyViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
         when (effect) {
-            is JoinTheTourneyScreenEffect.NavigateBack -> onNavigateBack()
+            is JoinTheTourneyEffect.NavigateBack -> onNavigateBack()
             null -> {}
         }
     }
@@ -48,9 +48,9 @@ fun JoinTheTourneyScreen(
 @Stable
 @Composable
 private fun JoinTheTourneyScreen(
-    state: JoinTheTourneyScreenState,
+    state: JoinTheTourneyState,
     paddingFromSystemUi: PaddingValues,
-    eventCallback: (JoinTheTourneyScreenEvent) -> Unit
+    eventCallback: (JoinTheTourneyEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -66,7 +66,7 @@ private fun JoinTheTourneyScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = 20.dp),
-                    onBackClick = { eventCallback(JoinTheTourneyScreenEvent.OnBackClicked) }
+                    onBackClick = { eventCallback(JoinTheTourneyEvent.OnBackClicked) }
                 )
 
                 VolleyText.BodyRegular(
@@ -88,7 +88,7 @@ private fun JoinTheTourneyScreenPreview() {
             .background(VolleyColor.TurquoiseDark)
     ) {
         JoinTheTourneyScreen(
-            state = JoinTheTourneyScreenState(),
+            state = JoinTheTourneyState(),
             paddingFromSystemUi = PaddingValues(0.dp),
             eventCallback = {}
         )

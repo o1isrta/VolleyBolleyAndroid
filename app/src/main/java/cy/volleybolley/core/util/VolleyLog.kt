@@ -3,6 +3,7 @@ package cy.volleybolley.core.util
 import android.util.Log
 import cy.volleybolley.BuildConfig
 
+@Suppress("FunctionMinLength")
 object VolleyLog {
     @JvmStatic
     fun v(tag: String, msg: String, throwable: Throwable? = null) {

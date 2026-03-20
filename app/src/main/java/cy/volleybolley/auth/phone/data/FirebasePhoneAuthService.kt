@@ -5,7 +5,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider as FirebasePhoneAuthProvider
 import cy.volleybolley.auth.data.FirebaseResendCodeToken
 import cy.volleybolley.auth.phone.domain.CodeSentResult
 import cy.volleybolley.auth.phone.domain.PhoneAuthError
@@ -16,16 +15,14 @@ import cy.volleybolley.core.util.VolleyLog
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
+import com.google.firebase.auth.PhoneAuthProvider as FirebasePhoneAuthProvider
 
 class FirebasePhoneAuthService(
     private val auth: FirebaseAuth,
     private val activityProvider: CurrentActivityProvider
 ) : PhoneAuthService {
 
-    private companion object {
-        const val TAG = "FirebasePhoneAuthService"
-    }
-
+    @Suppress("LabeledExpression") // Нужен suspendCancellableCoroutine для интеграции в коррутину callback
     override suspend fun sendCode(
         phoneNumber: String,
         resendToken: ResendCodeToken?
@@ -74,7 +71,7 @@ class FirebasePhoneAuthService(
 
         val options = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber(phoneNumber)
-            .setTimeout(30L, TimeUnit.SECONDS)
+            .setTimeout(PHONE_AUTH_TIMEOUT, TimeUnit.SECONDS)
             .setActivity(activity)
             .setCallbacks(callbacks)
 
@@ -132,7 +129,7 @@ class FirebasePhoneAuthService(
             is FirebaseAuthException -> {
                 val result = when {
                     e.message?.contains("phone", ignoreCase = true) == true ||
-                    e.message?.contains("format", ignoreCase = true) == true -> {
+                        e.message?.contains("format", ignoreCase = true) == true -> {
                         VolleyLog.d(TAG, "mapFirebaseException() -> INVALID_PHONE_NUMBER")
                         PhoneAuthError.INVALID_PHONE_NUMBER
                     }
@@ -178,5 +175,10 @@ class FirebasePhoneAuthService(
                 PhoneAuthError.UNKNOWN
             }
         }
+    }
+
+    private companion object {
+        const val TAG = "FirebasePhoneAuthService"
+        const val PHONE_AUTH_TIMEOUT = 30L
     }
 }

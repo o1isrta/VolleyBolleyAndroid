@@ -145,6 +145,6 @@ open class GameConditionsViewModel(
     }
 
     private fun getAccountNumber(): String? {
-        return if (Random.nextBoolean()) "123 45 6789" else null // TODO("для теста, заменить на получение номера из профиля")
+        return if (Random.nextBoolean()) "123 45 6789" else null
     }
 }

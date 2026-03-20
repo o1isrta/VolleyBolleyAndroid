@@ -36,11 +36,11 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackA
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
+import cy.volleybolley.core.presentation.ui.model.DateOption
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.model.DateOption
 import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
@@ -53,7 +53,7 @@ fun BasicTourneySetupScreen(
     onNavigateToSearchCourt: () -> Unit,
     onNavigateToNextStep: () -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: BasicTourneySetupScreenViewModel = koinViewModel()
+    viewModel: BasicTourneySetupViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -62,17 +62,17 @@ fun BasicTourneySetupScreen(
 
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
-            is BasicTourneySetupScreenEffect.NavigateToCreatePlace -> onNavigateToSearchCourt()
+            is BasicTourneySetupEffect.NavigateToCreatePlace -> onNavigateToSearchCourt()
 
-            is BasicTourneySetupScreenEffect.NavigateBack -> onNavigateBack()
+            is BasicTourneySetupEffect.NavigateBack -> onNavigateBack()
 
-            is BasicTourneySetupScreenEffect.NavigateNextStep -> onNavigateToNextStep()
+            is BasicTourneySetupEffect.NavigateNextStep -> onNavigateToNextStep()
 
-            is BasicTourneySetupScreenEffect.ShowErrorMessage -> {
+            is BasicTourneySetupEffect.ShowErrorMessage -> {
                 Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_SHORT).show()
             }
 
-            is BasicTourneySetupScreenEffect.ShowErrorMessageById -> {
+            is BasicTourneySetupEffect.ShowErrorMessageById -> {
                 val errorMessage = context.getString(currentEffect.messageId)
                 Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
             }
@@ -93,11 +93,11 @@ fun BasicTourneySetupScreen(
 @Stable
 @Composable
 private fun BasicTourneySetupScreen(
-    state: BasicTourneySetupScreenState,
+    state: BasicTourneySetupState,
     paddingFromSystemUi: PaddingValues,
     showCalendar: Boolean,
     isSameDay: (LocalDate, LocalDate) -> Boolean,
-    eventCallback: (BasicTourneySetupScreenEvent) -> Unit
+    eventCallback: (BasicTourneySetupEvent) -> Unit
 ) {
     val scrollState = rememberSaveable(saver = ScrollState.Saver) {
         ScrollState(0)
@@ -120,7 +120,7 @@ private fun BasicTourneySetupScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 20.dp),
-                        onBackClick = { eventCallback(BasicTourneySetupScreenEvent.OnBackClicked) }
+                        onBackClick = { eventCallback(BasicTourneySetupEvent.OnBackClicked) }
                     )
 
                     Column(
@@ -128,7 +128,7 @@ private fun BasicTourneySetupScreen(
                     ) {
                         MessageSection(
                             message = state.message,
-                            onMessageChanged = { eventCallback(BasicTourneySetupScreenEvent.MessageChanged(it)) }
+                            onMessageChanged = { eventCallback(BasicTourneySetupEvent.MessageChanged(it)) }
                         )
 
                         VolleySimpleComponent.DividerLine(
@@ -137,7 +137,7 @@ private fun BasicTourneySetupScreen(
 
                         PlaceSection(
                             placeCourt = state.placeCourt,
-                            onChangeClick = { eventCallback(BasicTourneySetupScreenEvent.OnChangeClick) }
+                            onChangeClick = { eventCallback(BasicTourneySetupEvent.OnChangeClick) }
                         )
 
                         VolleySimpleComponent.DividerLine(
@@ -148,16 +148,16 @@ private fun BasicTourneySetupScreen(
                             date = state.date,
                             showCalendar = showCalendar,
                             isSameDay = isSameDay,
-                            onTodayClicked = { eventCallback(BasicTourneySetupScreenEvent.OnTodayClicked) },
-                            onPickDateClicked = { eventCallback(BasicTourneySetupScreenEvent.OnPickDateClicked) },
-                            onDateSelected = { eventCallback(BasicTourneySetupScreenEvent.DateSelected(it)) }
+                            onTodayClicked = { eventCallback(BasicTourneySetupEvent.OnTodayClicked) },
+                            onPickDateClicked = { eventCallback(BasicTourneySetupEvent.OnPickDateClicked) },
+                            onDateSelected = { eventCallback(BasicTourneySetupEvent.DateSelected(it)) }
                         )
 
                         TimeSection(
                             startTime = state.startTime,
                             finishTime = state.finishTime,
-                            onStartTimeChanged = { eventCallback(BasicTourneySetupScreenEvent.StartTimeChanged(it)) },
-                            onFinishTimeChanged = { eventCallback(BasicTourneySetupScreenEvent.FinishTimeChanged(it)) }
+                            onStartTimeChanged = { eventCallback(BasicTourneySetupEvent.StartTimeChanged(it)) },
+                            onFinishTimeChanged = { eventCallback(BasicTourneySetupEvent.FinishTimeChanged(it)) }
                         )
 
                         VolleySimpleComponent.DividerLine(
@@ -166,7 +166,7 @@ private fun BasicTourneySetupScreen(
 
                         TourneyTypeSection(
                             tourneyType = state.tourneyType,
-                            onTourneyTypeSelected = { eventCallback(BasicTourneySetupScreenEvent.TourneyTypeSelected(it)) }
+                            onTourneyTypeSelected = { eventCallback(BasicTourneySetupEvent.TourneyTypeSelected(it)) }
                         )
 
                         VolleySimpleComponent.DividerLine(
@@ -175,7 +175,7 @@ private fun BasicTourneySetupScreen(
 
                         GenderSection(
                             gender = state.gender,
-                            onGenderSelected = { eventCallback(BasicTourneySetupScreenEvent.GenderSelected(it)) }
+                            onGenderSelected = { eventCallback(BasicTourneySetupEvent.GenderSelected(it)) }
                         )
 
                         VolleySimpleComponent.DividerLine(
@@ -184,7 +184,7 @@ private fun BasicTourneySetupScreen(
 
                         LevelSection(
                             levels = state.levels,
-                            onPlayerLevelSelected = { eventCallback(BasicTourneySetupScreenEvent.PlayerLevelSelected(it)) }
+                            onPlayerLevelSelected = { eventCallback(BasicTourneySetupEvent.PlayerLevelSelected(it)) }
                         )
 
                         VolleyButton.ActiveButton(
@@ -193,7 +193,7 @@ private fun BasicTourneySetupScreen(
                                 .height(44.dp)
                                 .fillMaxWidth(),
                             text = stringResource(R.string.next_step),
-                            onClick = { eventCallback(BasicTourneySetupScreenEvent.OnNextStepClick) }
+                            onClick = { eventCallback(BasicTourneySetupEvent.OnNextStepClick) }
                         )
                     }
                 }
@@ -440,7 +440,7 @@ private fun LevelSection(
 @Preview
 @Composable
 private fun BasicTourneySetupScreenPreview() {
-    val previewState = BasicTourneySetupScreenState(
+    val previewState = BasicTourneySetupState(
         placeCourt = Court(
             courtId = 1,
             price = "1$",

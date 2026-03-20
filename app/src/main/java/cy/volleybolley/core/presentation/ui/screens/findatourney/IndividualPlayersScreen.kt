@@ -25,7 +25,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun IndividualPlayersScreen(
     onNavigateBack: () -> Unit,
-    viewModel: IndividualPlayersScreenViewModel = koinViewModel(),
+    viewModel: IndividualPlayersViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -33,7 +33,7 @@ fun IndividualPlayersScreen(
 
     LaunchedEffect(effect) {
         when (effect) {
-            is IndividualPlayersScreenEffect.NavigateBack -> onNavigateBack()
+            is IndividualPlayersEffect.NavigateBack -> onNavigateBack()
             null -> {}
         }
     }
@@ -48,9 +48,9 @@ fun IndividualPlayersScreen(
 @Stable
 @Composable
 private fun IndividualPlayersScreen(
-    state: IndividualPlayersScreenState,
+    state: IndividualPlayersState,
     paddingFromSystemUi: PaddingValues,
-    eventCallback: (IndividualPlayersScreenEvent) -> Unit
+    eventCallback: (IndividualPlayersEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -68,7 +68,7 @@ private fun IndividualPlayersScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = 20.dp),
-                    onBackClick = { eventCallback(IndividualPlayersScreenEvent.OnBackClicked) }
+                    onBackClick = { eventCallback(IndividualPlayersEvent.OnBackClicked) }
                 )
 
                 VolleyText.BodyRegular(
@@ -90,7 +90,7 @@ private fun IndividualPlayersScreenPreview() {
             .background(VolleyColor.TurquoiseDark)
     ) {
         IndividualPlayersScreen(
-            state = IndividualPlayersScreenState(),
+            state = IndividualPlayersState(),
             paddingFromSystemUi = PaddingValues(0.dp),
             eventCallback = {}
         )

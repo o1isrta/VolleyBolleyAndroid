@@ -19,10 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,13 +37,11 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.courts.domain.model.Location
-import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEffect.NavigateFromPlayerDetailScreen
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnActivityMapButton
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnBackFromPlayerDetails
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnFavoriteManagementButton
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerActivityTemp
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerDetailTemp
-import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 
 @Composable
 fun PlayerProfileScreen(
@@ -57,9 +53,9 @@ fun PlayerProfileScreen(
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     LaunchedEffect(effect) {
-        when (val currentEffect = effect) {
+        when (effect) {
             is PlayerProfileScreenEffect.NavigateFromPlayerDetailScreen -> {
-                onNavigateBack(currentEffect.playerIdWithChangedFavoriteStatus)
+                onNavigateBack(effect.playerIdWithChangedFavoriteStatus)
             }
             null -> {}
         }

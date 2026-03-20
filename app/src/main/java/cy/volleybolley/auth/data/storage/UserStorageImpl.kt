@@ -18,7 +18,7 @@ class UserStorageImpl(
         val dataJson = prefs.getString(KEY_PERSONAL_DATA, null) ?: return null
         return try {
             json.decodeFromString(dataJson)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

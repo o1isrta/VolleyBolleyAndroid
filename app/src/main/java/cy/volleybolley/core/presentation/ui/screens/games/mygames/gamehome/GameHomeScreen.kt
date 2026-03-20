@@ -50,7 +50,7 @@ fun GameHomeScreen(
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
-        when (val currentEffect = effect) {
+        when (effect) {
             is GameHomeEffect.NavigateToMyGames -> onNavigateToMyGames()
             is GameHomeEffect.NavigateToUpcomingGames -> onNavigateToUpcomingGames()
             is GameHomeEffect.NavigateToInvites -> onNavigateToInvites()
@@ -79,76 +79,73 @@ private fun GameHomeContent(
     onInvitesClick: () -> Unit,
     onArchiveClick: () -> Unit
 ) {
-    Box(Modifier
-        .padding(top = paddingFromSystemUi.calculateTopPadding())
-        .fillMaxSize()) {
-        GlassCard {
-            MenuItem(
-                text = stringResource(R.string.my_games),
-                onClick = onMyGamesClick
-            )
-            HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
-
-            // Upcoming games — подзаголовок только если есть дата
-            val upcomingSubtitle =
-                if (state.upcomingGame.isNotBlank()) {
+    GameHomeContainer(paddingFromSystemUi = paddingFromSystemUi) {
+        MenuItem(
+            text = stringResource(R.string.my_games),
+            onClick = onMyGamesClick
+        )
+        HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
+        if (VolleyFeature.IS_UPCOMING_GAMES_AVAILABLE) {
+            MenuItemWithSubtitle(
+                title = stringResource(R.string.upcoming_games),
+                subtitle = if (state.upcomingGame.isNotBlank()) {
                     stringResource(R.string.next_game, state.upcomingGame)
                 } else {
                     ""
-                }
-
-            if (VolleyFeature.IS_UPCOMING_GAMES_AVAILABLE) {
-                MenuItemWithSubtitle(
-                    title = stringResource(R.string.upcoming_games),
-                    subtitle = upcomingSubtitle,
-                    onClick = onUpcomingGamesClick
-                )
-                HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
-            }
-
-            if (VolleyFeature.IS_GAME_INVITES_AVAILABLE) {
-                // Game invites — бейдж только если invites > 0
-                MenuItem(
-                    text = stringResource(R.string.game_invites),
-                    trailing = {
-                        if (state.invites > 0) {
-                            CountBadge(text = state.invites.toString())
-                        }
-                    },
-                    onClick = onInvitesClick
-                )
-                HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
-            }
-
-
-            MenuItem(
-                text = stringResource(R.string.archive),
-                onClick = onArchiveClick
+                },
+                onClick = onUpcomingGamesClick
             )
+            HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
         }
+
+        if (VolleyFeature.IS_GAME_INVITES_AVAILABLE) {
+            MenuItem(
+                text = stringResource(R.string.game_invites),
+                trailing = if (state.invites > 0) {
+                    { CountBadge(text = state.invites.toString()) }
+                } else {
+                    null
+                },
+                onClick = onInvitesClick
+            )
+            HorizontalDivider(thickness = 1.dp, color = VolleyColor.White)
+        }
+        MenuItem(
+            text = stringResource(R.string.archive),
+            onClick = onArchiveClick
+        )
     }
 }
 
 @Composable
-private fun GlassCard(
+private fun GameHomeContainer(
+    paddingFromSystemUi: PaddingValues,
     modifier: Modifier = Modifier,
     cornerRadiusDp: Int = 32,
     innerPadding: Dp = 20.dp,
     itemsGap: Dp = 16.dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    VolleyContainersRootTransparent.TransparentContainer(
-        modifier = modifier.padding(8.dp),
-        cornerRadius = cornerRadiusDp,
-        mainContainerAlignment = Alignment.TopStart,
-        contentContainerAlignment = Alignment.TopStart
+    Box(
+        modifier = Modifier
+            .padding(paddingFromSystemUi)
+            .fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(itemsGap),
-            horizontalAlignment = Alignment.Start,
-            content = content
-        )
+        VolleyContainersRootTransparent.TransparentContainer(
+            modifier = modifier.padding(8.dp),
+            cornerRadius = cornerRadiusDp,
+            mainContainerAlignment = Alignment.TopStart,
+            contentContainerAlignment = Alignment.TopStart
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(innerPadding),
+                verticalArrangement = Arrangement.spacedBy(itemsGap),
+                horizontalAlignment = Alignment.Start,
+                content = content
+            )
+        }
     }
 }
 

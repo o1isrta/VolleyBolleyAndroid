@@ -17,6 +17,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 
+@Suppress("LongParameterList")
 class MainActivityViewModel(
     private val sendDeviceTokenUseCase: SendDeviceTokenUseCase,
     private val fcmTokenStore: FCMTokenStore,

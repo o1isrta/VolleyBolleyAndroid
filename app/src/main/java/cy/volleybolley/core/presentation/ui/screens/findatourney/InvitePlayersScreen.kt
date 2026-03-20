@@ -1,7 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.findatourney
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +24,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun InvitePlayersScreen(
     onNavigateBack: () -> Unit,
-    viewModel: InvitePlayersScreenViewModel = koinViewModel(),
+    viewModel: InvitePlayersViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -34,7 +32,7 @@ fun InvitePlayersScreen(
 
     LaunchedEffect(effect) {
         when (effect) {
-            is InvitePlayersScreenEffect.NavigateBack -> onNavigateBack()
+            is InvitePlayersEffect.NavigateBack -> onNavigateBack()
             null -> {}
         }
     }
@@ -49,9 +47,9 @@ fun InvitePlayersScreen(
 @Stable
 @Composable
 private fun InvitePlayersScreen(
-    state: InvitePlayersScreenState,
+    state: InvitePlayersState,
     paddingFromSystemUi: PaddingValues,
-    eventCallback: (InvitePlayersScreenEvent) -> Unit
+    eventCallback: (InvitePlayersEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -69,7 +67,7 @@ private fun InvitePlayersScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = 20.dp),
-                    onBackClick = { eventCallback(InvitePlayersScreenEvent.OnBackClicked) }
+                    onBackClick = { eventCallback(InvitePlayersEvent.OnBackClicked) }
                 )
 
                 VolleyText.BodyRegular(
@@ -87,7 +85,7 @@ private fun InvitePlayersScreen(
 private fun InvitePlayersScreenPreview() {
     RootContainerForPreview {
         InvitePlayersScreen(
-            state = InvitePlayersScreenState(),
+            state = InvitePlayersState(),
             paddingFromSystemUi = PaddingValues(0.dp),
             eventCallback = {}
         )

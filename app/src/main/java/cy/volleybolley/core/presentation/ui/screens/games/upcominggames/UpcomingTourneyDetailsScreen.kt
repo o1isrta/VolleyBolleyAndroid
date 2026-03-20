@@ -33,7 +33,7 @@ fun UpcomingTourneyDetailsScreen(
     tournamentDetails: TournamentDetails?,
     onNavigateToJoinedPlayers: (String) -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: UpcomingTourneyDetailsScreenViewModel = koinViewModel { parametersOf(tournamentDetails) }
+    viewModel: UpcomingTourneyDetailsViewModel = koinViewModel { parametersOf(tournamentDetails) }
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -41,8 +41,8 @@ fun UpcomingTourneyDetailsScreen(
 
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
-            is UpcomingTourneyDetailsScreenEffect.NavigateBack -> onNavigateBack()
-            is UpcomingTourneyDetailsScreenEffect.NavigateToJoinedPlayers -> {
+            is UpcomingTourneyDetailsEffect.NavigateBack -> onNavigateBack()
+            is UpcomingTourneyDetailsEffect.NavigateToJoinedPlayers -> {
                 val key = dataHolder.put(currentEffect.tournamentDetails)
                 onNavigateToJoinedPlayers(key)
             }
@@ -60,9 +60,9 @@ fun UpcomingTourneyDetailsScreen(
 @Stable
 @Composable
 private fun UpcomingTourneyDetailsScreen(
-    state: UpcomingTourneyDetailsScreenState,
+    state: UpcomingTourneyDetailsState,
     paddingFromSystemUi: PaddingValues,
-    eventCallback: (UpcomingTourneyDetailsScreenEvent) -> Unit
+    eventCallback: (UpcomingTourneyDetailsEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -78,7 +78,7 @@ private fun UpcomingTourneyDetailsScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = 20.dp),
-                    onBackClick = { eventCallback(UpcomingTourneyDetailsScreenEvent.OnBackClicked) }
+                    onBackClick = { eventCallback(UpcomingTourneyDetailsEvent.OnBackClicked) }
                 )
 
                 VolleyText.BodyRegular(
@@ -92,7 +92,7 @@ private fun UpcomingTourneyDetailsScreen(
                         .padding(top = 20.dp)
                         .fillMaxWidth(),
                     text = stringResource(R.string.joined_players),
-                    onClick = { eventCallback(UpcomingTourneyDetailsScreenEvent.OnViewPlayersClicked) }
+                    onClick = { eventCallback(UpcomingTourneyDetailsEvent.OnViewPlayersClicked) }
                 )
             }
         }
@@ -108,7 +108,7 @@ private fun UpcomingTourneyDetailsScreenPreview() {
             .background(VolleyColor.TurquoiseDark)
     ) {
         UpcomingTourneyDetailsScreen(
-            state = UpcomingTourneyDetailsScreenState(),
+            state = UpcomingTourneyDetailsState(),
             paddingFromSystemUi = PaddingValues(0.dp),
             eventCallback = {}
         )

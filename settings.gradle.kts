@@ -26,4 +26,3 @@ includeBuild("build-logic")
 
 rootProject.name = "Volleybolley"
 include(":app")
-

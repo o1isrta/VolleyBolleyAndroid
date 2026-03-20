@@ -26,14 +26,14 @@ import org.koin.compose.viewmodel.koinViewModel
 fun UpcomingGamesScreen(
     paddingFromSystemUi: PaddingValues,
     onNavigateBack: () -> Unit,
-    viewModel: UpcomingGamesScreenViewModel = koinViewModel()
+    viewModel: UpcomingGamesViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
         when (effect) {
-            is UpcomingGamesScreenEffect.NavigateBack -> onNavigateBack()
+            is UpcomingGamesEffect.NavigateBack -> onNavigateBack()
             null -> {}
         }
     }
@@ -48,9 +48,9 @@ fun UpcomingGamesScreen(
 @Stable
 @Composable
 private fun UpcomingGamesScreen(
-    state: UpcomingGamesScreenState,
+    state: UpcomingGamesState,
     paddingFromSystemUi: PaddingValues,
-    eventCallback: (UpcomingGamesScreenEvent) -> Unit
+    eventCallback: (UpcomingGamesEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -66,7 +66,7 @@ private fun UpcomingGamesScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = 20.dp),
-                    onBackClick = { eventCallback(UpcomingGamesScreenEvent.OnBackClicked) }
+                    onBackClick = { eventCallback(UpcomingGamesEvent.OnBackClicked) }
                 )
 
                 VolleyText.BodyRegular(
@@ -88,7 +88,7 @@ private fun UpcomingGamesScreenPreview() {
             .background(VolleyColor.TurquoiseDark)
     ) {
         UpcomingGamesScreen(
-            state = UpcomingGamesScreenState(),
+            state = UpcomingGamesState(),
             paddingFromSystemUi = PaddingValues(0.dp),
             eventCallback = {}
         )

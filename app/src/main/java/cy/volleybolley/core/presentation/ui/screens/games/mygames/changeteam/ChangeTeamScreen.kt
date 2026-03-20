@@ -43,7 +43,6 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

@@ -33,8 +33,6 @@ import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
-import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEffect.NavigateFromPersonalDataScreen
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.CitySelect
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.CountrySelect
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.DateSelect
@@ -43,8 +41,8 @@ import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalData
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnAvatarEditClick
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnBackFromPersonalDataClick
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnUpdateButtonClick
-import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.GenderType
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.SurnameChanged
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.GenderType
 
 @Composable
 fun PersonalDataScreen(
@@ -58,10 +56,9 @@ fun PersonalDataScreen(
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
     LaunchedEffect(effect) {
-        when (val currentEffect = effect) {
+        when (effect) {
             is PersonalDataScreenEffect.NavigateFromPersonalDataScreen -> {
-                val route = currentEffect.route
-                when (route) {
+                when (val route = effect.route) {
                     is cy.volleybolley.core.presentation.ui.navigation.ChangePhotoRoute -> {
                         onNavigateToChangePhoto(route.avatarUrl)
                     }

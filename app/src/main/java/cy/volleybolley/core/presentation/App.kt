@@ -2,9 +2,8 @@ package cy.volleybolley.core.presentation
 
 import android.app.Application
 import cy.volleybolley.BuildConfig
-import cy.volleybolley.core.DiProvider
-import cy.volleybolley.auth.phone.data.CurrentActivityProvider
 import cy.volleybolley.auth.phone.data.CurrentActivityProviderImpl
+import cy.volleybolley.core.DiProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -17,14 +16,12 @@ class App : Application() {
     val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     // Eagerly initialized to register ActivityLifecycleCallbacks before any Activity is created
-    lateinit var currentActivityProvider: CurrentActivityProvider
-        private set
+    val currentActivityProvider by lazy { CurrentActivityProviderImpl(this) }
 
     override fun onCreate() {
         super.onCreate()
 
-        // Initialize activity provider BEFORE Koin to ensure lifecycle callbacks are registered early
-        currentActivityProvider = CurrentActivityProviderImpl(this)
+        currentActivityProvider.hashCode()
 
         startKoin {
             androidContext(applicationContext)

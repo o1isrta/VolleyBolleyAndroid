@@ -31,10 +31,12 @@ fun AuthorizationByPhoneScreen(
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
-        when (val e = effect) {
+        when (val action = effect) {
             is AuthorizationByPhoneEffect.NavigateToRegistration -> onNavigateToRegistration()
             is AuthorizationByPhoneEffect.NavigateHome -> onNavigateToHome()
-            is AuthorizationByPhoneEffect.ShowError -> Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+            is AuthorizationByPhoneEffect.ShowError -> {
+                Toast.makeText(context, action.message, Toast.LENGTH_SHORT).show()
+            }
             null -> Unit
         }
     }

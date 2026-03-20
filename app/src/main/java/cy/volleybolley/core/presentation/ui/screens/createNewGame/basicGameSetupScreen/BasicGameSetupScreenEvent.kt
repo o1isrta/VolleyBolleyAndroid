@@ -7,16 +7,15 @@ import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameR
 import java.time.LocalDate
 
 sealed interface BasicGameSetupScreenEvent : UiEvent {
-    data object OnBackClicked : BasicGameSetupScreenEvent
-    data object OnChangeClick : BasicGameSetupScreenEvent
-    data object OnPickDateClicked : BasicGameSetupScreenEvent
-    data object OnTodayClicked : BasicGameSetupScreenEvent
-    data object OnNextStepClick : BasicGameSetupScreenEvent
-    data class MessageChanged(val text: String) : BasicGameSetupScreenEvent
-    data class StartTimeChanged(val time: VolleyTimeStamp?) : BasicGameSetupScreenEvent
-    data class FinishTimeChanged(val time: VolleyTimeStamp?) : BasicGameSetupScreenEvent
-    data class GenderSelected(val gender: Gender) : BasicGameSetupScreenEvent
-    data class PlayerLevelSelected(val levels: Set<Level>) : BasicGameSetupScreenEvent
-    data class DateSelected(val date: LocalDate) : BasicGameSetupScreenEvent
+    object OnBackClicked : BasicGameSetupScreenEvent
+    object OnChangeClick : BasicGameSetupScreenEvent
+    object OnPickDateClicked : BasicGameSetupScreenEvent
+    object OnTodayClicked : BasicGameSetupScreenEvent
+    object OnNextStepClick : BasicGameSetupScreenEvent
+    class MessageChanged(val text: String) : BasicGameSetupScreenEvent
+    class StartTimeChanged(val time: VolleyTimeStamp?) : BasicGameSetupScreenEvent
+    class FinishTimeChanged(val time: VolleyTimeStamp?) : BasicGameSetupScreenEvent
+    class GenderSelected(val gender: Gender) : BasicGameSetupScreenEvent
+    class PlayerLevelSelected(val levels: Set<Level>) : BasicGameSetupScreenEvent
+    class DateSelected(val date: LocalDate) : BasicGameSetupScreenEvent
 }
-

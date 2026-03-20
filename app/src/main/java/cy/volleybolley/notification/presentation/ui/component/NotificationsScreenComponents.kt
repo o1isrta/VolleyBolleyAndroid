@@ -46,7 +46,7 @@ object NotificationsScreenComponents {
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16))
+                .clip(RoundedCornerShape(16.dp))
                 .background(VolleyColor.NotificationColor)
                 .padding(16.dp)
                 .clickable { onClick() }

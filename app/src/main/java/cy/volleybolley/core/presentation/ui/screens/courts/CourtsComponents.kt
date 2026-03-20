@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.LatLng
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
-import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.ViewTab
+import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.ListContent
 import cy.volleybolley.core.presentation.ui.screens.courts.MapScreenComponents.MapScreen
 import cy.volleybolley.courts.presentation.model.CourtUi

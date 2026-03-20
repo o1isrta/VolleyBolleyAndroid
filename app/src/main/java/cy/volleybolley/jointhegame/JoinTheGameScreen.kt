@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -44,6 +45,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
 import cy.volleybolley.core.domain.model.PaymentType
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
@@ -53,13 +55,13 @@ import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.referencedata.domain.model.CurrencyType
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JoinTheGameScreen(
+    paddingFromSystemUi: PaddingValues,
     onNavigateBack: () -> Unit,
     onNavigateToSuccess: (String) -> Unit,
     viewModel: JoinTheGameViewModel = koinViewModel()
@@ -68,6 +70,7 @@ fun JoinTheGameScreen(
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     PullToRefreshBox(
+        modifier = Modifier.padding(paddingFromSystemUi),
         isRefreshing = state.isRefreshing,
         onRefresh = { viewModel.obtainEvent(JoinTheGameEvent.OnRefresh) }
     ) {
@@ -419,63 +422,52 @@ private fun openMap(context: Context, location: Location?) {
     }
 }
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
-    device = "spec:width=375dp,height=1200dp"
-)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun JoinTheGameScreenPreview() {
-    VolleybolleyTheme {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-                .padding(top = 116.dp)
-        ) {
-            JoinTheGameScreen(
-                state = JoinTheGameState(
-                    isRefreshing = false,
-                    errorMessage = stringResource(R.string.error_message_standard),
-                    details = GameDetailsUi(
-                        gameId = 1,
-                        host = HostUi(
+    RootContainerForPreview {
+        JoinTheGameScreen(
+            state = JoinTheGameState(
+                isRefreshing = false,
+                errorMessage = stringResource(R.string.error_message_standard),
+                details = GameDetailsUi(
+                    gameId = 1,
+                    host = HostUi(
+                        id = 1,
+                        name = "Artem Ivanov",
+                        avatar = null,
+                        level = "L"
+                    ),
+                    message = "Hi! Just old friends meet at the court.",
+                    courtLocation = Location(
+                        longitude = 0.6,
+                        latitude = 0.7,
+                        courtName = "Karon Beach Club",
+                        locationName = "Ratak Rd, Mueng Phuket"
+                    ),
+                    gender = "Mix",
+                    levels = listOf("Light"),
+                    pricePerPerson = "5",
+                    maximumPlayers = 5,
+                    paymentType = PaymentType.THAIBANK,
+                    paymentAccount = "988 016 7890",
+                    currencyType = CurrencyType.EUR,
+                    players = listOf(
+                        PlayerShortUi(
                             id = 1,
                             name = "Artem Ivanov",
-                            avatar = null,
-                            level = "L"
-                        ),
-                        message = "Hi! Just old friends meet at the court.",
-                        courtLocation = Location(
-                            longitude = 0.6,
-                            latitude = 0.7,
-                            courtName = "Karon Beach Club",
-                            locationName = "Ratak Rd, Mueng Phuket"
-                        ),
-                        gender = "Mix",
-                        levels = listOf("Light"),
-                        pricePerPerson = "5",
-                        maximumPlayers = 5,
-                        paymentType = PaymentType.THAIBANK,
-                        paymentAccount = "988 016 7890",
-                        currencyType = CurrencyType.EUR,
-                        players = listOf(
-                            PlayerShortUi(
-                                id = 1,
-                                name = "Artem Ivanov",
-                                level = "L",
-                                avatar = null
-                            )
-                        ),
-                        isPrivate = false,
-                        time = "10 October, 6:00-8:00",
-                    )
-                ),
-                effect = null,
-                onNavigateBack = {},
-                onNavigateToSuccess = {},
-                eventCallback = {}
-            )
-        }
+                            level = "L",
+                            avatar = null
+                        )
+                    ),
+                    isPrivate = false,
+                    time = "10 October, 6:00-8:00",
+                )
+            ),
+            effect = null,
+            onNavigateBack = {},
+            onNavigateToSuccess = {},
+            eventCallback = {}
+        )
     }
 }

@@ -25,7 +25,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun JoinIndividualScreen(
     onNavigateBack: () -> Unit,
-    viewModel: JoinIndividualScreenViewModel = koinViewModel(),
+    viewModel: JoinIndividualViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -33,7 +33,7 @@ fun JoinIndividualScreen(
 
     LaunchedEffect(effect) {
         when (effect) {
-            is JoinIndividualScreenEffect.NavigateBack -> onNavigateBack()
+            is JoinIndividualEffect.NavigateBack -> onNavigateBack()
             null -> {}
         }
     }
@@ -48,9 +48,9 @@ fun JoinIndividualScreen(
 @Stable
 @Composable
 private fun JoinIndividualScreen(
-    state: JoinIndividualScreenState,
+    state: JoinIndividualState,
     paddingFromSystemUi: PaddingValues,
-    eventCallback: (JoinIndividualScreenEvent) -> Unit
+    eventCallback: (JoinIndividualEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -68,7 +68,7 @@ private fun JoinIndividualScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = 20.dp),
-                    onBackClick = { eventCallback(JoinIndividualScreenEvent.OnBackClicked) }
+                    onBackClick = { eventCallback(JoinIndividualEvent.OnBackClicked) }
                 )
 
                 VolleyText.BodyRegular(
@@ -90,7 +90,7 @@ private fun JoinIndividualScreenPreview() {
             .background(VolleyColor.TurquoiseDark)
     ) {
         JoinIndividualScreen(
-            state = JoinIndividualScreenState(),
+            state = JoinIndividualState(),
             paddingFromSystemUi = PaddingValues(0.dp),
             eventCallback = {}
         )

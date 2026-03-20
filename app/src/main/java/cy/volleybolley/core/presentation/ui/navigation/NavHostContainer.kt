@@ -266,6 +266,7 @@ fun NavHostContainer(
             composable<JoinTheGameRoute> { backStackEntry ->
                 val gameId = backStackEntry.toRoute<JoinTheGameRoute>().gameId
                 JoinTheGameScreen(
+                    paddingFromSystemUi = paddingFromSystemUi,
                     onNavigateBack = { navController.popBackStack() },
                     onNavigateToSuccess = { succeedGameJson ->
                         navController.navigate(SuccessRoute(succeedGameJson))
@@ -521,7 +522,10 @@ fun NavHostContainer(
                 PlayerProfileScreen(
                     onNavigateBack = { backPlayerId ->
                         backPlayerId?.let {
-                            navController.previousBackStackEntry?.savedStateHandle?.set(BackPlayerIdHolder.PLAYER_ID_KEY, it)
+                            navController.previousBackStackEntry?.savedStateHandle?.set(
+                                BackPlayerIdHolder.PLAYER_ID_KEY,
+                                it
+                            )
                         }
                         navController.popBackStack()
                     },
@@ -552,7 +556,10 @@ fun NavHostContainer(
                 EnterPaymentDataScreen(
                     onNavigateBack = { updatedPaymentsJsonString ->
                         updatedPaymentsJsonString?.let {
-                            navController.previousBackStackEntry?.savedStateHandle?.set(BackPaymentsHolder.PAYMENTS_KEY, it)
+                            navController.previousBackStackEntry?.savedStateHandle?.set(
+                                BackPaymentsHolder.PAYMENTS_KEY,
+                                it
+                            )
                         }
                         navController.popBackStack()
                     },
@@ -569,6 +576,7 @@ fun NavHostContainer(
         ) { backStackEntry ->
             val route = backStackEntry.toRoute<ShareLinkRoute>()
             JoinTheGameScreen(
+                paddingFromSystemUi = paddingFromSystemUi,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToSuccess = { succeedGameJson ->
                     navController.navigate(SuccessRoute(succeedGameJson))

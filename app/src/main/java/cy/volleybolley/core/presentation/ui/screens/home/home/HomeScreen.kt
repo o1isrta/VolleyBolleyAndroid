@@ -423,7 +423,7 @@ private fun CreateTourneyButton(
         VolleyText.TitleLarge(
             modifier = Modifier
                 .padding(insidePaddings)
-                .rotate(-8f),
+                .rotate(degrees = -8f),
             text = stringResource(R.string.create_a_tourney),
             color = VolleyColor.TextDark
         )
@@ -462,7 +462,7 @@ private fun DonateButton(
         VolleyText.TitleLarge(
             modifier = Modifier
                 .padding(insidePaddings)
-                .rotate(-8f),
+                .rotate(degrees = -8f),
             text = stringResource(R.string.donate),
             color = VolleyColor.White
         )

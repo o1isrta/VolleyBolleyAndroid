@@ -22,7 +22,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
@@ -86,17 +85,24 @@ object VolleyCashField {
     private fun getCorrectValue(value: String, inputSymbolLimit: Int): String = value.trim().take(inputSymbolLimit)
 
     private fun getFieldWidth(value: String): Int {
-        return if (value.isEmpty()) {
-            9
-        } else {
-            value.chunked(1).map { symbol ->
-                if (symbol.isDigitsOnly()) symbol.toInt() else 1
-            }.fold(0) { accumulator, digit ->
-                val stepValue = if (digit == 1) 6 else 10
-                accumulator + stepValue
-            }
+        if (value.isEmpty()) return EMPTY_FIELD_WIDTH_DP
+
+        return value.sumOf { char ->
+            if (char == '1') NARROW_DIGIT_WIDTH_DP else WIDE_DIGIT_WIDTH_DP
         }
     }
+
+    private const val EMPTY_FIELD_WIDTH_DP = 9
+
+    /**
+     * width of "1"
+     */
+    private const val NARROW_DIGIT_WIDTH_DP = 6
+
+    /**
+     * width of 0, 2-9
+     */
+    private const val WIDE_DIGIT_WIDTH_DP = 10
 }
 
 @Preview(showBackground = true, showSystemUi = true)
