@@ -54,6 +54,17 @@ import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 object VolleyContainersRootTransparent {
+    /**
+     * Maximum blur radius supported by RenderScript ScriptIntrinsicBlur.
+     * Used for legacy blur on Android < S (API 31).
+     * @see android.renderscript.ScriptIntrinsicBlur
+     */
+    private const val RENDERSCRIPT_MAX_BLUR_RADIUS = 25
+
+    /**
+     * Default blur radius used when the provided value is out of valid range.
+     */
+    private const val DEFAULT_BLUR_RADIUS = 24
     @Composable
     fun Root(content: @Composable (PaddingValues) -> Unit) {
         VolleybolleyTheme {
@@ -216,8 +227,11 @@ object VolleyContainersRootTransparent {
     ) {
         val localVew = LocalView.current
         var capturedImage by remember { mutableStateOf<Bitmap?>(null) }
-        val correctBlurRadius =
-            if (blurRadius > 0 && blurRadius <= 25) blurRadius else 24
+        val correctBlurRadius = if (blurRadius in 1..RENDERSCRIPT_MAX_BLUR_RADIUS) {
+            blurRadius
+        } else {
+            DEFAULT_BLUR_RADIUS
+        }
         val shape = RoundedCornerShape(cornerRadius.dp)
 
         Box(

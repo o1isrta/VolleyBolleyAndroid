@@ -318,11 +318,6 @@ private fun GamesAvailableBlock(
     gamesCount: Int = 0,
 ) {
     val digitsStringValuesList = gamesCount.toString().toList()
-    val topGapForDigits = when (digitsStringValuesList.size) {
-        3 -> 10
-        4 -> 16
-        else -> 0
-    }
 
     Box(
         modifier = modifier
@@ -338,23 +333,22 @@ private fun GamesAvailableBlock(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxSize()
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
+                    .padding(bottom = 8.dp)
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(
-                        top = topGapForDigits.dp,
-                        bottom = (10 + topGapForDigits).dp
-                    )
             ) {
                 digitsStringValuesList.forEach { digitString ->
                     Image(
                         contentDescription = null,
                         painter = painterResource(DigitIcon.getIconResByString(digitString)),
-                        contentScale = ContentScale.Inside,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
@@ -480,7 +474,7 @@ private fun PreviewHomeScreen() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             val state = HomeScreenState(
-                nearGamesCount = 13,
+                nearGamesCount = 12,
                 location = VolleyMocks.mockLocation
             )
             HomeScreen(
