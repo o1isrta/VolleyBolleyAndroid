@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository
+package cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository
 
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult

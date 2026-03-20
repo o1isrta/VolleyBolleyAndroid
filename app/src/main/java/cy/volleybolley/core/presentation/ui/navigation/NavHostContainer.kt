@@ -13,9 +13,9 @@ import cy.volleybolley.auth.chooseMethod.AuthorizationScreen
 import cy.volleybolley.auth.phone.ui.AuthorizationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen.BasicGameSetupScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.gameEnteringConditionsScreen.GameEnteringConditionsScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen.PrivacyOptionsScreen
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.basicGameSetupScreen.BasicGameSetupScreen
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditions.GameConditionsScreen
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.privacyOptionsScreen.PrivacyOptionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.ChooseTeamScreen
@@ -189,6 +189,7 @@ fun NavHostContainer(
                 val eventId = args.eventId
                 val eventType = args.eventType
                 RatePlayersScreen(
+                    paddingFromSystemUi = paddingFromSystemUi,
                     onNavigateBack = { navController.popBackStack() },
                     viewModel = koinViewModel {
                         parametersOf(eventId, eventType)
@@ -225,7 +226,7 @@ fun NavHostContainer(
                 )
             }
             composable<GameEnteringConditionsRoute> {
-                GameEnteringConditionsScreen(
+                GameConditionsScreen(
                     paddingFromSystemUi = paddingFromSystemUi,
                     onNavigateToPayments = { navController.navigate(PaymentsRoute) },
                     onNavigateToPrivacyOptions = { navController.navigate(PrivacyOptionsRoute) },
@@ -409,8 +410,8 @@ fun NavHostContainer(
                 val tournamentDetails = holder.get<TournamentDetails>(holderKey)
                 JoinedPlayersScreen(
                     paddingFromSystemUi = paddingFromSystemUi,
-                    tournamentDetails = tournamentDetails,
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = { navController.popBackStack() },
+                    viewModel = koinViewModel { parametersOf(tournamentDetails) }
                 )
             }
             composable<UpcomingGameDetailsRoute> {

@@ -1,14 +1,14 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen
+package cy.volleybolley.core.presentation.ui.screens.createNewGame.privacyOptionsScreen
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.R
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.CreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.FakeCreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.FakeSearchPlayersUseCase
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.GameData
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.FakeCreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.FakeSearchPlayersUseCase
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.GameData
 import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.players.domain.usecase.SearchPlayersUseCase
 import kotlinx.coroutines.Dispatchers

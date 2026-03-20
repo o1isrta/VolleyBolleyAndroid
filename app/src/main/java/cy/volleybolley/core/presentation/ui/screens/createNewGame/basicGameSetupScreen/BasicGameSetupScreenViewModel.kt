@@ -1,15 +1,12 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen
+package cy.volleybolley.core.presentation.ui.screens.createNewGame.basicGameSetupScreen
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.CreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Gender
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,8 +17,6 @@ class BasicGameSetupScreenViewModel(
 ) : BaseViewModel<BasicGameSetupScreenState, BasicGameSetupScreenEvent, BasicGameSetupScreenEffect>(
     initialState = BasicGameSetupScreenState()
 ) {
-    private var timeChangeJob: Job? = null
-
     init {
         viewModelScope.launch {
             gameRepository.gameData.collectLatest { gameDataFromRepo ->
@@ -32,7 +27,6 @@ class BasicGameSetupScreenViewModel(
                         startTime = gameDataFromRepo.startTime,
                         finishTime = gameDataFromRepo.finishTime,
                         gender = gameDataFromRepo.gender,
-                        genderButtonIndex = gameDataFromRepo.gender.toButtonIndex(),
                         levels = gameDataFromRepo.levels,
                         showCalendar = gameDataFromRepo.date != LocalDate.now()
                     )
@@ -90,23 +84,15 @@ class BasicGameSetupScreenViewModel(
     }
 
     private fun startTimeChanged(time: VolleyTimeStamp?) {
-        timeChangeJob?.cancel()
-        timeChangeJob = viewModelScope.launch {
-            delay(DEBOUNCE_DELAY_300MS)
-            uiStateMutable.update { it.copy(startTime = time) }
-        }
+        uiStateMutable.update { it.copy(startTime = time) }
     }
 
     private fun finishTimeChanged(time: VolleyTimeStamp?) {
-        timeChangeJob?.cancel()
-        timeChangeJob = viewModelScope.launch {
-            delay(DEBOUNCE_DELAY_300MS)
-            uiStateMutable.update { it.copy(finishTime = time) }
-        }
+        uiStateMutable.update { it.copy(finishTime = time) }
     }
 
     private fun genderSelected(gender: Gender) {
-        uiStateMutable.update { it.copy(gender = gender, genderButtonIndex = gender.toButtonIndex()) }
+        uiStateMutable.update { it.copy(gender = gender) }
     }
 
     private fun playerLevelSelected(levels: Set<Level>) {
@@ -195,15 +181,8 @@ class BasicGameSetupScreenViewModel(
 
     private companion object {
         const val MAX_LENGTH = 160
-        const val DEBOUNCE_DELAY_300MS = 300L
         const val MINIMUM_GAME_DURATION_MINUTES = 60
         const val MAXIMUM_GAME_DURATION_MINUTES = 240
         const val HOUR = 60
     }
-}
-
-private fun Gender.toButtonIndex(): Int = when (this) {
-    Gender.Mix -> GENDER_BUTTON_MIX
-    Gender.Men -> GENDER_BUTTON_MEN
-    Gender.Women -> GENDER_BUTTON_WOMEN
 }

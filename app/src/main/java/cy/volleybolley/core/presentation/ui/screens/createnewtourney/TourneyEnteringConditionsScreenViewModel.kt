@@ -2,9 +2,9 @@ package cy.volleybolley.core.presentation.ui.screens.createnewtourney
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.CreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.FakeCreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.GameData
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.FakeCreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.GameData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update

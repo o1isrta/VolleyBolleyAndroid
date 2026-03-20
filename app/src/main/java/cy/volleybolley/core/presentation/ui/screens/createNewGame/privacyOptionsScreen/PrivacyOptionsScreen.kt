@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen
+package cy.volleybolley.core.presentation.ui.screens.createNewGame.privacyOptionsScreen
 
 import android.widget.Toast
 import androidx.compose.foundation.ScrollState
@@ -30,6 +30,7 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackArrow
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.model.PlayersFilter
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.players.domain.model.Player
 import org.koin.compose.viewmodel.koinViewModel
@@ -111,18 +112,15 @@ private fun PrivacyOptionsScreen(
                             actionToTransferContent = { eventCallback(PrivacyOptionsScreenEvent.OnQueryChanged(it)) }
                         ) { }
 
-                        VolleyButton.SliderButtonsPlayers(
+                        VolleyButton.SliderButtonGroup(
+                            items = PlayersFilter.entries,
+                            selected = if (state.flagFavorites) PlayersFilter.Favorites else PlayersFilter.All,
+                            label = { it.displayText },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp),
-                            checkId = if (state.flagFavorites) {
-                                PrivacyOptionsScreenConstants.FAVORITE_PLAYERS
-                            } else {
-                                PrivacyOptionsScreenConstants.ALL_PLAYERS
-                            },
-                            onSelected = { position ->
-                                val isFavorites = position == PrivacyOptionsScreenConstants.FAVORITE_PLAYERS
-                                eventCallback(PrivacyOptionsScreenEvent.AllOrFavoritesSelected(isFavorites))
+                            onSelect = { filter ->
+                                eventCallback(PrivacyOptionsScreenEvent.AllOrFavoritesSelected(filter == PlayersFilter.Favorites))
                             }
                         )
 

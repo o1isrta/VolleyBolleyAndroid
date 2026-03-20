@@ -36,10 +36,12 @@ import cy.volleybolley.core.presentation.ui.VolleySimpleComponent.TitleWithBackA
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.component.VolleyCalendar
+import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Gender
+import cy.volleybolley.core.presentation.ui.model.DateOption
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
 import org.koin.compose.viewmodel.koinViewModel
@@ -289,6 +291,8 @@ private fun DateSection(
     onPickDateClicked: () -> Unit,
     onDateSelected: (LocalDate) -> Unit
 ) {
+    val selectedOption = if (isSameDay(date, LocalDate.now())) DateOption.Today else DateOption.PickDate
+
     VolleyText.TitleMedium(
         text = stringResource(R.string.date),
         modifier = Modifier
@@ -297,13 +301,16 @@ private fun DateSection(
         color = VolleyColor.White
     )
 
-    VolleyButton.GroupButtonsForDate2(
+    VolleyButton.SingleChoiceButtonGroup(
+        items = DateOption.entries,
+        selected = selectedOption,
+        label = { it.displayText },
+        showRightIcon = { it.showRightIcon },
         modifier = Modifier.padding(top = 12.dp),
-        checkId = if (isSameDay(date, LocalDate.now())) 1 else 2,
-        onSelected = { position ->
-            when (position) {
-                1 -> onTodayClicked()
-                2 -> onPickDateClicked()
+        onSelect = { option ->
+            when (option) {
+                DateOption.Today -> onTodayClicked()
+                DateOption.PickDate -> onPickDateClicked()
             }
         }
     )
@@ -376,17 +383,12 @@ private fun TourneyTypeSection(
         color = VolleyColor.White
     )
 
-    VolleyButton.GroupButtonsForTourneyType(
+    VolleyButton.SingleChoiceButtonGroup(
+        items = TourneyType.entries,
+        selected = tourneyType,
+        label = { it.displayText },
         modifier = Modifier.padding(top = 12.dp),
-        onSelected = { position ->
-            val type = when (position) {
-                1 -> TourneyType.SINGLE_ELIMINATION
-                2 -> TourneyType.DOUBLE_ELIMINATION
-                3 -> TourneyType.ROUND_ROBIN
-                else -> null
-            }
-            type?.let { onTourneyTypeSelected(it) }
-        }
+        onSelect = onTourneyTypeSelected
     )
 }
 
@@ -403,22 +405,12 @@ private fun GenderSection(
         color = VolleyColor.White
     )
 
-    VolleyButton.GroupButtonsForGender3(
+    VolleyButton.SingleChoiceButtonGroup(
+        items = Gender.entries,
+        selected = gender,
+        label = { it.displayText },
         modifier = Modifier.padding(top = 12.dp),
-        checkId = when (gender) {
-            Gender.Mix -> 1
-            Gender.Men -> 2
-            Gender.Women -> 3
-        },
-        onSelected = { position ->
-            val selectedGender = when (position) {
-                1 -> Gender.Mix
-                2 -> Gender.Men
-                3 -> Gender.Women
-                else -> null
-            }
-            selectedGender?.let { onGenderSelected(it) }
-        }
+        onSelect = onGenderSelected
     )
 }
 
@@ -435,10 +427,13 @@ private fun LevelSection(
         color = VolleyColor.White
     )
 
-    VolleyButton.GroupButtonsForLevelMulti(
+    VolleyButton.MultiChoiceButtonGroup(
+        items = Level.entries,
+        selected = levels,
+        label = { it.displayText },
         modifier = Modifier.padding(top = 12.dp),
-        checkedLevels = levels,
-        onSelected = onPlayerLevelSelected
+        paddingValues = PaddingValues(horizontal = 10.dp, vertical = 10.dp),
+        onSelect = onPlayerLevelSelected
     )
 }
 

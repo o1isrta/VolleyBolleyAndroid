@@ -32,8 +32,7 @@ import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Privacy
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.gameEnteringConditionsScreen.GameEnteringConditionsScreenConstants
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Privacy
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -192,17 +191,13 @@ private fun PrivacySection(
         textAlign = TextAlign.Left
     )
 
-    VolleyButton.GroupButtonsForPrivacy(
+    VolleyButton.SingleChoiceButtonGroup(
+        items = Privacy.entries,
+        selected = if (isPrivate) Privacy.Private else Privacy.Public,
+        label = { it.displayText },
+        showRightIcon = { it.showRightIcon },
         modifier = Modifier.padding(top = 12.dp),
-        checkId = if (isPrivate) GameEnteringConditionsScreenConstants.PRIVATE else GameEnteringConditionsScreenConstants.PUBLIC,
-        onSelected = { position ->
-            val selectedPrivacy = when (position) {
-                GameEnteringConditionsScreenConstants.PUBLIC -> Privacy.Public
-                GameEnteringConditionsScreenConstants.PRIVATE -> Privacy.Private
-                else -> null
-            }
-            selectedPrivacy?.let { onPrivacySelected(it) }
-        }
+        onSelect = onPrivacySelected
     )
 }
 
@@ -267,8 +262,9 @@ private fun PaymentSection(
                 text = it,
                 color = VolleyColor.White
             )
-        } ?: VolleyButton.OutlinedActiveButtonSmallText(
+        } ?: VolleyButton.OutlinedGradientButton(
             modifier = Modifier.height(35.dp),
+            paddingValues = PaddingValues(16.dp, 8.dp, 16.dp, 8.dp),
             text = stringResource(R.string.add_payment),
             onClick = onAddPaymentClick
         )

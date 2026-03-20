@@ -1,23 +1,21 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.gameEnteringConditionsScreen
+package cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditions
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.CreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.FakeCreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.GameData
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.CreateNewGameRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-open class GameEnteringConditionsScreenViewModel(
+open class GameConditionsViewModel(
     private val gameRepository: CreateNewGameRepository
-) : BaseViewModel<GameEnteringConditionsScreenState, GameEnteringConditionsScreenEvent, GameEnteringConditionsScreenEffect>(
-    GameEnteringConditionsScreenState()
+) : BaseViewModel<GameConditionsState, GameConditionsEvent, GameConditionsEffect>(
+    GameConditionsState()
 ) {
     init {
-        obtainEvent(GameEnteringConditionsScreenEvent.CheckIfAccountExists)
+        obtainEvent(GameConditionsEvent.CheckIfAccountExists)
         viewModelScope.launch {
             gameRepository.gameData
                 .collectLatest { gameDataFromRepo ->
@@ -34,28 +32,28 @@ open class GameEnteringConditionsScreenViewModel(
         }
     }
 
-    override fun obtainEvent(event: GameEnteringConditionsScreenEvent) {
+    override fun obtainEvent(event: GameConditionsEvent) {
         when (event) {
-            is GameEnteringConditionsScreenEvent.OnPublicSelected -> onPublicSelected()
-            is GameEnteringConditionsScreenEvent.OnPrivateSelected -> onPrivateSelected()
-            is GameEnteringConditionsScreenEvent.RemovePlayer -> onRemovePlayer(event.index)
-            is GameEnteringConditionsScreenEvent.OnSaveGameClick -> saveGame()
-            is GameEnteringConditionsScreenEvent.CheckIfAccountExists -> checkIfAccountExists()
-            is GameEnteringConditionsScreenEvent.OnManagePlayersClick -> gotoPrivacyOptions()
-            is GameEnteringConditionsScreenEvent.PerPersonChanged -> {
-                uiStateMutable.value = uiStateMutable.value.copy(perPerson = event.perPerson)
+            is GameConditionsEvent.OnPublicSelected -> onPublicSelected()
+            is GameConditionsEvent.OnPrivateSelected -> onPrivateSelected()
+            is GameConditionsEvent.RemovePlayer -> onRemovePlayer(event.index)
+            is GameConditionsEvent.OnSaveGameClick -> saveGame()
+            is GameConditionsEvent.CheckIfAccountExists -> checkIfAccountExists()
+            is GameConditionsEvent.OnManagePlayersClick -> gotoPrivacyOptions()
+            is GameConditionsEvent.PerPersonChanged -> {
+                uiStateMutable.update { it.copy(perPerson = event.perPerson) }
             }
 
-            is GameEnteringConditionsScreenEvent.MaximumPlayersChanged -> {
-                uiStateMutable.value = uiStateMutable.value.copy(maximumPlayers = event.maximumPersons)
+            is GameConditionsEvent.MaximumPlayersChanged -> {
+                uiStateMutable.update { it.copy(maximumPlayers = event.maximumPlayers) }
             }
 
-            is GameEnteringConditionsScreenEvent.OnBackClicked -> {
-                sendUiEffect(GameEnteringConditionsScreenEffect.NavigateBack)
+            is GameConditionsEvent.OnBackClicked -> {
+                sendUiEffect(GameConditionsEffect.NavigateBack)
             }
 
-            is GameEnteringConditionsScreenEvent.OnAddPaymentClick -> {
-                sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToPayments)
+            is GameConditionsEvent.OnAddPaymentClick -> {
+                sendUiEffect(GameConditionsEffect.NavigateToPayments)
             }
         }
     }
@@ -87,7 +85,7 @@ open class GameEnteringConditionsScreenViewModel(
             }
         }
         sendUiEffect(
-            GameEnteringConditionsScreenEffect.NavigateToPrivacy
+            GameConditionsEffect.NavigateToPrivacy
         )
     }
 
@@ -108,14 +106,14 @@ open class GameEnteringConditionsScreenViewModel(
                 isLoading = true,
                 errorMessage = null
             )
-        } // Начинаем загрузку, очищаем предыдущие ошибки
+        }
 
         launchSafe(
             dispatcher = Dispatchers.IO,
             getErrorLogMessage = { "Error saving game: ${it.message ?: "Unknown error"}" },
             onError = { er ->
                 uiStateMutable.update { it.copy(isLoading = false, errorMessage = er.message ?: "Failed to save game") }
-                sendUiEffect(GameEnteringConditionsScreenEffect.ShowErrorMessage(er.message ?: "Failed to save game"))
+                sendUiEffect(GameConditionsEffect.ShowErrorMessage(er.message ?: "Failed to save game"))
             }
         ) {
             gameRepository.updateGameData { gameData ->
@@ -127,30 +125,26 @@ open class GameEnteringConditionsScreenViewModel(
                 )
             }
             gameRepository.saveGameDataToServer()
-            uiStateMutable.update { it.copy(isLoading = false) } // Завершаем загрузку
-            sendUiEffect(GameEnteringConditionsScreenEffect.NavigateToSuccess)
+            uiStateMutable.update { it.copy(isLoading = false) }
+            sendUiEffect(GameConditionsEffect.NavigateToSuccess)
         }
     }
 
-    private fun checkIfAccountExists() { // если accountNumber != Null, аккааунт существует
+    private fun checkIfAccountExists() {
         launchSafe(
-            dispatcher = Dispatchers.IO,
             getErrorLogMessage = { "Error checking account existence: ${it.message ?: "Unknown error"}" },
-            onError = { er ->
+            onError = { error ->
                 sendUiEffect(
-                    GameEnteringConditionsScreenEffect.ShowErrorMessage(er.message ?: "Failed to check account")
+                    GameConditionsEffect.ShowErrorMessage(error.message ?: "Failed to check account")
                 )
             }
         ) {
-            val accountNumber = getAccountNumber() // Получение номера счета (аккаунта), если он есть
+            val accountNumber = getAccountNumber()
             uiStateMutable.value = uiStateMutable.value.copy(accountNumber = accountNumber)
         }
     }
 
     private fun getAccountNumber(): String? {
-        return if (Random.nextBoolean()) "123 45 6789" else null // для теста, заменить на получение номера из профиля
+        return if (Random.nextBoolean()) "123 45 6789" else null // TODO("для теста, заменить на получение номера из профиля")
     }
 }
-
-class GameEnteringConditionsScreenViewModelPreview :
-    GameEnteringConditionsScreenViewModel(FakeCreateNewGameRepository(GameData()))

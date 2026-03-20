@@ -21,27 +21,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBarWithBackButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.games.domain.model.entity.PlayerShort
-import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun JoinedPlayersScreen(
     paddingFromSystemUi: PaddingValues,
-    tournamentDetails: TournamentDetails?,
     onNavigateBack: () -> Unit,
-    viewModel: JoinedPlayersScreenViewModel = koinViewModel { parametersOf(tournamentDetails) }
+    viewModel: JoinedPlayersScreenViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -67,7 +65,7 @@ private fun JoinedPlayersScreen(
     paddingFromSystemUi: PaddingValues,
     eventCallback: (JoinedPlayersScreenEvent) -> Unit
 ) {
-    val tournamentDetails = state.tournamentDetails ?: return
+    val tournamentDetails = state.tournamentDetails
 
     Box(
         modifier = Modifier
@@ -149,19 +147,13 @@ private fun PlayersRow(index: Int) {
 }
 
 @Composable
-@Preview(showSystemUi = true)
+@Preview(showSystemUi = true, showBackground = true, device = Devices.PIXEL_9_PRO)
 private fun JoinedPlayersScreenPreview() {
-    VolleybolleyTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            JoinedPlayersScreen(
-                state = JoinedPlayersScreenState(tournamentDetails = VolleyMocks.mockTournament),
-                paddingFromSystemUi = PaddingValues(0.dp),
-                eventCallback = {}
-            )
-        }
+    RootContainerForPreview {
+        JoinedPlayersScreen(
+            state = JoinedPlayersScreenState(tournamentDetails = VolleyMocks.mockTournament),
+            paddingFromSystemUi = it,
+            eventCallback = {}
+        )
     }
 }

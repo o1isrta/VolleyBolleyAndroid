@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,11 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
 import cy.volleybolley.core.domain.model.LevelType
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
@@ -35,10 +38,10 @@ import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.games.domain.model.entity.RatingType
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 @Composable
 fun RatePlayersScreen(
+    paddingFromSystemUi: PaddingValues,
     onNavigateBack: () -> Unit,
     viewModel: RatePlayersViewModel,
 ) {
@@ -46,6 +49,7 @@ fun RatePlayersScreen(
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     RatePlayersScreen(
+        paddingFromSystemUi = paddingFromSystemUi,
         state = state,
         effect = effect,
         navigateAction = onNavigateBack,
@@ -57,6 +61,7 @@ fun RatePlayersScreen(
 
 @Composable
 private fun RatePlayersScreen(
+    paddingFromSystemUi: PaddingValues,
     state: RatePlayersState,
     effect: RatePlayersEffect?,
     navigateAction: () -> Unit,
@@ -69,7 +74,7 @@ private fun RatePlayersScreen(
         }
     }
 
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier.padding(paddingFromSystemUi).fillMaxSize()) {
         TransparentContainer(
             modifier = Modifier.padding(8.dp),
             cornerRadius = 16,
@@ -191,53 +196,42 @@ private fun LevelPill(
     }
 }
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
-    device = "spec:width=411dp,height=1000dp,dpi=420"
-)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun RatePlayersPreview() {
-    VolleybolleyTheme {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            val state = RatePlayersState(
-                isLoading = false,
-                players = listOf(
-                    PlayerShortUI(
-                        playerId = 1,
-                        name = "Kristina Popova",
-                        level = LevelType.LIGHT,
-                        avatar = null,
-                        rating = RatingType.CONFIRM
-                    ),
-                    PlayerShortUI(
-                        playerId = 2,
-                        name = "Jane Dow",
-                        level = LevelType.HARD,
-                        avatar = null,
-                        rating = RatingType.UP
-                    ),
-                    PlayerShortUI(
-                        playerId = 3,
-                        name = "John Smith",
-                        level = LevelType.LIGHT,
-                        avatar = null,
-                        rating = RatingType.DOWN
-                    )
+    RootContainerForPreview {
+        val state = RatePlayersState(
+            isLoading = false,
+            players = listOf(
+                PlayerShortUI(
+                    playerId = 1,
+                    name = "Kristina Popova",
+                    level = LevelType.LIGHT,
+                    avatar = null,
+                    rating = RatingType.CONFIRM
+                ),
+                PlayerShortUI(
+                    playerId = 2,
+                    name = "Jane Dow",
+                    level = LevelType.HARD,
+                    avatar = null,
+                    rating = RatingType.UP
+                ),
+                PlayerShortUI(
+                    playerId = 3,
+                    name = "John Smith",
+                    level = LevelType.LIGHT,
+                    avatar = null,
+                    rating = RatingType.DOWN
                 )
             )
-            Box(modifier = Modifier.padding(top = 116.dp)) {
-                RatePlayersScreen(
-                    state = state,
-                    effect = null,
-                    navigateAction = {},
-                    eventCallback = {}
-                )
-            }
-        }
+        )
+        RatePlayersScreen(
+            paddingFromSystemUi = it,
+            state = state,
+            effect = null,
+            navigateAction = {},
+            eventCallback = {}
+        )
     }
 }

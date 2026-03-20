@@ -23,8 +23,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.LatLng
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.SliderButtonsMap
+import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
+import cy.volleybolley.core.presentation.ui.model.ViewTab
 import cy.volleybolley.core.presentation.ui.screens.courts.ListScreenComponents.ListContent
 import cy.volleybolley.core.presentation.ui.screens.courts.MapScreenComponents.MapScreen
 import cy.volleybolley.courts.presentation.model.CourtUi
@@ -114,14 +115,13 @@ private fun MapListTopBar(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        SliderButtonsMap(
-            checkId = if (isMapSelected) 1 else 2,
-            onTabSelected = { tabId -> onTabSelected(tabId == 1) },
-            modifier = Modifier
-                .size(
-                    width = 204.dp,
-                    height = 32.dp
-                )
+        VolleyButton.SliderButtonGroup(
+            items = ViewTab.entries,
+            selected = if (isMapSelected) ViewTab.Map else ViewTab.List,
+            label = { it.displayText },
+            fillWidth = false,
+            modifier = Modifier,
+            onSelect = { tab -> onTabSelected(tab == ViewTab.Map) }
         )
 
         Spacer(modifier = Modifier.weight(1f))

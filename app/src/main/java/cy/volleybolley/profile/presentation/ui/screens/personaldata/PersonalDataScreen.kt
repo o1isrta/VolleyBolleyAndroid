@@ -43,6 +43,7 @@ import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalData
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnAvatarEditClick
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnBackFromPersonalDataClick
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnUpdateButtonClick
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.GenderType
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.SurnameChanged
 
 @Composable
@@ -134,10 +135,13 @@ private fun PersonalDataScreen(
                 PersonalDataTextMark(stringResource(R.string.gender))
                 Spacer(Modifier.height(8.dp))
 
-                VolleyButton.GroupButtonsForGender2(
+                VolleyButton.SingleChoiceButtonGroup(
+                    items = listOf(GenderType.MALE, GenderType.FEMALE),
+                    selected = GenderType.getById(state.genderId),
+                    label = { it.displayText },
                     modifier = Modifier,
-                    checkId = state.genderId,
-                    onSelected = { eventCallback(GenderSelect(it)) },
+                    paddingValues = PaddingValues(10.dp),
+                    onSelect = { eventCallback(GenderSelect(it.id)) }
                 )
 
                 Spacer(Modifier.height(16.dp))

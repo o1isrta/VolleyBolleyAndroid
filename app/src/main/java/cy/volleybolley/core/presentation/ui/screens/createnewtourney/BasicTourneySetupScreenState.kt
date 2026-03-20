@@ -3,7 +3,7 @@ package cy.volleybolley.core.presentation.ui.screens.createnewtourney
 import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Gender
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
 import java.time.LocalDate
@@ -38,8 +38,8 @@ data class BasicTourneySetupScreenState(
     val isLoading: Boolean = false
 ) : UiState
 
-enum class TourneyType {
-    SINGLE_ELIMINATION,
-    DOUBLE_ELIMINATION,
-    ROUND_ROBIN
+enum class TourneyType(val displayText: String) {
+    SINGLE_ELIMINATION("Single elimination"),
+    DOUBLE_ELIMINATION("Double elimination"),
+    ROUND_ROBIN("Round robin")
 }

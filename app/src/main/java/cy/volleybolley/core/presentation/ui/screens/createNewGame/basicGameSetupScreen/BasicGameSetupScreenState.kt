@@ -1,21 +1,19 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository
+package cy.volleybolley.core.presentation.ui.screens.createNewGame.basicGameSetupScreen
 
+import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
-import cy.volleybolley.players.domain.model.Player
 import java.time.LocalDate
 
 private const val DEFAULT_START_HOUR = 2
 private const val DEFAULT_START_MINUTE = 0
 private const val DEFAULT_FINISH_HOUR = 4
 private const val DEFAULT_FINISH_MINUTE = 0
-private const val DEFAULT_MAXIMUM_PLAYERS = 8
-private const val DEFAULT_PER_PERSON = "5.0"
 
-data class GameData(
-    // получаем с экрана BasicGameSetupScreen:
+data class BasicGameSetupScreenState(
     val message: String = "",
     val placeCourt: Court = Court(
         courtId = 1,
@@ -36,23 +34,6 @@ data class GameData(
     val finishTime: VolleyTimeStamp? = VolleyTimeStamp(DEFAULT_FINISH_HOUR, DEFAULT_FINISH_MINUTE, true),
     val gender: Gender = Gender.Mix,
     val levels: Set<Level> = setOf(Level.Light, Level.Medium, Level.Hard),
-    // получаем с экрана GameEnteringConditionsScreen:
-    val maximumPlayers: Int = DEFAULT_MAXIMUM_PLAYERS,
-    val perPerson: String = DEFAULT_PER_PERSON,
-    val accountNumber: String? = null, // номер аккаунта, если есть
-    // получаем с экрана PrivacyOptionsScreen, показываем на экране GameEnteringConditionsScreen,
-    // редактируем на обоих экранах
-    // (на GameEnteringConditionsScreen можем удалять игроков, на PrivacyOptionsScreen - добавлять, удалять)
-    val players: List<Player> = emptyList() // игроки, выбранные для игры
-)
-
-enum class Privacy {
-    Public,
-    Private
-}
-
-enum class Gender {
-    Mix,
-    Men,
-    Women
-}
+    val showCalendar: Boolean = false,
+    val isLoading: Boolean = false
+) : UiState

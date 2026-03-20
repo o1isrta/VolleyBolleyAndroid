@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.privacyOptionsScreen
+package cy.volleybolley.core.presentation.ui.screens.createNewGame.privacyOptionsScreen
 
 import cy.volleybolley.core.presentation.base.UiEvent
 import cy.volleybolley.players.domain.model.Player

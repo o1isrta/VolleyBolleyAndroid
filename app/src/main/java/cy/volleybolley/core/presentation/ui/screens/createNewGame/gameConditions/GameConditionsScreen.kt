@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.gameEnteringConditionsScreen
+package cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditions
 
 import android.widget.Toast
 import androidx.compose.foundation.ScrollState
@@ -35,7 +35,7 @@ import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.screens.createnewgame.createNewGameRepository.Privacy
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Privacy
 import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.success.SucceedGame
@@ -43,13 +43,13 @@ import cy.volleybolley.success.SucceedGameType
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun GameEnteringConditionsScreen(
+fun GameConditionsScreen(
     paddingFromSystemUi: PaddingValues,
     onNavigateToPayments: () -> Unit,
     onNavigateToPrivacyOptions: () -> Unit,
     onNavigateToSuccess: (SucceedGame) -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: GameEnteringConditionsScreenViewModel = koinViewModel()
+    viewModel: GameConditionsViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
@@ -57,23 +57,18 @@ fun GameEnteringConditionsScreen(
 
     LaunchedEffect(effect) {
         when (val currentEffect = effect) {
-            is GameEnteringConditionsScreenEffect.ShowErrorMessage -> {
+            is GameConditionsEffect.ShowErrorMessage -> {
                 Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_SHORT).show()
             }
-
-            is GameEnteringConditionsScreenEffect.NavigateToPayments -> onNavigateToPayments()
-
-            is GameEnteringConditionsScreenEffect.NavigateBack -> onNavigateBack()
-
-            is GameEnteringConditionsScreenEffect.NavigateToSuccess -> onNavigateToSuccess(createSucceedGame())
-
-            is GameEnteringConditionsScreenEffect.NavigateToPrivacy -> onNavigateToPrivacyOptions()
-
+            is GameConditionsEffect.NavigateToPayments -> onNavigateToPayments()
+            is GameConditionsEffect.NavigateBack -> onNavigateBack()
+            is GameConditionsEffect.NavigateToSuccess -> onNavigateToSuccess(createSucceedGame())
+            is GameConditionsEffect.NavigateToPrivacy -> onNavigateToPrivacyOptions()
             null -> {}
         }
     }
 
-    GameEnteringConditionsScreen(
+    GameConditionsScreen(
         state = state,
         paddingFromSystemUi = paddingFromSystemUi,
         eventCallback = { viewModel.obtainEvent(it) }
@@ -98,10 +93,10 @@ private fun createSucceedGame(): SucceedGame {
 
 @Stable
 @Composable
-private fun GameEnteringConditionsScreen(
-    state: GameEnteringConditionsScreenState,
+private fun GameConditionsScreen(
+    state: GameConditionsState,
     paddingFromSystemUi: PaddingValues,
-    eventCallback: (GameEnteringConditionsScreenEvent) -> Unit
+    eventCallback: (GameConditionsEvent) -> Unit
 ) {
     if (state.isLoading) {
         VolleySimpleComponent.LoadingIndicator()
@@ -120,7 +115,7 @@ private fun GameEnteringConditionsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 20.dp),
-                        onBackClick = { eventCallback(GameEnteringConditionsScreenEvent.OnBackClicked) }
+                        onBackClick = { eventCallback(GameConditionsEvent.OnBackClicked) }
                     )
 
                     val scrollState = rememberSaveable(saver = ScrollState.Saver) {
@@ -134,7 +129,7 @@ private fun GameEnteringConditionsScreen(
                         MaximumPlayersSection(
                             maximumPlayers = state.maximumPlayers,
                             onMaximumPlayersChanged = {
-                                eventCallback(GameEnteringConditionsScreenEvent.MaximumPlayersChanged(it))
+                                eventCallback(GameConditionsEvent.MaximumPlayersChanged(it))
                             }
                         )
 
@@ -143,8 +138,8 @@ private fun GameEnteringConditionsScreen(
                             onPrivacySelected = { privacy ->
                                 eventCallback(
                                     when (privacy) {
-                                        Privacy.Public -> GameEnteringConditionsScreenEvent.OnPublicSelected
-                                        Privacy.Private -> GameEnteringConditionsScreenEvent.OnPrivateSelected
+                                        Privacy.Public -> GameConditionsEvent.OnPublicSelected
+                                        Privacy.Private -> GameConditionsEvent.OnPrivateSelected
                                     }
                                 )
                             }
@@ -153,10 +148,10 @@ private fun GameEnteringConditionsScreen(
                         PlayersListSection(
                             players = state.players,
                             onRemovePlayer = { index ->
-                                eventCallback(GameEnteringConditionsScreenEvent.RemovePlayer(index))
+                                eventCallback(GameConditionsEvent.RemovePlayer(index))
                             },
                             onManagePlayersClick = {
-                                eventCallback(GameEnteringConditionsScreenEvent.OnManagePlayersClick)
+                                eventCallback(GameConditionsEvent.OnManagePlayersClick)
                             }
                         )
 
@@ -164,10 +159,10 @@ private fun GameEnteringConditionsScreen(
                             perPerson = state.perPerson,
                             accountNumber = state.accountNumber,
                             onPerPersonChanged = {
-                                eventCallback(GameEnteringConditionsScreenEvent.PerPersonChanged(it))
+                                eventCallback(GameConditionsEvent.PerPersonChanged(it))
                             },
                             onAddPaymentClick = {
-                                eventCallback(GameEnteringConditionsScreenEvent.OnAddPaymentClick)
+                                eventCallback(GameConditionsEvent.OnAddPaymentClick)
                             }
                         )
 
@@ -177,7 +172,7 @@ private fun GameEnteringConditionsScreen(
                                 .height(44.dp)
                                 .fillMaxWidth(),
                             text = stringResource(R.string.save_game),
-                            onClick = { eventCallback(GameEnteringConditionsScreenEvent.OnSaveGameClick) }
+                            onClick = { eventCallback(GameConditionsEvent.OnSaveGameClick) }
                         )
                     }
                 }
@@ -225,17 +220,13 @@ private fun PrivacySection(
         textAlign = TextAlign.Left
     )
 
-    VolleyButton.GroupButtonsForPrivacy(
+    VolleyButton.SingleChoiceButtonGroup(
+        items = Privacy.entries,
+        selected = if (isPrivate) Privacy.Private else Privacy.Public,
+        label = { it.displayText },
+        showRightIcon = { it.showRightIcon },
         modifier = Modifier.padding(top = 12.dp),
-        checkId = if (isPrivate) GameEnteringConditionsScreenConstants.PRIVATE else GameEnteringConditionsScreenConstants.PUBLIC,
-        onSelected = { position ->
-            val selectedPrivacy = when (position) {
-                GameEnteringConditionsScreenConstants.PUBLIC -> Privacy.Public
-                GameEnteringConditionsScreenConstants.PRIVATE -> Privacy.Private
-                else -> null
-            }
-            selectedPrivacy?.let { onPrivacySelected(it) }
-        }
+        onSelect = onPrivacySelected
     )
 }
 
@@ -327,8 +318,9 @@ private fun PaymentSection(
                 text = it,
                 color = VolleyColor.White
             )
-        } ?: VolleyButton.OutlinedActiveButtonSmallText(
+        } ?: VolleyButton.OutlinedGradientButton(
             modifier = Modifier.height(35.dp),
+            paddingValues = PaddingValues(16.dp, 8.dp, 16.dp, 8.dp),
             text = stringResource(R.string.add_payment),
             onClick = onAddPaymentClick
         )
@@ -338,14 +330,14 @@ private fun PaymentSection(
 @Preview(showSystemUi = true, showBackground = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun GameEnteringConditionsScreenPreview() {
-    val previewState = GameEnteringConditionsScreenState(
+    val previewState = GameConditionsState(
         maximumPlayers = 8,
         perPerson = "5.0",
         accountNumber = "123 45 6789"
     )
 
     RootContainerForPreview {
-        GameEnteringConditionsScreen(
+        GameConditionsScreen(
             state = previewState,
             paddingFromSystemUi = it,
             eventCallback = {}

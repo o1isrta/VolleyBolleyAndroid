@@ -182,7 +182,7 @@ val gamesModule = module {
     viewModel { (tournamentDetails: TournamentDetails?) ->
         UpcomingTourneyDetailsScreenViewModel(tournamentDetails)
     }
-    viewModel { (tournamentDetails: TournamentDetails?) ->
+    viewModel { (tournamentDetails: TournamentDetails) ->
         JoinedPlayersScreenViewModel(tournamentDetails)
     }
 

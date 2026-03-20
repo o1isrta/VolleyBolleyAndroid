@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createnewgame.basicGameSetupScreen
+package cy.volleybolley.core.presentation.ui.screens.createNewGame.basicGameSetupScreen
 
 import cy.volleybolley.core.presentation.base.UiEffect
 

@@ -33,10 +33,10 @@ import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.ScreenPreviewContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsForGender2
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsForLevel
+import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.GenderType
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEffect.NavigateToHome
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEffect.ShowToast
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.CitySelected
@@ -251,10 +251,13 @@ private fun GenderChooser(
             text = stringResource(id = R.string.gender),
             color = VolleyColor.White
         )
-        GroupButtonsForGender2(
-            checkId = selectedGenderIndex,
+        VolleyButton.SingleChoiceButtonGroup(
+            items = listOf(GenderType.MALE, GenderType.FEMALE),
+            selected = GenderType.getById(selectedGenderIndex),
+            label = { it.displayText },
             modifier = Modifier.padding(top = 8.dp),
-            onSelected = onGenderClick
+            paddingValues = PaddingValues(10.dp),
+            onSelect = { onGenderClick(it.id) }
         )
         HorizontalDivider(
             modifier = Modifier.padding(top = 16.dp),
@@ -318,12 +321,15 @@ private fun LevelChooser(
                 )
             }
         }
-        GroupButtonsForLevel(
-            checkId = selectedLevelIndex,
+        VolleyButton.SingleChoiceButtonGroup(
+            items = Level.entries,
+            selected = Level.getById(selectedLevelIndex),
+            label = { it.displayText },
             modifier = Modifier
                 .padding(top = 12.dp)
                 .fillMaxWidth(),
-            onSelected = onLevelClick
+            paddingValues = PaddingValues(10.dp),
+            onSelect = { onLevelClick(it.id) }
         )
         HorizontalDivider(
             modifier = Modifier.padding(top = 16.dp),

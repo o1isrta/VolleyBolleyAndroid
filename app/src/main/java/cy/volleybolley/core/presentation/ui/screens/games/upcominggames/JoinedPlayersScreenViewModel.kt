@@ -4,7 +4,7 @@ import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 
 class JoinedPlayersScreenViewModel(
-    tournamentDetails: TournamentDetails?
+    tournamentDetails: TournamentDetails
 ) : BaseViewModel<JoinedPlayersScreenState, JoinedPlayersScreenEvent, JoinedPlayersScreenEffect>(
     initialState = JoinedPlayersScreenState(tournamentDetails = tournamentDetails)
 ) {
