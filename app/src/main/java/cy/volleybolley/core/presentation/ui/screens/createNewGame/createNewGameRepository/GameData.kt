@@ -15,7 +15,6 @@ private const val DEFAULT_MAXIMUM_PLAYERS = 8
 private const val DEFAULT_PER_PERSON = "5.0"
 
 data class GameData(
-    // получаем с экрана BasicGameSetupScreen:
     val message: String = "",
     val placeCourt: Court = Court(
         courtId = 1,
@@ -36,14 +35,10 @@ data class GameData(
     val finishTime: VolleyTimeStamp? = VolleyTimeStamp(DEFAULT_FINISH_HOUR, DEFAULT_FINISH_MINUTE, true),
     val gender: Gender = Gender.Mix,
     val levels: Set<Level> = setOf(Level.Light, Level.Medium, Level.Hard),
-    // получаем с экрана GameEnteringConditionsScreen:
     val maximumPlayers: Int = DEFAULT_MAXIMUM_PLAYERS,
     val perPerson: String = DEFAULT_PER_PERSON,
-    val accountNumber: String? = null, // номер аккаунта, если есть
-    // получаем с экрана PrivacyOptionsScreen, показываем на экране GameEnteringConditionsScreen,
-    // редактируем на обоих экранах
-    // (на GameEnteringConditionsScreen можем удалять игроков, на PrivacyOptionsScreen - добавлять, удалять)
-    val players: List<Player> = emptyList() // игроки, выбранные для игры
+    val accountNumber: String? = null,
+    val players: List<Player> = emptyList()
 )
 
 enum class Privacy(val displayText: String, val showRightIcon: Boolean) {

@@ -17,21 +17,6 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
     private val _gameData = MutableStateFlow(GameData())
     override val gameData: StateFlow<GameData> = _gameData // Expose as immutable StateFlow
 
-    companion object {
-        const val DEBOUNCE_DELAY_500MS = 500L
-        const val DEBOUNCE_DELAY_1000MS = 1000L
-        private const val KRISTINA_ID = 1
-        private const val POLINA_ID = 2
-        private const val ANTON_ID = 3
-        private const val ALEKSANDR_ID = 4
-        private const val MARK_ID = 5
-        private const val POL_ID = 6
-        private const val ANN_ID = 7
-        private const val SERGEY_ID = 8
-        private const val SVETLANA_ID = 9
-        private const val NIKITA_ID = 10
-    }
-
     override fun addPlayersToGame(players: List<Player>) {
         if (players.size < _gameData.value.maximumPlayers) {
             _gameData.value = _gameData.value.copy(players = _gameData.value.players + players)
@@ -108,5 +93,20 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
         } else {
             VolleyResult.Failure(response.resultCode.mapToErrorType())
         }*/
+    }
+
+    companion object {
+        const val DEBOUNCE_DELAY_500MS = 500L
+        const val DEBOUNCE_DELAY_1000MS = 1000L
+        private const val KRISTINA_ID = 1
+        private const val POLINA_ID = 2
+        private const val ANTON_ID = 3
+        private const val ALEKSANDR_ID = 4
+        private const val MARK_ID = 5
+        private const val POL_ID = 6
+        private const val ANN_ID = 7
+        private const val SERGEY_ID = 8
+        private const val SVETLANA_ID = 9
+        private const val NIKITA_ID = 10
     }
 }
