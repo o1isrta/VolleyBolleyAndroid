@@ -57,6 +57,8 @@ android {
             buildConfigField("Boolean", "IS_LOG_ENABLED", "false")
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("debug")
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "release-proguard-rules.pro"

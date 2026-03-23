@@ -12,6 +12,7 @@ import cy.volleybolley.core.presentation.ui.model.state.data.DialogData
 import cy.volleybolley.notification.domain.api.permission.NotificationPermissionChecker
 import cy.volleybolley.notification.domain.api.registration.SendDeviceTokenUseCase
 import cy.volleybolley.notification.domain.api.storages.FCMTokenStore
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 import kotlinx.io.IOException
@@ -31,6 +32,7 @@ class MainActivityViewModel(
 ) {
     init {
         loadAuthState()
+        observePersonalData()
     }
 
     private fun loadAuthState() {
@@ -38,20 +40,26 @@ class MainActivityViewModel(
             getErrorLogMessage = { "Failed to load auth state: $it" }
         ) {
             val isAuthenticated = getAuthenticatedStatusUseCase.execute()
-            val personalData = if (isAuthenticated) {
-                getPersonalDataUseCase.execute()
-            } else {
-                null
-            }
             uiStateMutable.update {
                 it.copy(
                     isAuthenticated = isAuthenticated,
-                    personalData = personalData,
                     isReady = true
                 )
             }
             if (isAuthenticated) {
                 updateTokenBasedOnPermission()
+            }
+        }
+    }
+
+    private fun observePersonalData() {
+        launchSafe(
+            getErrorLogMessage = { "Failed to observe personal data: $it" }
+        ) {
+            getPersonalDataUseCase.executeFlow().collectLatest { personalData ->
+                uiStateMutable.update {
+                    it.copy(personalData = personalData)
+                }
             }
         }
     }

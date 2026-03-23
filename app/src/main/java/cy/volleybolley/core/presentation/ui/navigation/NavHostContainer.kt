@@ -452,7 +452,7 @@ fun NavHostContainer(
                     onNavigateToAbout = { navController.navigate(AboutRoute) },
                     onNavigateToAuthorization = {
                         navController.navigate(AuthorizationRoute) {
-                            popUpTo(LaunchRoute) { inclusive = true }
+                            popUpTo(0) { inclusive = true }
                         }
                     }
                 )

@@ -139,6 +139,7 @@ class MainActivity : ComponentActivity() {
         super.onStop()
         viewModel.obtainEvent(MainActivityEvent.OnStop)
     }
+
 }
 
 private fun isAuthRoute(route: String): Boolean {

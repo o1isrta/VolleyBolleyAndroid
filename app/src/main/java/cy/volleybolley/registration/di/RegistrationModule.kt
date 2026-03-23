@@ -19,7 +19,8 @@ val registrationModule = module {
 
     single<RegistrationRepository> {
         RegistrationRepositoryImpl(
-            networkClient = get(HttpClientQualifier.REGISTRATION.qualifier)
+            networkClient = get(HttpClientQualifier.REGISTRATION.qualifier),
+            userStorage = get()
         )
     }
 
@@ -31,8 +32,7 @@ val registrationModule = module {
         RegistrationViewModel(
             getCountriesUseCase = get(),
             userRegistrationUseCase = get(),
-            getPersonalDataUseCase = get(),
-            savePersonalDataUseCase = get()
+            getPersonalDataUseCase = get()
         )
     }
 }

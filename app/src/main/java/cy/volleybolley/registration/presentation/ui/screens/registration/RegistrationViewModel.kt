@@ -1,11 +1,10 @@
 package cy.volleybolley.registration.presentation.ui.screens.registration
 
 import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
-import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
 import cy.volleybolley.core.domain.model.onFailure
 import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
+import cy.volleybolley.core.util.VolleyLog
 import cy.volleybolley.referencedata.domain.api.GetCountriesUseCase
 import cy.volleybolley.referencedata.domain.model.Country
 import cy.volleybolley.registration.domain.UserRegistrationUseCase
@@ -25,7 +24,6 @@ class RegistrationViewModel(
     private val getCountriesUseCase: GetCountriesUseCase,
     private val userRegistrationUseCase: UserRegistrationUseCase,
     private val getPersonalDataUseCase: GetPersonalDataUseCase,
-    private val savePersonalDataUseCase: SavePersonalDataUseCase,
 ) : BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(
     initialState = RegistrationState()
 ) {
@@ -45,10 +43,7 @@ class RegistrationViewModel(
             val personalData = getPersonalDataUseCase.execute()
             getCountriesUseCase.execute()
                 .onSuccess { countries ->
-                    VolleyUiUtil.showDebugLog(
-                        tag,
-                        "RegistrationScreen >> GetCountries = $countries"
-                    )
+                    VolleyLog.v(tag, "RegistrationScreen >> GetCountries = $countries")
                     uiStateMutable.update {
                         it.copy(
                             name = personalData?.firstName ?: "",
@@ -60,6 +55,7 @@ class RegistrationViewModel(
                     }
                 }
                 .onFailure { error ->
+                    VolleyLog.e(tag, "error in load initial data -> $error")
                     sendUiEffect(ShowToast("Failed to load countries"))
                     uiStateMutable.update {
                         it.copy(
@@ -139,13 +135,8 @@ class RegistrationViewModel(
             uiStateMutable.update { it.copy(isLoading = true) }
 
             val personalData = uiState.value.toPersonalData()
-            VolleyUiUtil.showDebugLog(
-                tag,
-                "RegistrationScreen >> UserData for registration = $personalData"
-            )
             userRegistrationUseCase.execute(personalData)
                 .onSuccess {
-                    savePersonalDataUseCase.execute(personalData)
                     uiStateMutable.update { it.copy(isLoading = false) }
                     sendUiEffect(NavigateToHome)
                 }
