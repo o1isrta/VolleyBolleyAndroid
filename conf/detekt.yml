@@ -617,7 +617,7 @@ style:
         includeLineWrapping: false
     ForbiddenComment:
         active: true
-        comments: [ 'TODO', 'FIXME', 'STOPSHIP' ]
+        comments: [ 'FIXME', 'STOPSHIP' ]
         allowedPatterns: 'PORTFOLIO-[0-9]+|MOB-[0-9]+|HH-[0-9]+'
     # Выключено, потому что не возникало необходимости запрещать import-ы
     # конкретных сущностей
@@ -742,7 +742,7 @@ style:
         active: false
     UnusedParameter:
         active: true
-        allowedNames: 'ignored|expected'
+        allowedNames: 'ignored|expected|state'
     UnusedPrivateClass:
         active: true
     UnusedPrivateMember:

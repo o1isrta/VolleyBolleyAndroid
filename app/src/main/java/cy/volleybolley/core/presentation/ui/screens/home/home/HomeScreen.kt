@@ -1,6 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.home.home
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,19 +33,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
+import cy.volleybolley.core.presentation.ui.model.state.data.DialogData
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEffect.NavigateToSearchCourt
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEffect.RequestNotificationPermission
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateNewGameClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnCreateTourneyClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnDonateClick
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnFindGameClick
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnNotificationDialogConfirm
+import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenEvent.OnNotificationDialogDismiss
 import cy.volleybolley.core.presentation.ui.screens.home.home.model.DigitIcon
+import cy.volleybolley.games.domain.model.event.EventType
+import cy.volleybolley.notification.presentation.ui.component.GlobalAlertDialog
 import org.koin.androidx.compose.koinViewModel
 
 const val HOME_FIND_GAME_TEXT_WEIGHT = 0.6f
@@ -55,23 +58,27 @@ const val HOME_CREATE_GAME_BUTTON_ALPHA = 0.85f
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
-    viewModel: HomeScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues,
-    finisher: () -> Unit,
+    onNavigateToSearchCourt: (EventType) -> Unit,
+    onRequestNotificationPermission: () -> Unit = {},
+    viewModel: HomeScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    LaunchedEffect(effect) {
+        when (effect) {
+            is NavigateToSearchCourt -> onNavigateToSearchCourt(effect.eventType)
+            RequestNotificationPermission -> onRequestNotificationPermission()
+            null -> Unit
+        }
+    }
+
     HomeScreen(
         state = state,
-        effect = effect,
-        navigateAction = { route -> navController.navigate(route) },
         eventCallback = { event -> viewModel.obtainEvent(event) },
         modifier = Modifier.padding(paddingFromSystemUi)
     )
-
-    BackHandler { finisher() }
 }
 
 @Stable
@@ -79,8 +86,6 @@ fun HomeScreen(
 private fun HomeScreen(
     modifier: Modifier = Modifier,
     state: HomeScreenState,
-    effect: HomeScreenEffect?,
-    navigateAction: (NavMap) -> Unit,
     eventCallback: (HomeScreenEvent) -> Unit,
 ) {
     Box(
@@ -100,10 +105,10 @@ private fun HomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    top = VolleyDimens.DIMEN_20.dp,
-                    bottom = VolleyDimens.DIMEN_20.dp,
-                    start = VolleyDimens.DIMEN_8.dp,
-                    end = VolleyDimens.DIMEN_8.dp
+                    top = 20.dp,
+                    bottom = 20.dp,
+                    start = 8.dp,
+                    end = 8.dp
                 )
                 .align(Alignment.BottomCenter)
         ) {
@@ -113,14 +118,14 @@ private fun HomeScreen(
                 onClick = { eventCallback(OnCreateNewGameClick) }
             )
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.height(8.dp))
 
             FindGameButton(
                 gamesCount = state.nearGamesCount,
                 onClick = { eventCallback(OnFindGameClick) }
             )
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.height(8.dp))
 
             SquareButtonsLine(
                 onCreateTourneyButtonClick = { eventCallback(OnCreateTourneyClick) },
@@ -129,11 +134,17 @@ private fun HomeScreen(
         }
     }
 
-    LaunchedEffect(effect) {
-        when (effect) {
-            is HomeScreenEffect.NavigateFromHomeScreen -> navigateAction(effect.route)
-            null -> Unit
-        }
+    if (state.showNotificationPermissionDialog) {
+        GlobalAlertDialog(
+            dialog = DialogData(
+                title = stringResource(R.string.notifications),
+                message = stringResource(R.string.notifications_alert_dialog),
+                onConfirm = { eventCallback(OnNotificationDialogConfirm) },
+                onDismiss = { eventCallback(OnNotificationDialogDismiss) }
+            ),
+            onConfirm = { eventCallback(OnNotificationDialogConfirm) },
+            onDismiss = { eventCallback(OnNotificationDialogDismiss) }
+        )
     }
 }
 
@@ -145,7 +156,7 @@ private fun CreateNewGameButton(
     courtName: String,
     onClick: () -> Unit,
 ) {
-    val shapeOfButton = remember { RoundedCornerShape(VolleyDimens.DIMEN_32.dp) }
+    val shapeOfButton = remember { RoundedCornerShape(32.dp) }
     Box(
         modifier = Modifier
             .background(
@@ -165,7 +176,7 @@ private fun CreateNewGameButton(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(VolleyDimens.DIMEN_20.dp)
+                    .padding(20.dp)
             ) {
                 VolleyText.TitleLarge(
                     text = stringResource(R.string.create_a_new_game),
@@ -175,7 +186,7 @@ private fun CreateNewGameButton(
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 LocationDescription(
                     locationName = locationName,
@@ -209,7 +220,7 @@ private fun LocationDescription(
                 tint = VolleyColor.OrangeHard
             )
 
-            Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.width(8.dp))
 
             Column(Modifier.weight(1f)) {
                 VolleyText.BodyBold(
@@ -251,17 +262,17 @@ private fun FindGameButton(
     ) {
         Row(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_8.dp)
+                .padding(8.dp)
         ) {
             Column(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
                     .weight(HOME_FIND_GAME_TEXT_WEIGHT)
                     .padding(
-                        top = VolleyDimens.DIMEN_12.dp,
-                        start = VolleyDimens.DIMEN_12.dp,
-                        end = VolleyDimens.DIMEN_6.dp,
-                        bottom = VolleyDimens.DIMEN_4.dp
+                        top = 12.dp,
+                        start = 12.dp,
+                        end = 6.dp,
+                        bottom = 4.dp
                     )
             ) {
                 VolleyText.TitleLarge(
@@ -281,8 +292,8 @@ private fun FindGameButton(
 
                 Box(
                     modifier = Modifier
-                        .padding(start = VolleyDimens.DIMEN_36.dp, end = VolleyDimens.DIMEN_24.dp)
-                        .height(VolleyDimens.DIMEN_40.dp)
+                        .padding(start = 36.dp, end = 24.dp)
+                        .height(40.dp)
                 ) {
                     Image(
                         contentDescription = null,
@@ -307,43 +318,37 @@ private fun GamesAvailableBlock(
     gamesCount: Int = 0,
 ) {
     val digitsStringValuesList = gamesCount.toString().toList()
-    val topGapForDigits = when (digitsStringValuesList.size) {
-        VolleyDimens.DIMEN_3 -> VolleyDimens.DIMEN_10
-        VolleyDimens.DIMEN_4 -> VolleyDimens.DIMEN_16
-        else -> 0
-    }
 
     Box(
         modifier = modifier
-            .height(VolleyDimens.DIMEN_100.dp)
+            .height(100.dp)
             .background(
                 color = VolleyColor.White,
-                shape = RoundedCornerShape(VolleyDimens.DIMEN_28.dp)
+                shape = RoundedCornerShape(28.dp)
             )
             .padding(
-                horizontal = VolleyDimens.DIMEN_12.dp,
-                vertical = VolleyDimens.DIMEN_8.dp
+                horizontal = 12.dp,
+                vertical = 8.dp
             )
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxSize()
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
+                    .padding(bottom = 8.dp)
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(
-                        top = topGapForDigits.dp,
-                        bottom = (VolleyDimens.DIMEN_10 + topGapForDigits).dp
-                    )
             ) {
                 digitsStringValuesList.forEach { digitString ->
                     Image(
                         contentDescription = null,
                         painter = painterResource(DigitIcon.getIconResByString(digitString)),
-                        contentScale = ContentScale.Inside,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
@@ -371,7 +376,7 @@ private fun SquareButtonsLine(
             onClick = onCreateTourneyButtonClick,
             modifier = Modifier.weight(1f)
         )
-        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+        Spacer(Modifier.width(8.dp))
         DonateButton(
             onClick = onDonateButtonClick,
             modifier = Modifier.weight(1f)
@@ -384,11 +389,11 @@ private fun CreateTourneyButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    val shape = remember { RoundedCornerShape(VolleyDimens.DIMEN_32.dp) }
+    val shape = remember { RoundedCornerShape(32.dp) }
     val insidePaddings = remember {
         PaddingValues(
-            top = VolleyDimens.DIMEN_20.dp,
-            start = VolleyDimens.DIMEN_20.dp
+            top = 20.dp,
+            start = 20.dp
         )
     }
 
@@ -412,7 +417,7 @@ private fun CreateTourneyButton(
         VolleyText.TitleLarge(
             modifier = Modifier
                 .padding(insidePaddings)
-                .rotate(VolleyDimens.ROTATION_8),
+                .rotate(degrees = -8f),
             text = stringResource(R.string.create_a_tourney),
             color = VolleyColor.TextDark
         )
@@ -426,8 +431,8 @@ private fun DonateButton(
 ) {
     val insidePaddings = remember {
         PaddingValues(
-            top = VolleyDimens.DIMEN_28.dp,
-            start = VolleyDimens.DIMEN_30.dp
+            top = 28.dp,
+            start = 30.dp
         )
     }
 
@@ -451,7 +456,7 @@ private fun DonateButton(
         VolleyText.TitleLarge(
             modifier = Modifier
                 .padding(insidePaddings)
-                .rotate(VolleyDimens.ROTATION_8),
+                .rotate(degrees = -8f),
             text = stringResource(R.string.donate),
             color = VolleyColor.White
         )
@@ -469,13 +474,11 @@ private fun PreviewHomeScreen() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             val state = HomeScreenState(
-                nearGamesCount = 13,
+                nearGamesCount = 12,
                 location = VolleyMocks.mockLocation
             )
             HomeScreen(
                 state = state,
-                effect = null,
-                navigateAction = {},
                 eventCallback = {}
             )
         }
@@ -496,17 +499,17 @@ private fun PreviewFindGameButton() {
                 gamesCount = 0,
                 onClick = {}
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_20.dp))
+            Spacer(Modifier.height(20.dp))
             FindGameButton(
                 gamesCount = 22,
                 onClick = {}
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_20.dp))
+            Spacer(Modifier.height(20.dp))
             FindGameButton(
                 gamesCount = 222,
                 onClick = {}
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_20.dp))
+            Spacer(Modifier.height(20.dp))
             FindGameButton(
                 gamesCount = 2222,
                 onClick = {}

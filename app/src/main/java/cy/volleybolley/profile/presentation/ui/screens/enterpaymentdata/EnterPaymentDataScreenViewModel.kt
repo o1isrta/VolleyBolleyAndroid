@@ -27,7 +27,6 @@ class EnterPaymentDataScreenViewModel(
     )
 
     private var savedPaymentsJsonString: String? = null
-    override val tag: String = EnterPaymentDataScreenViewModel::class.simpleName ?: "EnterPaymentDataScreenViewModel"
 
     init {
         uiStateMutable.update {

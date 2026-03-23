@@ -1,8 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.serialization)
     alias(libs.plugins.google.services)
@@ -53,14 +54,18 @@ android {
 
     buildTypes {
         release {
+            buildConfigField("Boolean", "IS_LOG_ENABLED", "false")
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("debug")
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "release-proguard-rules.pro"
             )
         }
         debug {
+            buildConfigField("Boolean", "IS_LOG_ENABLED", "true")
             signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false
             isShrinkResources = false
@@ -76,9 +81,8 @@ android {
             sourceCompatibility = version
             targetCompatibility = version
         }
-    }
-    kotlinOptions {
-        jvmTarget = javaVersion
+
+        isCoreLibraryDesugaringEnabled = true
     }
     buildFeatures {
         compose = true
@@ -86,7 +90,15 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_2_3
+        jvmTarget = JvmTarget.fromTarget(libs.versions.javaVersion.get())
+    }
+}
+
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -105,13 +117,23 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(platform(libs.koin.bom))
     implementation(libs.bundles.koin.di)
     implementation(libs.bundles.ktor.client)
+    implementation(libs.bundles.firebase.fcm)
     implementation(libs.androidx.navigation.compose)
 
-    ksp(libs.koin.ksp.compiler)
-
-    implementation(libs.play.services.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.google.id)
     implementation(libs.firebase.auth)
     implementation(platform(libs.firebase.bom))
+
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.compose.calendar)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.android.maps.utils)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.maps.compose)
 }

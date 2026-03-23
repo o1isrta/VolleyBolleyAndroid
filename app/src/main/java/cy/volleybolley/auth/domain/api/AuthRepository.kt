@@ -6,5 +6,6 @@ import cy.volleybolley.core.domain.model.VolleyResult
 
 interface AuthRepository {
     suspend fun loginWithGoogle(idToken: String): VolleyResult<LoginData, ErrorType>
+    suspend fun loginWithPhone(idToken: String): VolleyResult<LoginData, ErrorType>
     suspend fun refreshAccessToken(refreshToken: String): VolleyResult<String, ErrorType>
 }

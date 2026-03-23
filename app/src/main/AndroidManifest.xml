@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".core.presentation.App"
@@ -17,10 +20,15 @@
         android:theme="@style/Theme.Volleybolley"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
         <activity
             android:name=".core.presentation.MainActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Volleybolley">
+            <property android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY" android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,6 +41,15 @@
                 <data android:scheme="volleybolley" android:host="invite"/>
             </intent-filter>
         </activity>
+      
+        <service
+            android:name=".notification.presentation.service.FirebaseNotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+      
         <provider
             android:authorities="cy.volleybolley.fileprovider"
             android:name=".core.presentation.VolleyFileProvider"
@@ -42,6 +59,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+      
     </application>
 
 </manifest>

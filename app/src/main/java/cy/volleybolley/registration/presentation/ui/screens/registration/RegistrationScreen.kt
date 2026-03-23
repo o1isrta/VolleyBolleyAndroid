@@ -28,16 +28,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.RootContainer
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
+import cy.volleybolley.core.presentation.ui.component.ScreenPreviewContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsForGender2
-import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsForLevel
+import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.GenderType
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEffect.NavigateToHome
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEffect.ShowToast
 import cy.volleybolley.registration.presentation.ui.screens.registration.RegistrationEvent.CitySelected
@@ -66,6 +65,7 @@ fun RegistrationScreen(
             is ShowToast -> {
                 Toast.makeText(context, currentEffect.message, Toast.LENGTH_SHORT).show()
             }
+
             null -> {}
         }
     }
@@ -119,11 +119,12 @@ fun RegistrationScreen(
             VolleyButton.ActiveButton(
                 text = stringResource(id = R.string.get_started),
                 enabled = state.isBtnRegistrationEnabled,
+                isLoading = state.isLoading,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(bottom = 20.dp, start = 20.dp, end = 20.dp)
                     .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_56.dp),
+                    .height(56.dp),
                 onClick = { eventCallback(GetStartedClicked) }
             )
         }
@@ -186,7 +187,7 @@ private fun FillRegistrationData(
             )
             HorizontalDivider(
                 modifier = Modifier.padding(top = 16.dp),
-                thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+                thickness = 1.dp,
                 color = VolleyColor.TextCalendarLightGrey
             )
         }
@@ -232,7 +233,7 @@ private fun FillNameAndSurname(
         )
         HorizontalDivider(
             modifier = Modifier.padding(top = 14.dp),
-            thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+            thickness = 1.dp,
             color = VolleyColor.TextCalendarLightGrey
         )
     }
@@ -250,14 +251,17 @@ private fun GenderChooser(
             text = stringResource(id = R.string.gender),
             color = VolleyColor.White
         )
-        GroupButtonsForGender2(
-            checkId = selectedGenderIndex,
+        VolleyButton.SingleChoiceButtonGroup(
+            items = listOf(GenderType.MALE, GenderType.FEMALE),
+            selected = GenderType.getById(selectedGenderIndex),
+            label = { it.displayText },
             modifier = Modifier.padding(top = 8.dp),
-            onSelected = onGenderClick
+            paddingValues = PaddingValues(10.dp),
+            onSelect = { onGenderClick(it.id) }
         )
         HorizontalDivider(
             modifier = Modifier.padding(top = 16.dp),
-            thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+            thickness = 1.dp,
             color = VolleyColor.TextCalendarLightGrey
         )
     }
@@ -282,7 +286,7 @@ private fun FillDateOfBirth(
         )
         HorizontalDivider(
             modifier = Modifier.padding(top = 16.dp),
-            thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+            thickness = 1.dp,
             color = VolleyColor.TextCalendarLightGrey
         )
     }
@@ -317,27 +321,30 @@ private fun LevelChooser(
                 )
             }
         }
-        GroupButtonsForLevel(
-            checkId = selectedLevelIndex,
+        VolleyButton.SingleChoiceButtonGroup(
+            items = Level.entries,
+            selected = Level.getById(selectedLevelIndex),
+            label = { it.displayText },
             modifier = Modifier
                 .padding(top = 12.dp)
                 .fillMaxWidth(),
-            onSelected = onLevelClick
+            paddingValues = PaddingValues(10.dp),
+            onSelect = { onLevelClick(it.id) }
         )
         HorizontalDivider(
             modifier = Modifier.padding(top = 16.dp),
-            thickness = VolleyDimens.REGISTRATION_DIVIDER_THICKNESS.dp,
+            thickness = 1.dp,
             color = VolleyColor.TextCalendarLightGrey
         )
     }
 }
 
-@Preview(showBackground = true, heightDp = 1000)
+@Preview(showBackground = true, heightDp = 500, widthDp = 2000)
 @Composable
 private fun RegistrationScreenPreview() {
-    RootContainer { paddingFromSystemUi, navController ->
+    ScreenPreviewContainer {
         RegistrationScreen(
-            paddingFromSystemUi = paddingFromSystemUi,
+            paddingFromSystemUi = PaddingValues(0.dp),
             state = RegistrationState(),
             onRequestNavigateToAboutLevels = {},
             eventCallback = {}

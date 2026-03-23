@@ -31,15 +31,14 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar.TopBar
 import cy.volleybolley.core.presentation.ui.component.model.LevelIcon
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 
 object VolleyTopBar {
-    private val TopBarHeight = VolleyDimens.DIMEN_106.dp
-    private val CornerRadius = VolleyDimens.DIMEN_32.dp
+    private val TopBarHeight = 106.dp
+    private val CornerRadius = 32.dp
     private val BackgroundColor = VolleyColor.Turquoise
-    private val Diameter = VolleyDimens.DIMEN_46.dp
-    private val MarginIcon = VolleyDimens.DIMEN_8.dp
+    private val Diameter = 46.dp
+    private val MarginIcon = 8.dp
 
     @Composable
     @Stable
@@ -63,7 +62,7 @@ object VolleyTopBar {
                 .height(TopBarHeight),
             color = BackgroundColor,
             shape = shape,
-            shadowElevation = VolleyDimens.DIMEN_4.dp
+            shadowElevation = 4.dp
         ) {
             Box {
                 // Name
@@ -73,9 +72,9 @@ object VolleyTopBar {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                start = VolleyDimens.DIMEN_71.dp,
-                                end = VolleyDimens.DIMEN_71.dp,
-                                top = VolleyDimens.DIMEN_63.dp
+                                start = 71.dp,
+                                end = 71.dp,
+                                top = 63.dp
                             ),
                         color = VolleyColor.White,
                         textAlign = TextAlign.Left,
@@ -123,7 +122,7 @@ object VolleyTopBar {
                 onClick = onBackNavigationRequested,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .size(VolleyDimens.DIMEN_24.dp)
+                    .size(24.dp)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),

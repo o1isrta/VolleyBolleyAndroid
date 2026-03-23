@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -21,16 +19,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
-import cy.volleybolley.core.presentation.ui.navigation.NavMap
 import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEffect.NavigateFromFaqScreen
 import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEvent.OnBackFromFaqClick
 import cy.volleybolley.profile.presentation.ui.screens.faq.model.FaqString
@@ -39,21 +34,22 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FaqScreen(
-    navController: NavHostController,
-    viewModel: FaqScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues,
+    onNavigateBack: () -> Unit,
+    viewModel: FaqScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    LaunchedEffect(effect) {
+        when (effect) {
+            is NavigateFromFaqScreen -> onNavigateBack()
+            null -> {}
+        }
+    }
+
     FaqScreen(
         state = state,
-        effect = effect,
-        navigateAction = { route ->
-            route?.let {
-                navController.navigate(it)
-            } ?: navController.popBackStack()
-        },
         eventCallback = { event -> viewModel.obtainEvent(event) },
         modifier = Modifier.padding(paddingFromSystemUi)
     )
@@ -63,42 +59,33 @@ fun FaqScreen(
 private fun FaqScreen(
     modifier: Modifier = Modifier,
     state: FaqScreenState,
-    effect: FaqScreenEffect?,
-    navigateAction: (NavMap?) -> Unit,
     eventCallback: (FaqScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
         modifier = modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
+            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             VolleySimpleComponent.TitleWithBackArrow(
                 title = stringResource(R.string.faq),
                 modifier = Modifier.fillMaxWidth(),
                 onBackClick = { eventCallback(OnBackFromFaqClick) }
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
 
             LazyColumn(
                 horizontalAlignment = Alignment.Start,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
             ) {
                 itemsIndexed(state.faqText) { index, faqString ->
                     FaqBlock(faqString, index)
                 }
             }
-        }
-    }
-
-    LaunchedEffect(effect) {
-        when (effect) {
-            is NavigateFromFaqScreen -> navigateAction(effect.route)
-            null -> {}
         }
     }
 }
@@ -110,8 +97,8 @@ private fun FaqBlock(faqString: FaqString, index: Int) {
             if (index != 0) {
                 FaqScreenDivider(
                     paddingValues = PaddingValues(
-                        horizontal = VolleyDimens.DIMEN_0.dp,
-                        vertical = VolleyDimens.DIMEN_16.dp,
+                        horizontal = 0.dp,
+                        vertical = 16.dp,
                     )
                 )
             }
@@ -121,8 +108,8 @@ private fun FaqBlock(faqString: FaqString, index: Int) {
                 color = VolleyColor.White,
                 textAlign = TextAlign.Start,
                 maxLines = 1,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
         }
 
         FaqStringType.BULLET -> {
@@ -176,8 +163,6 @@ private fun PreviewAboutScreen() {
             val state = FaqScreenState(faqText = VolleyUiUtil.parseMarkdown(VolleyMocks.MOCK_FAQ))
             FaqScreen(
                 state = state,
-                effect = null,
-                navigateAction = {},
                 eventCallback = {},
             )
         }

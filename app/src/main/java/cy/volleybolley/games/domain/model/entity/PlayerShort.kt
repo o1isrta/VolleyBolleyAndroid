@@ -6,5 +6,5 @@ data class PlayerShort(
     val playerId: Int,
     val name: String,
     val level: LevelType,
-    val avatar: String,
+    val avatar: String?,
 )

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,37 +23,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.domain.model.LevelType
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent.TransparentContainer
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar.CircularAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.ActiveButton
 import cy.volleybolley.core.presentation.ui.component.VolleyButton.GroupButtonsForChangeLevel
 import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.games.domain.model.entity.RatingType
-import cy.volleybolley.ui.theme.VolleybolleyTheme
 
 @Composable
 fun RatePlayersScreen(
-    navController: NavHostController,
+    paddingFromSystemUi: PaddingValues,
+    onNavigateBack: () -> Unit,
     viewModel: RatePlayersViewModel,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
 
     RatePlayersScreen(
+        paddingFromSystemUi = paddingFromSystemUi,
         state = state,
         effect = effect,
-        navigateAction = {
-            navController.popBackStack()
-        },
+        navigateAction = onNavigateBack,
         eventCallback = { event ->
             viewModel.obtainEvent(event)
         }
@@ -61,6 +61,7 @@ fun RatePlayersScreen(
 
 @Composable
 private fun RatePlayersScreen(
+    paddingFromSystemUi: PaddingValues,
     state: RatePlayersState,
     effect: RatePlayersEffect?,
     navigateAction: () -> Unit,
@@ -73,10 +74,10 @@ private fun RatePlayersScreen(
         }
     }
 
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier.padding(paddingFromSystemUi).fillMaxSize()) {
         TransparentContainer(
-            modifier = Modifier.padding(VolleyDimens.DIMEN_8.dp),
-            cornerRadius = VolleyDimens.DIMEN_16,
+            modifier = Modifier.padding(8.dp),
+            cornerRadius = 16,
         ) {
             if (state.isLoading) {
                 Box(
@@ -87,12 +88,12 @@ private fun RatePlayersScreen(
                 }
             } else {
                 Column(
-                    modifier = Modifier.padding(VolleyDimens.DIMEN_20.dp),
+                    modifier = Modifier.padding(20.dp),
                 ) {
                     Header()
                     LazyColumn(
-                        modifier = Modifier.padding(top = VolleyDimens.DIMEN_20.dp),
-                        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp),
+                        modifier = Modifier.padding(top = 20.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         itemsIndexed(state.players) { index, player ->
                             PlayerBox(
@@ -112,7 +113,7 @@ private fun RatePlayersScreen(
                         text = stringResource(R.string.rate_players),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = VolleyDimens.DIMEN_16.dp)
+                            .padding(top = 16.dp)
                     ) {
                         eventCallback(RatePlayersEvent.ConfirmRate)
                     }
@@ -126,7 +127,7 @@ private fun RatePlayersScreen(
 @Composable
 private fun Header() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         VolleyText.TitleLarge(
             text = stringResource(R.string.game_completed),
@@ -146,7 +147,7 @@ private fun PlayerBox(
     onSelected: (RatingType) -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PlayerInfo(player = player, modifier = Modifier.fillMaxWidth())
         GroupButtonsForChangeLevel(
@@ -165,10 +166,10 @@ private fun PlayerInfo(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(VolleyDimens.DIMEN_8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        CircularAvatar(avatar = player.avatar, size = VolleyDimens.DIMEN_40.dp)
+        CircularAvatar(avatar = player.avatar, size = 40.dp)
         VolleyText.BodyRegular(text = player.name, color = VolleyColor.White)
         Spacer(Modifier.weight(1f))
         if (player.level != LevelType.UNCONFINED) {
@@ -186,62 +187,51 @@ private fun LevelPill(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .height(VolleyDimens.DIMEN_23.dp)
-            .width(VolleyDimens.DIMEN_30.dp)
-            .clip(RoundedCornerShape(VolleyDimens.DIMEN_10.dp))
+            .height(23.dp)
+            .width(30.dp)
+            .clip(RoundedCornerShape(10.dp))
             .background(VolleyColor.GreyDark)
     ) {
         VolleyText.BodyRegular(level, color = VolleyColor.White)
     }
 }
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
-    device = "spec:width=411dp,height=1000dp,dpi=420"
-)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun RatePlayersPreview() {
-    VolleybolleyTheme {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            val state = RatePlayersState(
-                isLoading = false,
-                players = listOf(
-                    PlayerShortUI(
-                        playerId = 1,
-                        name = "Kristina Popova",
-                        level = LevelType.LIGHT,
-                        avatar = null,
-                        rating = RatingType.CONFIRM
-                    ),
-                    PlayerShortUI(
-                        playerId = 2,
-                        name = "Jane Dow",
-                        level = LevelType.HARD,
-                        avatar = null,
-                        rating = RatingType.UP
-                    ),
-                    PlayerShortUI(
-                        playerId = 3,
-                        name = "John Smith",
-                        level = LevelType.LIGHT,
-                        avatar = null,
-                        rating = RatingType.DOWN
-                    )
+    RootContainerForPreview {
+        val state = RatePlayersState(
+            isLoading = false,
+            players = listOf(
+                PlayerShortUI(
+                    playerId = 1,
+                    name = "Kristina Popova",
+                    level = LevelType.LIGHT,
+                    avatar = null,
+                    rating = RatingType.CONFIRM
+                ),
+                PlayerShortUI(
+                    playerId = 2,
+                    name = "Jane Dow",
+                    level = LevelType.HARD,
+                    avatar = null,
+                    rating = RatingType.UP
+                ),
+                PlayerShortUI(
+                    playerId = 3,
+                    name = "John Smith",
+                    level = LevelType.LIGHT,
+                    avatar = null,
+                    rating = RatingType.DOWN
                 )
             )
-            Box(modifier = Modifier.padding(top = VolleyDimens.DIMEN_116.dp)) {
-                RatePlayersScreen(
-                    state = state,
-                    effect = null,
-                    navigateAction = {},
-                    eventCallback = {}
-                )
-            }
-        }
+        )
+        RatePlayersScreen(
+            paddingFromSystemUi = it,
+            state = state,
+            effect = null,
+            navigateAction = {},
+            eventCallback = {}
+        )
     }
 }

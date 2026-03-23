@@ -9,6 +9,9 @@ import cy.volleybolley.courts.data.network.CourtsResponse
 import cy.volleybolley.courts.domain.CourtsUseCaseImpl
 import cy.volleybolley.courts.domain.api.CourtsRepository
 import cy.volleybolley.courts.domain.api.CourtsUseCase
+import cy.volleybolley.courts.presentation.SearchCourtViewModel
+import cy.volleybolley.games.domain.model.event.EventType
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val courtsModule = module {
@@ -16,11 +19,22 @@ val courtsModule = module {
     single<NetworkClient<CourtsRequest, CourtsResponse>>(HttpClientQualifier.COURTS.qualifier) {
         CourtsNetworkClient()
     }
-    single<CourtsRepository>(HttpClientQualifier.COURTS.qualifier) { CourtsRepositoryImpl(networkClient = get()) }
+    single<CourtsRepository>(HttpClientQualifier.COURTS.qualifier) {
+        CourtsRepositoryImpl(
+            networkClient = get(HttpClientQualifier.COURTS.qualifier)
+        )
+    }
 
     // Domain
-    single<CourtsUseCase> { CourtsUseCaseImpl(repository = get()) }
+    single<CourtsUseCase> {
+        CourtsUseCaseImpl(repository = get(HttpClientQualifier.COURTS.qualifier))
+    }
 
     // ViewModel
-
+    viewModel { (eventType: EventType) ->
+        SearchCourtViewModel(
+            courtsUseCase = get(),
+            eventType = eventType
+        )
+    }
 }

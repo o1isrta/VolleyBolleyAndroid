@@ -1,8 +1,8 @@
 package cy.volleybolley.core.presentation.base
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cy.volleybolley.core.util.VolleyLog
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect>(
     initialState: State
 ) : ViewModel() {
-    abstract val tag: String
+    protected open val tag = this.javaClass.simpleName.orEmpty()
 
     /**
      * Входная точка MVI для событий с ui
@@ -44,12 +44,6 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
         }
     }
 
-    fun absorbEffect() {
-        viewModelScope.launch {
-            uiEffectMutable.send(null)
-        }
-    }
-
     // В этом случае используем общую ошибку для избегания вылетов при недочетах во внешних зависимостях
     @Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException")
     /**
@@ -69,7 +63,7 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
                 if (e is CancellationException) {
                     throw CancellationException()
                 }
-                Log.e(tag, getErrorLogMessage(e), e)
+                VolleyLog.e(tag, getErrorLogMessage(e), e)
                 onError?.invoke(e)
             }
         }
@@ -78,7 +72,7 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
     /**
      * Функция для изменения списка по индексу
      */
-    protected fun<T> List<T>.replaceForCompose(index: Int, newElement: T): List<T> {
+    protected fun <T> List<T>.replaceForCompose(index: Int, newElement: T): List<T> {
         return this.toMutableList().apply {
             this[index] = newElement
         }

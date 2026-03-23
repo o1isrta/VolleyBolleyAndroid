@@ -22,8 +22,6 @@ class ChangePhotoScreenViewModel(
     private var originAvatarString: String? = uiState.value.avatarUrl
     private var chosenImageByteArray: ByteArray? = null
 
-    override val tag: String = ChangePhotoScreenViewModel::class.simpleName ?: "ChangePhotoScreenViewModel"
-
     override fun obtainEvent(event: ChangePhotoScreenEvent) {
         when (event) {
             is GetAvatarFromPersonalData -> {

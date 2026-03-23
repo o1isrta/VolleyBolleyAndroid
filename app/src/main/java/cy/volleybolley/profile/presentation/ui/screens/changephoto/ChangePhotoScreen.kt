@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,19 +39,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.BuildConfig
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEffect.NavigateFromChangePhotoScreen
@@ -62,7 +61,6 @@ import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoSc
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.OnDeletePhotoClick
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.OnGalleryPhotoSelect
 import cy.volleybolley.profile.presentation.ui.screens.changephoto.ChangePhotoScreenEvent.OnSaveButtonClick
-import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.BackAvatarHolder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
@@ -71,7 +69,7 @@ import java.io.File
 @Composable
 fun ChangePhotoScreen(
     avatarFromPersonalData: String? = null,
-    navController: NavHostController,
+    onNavigateBack: (String?) -> Unit,
     viewModel: ChangePhotoScreenViewModel = koinViewModel(),
     paddingFromSystemUi: PaddingValues,
 ) {
@@ -135,12 +133,7 @@ fun ChangePhotoScreen(
         cameraPhotoUri = cameraPhotoUri,
         state = state,
         effect = effect,
-        navigateAction = { newAvatar ->
-            newAvatar?.let {
-                navController.previousBackStackEntry?.savedStateHandle?.set(BackAvatarHolder.AVATAR_KEY, it)
-            }
-            navController.popBackStack()
-        },
+        navigateAction = onNavigateBack,
         eventCallback = { event -> viewModel.obtainEvent(event) },
         modifier = Modifier.padding(paddingFromSystemUi)
     )
@@ -163,29 +156,28 @@ private fun ChangePhotoScreen(
     }
 
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
         modifier = modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
+            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             VolleySimpleComponent.TitleWithBackArrow(
                 title = stringResource(R.string.change_photo),
                 modifier = Modifier.fillMaxWidth(),
                 onBackClick = { eventCallback(OnBackFromChangePhotoClick) }
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.height(8.dp))
 
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+                Spacer(Modifier.height(8.dp))
                 Avatar(
                     modifier = Modifier.fillMaxWidth(),
                     avatarUrl = state.avatarUrl,
                 )
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 Menu(
                     galleryPhotoPicker = galleryPhotoPicker,
@@ -194,14 +186,14 @@ private fun ChangePhotoScreen(
                     eventCallback = eventCallback
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 VolleyButton.ActiveButton(
                     enabled = state.buttonEnabled,
                     text = stringResource(R.string.save),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(VolleyDimens.DIMEN_44.dp)
+                        .height(44.dp)
                 ) { eventCallback(OnSaveButtonClick) }
             }
         }
@@ -227,7 +219,7 @@ private fun Avatar(
         Box {
             VolleyAvatar.CircularAvatar(
                 avatar = avatarUrl,
-                size = VolleyDimens.DIMEN_122.dp
+                size = 122.dp
             )
             Image(
                 painter = painterResource(R.drawable.ic_edit_avatar),
@@ -236,10 +228,10 @@ private fun Avatar(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(
-                        VolleyDimens.DIMEN_0.dp,
-                        VolleyDimens.DIMEN_0.dp,
-                        VolleyDimens.DIMEN_10.dp,
-                        VolleyDimens.DIMEN_6.dp
+                        0.dp,
+                        0.dp,
+                        10.dp,
+                        6.dp
                     )
             )
         }
@@ -262,17 +254,17 @@ private fun Menu(
             )
         )
     }
-    val menuShape = remember { RoundedCornerShape(VolleyDimens.DIMEN_32.dp) }
+    val menuShape = remember { RoundedCornerShape(32.dp) }
 
     Column(
         modifier = Modifier
             .background(VolleyColor.White, menuShape)
             .border(
-                width = VolleyDimens.DIMEN_1.dp,
+                width = 1.dp,
                 brush = gradientBrush,
                 shape = menuShape
             )
-            .padding(VolleyDimens.DIMEN_20.dp)
+            .padding(20.dp)
     ) {
         MenuComponent(
             painter = painterResource(R.drawable.ic_photo_gallery),
@@ -331,8 +323,8 @@ private fun MenuComponent(
             modifier = Modifier
                 .weight(1f)
                 .padding(
-                    horizontal = VolleyDimens.DIMEN_8.dp,
-                    vertical = VolleyDimens.DIMEN_0.dp
+                    horizontal = 8.dp,
+                    vertical = 0.dp
                 )
         )
     }
@@ -343,7 +335,7 @@ private fun ChangePhotoScreenDivider() {
     VolleySimpleComponent.DividerLine(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_0.dp, VolleyDimens.DIMEN_16.dp)
+            .padding(0.dp, 16.dp)
     )
 }
 
@@ -370,22 +362,15 @@ private suspend fun convertUriToByteArray(context: Context, uri: Uri): ByteArray
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewChangePhotoScreen() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            ChangePhotoScreen(
-                state = ChangePhotoScreenState(),
-                effect = null,
-                navigateAction = {},
-                eventCallback = {}
-            )
-        }
+    RootContainerForPreview(showTopBar = false) {
+        ChangePhotoScreen(
+            state = ChangePhotoScreenState(),
+            effect = null,
+            navigateAction = {},
+            eventCallback = {}
+        )
     }
 }

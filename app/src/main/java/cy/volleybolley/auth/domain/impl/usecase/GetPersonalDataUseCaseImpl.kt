@@ -1,14 +1,18 @@
 package cy.volleybolley.auth.domain.impl.usecase
 
-import cy.volleybolley.auth.domain.api.LoginDataRepository
+import cy.volleybolley.auth.domain.api.storage.UserStorage
 import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
 import cy.volleybolley.profile.domain.model.PersonalData
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 
 class GetPersonalDataUseCaseImpl(
-    private val loginDataRepository: LoginDataRepository
+    private val userStorage: UserStorage
 ) : GetPersonalDataUseCase {
-    override fun execute(): StateFlow<PersonalData?> {
-        return loginDataRepository.personalData
+    override suspend fun execute(): PersonalData? {
+        return userStorage.getPersonalData()
+    }
+
+    override fun executeFlow(): Flow<PersonalData?> {
+        return userStorage.getPersonalDataFlow()
     }
 }

@@ -1,0 +1,17 @@
+package cy.volleybolley.success
+
+import cy.volleybolley.core.presentation.base.BaseViewModel
+
+class SuccessViewModel(
+    createdEvent: SucceedGame,
+) :
+    BaseViewModel<SuccessState, SuccessEvent, SuccessEffect>(SuccessState(event = createdEvent)) {
+
+    override fun obtainEvent(event: SuccessEvent) {
+        when (event) {
+            SuccessEvent.OnDoneClick -> sendUiEffect(SuccessEffect.CloseScreen)
+            is SuccessEvent.OnInvitePlayers -> sendUiEffect(SuccessEffect.NavigateToInvitePlayers)
+            // SuccessEvent.OnShareLink -> sendUiEffect(SuccessEffect.ShareLink)
+        }
+    }
+}

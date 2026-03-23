@@ -36,15 +36,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 
 object VolleyDropDownField {
     @Composable
     fun DropDownGradientField(
         paddingValues: PaddingValues = PaddingValues(0.dp),
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
-        contentPaddingValues: PaddingValues = PaddingValues(VolleyDimens.DIMEN_16.dp),
+        cornerRadius: Int = 16,
+        contentPaddingValues: PaddingValues = PaddingValues(16.dp),
         inputText: String,
         valuesList: List<String>,
         onValueClick: (String) -> Unit,
@@ -70,12 +69,12 @@ object VolleyDropDownField {
                             modifier = Modifier.weight(1f)
                         )
 
-                        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+                        Spacer(Modifier.width(8.dp))
 
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
-                                .size(VolleyDimens.DIMEN_18.dp)
+                                .size(18.dp)
                                 .clip(CircleShape)
                                 .clickable(
                                     interactionSource = null,
@@ -96,7 +95,7 @@ object VolleyDropDownField {
                 }
 
                 if (showDropDown && valuesList.isNotEmpty()) {
-                    Spacer(Modifier.height(VolleyDimens.DIMEN_6.dp))
+                    Spacer(Modifier.height(6.dp))
                     GradientBox(
                         cornerRadius = cornerRadius,
                         contentPadding = contentPaddingValues,
@@ -121,7 +120,7 @@ object VolleyDropDownField {
     ) {
         LazyColumn(
             modifier = Modifier
-                .heightIn(0.dp, VolleyDimens.DIMEN_160.dp)
+                .heightIn(0.dp, 160.dp)
         ) {
             itemsIndexed(valuesList) { index, value ->
                 VolleyText.BodySmall(
@@ -147,8 +146,8 @@ object VolleyDropDownField {
 
     @Composable
     private fun GradientBox(
-        cornerRadius: Int = VolleyDimens.DIMEN_16,
-        contentPadding: PaddingValues = PaddingValues(VolleyDimens.DIMEN_16.dp),
+        cornerRadius: Int = 16,
+        contentPadding: PaddingValues = PaddingValues(16.dp),
         content: @Composable BoxScope.() -> Unit
     ) {
         val gradientBrush = remember {
@@ -168,7 +167,7 @@ object VolleyDropDownField {
                     shape = RoundedCornerShape(cornerRadius.dp)
                 )
                 .border(
-                    width = VolleyDimens.DIMEN_1.dp,
+                    width = 1.dp,
                     brush = gradientBrush,
                     shape = RoundedCornerShape(cornerRadius.dp)
                 )
@@ -182,7 +181,7 @@ object VolleyDropDownField {
         VolleySimpleComponent.DividerLine(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(0.dp, VolleyDimens.DIMEN_16.dp)
+                .padding(0.dp, 16.dp)
         )
     }
 
@@ -199,7 +198,7 @@ private fun PreviewDropDownField() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             VolleyDropDownField.DropDownGradientField(
-                paddingValues = PaddingValues(VolleyDimens.DIMEN_16.dp),
+                paddingValues = PaddingValues(16.dp),
                 inputText = "Some hint on field...",
                 valuesList = emptyList()
             ) { }

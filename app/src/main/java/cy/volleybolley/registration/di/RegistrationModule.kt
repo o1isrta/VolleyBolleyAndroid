@@ -13,28 +13,26 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val registrationModule = module {
-    // Data
     single<NetworkClient<RegistrationRequest, RegistrationResponse>>(HttpClientQualifier.REGISTRATION.qualifier) {
         RegistrationNetworkClient()
     }
 
     single<RegistrationRepository> {
         RegistrationRepositoryImpl(
-            networkClient = get(HttpClientQualifier.REGISTRATION.qualifier)
+            networkClient = get(HttpClientQualifier.REGISTRATION.qualifier),
+            userStorage = get()
         )
     }
 
-    // Domain
-    factory { UserRegistrationUseCase(repository = get()) }
+    factory {
+        UserRegistrationUseCase(repository = get())
+    }
 
-    // ViewModels
-    viewModel { (userData: String) ->
+    viewModel {
         RegistrationViewModel(
             getCountriesUseCase = get(),
             userRegistrationUseCase = get(),
-            savePersonalDataUseCase = get(),
-            json = get(),
-            userData = userData
+            getPersonalDataUseCase = get()
         )
     }
 }

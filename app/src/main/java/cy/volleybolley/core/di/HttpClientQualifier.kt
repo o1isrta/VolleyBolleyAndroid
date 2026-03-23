@@ -11,7 +11,9 @@ enum class HttpClientQualifier(val value: String) {
     REFERENCE_DATA("reference_data"),
     AUTH("auth"),
     REGISTRATION("registration"),
-    NO_ACCESS_TOKEN("no_access_token");
+    NO_ACCESS_TOKEN("no_access_token"),
+    DEVICE_TOKEN("device_token"),
+    NOTIFICATIONS("notifications");
 
     val qualifier get() = named(value)
 }

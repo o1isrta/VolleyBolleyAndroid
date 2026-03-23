@@ -7,5 +7,6 @@ data class PlayerDetail(
     val avatarUrl: String?,
     val isFavorite: Boolean,
     val level: String,
+    val gender: String,
     val latestActivity: List<PlayerActivity>
 )

@@ -11,5 +11,6 @@ data class PlayerDtoDetail(
     @SerialName("avatar") val avatarUrl: String? = null,
     @SerialName("is_favorite") val isFavorite: Boolean,
     @SerialName("level") val level: String,
+    @SerialName("gender") val gender: String,
     @SerialName("latest_activity") val latestActivity: List<ActivityDto>
 )

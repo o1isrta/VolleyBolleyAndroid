@@ -16,7 +16,8 @@ fun PlayerDto.toDomain(): Player {
         lastName = lastName,
         avatarUrl = avatarUrl,
         isFavorite = isFavorite,
-        level = level
+        level = level,
+        gender = gender
     )
 }
 
@@ -28,6 +29,7 @@ fun PlayerDtoDetail.toDomain(): PlayerDetail {
         avatarUrl = avatarUrl,
         isFavorite = isFavorite,
         level = level,
+        gender = gender,
         latestActivity = latestActivity.map { it.toDomain() }
     )
 }

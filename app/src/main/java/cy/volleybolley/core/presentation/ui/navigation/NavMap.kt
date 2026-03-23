@@ -11,7 +11,7 @@ sealed interface NavMap
 object HomeTopLevelRoute : NavMap
 
 @Serializable
-object MyGamesTopLevelRoute : NavMap
+object GameHomeTopLevelRoute : NavMap
 
 @Serializable
 object ProfileTopLevelRoute : NavMap
@@ -27,13 +27,10 @@ object OnboardingRoute : NavMap
 object AuthorizationRoute : NavMap
 
 @Serializable
-data class RegistrationRoute(val user: String = "") : NavMap
+object RegistrationRoute : NavMap
 
 @Serializable
 object AuthorizationByPhoneRoute : NavMap
-
-@Serializable
-object VerifyPhoneNumberRoute : NavMap
 
 @Serializable
 object AboutLevelsRoute : NavMap
@@ -57,7 +54,7 @@ object TourneyEnteringConditionsRoute : NavMap
 
 // --- find a game flow ---
 @Serializable
-object JoinTheGameRoute : NavMap
+data class JoinTheGameRoute(val gameId: Int) : NavMap
 
 // --- find a tourney flow ---
 @Serializable
@@ -95,7 +92,7 @@ object TeamsRoute : NavMap
 object GameInvitesRoute : NavMap
 
 @Serializable
-object JoinTheTourneyRoute : NavMap
+data class JoinTheTourneyRoute(val tourneyId: Int) : NavMap
 
 // --- my games flow ---
 @Serializable
@@ -118,7 +115,9 @@ object MyTourneyRoute : NavMap
 
 // --- upcoming games flow ---
 @Serializable
-object JoinedPlayersRoute : NavMap
+data class JoinedPlayersRoute(
+    val tournamentDetailsHolderKey: String
+) : NavMap
 
 @Serializable
 object UpcomingGameDetailsRoute : NavMap
@@ -134,7 +133,9 @@ object UpcomingTourneyDetailsRoute : NavMap
 object HomeRoute : NavMap
 
 @Serializable
-object SearchCourtRoute : NavMap
+data class SearchCourtRoute(
+    val eventType: EventType
+) : NavMap
 
 @Serializable
 data class RatePlayersRoute(
@@ -184,3 +185,6 @@ data class EnterPaymentDataRoute(
 
 @Serializable
 data class ShareLinkRoute(val id: String, val type: String) : NavMap
+
+@Serializable
+object NotificationsRoute : NavMap

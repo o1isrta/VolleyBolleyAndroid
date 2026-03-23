@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -17,40 +18,40 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.component.VolleyTopBar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyTypography
+import cy.volleybolley.core.presentation.ui.util.safeTopPadding
 
+@Stable
 @Composable
 fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(VolleyColor.TurquoiseDark)
-            .padding(
-                top = VolleyDimens.DIMEN_38.dp,
-                start = VolleyDimens.DIMEN_16.dp,
-                end = VolleyDimens.DIMEN_16.dp
-            )
+            .safeTopPadding(extraTopPadding = 38.dp)
+            .padding(horizontal = 16.dp)
     ) {
         VolleyContainersRootTransparent.TransparentContainer(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .align(Alignment.TopCenter),
-            cornerRadius = VolleyDimens.DIMEN_32,
+            cornerRadius = 32,
             mainContainerAlignment = Alignment.TopStart,
             contentContainerAlignment = Alignment.TopStart
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(VolleyDimens.DIMEN_20.dp),
+                    .padding(20.dp),
                 horizontalAlignment = Alignment.Start
             ) {
                 VolleyTopBar.TopBarWithBackButton(
@@ -60,7 +61,7 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
                 )
 
                 LevelItem(
-                    modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     prefixResId = R.string.level_light_prefix,
                     descriptionResId = R.string.level_light_description,
                     gradient = Brush.verticalGradient(
@@ -70,7 +71,7 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
                 )
 
                 LevelItem(
-                    modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     prefixResId = R.string.level_medium_prefix,
                     descriptionResId = R.string.level_medium_description,
                     gradient = Brush.verticalGradient(
@@ -80,7 +81,7 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
                 )
 
                 LevelItem(
-                    modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     prefixResId = R.string.level_hard_prefix,
                     descriptionResId = R.string.level_hard_description,
                     gradient = Brush.verticalGradient(
@@ -90,7 +91,7 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
                 )
 
                 LevelItem(
-                    modifier = Modifier.padding(top = VolleyDimens.DIMEN_16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     prefixResId = R.string.level_pro_prefix,
                     descriptionResId = R.string.level_pro_description,
                     gradient = Brush.verticalGradient(
@@ -103,13 +104,15 @@ fun AboutLevelsScreen(onBackNavigationRequested: () -> Unit) {
     }
 }
 
+@Stable
 @Composable
 private fun LevelItem(modifier: Modifier = Modifier, prefixResId: Int, descriptionResId: Int, gradient: Brush) {
     val annotated = buildAnnotatedString {
         withStyle(style = SpanStyle(brush = gradient, fontWeight = FontWeight.Bold)) {
             append(stringResource(id = prefixResId))
         }
-        append(" " + stringResource(id = descriptionResId))
+        append(' ')
+        append(stringResource(id = descriptionResId))
     }
 
     Text(
@@ -120,8 +123,10 @@ private fun LevelItem(modifier: Modifier = Modifier, prefixResId: Int, descripti
     )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun AboutLevelsScreenPreview() {
-    AboutLevelsScreen { }
+    RootContainerForPreview(showBottomBar = false, showTopBar = false) {
+        AboutLevelsScreen { }
+    }
 }

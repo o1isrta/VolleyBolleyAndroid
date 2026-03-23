@@ -19,10 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,45 +28,43 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.courts.domain.model.Location
-import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEffect.NavigateFromPlayerDetailScreen
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnActivityMapButton
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnBackFromPlayerDetails
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnFavoriteManagementButton
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerActivityTemp
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerDetailTemp
-import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 
 @Composable
 fun PlayerProfileScreen(
-    navController: NavHostController,
+    onNavigateBack: (Int?) -> Unit,
     viewModel: PlayerProfileScreenViewModel,
     paddingFromSystemUi: PaddingValues,
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
+    LaunchedEffect(effect) {
+        when (effect) {
+            is PlayerProfileScreenEffect.NavigateFromPlayerDetailScreen -> {
+                onNavigateBack(effect.playerIdWithChangedFavoriteStatus)
+            }
+            null -> {}
+        }
+    }
+
     PlayerProfileScreen(
         state = state,
-        effect = effect,
         userHoursOffset = 3, // пока нет ручек для хранения профиля пользователя
         eventCallback = { event -> viewModel.obtainEvent(event) },
-        navigateAction = { backPlayerId ->
-            backPlayerId?.let {
-                navController.previousBackStackEntry?.savedStateHandle?.set(BackPlayerIdHolder.PLAYER_ID_KEY, it)
-                navController.popBackStack()
-            } ?: navController.popBackStack()
-        },
         modifier = Modifier.padding(paddingFromSystemUi)
     )
 }
@@ -77,20 +73,17 @@ fun PlayerProfileScreen(
 private fun PlayerProfileScreen(
     modifier: Modifier = Modifier,
     state: PlayerProfileScreenState,
-    effect: PlayerProfileScreenEffect?,
     userHoursOffset: Int,
-    navigateAction: (Int?) -> Unit,
     eventCallback: (PlayerProfileScreenEvent) -> Unit,
 ) {
     VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_32,
         modifier = modifier
             .fillMaxWidth()
-            .padding(VolleyDimens.DIMEN_8.dp)
+            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_20.dp)
+                .padding(20.dp)
         ) {
             VolleySimpleComponent.TitleWithBackArrow(
                 title = "${state.playerDetail.firstName} ${state.playerDetail.lastName}",
@@ -98,7 +91,7 @@ private fun PlayerProfileScreen(
                 onBackClick = { eventCallback(ClickOnBackFromPlayerDetails) }
             )
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+            Spacer(Modifier.height(16.dp))
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -106,10 +99,10 @@ private fun PlayerProfileScreen(
             ) {
                 VolleyAvatar.CircularAvatar(
                     avatar = state.playerDetail.avatarUrl,
-                    size = VolleyDimens.DIMEN_100.dp
+                    size = 100.dp
                 )
 
-                Spacer(Modifier.height(VolleyDimens.DIMEN_4.dp))
+                Spacer(Modifier.height(4.dp))
 
                 VolleyText.BodyBoldGradient(
                     text = state.playerDetail.level,
@@ -118,7 +111,7 @@ private fun PlayerProfileScreen(
                 )
             }
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
+            Spacer(Modifier.height(12.dp))
 
             if (state.playerDetail.latestActivity.isNotEmpty()) {
                 VolleyText.BodyBold(
@@ -126,7 +119,7 @@ private fun PlayerProfileScreen(
                     color = VolleyColor.White,
                     maxLines = 1
                 )
-                Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 LazyColumn {
                     val countOfActivities = state.playerDetail.latestActivity.size
@@ -140,7 +133,7 @@ private fun PlayerProfileScreen(
                         )
 
                         if (index < countOfActivities - 1) {
-                            Spacer(Modifier.height(VolleyDimens.DIMEN_16.dp))
+                            Spacer(Modifier.height(16.dp))
                         }
                     }
                 }
@@ -152,19 +145,12 @@ private fun PlayerProfileScreen(
                 )
             }
 
-            Spacer(Modifier.height(VolleyDimens.DIMEN_12.dp))
+            Spacer(Modifier.height(12.dp))
 
             FavoriteManagementButton(
                 isFavorite = state.playerDetail.isFavorite,
                 onClick = { eventCallback(ClickOnFavoriteManagementButton(!state.playerDetail.isFavorite)) }
             )
-        }
-    }
-
-    LaunchedEffect(effect) {
-        when (effect) {
-            is NavigateFromPlayerDetailScreen -> navigateAction(effect.playerIdWithChangedFavoriteStatus)
-            null -> {}
         }
     }
 }
@@ -177,12 +163,10 @@ private fun PlayerActivityItem(
     userHoursOffset: Int,
     onMapClick: () -> Unit,
 ) {
-    VolleyContainersRootTransparent.TransparentContainer(
-        cornerRadius = VolleyDimens.DIMEN_16,
-    ) {
+    VolleyContainersRootTransparent.TransparentContainer(cornerRadius = 16) {
         Column(
             modifier = Modifier
-                .padding(VolleyDimens.DIMEN_16.dp, VolleyDimens.DIMEN_8.dp)
+                .padding(16.dp, 8.dp)
         ) {
             VolleyText.BodyRegular(
                 text = VolleyUiUtil.parseTimeStringToActivityDateString(
@@ -192,7 +176,7 @@ private fun PlayerActivityItem(
                 color = VolleyColor.White,
                 maxLines = 1
             )
-            Spacer(Modifier.height(VolleyDimens.DIMEN_8.dp))
+            Spacer(Modifier.height(8.dp))
             LocationSection(
                 locationName = locationName,
                 courtName = courtName,
@@ -218,7 +202,7 @@ private fun LocationSection(
             tint = VolleyColor.OrangeHard
         )
 
-        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+        Spacer(Modifier.width(8.dp))
 
         Column(Modifier.weight(1f)) {
             VolleyText.BodyBold(
@@ -235,7 +219,7 @@ private fun LocationSection(
             )
         }
 
-        Spacer(Modifier.width(VolleyDimens.DIMEN_8.dp))
+        Spacer(Modifier.width(8.dp))
 
         VolleyButton.ActiveButtonMap(
             text = stringResource(R.string.map),
@@ -255,19 +239,19 @@ private fun FavoriteManagementButton(
     ).uppercase()
     val backgroundColor = if (isFavorite) Color.Transparent else VolleyColor.YellowPro
     val textColor = if (isFavorite) VolleyColor.White else VolleyColor.TextDark
-    val shape = RoundedCornerShape(VolleyDimens.DIMEN_16.dp)
+    val shape = RoundedCornerShape(16.dp)
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxWidth()
-            .height(VolleyDimens.DIMEN_44.dp)
+            .height(44.dp)
             .background(
                 color = backgroundColor,
                 shape = shape
             )
             .border(
-                width = VolleyDimens.DIMEN_1.dp,
+                width = 1.dp,
                 color = VolleyColor.YellowPro,
                 shape = shape
             )
@@ -328,9 +312,7 @@ private fun PreviewPlayerProfileScreen() {
 
             PlayerProfileScreen(
                 state = state,
-                effect = null,
                 userHoursOffset = 3,
-                navigateAction = {},
                 eventCallback = {}
             )
         }

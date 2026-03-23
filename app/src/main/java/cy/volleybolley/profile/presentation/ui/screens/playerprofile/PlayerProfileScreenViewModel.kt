@@ -26,8 +26,6 @@ class PlayerProfileScreenViewModel(
 ) {
     private val originFavoriteStatus: Boolean
 
-    override val tag: String = PlayerProfileScreenViewModel::class.simpleName ?: "PlayerDetailScreenViewModel"
-
     init {
         // getPlayerDetails(playerId)
         val details = VolleyMocks.mockPlayerDetails.find {
@@ -47,7 +45,8 @@ class PlayerProfileScreenViewModel(
                 }
             )
 
-            ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/ }
+            ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/
+            }
 
             is ClickOnFavoriteManagementButton -> uiStateMutable.update {
                 it.copy(

@@ -20,14 +20,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
-import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.model.VolleyDimens
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LogoWithAppName
 
@@ -59,7 +59,7 @@ fun OnboardingScreen(
         ) {
             VolleyText.TitleXL(
                 modifier = Modifier.padding(
-                    top = paddingFromSystemUi.calculateTopPadding() + VolleyDimens.DIMEN_40.dp,
+                    top = paddingFromSystemUi.calculateTopPadding() + 40.dp,
                     start = 26.dp
                 ),
                 text = stringResource(id = R.string.welcome),
@@ -85,29 +85,29 @@ fun OnboardingScreen(
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(
-                    start = VolleyDimens.DIMEN_20.dp,
-                    end = VolleyDimens.DIMEN_20.dp,
-                    top = buttonTopPadding + VolleyDimens.DIMEN_90.dp,
+                    start = 20.dp,
+                    end = 20.dp,
+                    top = buttonTopPadding + 90.dp,
                 )
         ) {
             VolleyButton.ActiveButton(
                 text = stringResource(id = R.string.get_started),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(VolleyDimens.DIMEN_44.dp),
+                    .height(44.dp),
                 onClick = onNextScreenRequested
             )
         }
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun OnboardingScreenPreview() {
-    VolleyContainersRootTransparent.Root { paddingValues ->
+    RootContainerForPreview(showBottomBar = false, showTopBar = false) {
         OnboardingScreen(
             onNextScreenRequested = {},
-            paddingFromSystemUi = paddingValues
+            paddingFromSystemUi = it
         )
     }
 }

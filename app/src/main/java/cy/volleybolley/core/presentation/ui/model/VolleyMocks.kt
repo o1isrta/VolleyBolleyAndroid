@@ -1,6 +1,11 @@
 package cy.volleybolley.core.presentation.ui.model
 
+import cy.volleybolley.core.domain.model.LevelType
 import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.games.domain.model.entity.Host
+import cy.volleybolley.games.domain.model.entity.PlayerShort
+import cy.volleybolley.games.domain.model.entity.Team
+import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.profile.domain.model.PersonalData
@@ -47,6 +52,23 @@ object VolleyMocks {
         "- Pro levels are harder to reach\n" +
         "Play fair — your level will speak for itself."
 
+    private const val HOST_NAME = "Artem Ivanov"
+    private const val GENDER_MIX = "Mix"
+    private val PAYMENT_TYPE_THAI_BANK = cy.volleybolley.core.domain.model.PaymentType.THAIBANK
+    private const val CURRENCY_USD = "$"
+    private const val PAYMENT_ACCOUNT = "988 016 7890"
+    private val LEVELS_LIGHT = listOf("Light")
+    private const val SHORT_MESSAGE: String = "Afterlunch meet. 6$ entry fee, our favorite place, don’t miss"
+
+    private const val PLAYER_1 = "Anton Ivanov"
+    private const val PLAYER_2 = "Aleksandr Abramov"
+    private const val PLAYER_3 = "Anya Levan"
+    private const val PLAYER_4 = "Alina Lyubimova"
+    private const val PLAYER_5 = "Maxim Petrov"
+    private const val PLAYER_6 = "Julia Petrova"
+    private const val PLAYER_7 = "Tatiana Kalinina"
+    private const val PLAYER_8 = "Artem Artemov"
+
     val mockPersonalData = PersonalData(
         firstName = USER_NAME,
         lastName = USER_SURNAME,
@@ -58,14 +80,16 @@ object VolleyMocks {
         avatar = USER_AVATAR
     )
 
-    val countries = listOf(Country(
-        id = 0,
-        name = "Thailand",
-        cities = listOf(
-            City(id = 0, name = "Koh Phangan"),
-            City(id = 1, name = "Koh Samui")
+    val countries = listOf(
+        Country(
+            id = 0,
+            name = "Thailand",
+            cities = listOf(
+                City(id = 0, name = "Koh Phangan"),
+                City(id = 1, name = "Koh Samui")
+            )
         )
-    ))
+    )
 
     val mockLocation = Location(
         longitude = 7.866269,
@@ -204,4 +228,72 @@ object VolleyMocks {
             isPreferred = false
         )
     )
+
+    val mockTournament: TournamentDetails = TournamentDetails(
+        tournamentId = 0,
+        isIndividual = true,
+        host = mockHost(),
+        message = SHORT_MESSAGE,
+        courtLocation = mockLocation,
+        startTime = timeRangeFor().first,
+        endTime = timeRangeFor().second,
+        gender = GENDER_MIX,
+        levels = LEVELS_LIGHT,
+        maximumPlayers = 4,
+        maximumTeams = 4,
+        pricePerPerson = "2",
+        paymentType = PAYMENT_TYPE_THAI_BANK,
+        paymentAccount = PAYMENT_ACCOUNT,
+        currencyType = CURRENCY_USD,
+        teams = mockTeams()
+    )
+
+    private fun mockHost(): Host = Host(
+        id = 10,
+        name = HOST_NAME,
+        avatar = null,
+        level = LevelType.LIGHT,
+    )
+
+    private fun timeRangeFor(): Pair<String, String> = "2025-10-10T18:00:00" to "2025-10-10T20:00:00"
+
+    private fun mockTeams(): List<Team> = listOf(
+        Team(
+            teamId = 0,
+            players = listOf(
+                mockPlayer(0, PLAYER_1),
+                mockPlayer(1, PLAYER_2)
+            )
+        ),
+        Team(
+            teamId = 1,
+            players = listOf(
+                mockPlayer(0, PLAYER_3),
+                mockPlayer(1, PLAYER_4)
+            )
+        ),
+        Team(
+            teamId = 2,
+            players = listOf(
+                mockPlayer(0, PLAYER_5),
+                mockPlayer(1, PLAYER_6)
+            )
+        ),
+        Team(
+            teamId = 3,
+            players = listOf(
+                mockPlayer(0, PLAYER_7),
+                mockPlayer(1, PLAYER_8)
+            )
+        )
+    )
+
+    private fun mockPlayer(id: Int, name: String): PlayerShort {
+        return PlayerShort(
+            playerId = id,
+            name = name,
+            level = LevelType.HARD,
+            avatar = ""
+        )
+    }
 }
