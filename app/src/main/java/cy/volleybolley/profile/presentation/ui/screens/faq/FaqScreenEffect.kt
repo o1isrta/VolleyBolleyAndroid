@@ -5,4 +5,5 @@ import cy.volleybolley.core.presentation.ui.navigation.NavMap
 
 sealed interface FaqScreenEffect : UiEffect {
     data class NavigateFromFaqScreen(val route: NavMap?) : FaqScreenEffect
+    data class ShowToast(val message: String) : FaqScreenEffect
 }

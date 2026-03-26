@@ -7,6 +7,7 @@ import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEffect.NavigateFromFaqScreen
 import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEvent.OnBackFromFaqClick
 import cy.volleybolley.referencedata.domain.api.GetFaqUseCase
+import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEffect.ShowToast
 import kotlinx.coroutines.flow.update
 
 class FaqScreenViewModel(
@@ -27,7 +28,12 @@ class FaqScreenViewModel(
 
     private fun loadFaq() {
         launchSafe(
-            getErrorLogMessage = { "Error loading FAQ: ${it.message}" }
+            onError = {
+                sendUiEffect(ShowToast("Failed to load data"))
+            },
+            getErrorLogMessage = {
+                "Error loading FAQ: ${it.message}"
+            }
         ) {
             getFaqUseCase.execute()
                 .onSuccess { faq ->
@@ -37,8 +43,8 @@ class FaqScreenViewModel(
                         it.copy(faqText = parsed)
                     }
                 }
-                .onFailure {
-                    println("FAQ ERROR: $it")
+                .onFailure { error ->
+                    sendUiEffect(ShowToast("Failed: $error"))
                 }
         }
     }
