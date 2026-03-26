@@ -5,9 +5,9 @@ import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEffect.NavigateFromFaqScreen
+import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEffect.ShowToast
 import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEvent.OnBackFromFaqClick
 import cy.volleybolley.referencedata.domain.api.GetFaqUseCase
-import cy.volleybolley.profile.presentation.ui.screens.faq.FaqScreenEffect.ShowToast
 import kotlinx.coroutines.flow.update
 
 class FaqScreenViewModel(
