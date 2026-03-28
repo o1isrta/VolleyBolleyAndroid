@@ -7,7 +7,7 @@ enum class GenderType(
 ) {
     MALE(1, "MALE", "Male"),
     FEMALE(2, "FEMALE", "Female"),
-    UNKNOWN(0, "", "");
+    UNKNOWN(0, "UNKNOWN", "Unknown");
 
     companion object {
         @JvmStatic
