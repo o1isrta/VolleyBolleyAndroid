@@ -11,8 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -21,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -98,96 +98,135 @@ private fun PersonalDataScreen(
             )
             Spacer(Modifier.height(8.dp))
 
-            Column(Modifier.verticalScroll(rememberScrollState())) {
-                Spacer(Modifier.height(8.dp))
-                AvatarBlock(
-                    modifier = Modifier.fillMaxWidth(),
-                    avatarString = state.avatar,
-                    onIconClick = { eventCallback(OnAvatarEditClick) }
-                )
+            ChangeFieldsBlock(
+                modifier = Modifier,
+                state = state,
+                eventCallback = eventCallback
+            )
+        }
 
-                Spacer(Modifier.height(8.dp))
-                PersonalDataTextMark(stringResource(R.string.name))
-                Spacer(Modifier.height(8.dp))
+        VolleyButton.ActiveButton(
+            enabled = state.buttonEnabled,
+            text = stringResource(R.string.update),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .fillMaxWidth()
+                .padding(20.dp)
+                .height(44.dp)
+        ) { eventCallback(OnUpdateButtonClick) }
+    }
+}
 
-                VolleyTextFieldGradient.SimpleGradientTextField(
-                    hint = stringResource(R.string.name),
-                    text = state.name,
-                    actionToTransferContent = { eventCallback(NameChanged(it)) }
-                )
+@Composable
+private fun ChangeFieldsBlock(
+    modifier: Modifier = Modifier,
+    state: PersonalDataScreenState,
+    eventCallback: (PersonalDataScreenEvent) -> Unit,
+) {
+    LazyColumn(
+        modifier = modifier
+    ) {
+        item {
+            Spacer(Modifier.height(8.dp))
+            AvatarBlock(
+                modifier = Modifier.fillMaxWidth(),
+                avatarString = state.avatar,
+                onIconClick = { eventCallback(OnAvatarEditClick) }
+            )
+        }
 
-                Spacer(Modifier.height(14.dp))
-                PersonalDataTextMark(stringResource(R.string.surname))
-                Spacer(Modifier.height(8.dp))
+        item {
+            Spacer(Modifier.height(8.dp))
+            PersonalDataTextMark(stringResource(R.string.name))
+            Spacer(Modifier.height(8.dp))
 
-                VolleyTextFieldGradient.SimpleGradientTextField(
-                    hint = stringResource(R.string.surname),
-                    text = state.surname,
-                    actionToTransferContent = { eventCallback(SurnameChanged(it)) }
-                )
+            VolleyTextFieldGradient.SimpleGradientTextField(
+                hint = stringResource(R.string.name),
+                text = state.name,
+                actionToTransferContent = { eventCallback(NameChanged(it)) }
+            )
+        }
 
-                Spacer(Modifier.height(14.dp))
-                PersonalDataDivider()
-                Spacer(Modifier.height(16.dp))
-                PersonalDataTextMark(stringResource(R.string.gender))
-                Spacer(Modifier.height(8.dp))
+        item {
+            Spacer(Modifier.height(14.dp))
+            PersonalDataTextMark(stringResource(R.string.surname))
+            Spacer(Modifier.height(8.dp))
 
-                VolleyButton.SingleChoiceButtonGroup(
-                    items = listOf(GenderType.MALE, GenderType.FEMALE),
-                    selected = GenderType.getById(state.genderId),
-                    label = { it.displayText },
-                    modifier = Modifier,
-                    paddingValues = PaddingValues(10.dp),
-                    onSelect = { eventCallback(GenderSelect(it.id)) }
-                )
+            VolleyTextFieldGradient.SimpleGradientTextField(
+                hint = stringResource(R.string.surname),
+                text = state.surname,
+                actionToTransferContent = { eventCallback(SurnameChanged(it)) }
+            )
+        }
 
-                Spacer(Modifier.height(16.dp))
-                PersonalDataDivider()
-                Spacer(Modifier.height(16.dp))
-                PersonalDataTextMark(stringResource(R.string.date_of_bith))
-                Spacer(Modifier.height(8.dp))
+        item {
+            Spacer(Modifier.height(14.dp))
+            PersonalDataDivider()
+            Spacer(Modifier.height(16.dp))
+        }
 
-                VolleyTextFieldAttribute.DatePickerField(
-                    inputDate = state.dateOfBirthMillis,
-                    actionForSaveDate = { eventCallback(DateSelect(it)) }
-                )
+        item {
+            PersonalDataTextMark(stringResource(R.string.gender))
+            Spacer(Modifier.height(8.dp))
 
-                Spacer(Modifier.height(16.dp))
-                PersonalDataDivider()
-                Spacer(Modifier.height(16.dp))
+            VolleyButton.SingleChoiceButtonGroup(
+                items = listOf(GenderType.MALE, GenderType.FEMALE),
+                selected = GenderType.getById(state.genderId),
+                label = { it.displayText },
+                modifier = Modifier,
+                paddingValues = PaddingValues(10.dp),
+                onSelect = { eventCallback(GenderSelect(it.id)) }
+            )
+        }
 
-                VolleyTextFieldGradient.GradientSpinner(
-                    modifier = Modifier.fillMaxWidth(),
-                    selectedItem = state.selectedCountry,
-                    itemList = state.countryList,
-                    getTextByItem = { it?.name ?: "" },
-                    hint = stringResource(id = R.string.your_country),
-                    onItemSelect = { country, _ -> eventCallback(CountrySelect(country!!)) }
-                )
+        item {
+            Spacer(Modifier.height(16.dp))
+            PersonalDataDivider()
+            Spacer(Modifier.height(16.dp))
+        }
 
-                Spacer(Modifier.height(16.dp))
-                PersonalDataDivider()
-                Spacer(Modifier.height(16.dp))
+        item {
+            PersonalDataTextMark(stringResource(R.string.date_of_bith))
+            Spacer(Modifier.height(8.dp))
 
-                VolleyTextFieldGradient.GradientSpinner(
-                    modifier = Modifier.fillMaxWidth(),
-                    selectedItem = state.selectedCity,
-                    itemList = state.cityList,
-                    getTextByItem = { it?.name ?: "" },
-                    hint = stringResource(id = R.string.your_city),
-                    onItemSelect = { city, _ -> eventCallback(CitySelect(city!!)) }
-                )
+            VolleyTextFieldAttribute.DatePickerField(
+                inputDate = state.dateOfBirthMillis,
+                actionForSaveDate = { eventCallback(DateSelect(it)) }
+            )
+        }
 
-                Spacer(Modifier.height(16.dp))
+        item {
+            Spacer(Modifier.height(16.dp))
+            PersonalDataDivider()
+            Spacer(Modifier.height(16.dp))
+        }
 
-                VolleyButton.ActiveButton(
-                    enabled = state.buttonEnabled,
-                    text = stringResource(R.string.update),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(44.dp)
-                ) { eventCallback(OnUpdateButtonClick) }
-            }
+        item {
+            VolleyTextFieldGradient.GradientSpinner(
+                modifier = Modifier.fillMaxWidth(),
+                selectedItem = state.selectedCountry,
+                itemList = state.countryList,
+                getTextByItem = { it?.name ?: "" },
+                hint = stringResource(id = R.string.your_country),
+                onItemSelect = { country, _ -> eventCallback(CountrySelect(country!!)) }
+            )
+        }
+
+        item {
+            Spacer(Modifier.height(16.dp))
+            PersonalDataDivider()
+            Spacer(Modifier.height(16.dp))
+        }
+
+        item {
+            VolleyTextFieldGradient.GradientSpinner(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 64.dp),
+                selectedItem = state.selectedCity,
+                itemList = state.cityList,
+                getTextByItem = { it?.name ?: "" },
+                hint = stringResource(id = R.string.your_city),
+                onItemSelect = { city, _ -> eventCallback(CitySelect(city!!)) }
+            )
         }
     }
 }
@@ -271,7 +310,7 @@ private fun PreviewAvatarBlock() {
     }
 }
 
-@Preview(showSystemUi = false, heightDp = 1000)
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewPersonalDataScreen() {
     VolleyContainersRootTransparent.Root {
