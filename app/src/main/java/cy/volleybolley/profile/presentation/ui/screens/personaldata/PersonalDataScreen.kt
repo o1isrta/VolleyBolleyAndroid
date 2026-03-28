@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.domain.VolleyFeature
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
@@ -169,14 +170,22 @@ private fun ChangeFieldsBlock(
             PersonalDataTextMark(stringResource(R.string.gender))
             Spacer(Modifier.height(8.dp))
 
-            VolleyButton.SingleChoiceButtonGroup(
-                items = listOf(GenderType.MALE, GenderType.FEMALE),
-                selected = GenderType.getById(state.genderId),
-                label = { it.displayText },
-                modifier = Modifier,
-                paddingValues = PaddingValues(10.dp),
-                onSelect = { eventCallback(GenderSelect(it.id)) }
-            )
+            if (VolleyFeature.IS_GENDER_CHANGE_AVAILABLE) {
+                VolleyButton.SingleChoiceButtonGroup(
+                    items = listOf(GenderType.MALE, GenderType.FEMALE),
+                    selected = GenderType.getById(state.genderId),
+                    label = { it.displayText },
+                    modifier = Modifier,
+                    paddingValues = PaddingValues(10.dp),
+                    onSelect = { eventCallback(GenderSelect(it.id)) }
+                )
+            } else {
+                VolleyButton.ActiveGradientButton(
+                    modifier = Modifier,
+                    text = GenderType.getById(state.genderId).displayText,
+                    onClick = {}
+                )
+            }
         }
 
         item {
@@ -321,7 +330,7 @@ private fun PreviewPersonalDataScreen() {
                 .background(VolleyColor.TurquoiseDark)
         ) {
             PersonalDataScreen(
-                state = PersonalDataScreenState(),
+                state = PersonalDataScreenState(genderId = 1),
                 eventCallback = { }
             )
         }
