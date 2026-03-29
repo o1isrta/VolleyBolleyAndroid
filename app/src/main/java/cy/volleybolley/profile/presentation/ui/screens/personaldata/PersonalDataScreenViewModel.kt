@@ -130,8 +130,8 @@ class PersonalDataScreenViewModel(
 
     private fun handleAndSetOriginStateOnInit(
         personalData: PersonalData?,
-        countries: List<Country>? = null)
-        : PersonalDataScreenState {
+        countries: List<Country>? = null
+    ): PersonalDataScreenState {
         originState = personalData.withCountriesToState(countries)
         return originState
     }
