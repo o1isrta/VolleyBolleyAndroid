@@ -44,6 +44,7 @@ fun FaqScreen(
     LaunchedEffect(effect) {
         when (effect) {
             is NavigateFromFaqScreen -> onNavigateBack()
+            is FaqScreenEffect.ShowToast -> println(effect.message)
             null -> {}
         }
     }
