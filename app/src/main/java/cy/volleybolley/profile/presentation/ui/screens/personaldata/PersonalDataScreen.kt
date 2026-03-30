@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -67,6 +66,7 @@ fun PersonalDataScreen(
                     is ChangePhotoRoute -> {
                         onNavigateToChangePhoto(route.avatarUrl)
                     }
+
                     else -> onNavigateBack()
                 }
             }
@@ -103,10 +103,11 @@ private fun PersonalDataScreen(
         ) {
             VolleySimpleComponent.TitleWithBackArrow(
                 title = stringResource(R.string.personal_data),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .fillMaxWidth(),
                 onBackClick = { eventCallback(OnBackFromPersonalDataClick) }
             )
-            Spacer(Modifier.height(8.dp))
 
             ChangeFieldsBlock(
                 modifier = Modifier,
@@ -137,18 +138,20 @@ private fun ChangeFieldsBlock(
         modifier = modifier
     ) {
         item {
-            Spacer(Modifier.height(8.dp))
             AvatarBlock(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
                 avatarString = state.avatar,
                 onIconClick = { eventCallback(OnAvatarEditClick) }
             )
         }
 
         item {
-            Spacer(Modifier.height(8.dp))
-            PersonalDataTextMark(stringResource(R.string.name))
-            Spacer(Modifier.height(8.dp))
+            PersonalDataTextMark(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = stringResource(R.string.name)
+            )
 
             VolleyTextFieldGradient.SimpleGradientTextField(
                 hint = stringResource(R.string.name),
@@ -158,9 +161,10 @@ private fun ChangeFieldsBlock(
         }
 
         item {
-            Spacer(Modifier.height(14.dp))
-            PersonalDataTextMark(stringResource(R.string.surname))
-            Spacer(Modifier.height(8.dp))
+            PersonalDataTextMark(
+                modifier = Modifier.padding(top = 14.dp, bottom = 8.dp),
+                text = stringResource(R.string.surname)
+            )
 
             VolleyTextFieldGradient.SimpleGradientTextField(
                 hint = stringResource(R.string.surname),
@@ -174,8 +178,10 @@ private fun ChangeFieldsBlock(
         }
 
         item {
-            PersonalDataTextMark(stringResource(R.string.gender))
-            Spacer(Modifier.height(8.dp))
+            PersonalDataTextMark(
+                modifier = Modifier.padding(bottom = 8.dp),
+                text = stringResource(R.string.gender)
+            )
 
             if (VolleyFeature.IS_GENDER_CHANGE_AVAILABLE) {
                 VolleyButton.SingleChoiceButtonGroup(
@@ -200,8 +206,10 @@ private fun ChangeFieldsBlock(
         }
 
         item {
-            PersonalDataTextMark(stringResource(R.string.date_of_birth))
-            Spacer(Modifier.height(8.dp))
+            PersonalDataTextMark(
+                modifier = Modifier.padding(bottom = 8.dp),
+                text = stringResource(R.string.date_of_birth)
+            )
 
             VolleyTextFieldAttribute.DatePickerField(
                 inputDate = state.dateOfBirthMillis,
@@ -255,6 +263,7 @@ private fun PersonalDataDivider(
 
 @Composable
 private fun PersonalDataTextMark(
+    modifier: Modifier = Modifier,
     text: String,
 ) {
     VolleyText.BodyBold(
@@ -262,7 +271,7 @@ private fun PersonalDataTextMark(
         color = VolleyColor.White,
         textAlign = TextAlign.Start,
         maxLines = 1,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     )
 }
 
