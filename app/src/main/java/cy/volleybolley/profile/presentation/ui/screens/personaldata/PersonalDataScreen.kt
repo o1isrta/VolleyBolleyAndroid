@@ -170,9 +170,7 @@ private fun ChangeFieldsBlock(
         }
 
         item {
-            Spacer(Modifier.height(14.dp))
-            PersonalDataDivider()
-            Spacer(Modifier.height(16.dp))
+            PersonalDataDivider(modifier = Modifier.padding(bottom = 16.dp, top = 14.dp))
         }
 
         item {
@@ -198,13 +196,11 @@ private fun ChangeFieldsBlock(
         }
 
         item {
-            Spacer(Modifier.height(16.dp))
-            PersonalDataDivider()
-            Spacer(Modifier.height(16.dp))
+            PersonalDataDivider(modifier = Modifier.padding(vertical = 16.dp))
         }
 
         item {
-            PersonalDataTextMark(stringResource(R.string.date_of_bith))
+            PersonalDataTextMark(stringResource(R.string.date_of_birth))
             Spacer(Modifier.height(8.dp))
 
             VolleyTextFieldAttribute.DatePickerField(
@@ -214,9 +210,7 @@ private fun ChangeFieldsBlock(
         }
 
         item {
-            Spacer(Modifier.height(16.dp))
-            PersonalDataDivider()
-            Spacer(Modifier.height(16.dp))
+            PersonalDataDivider(modifier = Modifier.padding(vertical = 16.dp))
         }
 
         item {
@@ -231,9 +225,7 @@ private fun ChangeFieldsBlock(
         }
 
         item {
-            Spacer(Modifier.height(16.dp))
-            PersonalDataDivider()
-            Spacer(Modifier.height(16.dp))
+            PersonalDataDivider(modifier = Modifier.padding(vertical = 16.dp))
         }
 
         item {
@@ -252,9 +244,11 @@ private fun ChangeFieldsBlock(
 }
 
 @Composable
-private fun PersonalDataDivider() {
+private fun PersonalDataDivider(
+    modifier: Modifier = Modifier
+) {
     VolleySimpleComponent.DividerLine(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
     )
 }

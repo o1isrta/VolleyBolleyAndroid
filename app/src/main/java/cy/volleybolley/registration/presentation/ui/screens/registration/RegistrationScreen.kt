@@ -276,7 +276,7 @@ private fun FillDateOfBirth(
 ) {
     Column(modifier = modifier) {
         VolleyText.BodyBold(
-            text = stringResource(id = R.string.date_of_bith),
+            text = stringResource(id = R.string.date_of_birth),
             color = VolleyColor.White
         )
         VolleyTextFieldAttribute.DatePickerField(
