@@ -34,6 +34,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.domain.VolleyFeature
 import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
@@ -135,12 +136,14 @@ private fun ProfileScreen(
 
                     ProfileComponentDivider()
 
-                    ProfileComponent(
-                        painter = painterResource(R.drawable.ic_support),
-                        title = stringResource(R.string.profile_support_component),
-                    ) { eventCallback(OnSupportClick) }
+                    if (VolleyFeature.IS_SUPPORT_AVAILABLE) {
+                        ProfileComponent(
+                            painter = painterResource(R.drawable.ic_support),
+                            title = stringResource(R.string.profile_support_component),
+                        ) { eventCallback(OnSupportClick) }
 
-                    ProfileComponentDivider()
+                        ProfileComponentDivider()
+                    }
 
                     ProfileComponent(
                         painter = painterResource(R.drawable.ic_faq),

@@ -8,18 +8,11 @@ import cy.volleybolley.games.domain.model.entity.Team
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
-import cy.volleybolley.profile.domain.model.PersonalData
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerActivityTemp
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerDetailTemp
 import cy.volleybolley.profile.presentation.ui.screens.players.model.PlayerTemp
-import cy.volleybolley.referencedata.domain.model.City
-import cy.volleybolley.referencedata.domain.model.Country
 
 object VolleyMocks {
-    const val USER_NAME = "User"
-    const val USER_SURNAME = "Userovich"
-    const val USER_AVATAR = "https://cdn.fishki.net/upload/post/2021/03/29/3682461/gallery/tn/" +
-        "wil-hughes-troll-face.jpg"
     const val USER_LEVEL = "PRO"
 
     const val MOCK_FAQ = "# Registration\n" +
@@ -68,28 +61,6 @@ object VolleyMocks {
     private const val PLAYER_6 = "Julia Petrova"
     private const val PLAYER_7 = "Tatiana Kalinina"
     private const val PLAYER_8 = "Artem Artemov"
-
-    val mockPersonalData = PersonalData(
-        firstName = USER_NAME,
-        lastName = USER_SURNAME,
-        gender = "MALE",
-        birthDate = "1987-03-23",
-        level = "LIGHT",
-        countryId = 0,
-        cityId = 1,
-        avatar = USER_AVATAR
-    )
-
-    val countries = listOf(
-        Country(
-            id = 0,
-            name = "Thailand",
-            cities = listOf(
-                City(id = 0, name = "Koh Phangan"),
-                City(id = 1, name = "Koh Samui")
-            )
-        )
-    )
 
     val mockLocation = Location(
         longitude = 7.866269,

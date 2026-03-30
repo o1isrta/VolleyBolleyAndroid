@@ -9,7 +9,7 @@ import cy.volleybolley.profile.data.network.model.ProfileResponse
 import cy.volleybolley.profile.domain.DeleteAvatarUseCase
 import cy.volleybolley.profile.domain.DeleteProfileUseCase
 import cy.volleybolley.profile.domain.GetPaymentsUseCase
-import cy.volleybolley.profile.domain.GetPersonalDataUseCase
+import cy.volleybolley.profile.domain.GetPersonalDataFromServerUseCase
 import cy.volleybolley.profile.domain.UpdateAvatarUseCase
 import cy.volleybolley.profile.domain.UpdatePaymentsUseCase
 import cy.volleybolley.profile.domain.UpdatePersonalDataUseCase
@@ -43,7 +43,7 @@ val profileModule = module {
     }
 
     // Domain
-    factory { GetPersonalDataUseCase(repository = get()) }
+    factory { GetPersonalDataFromServerUseCase(repository = get()) }
     factory { GetPaymentsUseCase(repository = get()) }
     factory { UpdatePersonalDataUseCase(repository = get()) }
     factory { UpdatePaymentsUseCase(repository = get()) }
