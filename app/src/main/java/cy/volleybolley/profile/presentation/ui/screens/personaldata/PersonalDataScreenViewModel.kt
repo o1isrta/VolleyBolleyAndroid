@@ -4,7 +4,6 @@ import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
 import cy.volleybolley.core.domain.model.onFailure
 import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
 import cy.volleybolley.core.presentation.ui.navigation.ChangePhotoRoute
 import cy.volleybolley.core.util.VolleyLog
 import cy.volleybolley.profile.domain.UpdatePersonalDataUseCase
@@ -20,8 +19,8 @@ import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalData
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnBackFromPersonalDataClick
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnUpdateButtonClick
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.SurnameChanged
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.mapper.withCountriesToState
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.BackAvatarHolder
-import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.GenderType
 import cy.volleybolley.referencedata.domain.api.GetCountriesUseCase
 import cy.volleybolley.referencedata.domain.model.Country
 import kotlinx.coroutines.flow.update
@@ -132,50 +131,12 @@ class PersonalDataScreenViewModel(
         personalData: PersonalData?,
         countries: List<Country>? = null
     ): PersonalDataScreenState {
-        originState = personalData.withCountriesToState(countries)
+        originState = personalData
+            .withCountriesToState(
+                countries = countries,
+                stateForButtonEnabledFlag = originState
+            )
         return originState
-    }
-
-    private fun PersonalData?.withCountriesToState(countries: List<Country>? = null): PersonalDataScreenState {
-        val selectedCountryById = countries?.find { it.id == this?.countryId }
-        return PersonalDataScreenState(
-            avatar = this?.avatar,
-            name = this?.firstName ?: "",
-            surname = this?.lastName ?: "",
-            levelHolder = this?.level ?: "",
-            genderId = this?.gender?.let {
-                GenderType.getIdByStringValue(it)
-            } ?: 0,
-            dateOfBirthMillis = this?.birthDate?.let {
-                VolleyUiUtil.convertTextDateToMillis(
-                    VolleyUiUtil.DATE_OF_BIRTH_PATTERN_FOR_SERVER,
-                    it
-                )
-            },
-            selectedCountry = selectedCountryById,
-            selectedCity = selectedCountryById?.cities?.find { it.id == this?.cityId },
-            countryList = countries ?: emptyList(),
-            cityList = selectedCountryById?.cities ?: emptyList(),
-            buttonEnabled = originState.buttonEnabled
-        )
-    }
-
-    private fun PersonalDataScreenState.toPersonalData(): PersonalData {
-        return PersonalData(
-            firstName = name,
-            lastName = surname,
-            gender = GenderType.getNameValueById(genderId),
-            birthDate = dateOfBirthMillis?.let {
-                VolleyUiUtil.convertMillisToTextDate(
-                    VolleyUiUtil.DATE_OF_BIRTH_PATTERN_FOR_SERVER,
-                    it
-                )
-            } ?: "2000-12-31",
-            level = levelHolder,
-            countryId = selectedCountry?.id ?: -1,
-            cityId = selectedCity?.id ?: -1,
-            avatar = avatar
-        )
     }
 
     private fun checkStateForButtonEnabled(newState: PersonalDataScreenState): PersonalDataScreenState {
