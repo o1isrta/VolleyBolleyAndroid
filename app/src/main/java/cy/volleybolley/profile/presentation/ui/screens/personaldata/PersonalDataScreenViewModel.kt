@@ -1,6 +1,7 @@
 package cy.volleybolley.profile.presentation.ui.screens.personaldata
 
 import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
+import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
 import cy.volleybolley.core.domain.model.onFailure
 import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
@@ -19,6 +20,7 @@ import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalData
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnBackFromPersonalDataClick
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.OnUpdateButtonClick
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.PersonalDataScreenEvent.SurnameChanged
+import cy.volleybolley.profile.presentation.ui.screens.personaldata.mapper.toPersonalData
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.mapper.withCountriesToState
 import cy.volleybolley.profile.presentation.ui.screens.personaldata.model.BackAvatarHolder
 import cy.volleybolley.referencedata.domain.api.GetCountriesUseCase
@@ -30,10 +32,12 @@ class PersonalDataScreenViewModel(
     private val getPersonalDataUseCase: GetPersonalDataUseCase,
     private val updatePersonalDataUseCase: UpdatePersonalDataUseCase,
     private val getCountriesUseCase: GetCountriesUseCase,
+    private val savePersonalDataUseCase: SavePersonalDataUseCase,
 ) : BaseViewModel<PersonalDataScreenState, PersonalDataScreenEvent, PersonalDataScreenEffect>(
     initialState = PersonalDataScreenState()
 ) {
     private var originState: PersonalDataScreenState = uiState.value
+    private var originPersonalData: PersonalData? = null
 
     init {
         initScreenState()
@@ -87,7 +91,29 @@ class PersonalDataScreenViewModel(
     }
 
     private fun onUpdateClick() {
-        // next task
+        launchSafe(
+            getErrorLogMessage = {
+                "PersonalDataScreen >>> onUpdateClick() >>> error: ${it.message}"
+            },
+            onError = { sendUiEffect(ShowToast("Update personal data fail: ${it.message}")) }
+        ) {
+            val newPersonalData = uiState.value.toPersonalData()
+            updatePersonalDataUseCase.execute(
+                newPersonalData = newPersonalData,
+                cachedPersonalData = originPersonalData
+            )
+                .onSuccess {
+                    savePersonalDataUseCase.execute(newPersonalData)
+                    originPersonalData = newPersonalData
+                    originState = uiState.value.copy(buttonEnabled = false)
+                    uiStateMutable.update { originState }
+                }
+                .onFailure { error ->
+                    VolleyLog.e(tag, "PersonalDataScreen >>> updatePersonalDataUseCase(): $error")
+                    sendUiEffect(ShowToast("Update personal data fail"))
+
+                }
+        }
     }
 
     private fun onCountrySelected(country: Country) {
@@ -109,7 +135,7 @@ class PersonalDataScreenViewModel(
             },
             onError = { sendUiEffect(ShowToast("Data init fail: ${it.message}")) }
         ) {
-            val personalData = getPersonalDataUseCase.execute()
+            val personalData = getPersonalDataUseCase.execute().also { originPersonalData = it }
             getCountriesUseCase.execute()
                 .onSuccess { countries ->
                     uiStateMutable.update {
@@ -140,7 +166,11 @@ class PersonalDataScreenViewModel(
     }
 
     private fun checkStateForButtonEnabled(newState: PersonalDataScreenState): PersonalDataScreenState {
-        val checkState = if (newState.buttonEnabled) newState.copy(buttonEnabled = false) else newState
-        return if (checkState == originState) originState else newState.copy(buttonEnabled = true)
+        val unenabledNewState = if (newState.buttonEnabled) newState.copy(buttonEnabled = false) else newState
+        return if (unenabledNewState == originState) {
+            originState
+        } else {
+            newState.copy(buttonEnabled = newState.hasNotEmptyCriticalFields())
+        }
     }
 }

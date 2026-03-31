@@ -13,9 +13,11 @@ import cy.volleybolley.profile.data.network.model.ProfileResponse
 import cy.volleybolley.profile.domain.api.ProfileRepository
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PersonalData
+import kotlinx.serialization.json.Json
 
 class ProfileRepositoryImpl(
-    private val networkClient: NetworkClient<ProfileRequest, ProfileResponse>
+    private val networkClient: NetworkClient<ProfileRequest, ProfileResponse>,
+    private val json: Json,
 ) : ProfileRepository {
     private var lastReceivedPersonalData: PersonalData? = null
 
@@ -41,12 +43,16 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun updatePersonalData(
-        personalData: PersonalData,
+        newPersonalData: PersonalData,
+        cachedPersonalData: PersonalData?,
     ): VolleyResult<Unit, ErrorType> {
-        val actualChangesOnPersonalData = lastReceivedPersonalData?.getChangedPersonalDataFields(personalData)
+        cachedPersonalData?.let { lastReceivedPersonalData = it }
+        val actualChangesOnPersonalData = lastReceivedPersonalData?.getChangedPersonalDataFields(newPersonalData)
         val response = networkClient.getResponse(
             ProfileRequest.UpdatePersonalData(
-                body = actualChangesOnPersonalData?.toUpdateBody() ?: personalData.toUpdateBody()
+                body = json.encodeToString(
+                    actualChangesOnPersonalData?.toUpdateBody() ?: newPersonalData.toUpdateBody()
+                )
             )
         )
         return if (response.isSuccess) {
@@ -117,5 +123,5 @@ class ProfileRepositoryImpl(
     }
 
     private fun String.checkSameStringField(newString: String): String = if (this == newString) "" else newString
-    private fun Int.checkSameIntField(newInt: Int): Int = if (this.toInt() == newInt) -1 else newInt
+    private fun Int.checkSameIntField(newInt: Int): Int = if (this == newInt) -1 else newInt
 }

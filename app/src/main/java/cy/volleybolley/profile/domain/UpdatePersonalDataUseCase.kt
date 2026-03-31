@@ -8,7 +8,13 @@ import cy.volleybolley.profile.domain.model.PersonalData
 class UpdatePersonalDataUseCase(
     private val repository: ProfileRepository,
 ) {
-    suspend fun execute(personalData: PersonalData): VolleyResult<Unit, ErrorType> {
-        return repository.updatePersonalData(personalData)
+    suspend fun execute(
+        newPersonalData: PersonalData,
+        cachedPersonalData: PersonalData?
+    ): VolleyResult<Unit, ErrorType> {
+        return repository.updatePersonalData(
+            newPersonalData = newPersonalData,
+            cachedPersonalData = cachedPersonalData
+        )
     }
 }

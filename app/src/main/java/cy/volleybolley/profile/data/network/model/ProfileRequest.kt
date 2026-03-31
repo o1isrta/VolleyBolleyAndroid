@@ -2,7 +2,6 @@ package cy.volleybolley.profile.data.network.model
 
 import cy.volleybolley.profile.data.dto.AvatarDto
 import cy.volleybolley.profile.data.dto.PaymentsUpdateBodyDto
-import cy.volleybolley.profile.data.dto.PersonalDataUpdateBody
 
 sealed interface ProfileRequest {
     class GetPersonalData(
@@ -15,7 +14,7 @@ sealed interface ProfileRequest {
 
     class UpdatePersonalData(
         val path: String = PLAYERS_ME,
-        val body: PersonalDataUpdateBody,
+        val body: String,
     ) : ProfileRequest
 
     class UpdatePayments(

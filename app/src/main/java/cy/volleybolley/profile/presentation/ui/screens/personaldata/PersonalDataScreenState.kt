@@ -17,3 +17,11 @@ data class PersonalDataScreenState(
     val cityList: List<City> = emptyList(),
     val buttonEnabled: Boolean = false,
 ) : UiState
+
+fun PersonalDataScreenState.hasNotEmptyCriticalFields(): Boolean {
+    return name.isNotBlank() &&
+        surname.isNotBlank() &&
+        dateOfBirthMillis != null &&
+        selectedCountry != null &&
+        selectedCity != null
+}

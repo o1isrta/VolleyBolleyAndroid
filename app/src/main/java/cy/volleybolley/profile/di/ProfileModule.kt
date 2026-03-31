@@ -26,6 +26,7 @@ import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfi
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenViewModel
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenViewModel
+import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -39,7 +40,14 @@ val profileModule = module {
     single<ProfileRepository> {
         ProfileRepositoryImpl(
             networkClient = get(named(HttpClientQualifier.PROFILE.value)),
+            json = get(named(HttpClientQualifier.PROFILE.value))
         )
+    }
+
+    single<Json>(HttpClientQualifier.PROFILE.qualifier) {
+        Json {
+            explicitNulls = false
+        }
     }
 
     // Domain
@@ -64,6 +72,7 @@ val profileModule = module {
             getPersonalDataUseCase = get(),
             updatePersonalDataUseCase = get(),
             getCountriesUseCase = get(),
+            savePersonalDataUseCase = get()
         )
     }
     viewModel { AboutScreenViewModel() }

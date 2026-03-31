@@ -53,5 +53,5 @@ fun PersonalData.toUpdateBody(): PersonalDataUpdateBody {
     )
 }
 
-private fun checkStringDataField(field: String): String? = if (field.isEmpty()) null else field
+private fun checkStringDataField(field: String): String? = field.ifEmpty { null }
 private fun checkIntDataField(field: Int): Int? = if (field == -1) null else field
