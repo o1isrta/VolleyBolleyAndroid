@@ -97,7 +97,9 @@ class PersonalDataScreenViewModel(
             },
             onError = { sendUiEffect(ShowToast("Update personal data fail: ${it.message}")) }
         ) {
+            uiStateMutable.update { it.copy(isLoading = true) }
             val newPersonalData = uiState.value.toPersonalData()
+
             updatePersonalDataUseCase.execute(
                 newPersonalData = newPersonalData,
                 cachedPersonalData = originPersonalData
@@ -105,7 +107,7 @@ class PersonalDataScreenViewModel(
                 .onSuccess {
                     savePersonalDataUseCase.execute(newPersonalData)
                     originPersonalData = newPersonalData
-                    originState = uiState.value.copy(buttonEnabled = false)
+                    originState = uiState.value.copy(buttonEnabled = false, isLoading = false)
                     uiStateMutable.update { originState }
                 }
                 .onFailure { error ->

@@ -16,6 +16,7 @@ data class PersonalDataScreenState(
     val countryList: List<Country> = emptyList(),
     val cityList: List<City> = emptyList(),
     val buttonEnabled: Boolean = false,
+    val isLoading: Boolean = false,
 ) : UiState
 
 fun PersonalDataScreenState.hasNotEmptyCriticalFields(): Boolean {
