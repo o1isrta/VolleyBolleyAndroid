@@ -1,11 +1,13 @@
 package cy.volleybolley.profile.data
 
 import android.util.Base64
+import cy.volleybolley.auth.domain.api.storage.UserStorage
 import cy.volleybolley.core.data.network.api.NetworkClient
 import cy.volleybolley.core.data.network.model.mapToErrorType
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.profile.data.dto.AvatarDto
+import cy.volleybolley.profile.data.dto.getActualUpdateBody
 import cy.volleybolley.profile.data.dto.toDomain
 import cy.volleybolley.profile.data.dto.toUpdateBody
 import cy.volleybolley.profile.data.network.model.ProfileRequest
@@ -17,6 +19,7 @@ import kotlinx.serialization.json.Json
 
 class ProfileRepositoryImpl(
     private val networkClient: NetworkClient<ProfileRequest, ProfileResponse>,
+    private val userStorage: UserStorage,
     private val json: Json,
 ) : ProfileRepository {
     private var lastReceivedPersonalData: PersonalData? = null
@@ -47,15 +50,14 @@ class ProfileRepositoryImpl(
         cachedPersonalData: PersonalData?,
     ): VolleyResult<Unit, ErrorType> {
         cachedPersonalData?.let { lastReceivedPersonalData = it }
-        val actualChangesOnPersonalData = lastReceivedPersonalData?.getChangedPersonalDataFields(newPersonalData)
+        val actualChangesOnPersonalData = newPersonalData.getActualUpdateBody(lastReceivedPersonalData)
         val response = networkClient.getResponse(
             ProfileRequest.UpdatePersonalData(
-                body = json.encodeToString(
-                    actualChangesOnPersonalData?.toUpdateBody() ?: newPersonalData.toUpdateBody()
-                )
+                body = json.encodeToString(actualChangesOnPersonalData)
             )
         )
         return if (response.isSuccess) {
+            userStorage.savePersonalData(newPersonalData)
             VolleyResult.Success(Unit)
         } else {
             VolleyResult.Failure(response.resultCode.mapToErrorType())
@@ -108,20 +110,4 @@ class ProfileRepositoryImpl(
     private fun convertImageBytesToBase64String(imageBytes: ByteArray?): String? {
         return imageBytes?.let { Base64.encodeToString(it, Base64.DEFAULT) }
     }
-
-    private fun PersonalData.getChangedPersonalDataFields(newData: PersonalData): PersonalData {
-        return PersonalData(
-            firstName = firstName.checkSameStringField(newData.firstName),
-            lastName = lastName.checkSameStringField(newData.lastName),
-            gender = gender.checkSameStringField(newData.gender),
-            birthDate = birthDate.checkSameStringField(newData.birthDate),
-            level = level.checkSameStringField(newData.level),
-            countryId = countryId.checkSameIntField(newData.countryId),
-            cityId = cityId.checkSameIntField(newData.cityId),
-            avatar = avatar
-        )
-    }
-
-    private fun String.checkSameStringField(newString: String): String = if (this == newString) "" else newString
-    private fun Int.checkSameIntField(newInt: Int): Int = if (this == newInt) -1 else newInt
 }

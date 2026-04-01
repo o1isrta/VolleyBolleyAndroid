@@ -43,15 +43,23 @@ fun PersonalDataDto.toDomain(): PersonalData {
     )
 }
 
-fun PersonalData.toUpdateBody(): PersonalDataUpdateBody {
-    return PersonalDataUpdateBody(
-        firstName = checkStringDataField(firstName),
-        lastName = checkStringDataField(lastName),
-        birthDate = checkStringDataField(birthDate),
-        countryId = checkIntDataField(countryId),
-        cityId = checkIntDataField(cityId)
+fun PersonalData.getActualUpdateBody(oldPersonalData: PersonalData?): PersonalDataUpdateBody {
+    return oldPersonalData?.let {
+        PersonalDataUpdateBody(
+            firstName = it.firstName.checkSameStringField(firstName),
+            lastName = it.lastName.checkSameStringField(lastName),
+            birthDate = it.birthDate.checkSameStringField(birthDate),
+            countryId = it.countryId.checkSameIntField(countryId),
+            cityId = it.cityId.checkSameIntField(cityId)
+        )
+    } ?: PersonalDataUpdateBody(
+        firstName = firstName,
+        lastName = lastName,
+        birthDate = birthDate,
+        countryId = countryId,
+        cityId = cityId
     )
 }
 
-private fun checkStringDataField(field: String): String? = field.ifEmpty { null }
-private fun checkIntDataField(field: Int): Int? = if (field == -1) null else field
+private fun String.checkSameStringField(newString: String): String? = if (this == newString) null else newString
+private fun Int.checkSameIntField(newInt: Int): Int? = if (this == newInt) null else newInt

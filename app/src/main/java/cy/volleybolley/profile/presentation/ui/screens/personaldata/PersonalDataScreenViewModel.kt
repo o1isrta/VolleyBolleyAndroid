@@ -1,7 +1,6 @@
 package cy.volleybolley.profile.presentation.ui.screens.personaldata
 
 import cy.volleybolley.auth.domain.api.usecase.GetPersonalDataUseCase
-import cy.volleybolley.auth.domain.api.usecase.SavePersonalDataUseCase
 import cy.volleybolley.core.domain.model.onFailure
 import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
@@ -32,12 +31,10 @@ class PersonalDataScreenViewModel(
     private val getPersonalDataUseCase: GetPersonalDataUseCase,
     private val updatePersonalDataUseCase: UpdatePersonalDataUseCase,
     private val getCountriesUseCase: GetCountriesUseCase,
-    private val savePersonalDataUseCase: SavePersonalDataUseCase,
 ) : BaseViewModel<PersonalDataScreenState, PersonalDataScreenEvent, PersonalDataScreenEffect>(
     initialState = PersonalDataScreenState()
 ) {
     private var originState: PersonalDataScreenState = uiState.value
-    private var originPersonalData: PersonalData? = null
 
     init {
         initScreenState()
@@ -99,14 +96,8 @@ class PersonalDataScreenViewModel(
         ) {
             uiStateMutable.update { it.copy(isLoading = true) }
             val newPersonalData = uiState.value.toPersonalData()
-
-            updatePersonalDataUseCase.execute(
-                newPersonalData = newPersonalData,
-                cachedPersonalData = originPersonalData
-            )
+            updatePersonalDataUseCase.execute(newPersonalData)
                 .onSuccess {
-                    savePersonalDataUseCase.execute(newPersonalData)
-                    originPersonalData = newPersonalData
                     originState = uiState.value.copy(buttonEnabled = false, isLoading = false)
                     uiStateMutable.update { originState }
                 }
@@ -137,7 +128,7 @@ class PersonalDataScreenViewModel(
             },
             onError = { sendUiEffect(ShowToast("Data init fail: ${it.message}")) }
         ) {
-            val personalData = getPersonalDataUseCase.execute().also { originPersonalData = it }
+            val personalData = getPersonalDataUseCase.execute()
             getCountriesUseCase.execute()
                 .onSuccess { countries ->
                     uiStateMutable.update {
@@ -168,8 +159,7 @@ class PersonalDataScreenViewModel(
     }
 
     private fun checkStateForButtonEnabled(newState: PersonalDataScreenState): PersonalDataScreenState {
-        val unenabledNewState = if (newState.buttonEnabled) newState.copy(buttonEnabled = false) else newState
-        return if (unenabledNewState == originState) {
+        return if (newState.copy(buttonEnabled = false) == originState) {
             originState
         } else {
             newState.copy(buttonEnabled = newState.hasNotEmptyCriticalFields())

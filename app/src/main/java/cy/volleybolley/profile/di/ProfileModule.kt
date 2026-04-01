@@ -40,20 +40,17 @@ val profileModule = module {
     single<ProfileRepository> {
         ProfileRepositoryImpl(
             networkClient = get(named(HttpClientQualifier.PROFILE.value)),
-            json = get(named(HttpClientQualifier.PROFILE.value))
+            userStorage = get(),
+            json = Json {
+                explicitNulls = false
+            },
         )
-    }
-
-    single<Json>(HttpClientQualifier.PROFILE.qualifier) {
-        Json {
-            explicitNulls = false
-        }
     }
 
     // Domain
     factory { GetPersonalDataFromServerUseCase(repository = get()) }
     factory { GetPaymentsUseCase(repository = get()) }
-    factory { UpdatePersonalDataUseCase(repository = get()) }
+    factory { UpdatePersonalDataUseCase(repository = get(), getPersonalDataUseCase = get()) }
     factory { UpdatePaymentsUseCase(repository = get()) }
     factory { UpdateAvatarUseCase(repository = get()) }
     factory { DeleteProfileUseCase(repository = get()) }
@@ -72,7 +69,6 @@ val profileModule = module {
             getPersonalDataUseCase = get(),
             updatePersonalDataUseCase = get(),
             getCountriesUseCase = get(),
-            savePersonalDataUseCase = get()
         )
     }
     viewModel { AboutScreenViewModel() }
