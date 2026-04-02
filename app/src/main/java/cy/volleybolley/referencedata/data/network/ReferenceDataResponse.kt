@@ -2,7 +2,6 @@ package cy.volleybolley.referencedata.data.network
 
 import cy.volleybolley.referencedata.data.dto.CountryDto
 import cy.volleybolley.referencedata.data.dto.CurrencyDto
-import cy.volleybolley.referencedata.data.dto.FaqDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -22,6 +21,6 @@ sealed interface ReferenceDataResponse {
     @Serializable
     class FaqResponse(
         @SerialName("faq")
-        val faqDto: FaqDto
+        val faq: String
     ) : ReferenceDataResponse
 }

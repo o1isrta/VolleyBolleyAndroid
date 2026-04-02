@@ -3,7 +3,6 @@ package cy.volleybolley.referencedata.data.mapper
 import cy.volleybolley.referencedata.data.dto.CityDto
 import cy.volleybolley.referencedata.data.dto.CountryDto
 import cy.volleybolley.referencedata.data.dto.CurrencyDto
-import cy.volleybolley.referencedata.data.dto.FaqDto
 import cy.volleybolley.referencedata.data.localdto.CityLocalDto
 import cy.volleybolley.referencedata.data.localdto.CountryLocalDto
 import cy.volleybolley.referencedata.data.localdto.CurrencyLocalDto
@@ -50,11 +49,7 @@ fun List<CurrencyDto>.mapToDomain(): List<Currency> {
     return this.map { it.mapToDomain() }
 }
 
-fun FaqDto.mapToDomain(): Faq {
-    return Faq(
-        faq = faq
-    )
-}
+fun String.mapToDomain(): Faq = Faq(faq = this)
 
 // Local Dto mappers
 

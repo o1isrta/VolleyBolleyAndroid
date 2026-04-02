@@ -71,8 +71,7 @@ class ReferenceDataRemoteRepositoryImpl(
 
         return when (response.isSuccess) {
             true -> {
-                val result =
-                    (response.body as? ReferenceDataResponse.FaqResponse)?.faqDto?.mapToDomain()
+                val result = (response.body as? ReferenceDataResponse.FaqResponse)?.faq?.mapToDomain()
 
                 result?.let {
                     localRepository.saveFaq(it.mapToLocalDto())
