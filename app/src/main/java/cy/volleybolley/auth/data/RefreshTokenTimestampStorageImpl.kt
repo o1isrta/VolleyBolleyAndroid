@@ -5,22 +5,22 @@ import androidx.core.content.edit
 import cy.volleybolley.auth.domain.api.RefreshTokenTimestampStorage
 
 class RefreshTokenTimestampStorageImpl(
-    private val sharedPrefs: SharedPreferences
+    private val encryptedPrefs: SharedPreferences
 ) : RefreshTokenTimestampStorage {
 
     override suspend fun saveRefreshTokenTimestamp(timestamp: Long) {
-        sharedPrefs.edit {
+        encryptedPrefs.edit {
             putLong(KEY_REFRESH_TOKEN_TIMESTAMP, timestamp)
         }
     }
 
     override suspend fun getRefreshTokenTimestamp(): Long? {
-        val timestamp = sharedPrefs.getLong(KEY_REFRESH_TOKEN_TIMESTAMP, -1L)
+        val timestamp = encryptedPrefs.getLong(KEY_REFRESH_TOKEN_TIMESTAMP, -1L)
         return if (timestamp == -1L) null else timestamp
     }
 
     override suspend fun clear() {
-        sharedPrefs.edit {
+        encryptedPrefs.edit {
             remove(KEY_REFRESH_TOKEN_TIMESTAMP)
         }
     }

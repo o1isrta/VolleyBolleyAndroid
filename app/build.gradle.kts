@@ -136,4 +136,6 @@ dependencies {
     implementation(libs.android.maps.utils)
     implementation(libs.accompanist.permissions)
     implementation(libs.maps.compose)
+
+    implementation(libs.androidx.security.crypto)
 }
