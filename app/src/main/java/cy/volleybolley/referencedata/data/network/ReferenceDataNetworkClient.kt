@@ -12,7 +12,12 @@ class ReferenceDataNetworkClient(
 
     override suspend fun sendRequestByType(request: ReferenceDataRequest): HttpResponse {
         return httpClient.get {
-            requestConfigure(request.path)
+            val path = when (request) {
+                is ReferenceDataRequest.CountriesRequest -> ReferenceDataRequest.CountriesRequest.PATH
+                is ReferenceDataRequest.CurrencyRequest -> ReferenceDataRequest.CurrencyRequest.PATH
+                is ReferenceDataRequest.FaqRequest -> ReferenceDataRequest.FaqRequest.PATH
+            }
+            requestConfigure(path)
         }
     }
 

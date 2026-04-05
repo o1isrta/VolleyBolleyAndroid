@@ -1,18 +1,23 @@
 package cy.volleybolley.auth.data.network.model
 
 sealed interface AuthRequest {
-    class Google(
-        val path: String = "/auth/google/login/",
-        val body: AuthRequestBodyDto
-    ) : AuthRequest
+    class Google(val body: AuthRequestBodyDto) : AuthRequest {
+        companion object {
+            const val PATH = "/auth/google/login/"
+        }
+    }
 
-    class Phone(
-        val path: String = "/auth/phone-number/login/",
-        val body: AuthRequestBodyDto
-    ) : AuthRequest
+    class Phone(val body: AuthRequestBodyDto) : AuthRequest {
+        companion object {
+            const val PATH = "/auth/phone-number/login/"
+        }
+    }
 
     class RefreshAccessToken(
-        val path: String = "/auth/token/refresh/",
         val body: RefreshAccessTokenRequestBodyDto
-    ) : AuthRequest
+    ) : AuthRequest {
+        companion object {
+            const val PATH = "/auth/token/refresh/"
+        }
+    }
 }

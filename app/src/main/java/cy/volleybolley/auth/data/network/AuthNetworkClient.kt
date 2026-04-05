@@ -15,19 +15,19 @@ class AuthNetworkClient(
         return when (request) {
             is AuthRequest.Google -> {
                 httpClient.post {
-                    requestConfigure(path = request.path, body = request.body)
+                    requestConfigure(path = AuthRequest.Google.PATH, body = request.body)
                 }
             }
 
             is AuthRequest.RefreshAccessToken -> {
                 httpClient.post {
-                    requestConfigure(path = request.path, body = request.body)
+                    requestConfigure(path = AuthRequest.RefreshAccessToken.PATH, body = request.body)
                 }
             }
 
             is AuthRequest.Phone -> {
                 httpClient.post {
-                    requestConfigure(path = request.path, body = request.body)
+                    requestConfigure(path = AuthRequest.Phone.PATH, body = request.body)
                 }
             }
         }

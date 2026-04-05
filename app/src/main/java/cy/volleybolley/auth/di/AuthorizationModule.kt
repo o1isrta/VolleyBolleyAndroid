@@ -86,7 +86,7 @@ val authorizationModule = module {
 
     // Network
     single<NetworkClient<AuthRequest, AuthResponse>>(HttpClientQualifier.AUTH.qualifier) {
-        AuthNetworkClient(lazyHttpClient = inject(HttpClientQualifier.NO_ACCESS_TOKEN.qualifier))
+        AuthNetworkClient(lazyHttpClient = inject())
     }
     // End network
 

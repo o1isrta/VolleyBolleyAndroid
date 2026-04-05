@@ -1,6 +1,7 @@
 package cy.volleybolley.core.di
 
 import cy.volleybolley.BuildConfig
+import cy.volleybolley.auth.data.network.model.AuthRequest
 import cy.volleybolley.auth.domain.api.AuthRepository
 import cy.volleybolley.auth.domain.api.LoginDataRepository
 import cy.volleybolley.auth.domain.api.storage.TokenStorage
@@ -10,6 +11,7 @@ import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.App
 import cy.volleybolley.core.presentation.MainActivityViewModel
 import cy.volleybolley.core.presentation.ui.screens.home.home.HomeScreenViewModel
+import cy.volleybolley.referencedata.data.network.ReferenceDataRequest
 import cy.volleybolley.success.SucceedGame
 import cy.volleybolley.success.SuccessViewModel
 import io.ktor.client.HttpClient
@@ -32,6 +34,23 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 const val TIMEOUT_MILLIS = 30_000L
+
+private fun isRequestRequireAuthorization(request: HttpRequestBuilder): Boolean {
+    val path = request.url.buildString().substringAfter(BuildConfig.BASE_URL.dropLast(1))
+    val endpoints = listOf(
+        ReferenceDataRequest.CurrencyRequest.PATH,
+        ReferenceDataRequest.CountriesRequest.PATH,
+        AuthRequest.Google.PATH,
+        AuthRequest.Phone.PATH,
+        AuthRequest.RefreshAccessToken.PATH
+    )
+    for (endpoint in endpoints) {
+        if (path == endpoint) {
+            return false
+        }
+    }
+    return true
+}
 
 val coreModule = module {
 
@@ -98,31 +117,9 @@ val coreModule = module {
                     }
 
                     sendWithoutRequest { request: HttpRequestBuilder ->
-                        !request.url.pathSegments.contains("auth")
+                        isRequestRequireAuthorization(request)
                     }
                 }
-            }
-        }
-    }
-
-    // HttpClient WITHOUT Auth plugin (for Auth and ReferenceData modules)
-    single<HttpClient>(HttpClientQualifier.NO_ACCESS_TOKEN.qualifier) {
-        HttpClient(OkHttp) {
-            install(HttpTimeout) {
-                connectTimeoutMillis = TIMEOUT_MILLIS
-                requestTimeoutMillis = TIMEOUT_MILLIS
-                socketTimeoutMillis = TIMEOUT_MILLIS
-            }
-
-            if (BuildConfig.IS_LOG_ENABLED) {
-                install(Logging) {
-                    logger = Logger.ANDROID
-                    level = LogLevel.ALL
-                }
-            }
-
-            install(ContentNegotiation) {
-                json(get())
             }
         }
     }
