@@ -1,8 +1,8 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditions
+package cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditionsScreen
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.CreateNewGameRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update

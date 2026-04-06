@@ -32,7 +32,7 @@ import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Privacy
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.Privacy
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

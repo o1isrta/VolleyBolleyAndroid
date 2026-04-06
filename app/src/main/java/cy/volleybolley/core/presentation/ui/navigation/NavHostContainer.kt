@@ -14,7 +14,7 @@ import cy.volleybolley.auth.phone.ui.AuthorizationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
 import cy.volleybolley.core.presentation.ui.screens.createNewGame.basicGameSetupScreen.BasicGameSetupScreen
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditions.GameConditionsScreen
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditionsScreen.GameConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createNewGame.privacyOptionsScreen.PrivacyOptionsScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
 import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen

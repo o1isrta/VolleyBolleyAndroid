@@ -90,12 +90,12 @@ android {
     }
 }
 
-kotlin {
-    compilerOptions {
-        languageVersion = KotlinVersion.KOTLIN_2_3
-        jvmTarget = JvmTarget.fromTarget(libs.versions.javaVersion.get())
-    }
-}
+//kotlin {
+//    compilerOptions {
+//        languageVersion = KotlinVersion.KOTLIN_2_3
+//        jvmTarget = JvmTarget.fromTarget(libs.versions.javaVersion.get())
+//    }
+//}
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)

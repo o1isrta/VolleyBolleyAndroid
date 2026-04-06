@@ -5,7 +5,7 @@ import cy.volleybolley.R
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.CreateNewGameRepository
 import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.players.domain.usecase.SearchPlayersUseCase
 import kotlinx.coroutines.Dispatchers

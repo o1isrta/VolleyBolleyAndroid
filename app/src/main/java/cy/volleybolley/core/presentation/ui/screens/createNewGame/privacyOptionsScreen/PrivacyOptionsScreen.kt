@@ -34,7 +34,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.PlayersFilter
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.Gender
 import cy.volleybolley.players.domain.model.Player
 import org.koin.compose.viewmodel.koinViewModel
 

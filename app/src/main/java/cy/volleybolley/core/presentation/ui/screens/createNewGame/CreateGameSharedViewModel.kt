@@ -1,5 +1,8 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository
+package cy.volleybolley.core.presentation.ui.screens.createNewGame
 
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.ui.GENDER_FEMALE
@@ -7,17 +10,83 @@ import cy.volleybolley.core.presentation.ui.GENDER_MALE
 import cy.volleybolley.core.presentation.ui.LEVEL_HIGH
 import cy.volleybolley.core.presentation.ui.LEVEL_LIGHT
 import cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM
-import cy.volleybolley.core.presentation.ui.LEVEL_PRO/**/
+import cy.volleybolley.core.presentation.ui.LEVEL_PRO
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.GameData
 import cy.volleybolley.players.domain.model.Player
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
-class CreateNewGameRepositoryImpl : CreateNewGameRepository {
-    private val _gameData = MutableStateFlow(GameData())
-    override val gameData: StateFlow<GameData> = _gameData // Expose as immutable StateFlow
+class CreateGameSharedViewModel (
+    private val savedStateHandle: SavedStateHandle,
+    private val dataManager: CreateGameDataManager
+) : ViewModel() {
+    private val _gameData = MutableStateFlow<GameData?>(null)
+    val gameData: StateFlow<GameData?> = _gameData.asStateFlow()
 
-    override fun addPlayersToGame(players: List<Player>) {
+    private val _isSaving = MutableStateFlow(false)
+    val isSaving: StateFlow<Boolean> = _isSaving.asStateFlow()
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error.asStateFlow()
+
+    init {
+        val savedGameData = savedStateHandle.get<String>("gameData")
+        _gameData.value = if (savedGameData != null) {
+            Json.decodeFromString(savedGameData)
+        } else {
+            GameData()
+        }
+
+        viewModelScope.launch {
+            _gameData.collect { gameData ->
+                gameData?.let {
+                    savedStateHandle.set("gameData", Json.encodeToString(it))
+                }
+            }
+        }
+    }
+
+    fun updateGameData(update: (GameData) -> GameData) {
+        _gameData.update { current ->
+            current?.let { update(it) } ?: return
+        }
+    }
+
+    suspend fun saveGame(): VolleyResult<Unit, ErrorType> {
+        val currentGameData = _gameData.value ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+
+        _isSaving.value = true
+        clearError()
+
+        return try {
+            when (val result = dataManager.saveGame(currentGameData)) {
+                is VolleyResult.Success -> {
+                    updateGameData { it.copy(gameId = result.data) }
+                    VolleyResult.Success(Unit)
+                }
+                is VolleyResult.Failure -> {
+                    _error.value = "Failed to save game: ${result.error}"
+                    VolleyResult.Failure(result.error)
+                }
+            }
+        } catch (e: Exception) {
+            _error.value = e.message ?: "Unknown error"
+            VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+        } finally {
+            _isSaving.value = false
+        }
+    }
+
+    fun clearError() {
+        _error.value = null
+    }
+
+    /*override fun addPlayersToGame(players: List<Player>) {
         if (players.size < _gameData.value.maximumPlayers) {
             _gameData.value = _gameData.value.copy(players = _gameData.value.players + players)
         }
@@ -37,8 +106,8 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
         return VolleyResult.Success(Unit)
     }
 
-    /* Получение данных игры с сервера
-* */
+    *//* Получение данных игры с сервера
+* *//*
     override suspend fun getGameDataFromServer(): VolleyResult<GameData, ErrorType> {
         // Имитация загрузки с сервера
         delay(DEBOUNCE_DELAY_500MS) // Имитация задержки при получении данных с сервера
@@ -61,8 +130,8 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
         return VolleyResult.Success(mockGameData)
     }
 
-    /* Загрузить данные игры
-    * */
+    *//* Загрузить данные игры
+    * *//*
     override suspend fun loadGameData(): VolleyResult<Unit, ErrorType> {
         //  уже возвращает VolleyResult.
         return when (val result = getGameDataFromServer()) {
@@ -75,24 +144,6 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
                 VolleyResult.Failure(result.error) // Пробросить ошибку дальше
             }
         }
-    }
-
-    override suspend fun updateGameData(update: (GameData) -> GameData): VolleyResult<GameData, ErrorType> {
-        // заглушка
-        val updatedData = update(_gameData.value)
-        _gameData.value = updatedData
-        return VolleyResult.Success(updatedData)
-
-/*        val response = networkClient.getResponse(
-            GRequest.UpdatePersonalData(
-                body = actualChangesOnPersonalData?.toUpdateBody() ?: personalData.toUpdateBody()
-            )
-        )
-        return if (response.isSuccess) {
-            VolleyResult.Success(updatedData)
-        } else {
-            VolleyResult.Failure(response.resultCode.mapToErrorType())
-        }*/
     }
 
     companion object {
@@ -108,5 +159,5 @@ class CreateNewGameRepositoryImpl : CreateNewGameRepository {
         private const val SERGEY_ID = 8
         private const val SVETLANA_ID = 9
         private const val NIKITA_ID = 10
-    }
+    }*/
 }

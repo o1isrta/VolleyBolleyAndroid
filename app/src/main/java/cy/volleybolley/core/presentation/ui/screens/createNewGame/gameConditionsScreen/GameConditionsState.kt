@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditions
+package cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditionsScreen
 
 import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.players.domain.model.Player

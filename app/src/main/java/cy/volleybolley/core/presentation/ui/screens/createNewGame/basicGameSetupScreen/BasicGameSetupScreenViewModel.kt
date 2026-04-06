@@ -5,8 +5,8 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.CreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.Gender
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

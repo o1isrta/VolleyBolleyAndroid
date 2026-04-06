@@ -3,7 +3,7 @@ package cy.volleybolley.core.presentation.ui.screens.createNewGame.basicGameSetu
 import cy.volleybolley.core.presentation.base.UiState
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.Gender
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
 import java.time.LocalDate
