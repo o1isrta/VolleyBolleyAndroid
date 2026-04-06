@@ -55,7 +55,7 @@ class LaunchViewModel(
             .onFailure { errorType ->
                 VolleyLog.e(tag, "LaunchScreen >>> updatePersonalDataOnLaunchUseCase(): $errorType")
                 sendUiEffect(LaunchScreenEffect.ShowToast("Personal data update is failure."))
-                delay(LAUNCH_DELAY_MS/10)
+                delay(LAUNCH_DELAY_MS / 10)
             }
     }
 
