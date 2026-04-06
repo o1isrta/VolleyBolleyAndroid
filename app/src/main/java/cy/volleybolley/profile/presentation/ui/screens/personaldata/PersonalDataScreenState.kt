@@ -19,10 +19,16 @@ data class PersonalDataScreenState(
     val isLoading: Boolean = false,
 ) : UiState
 
-fun PersonalDataScreenState.hasNotEmptyCriticalFields(): Boolean {
+fun PersonalDataScreenState.isPersonalDataNotEmpty(): Boolean {
     return name.isNotBlank() &&
         surname.isNotBlank() &&
         dateOfBirthMillis != null &&
         selectedCountry != null &&
         selectedCity != null
+}
+
+fun PersonalDataScreenState.isPersonalDataChanged(other: PersonalDataScreenState): Boolean {
+    return name != other.name || surname != other.surname ||
+        dateOfBirthMillis != other.dateOfBirthMillis || selectedCountry != other.selectedCountry ||
+        selectedCity != other.selectedCity
 }

@@ -92,7 +92,7 @@ class PersonalDataScreenViewModel(
             getErrorLogMessage = {
                 "PersonalDataScreen >>> onUpdateClick() >>> error: ${it.message}"
             },
-            onError = { sendUiEffect(ShowToast("Update personal data fail: ${it.message}")) }
+            onError = { sendUiEffect(ShowToast("Update is failure with error: ${it.message}")) }
         ) {
             uiStateMutable.update { it.copy(isLoading = true) }
             val newPersonalData = uiState.value.toPersonalData()
@@ -100,10 +100,11 @@ class PersonalDataScreenViewModel(
                 .onSuccess {
                     originState = uiState.value.copy(buttonEnabled = false, isLoading = false)
                     uiStateMutable.update { originState }
+                    sendUiEffect(ShowToast("Update is successful"))
                 }
                 .onFailure { error ->
                     VolleyLog.e(tag, "PersonalDataScreen >>> updatePersonalDataUseCase(): $error")
-                    sendUiEffect(ShowToast("Update personal data fail"))
+                    sendUiEffect(ShowToast("Update is failure"))
 
                 }
         }
@@ -126,7 +127,7 @@ class PersonalDataScreenViewModel(
             getErrorLogMessage = {
                 "PersonalDataScreen >>> initScreenState() >>> countries + personal data: ${it.message}"
             },
-            onError = { sendUiEffect(ShowToast("Data init fail: ${it.message}")) }
+            onError = { sendUiEffect(ShowToast("Data init is failure with error: ${it.message}")) }
         ) {
             val personalData = getPersonalDataUseCase.execute()
             getCountriesUseCase.execute()
@@ -137,12 +138,11 @@ class PersonalDataScreenViewModel(
                 }
                 .onFailure { error ->
                     VolleyLog.e(tag, "PersonalDataScreen >>> getCountriesUseCase(): $error")
-                    sendUiEffect(ShowToast("Get countries failed"))
+                    sendUiEffect(ShowToast("Get countries is failure"))
                     uiStateMutable.update {
                         handleAndSetOriginStateOnInit(personalData)
                     }
                 }
-
         }
     }
 
@@ -159,10 +159,8 @@ class PersonalDataScreenViewModel(
     }
 
     private fun checkStateForButtonEnabled(newState: PersonalDataScreenState): PersonalDataScreenState {
-        return if (newState.copy(buttonEnabled = false) == originState) {
-            originState
-        } else {
-            newState.copy(buttonEnabled = newState.hasNotEmptyCriticalFields())
-        }
+        return newState.copy(
+            buttonEnabled = newState.isPersonalDataNotEmpty() && originState.isPersonalDataChanged(newState)
+        )
     }
 }
