@@ -6,4 +6,5 @@ sealed interface LaunchScreenEffect : UiEffect {
     data object NavigateToOnboarding : LaunchScreenEffect
     data object NavigateToHome : LaunchScreenEffect
     data object NavigateToAuthorization : LaunchScreenEffect
+    class ShowToast(val message: String) : LaunchScreenEffect
 }

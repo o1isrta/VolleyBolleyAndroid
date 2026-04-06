@@ -12,6 +12,7 @@ import cy.volleybolley.profile.domain.GetPaymentsUseCase
 import cy.volleybolley.profile.domain.GetPersonalDataFromServerUseCase
 import cy.volleybolley.profile.domain.UpdateAvatarUseCase
 import cy.volleybolley.profile.domain.UpdatePaymentsUseCase
+import cy.volleybolley.profile.domain.UpdatePersonalDataOnLaunchUseCase
 import cy.volleybolley.profile.domain.UpdatePersonalDataUseCase
 import cy.volleybolley.profile.domain.api.ProfileRepository
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreenViewModel
@@ -55,6 +56,7 @@ val profileModule = module {
     factory { UpdateAvatarUseCase(repository = get()) }
     factory { DeleteProfileUseCase(repository = get()) }
     factory { DeleteAvatarUseCase(repository = get()) }
+    factory { UpdatePersonalDataOnLaunchUseCase(userStorage = get(), getPersonalDataFromServerUseCase = get()) }
 
     // ViewModels Profile flow
     viewModel {

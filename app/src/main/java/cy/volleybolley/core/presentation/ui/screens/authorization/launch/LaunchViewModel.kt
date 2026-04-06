@@ -6,6 +6,8 @@ import cy.volleybolley.auth.domain.api.usecase.GetRefreshTokenUseCase
 import cy.volleybolley.core.domain.model.onFailure
 import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
+import cy.volleybolley.core.util.VolleyLog
+import cy.volleybolley.profile.domain.UpdatePersonalDataOnLaunchUseCase
 import cy.volleybolley.referencedata.domain.api.GetCountriesUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
@@ -13,7 +15,8 @@ import kotlinx.coroutines.flow.update
 class LaunchViewModel(
     private val getRefreshTokenUseCase: GetRefreshTokenUseCase,
     private val getIsRegisteredUseCase: GetIsRegisteredUseCase,
-    private val getCountriesUseCase: GetCountriesUseCase
+    private val getCountriesUseCase: GetCountriesUseCase,
+    private val updatePersonalDataOnLaunchUseCase: UpdatePersonalDataOnLaunchUseCase,
 ) : BaseViewModel<LaunchScreenState, LaunchScreenEvent, LaunchScreenEffect>(
     initialState = LaunchScreenState.Loading
 ) {
@@ -47,6 +50,15 @@ class LaunchViewModel(
         }
     }
 
+    private suspend fun updatePersonalDataFromServer() {
+        updatePersonalDataOnLaunchUseCase.execute()
+            .onFailure { errorType ->
+                VolleyLog.e(tag, "LaunchScreen >>> updatePersonalDataOnLaunchUseCase(): $errorType")
+                sendUiEffect(LaunchScreenEffect.ShowToast("Personal data update is failure."))
+                delay(LAUNCH_DELAY_MS/10)
+            }
+    }
+
     private suspend fun proceedToNextScreen() {
         val refreshToken = getRefreshTokenUseCase.execute()
 
@@ -54,6 +66,7 @@ class LaunchViewModel(
             val isRegistered = getIsRegisteredUseCase.execute()
 
             if (isRegistered) {
+                updatePersonalDataFromServer()
                 sendUiEffect(LaunchScreenEffect.NavigateToHome)
             } else {
                 sendUiEffect(LaunchScreenEffect.NavigateToOnboarding)

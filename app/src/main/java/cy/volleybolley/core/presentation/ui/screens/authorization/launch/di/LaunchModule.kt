@@ -9,7 +9,8 @@ val launchModule = module {
         LaunchViewModel(
             getRefreshTokenUseCase = get(),
             getIsRegisteredUseCase = get(),
-            getCountriesUseCase = get()
+            getCountriesUseCase = get(),
+            updatePersonalDataOnLaunchUseCase = get(),
         )
     }
 }
