@@ -12,6 +12,7 @@ import cy.volleybolley.profile.domain.GetPaymentsUseCase
 import cy.volleybolley.profile.domain.GetPersonalDataFromServerUseCase
 import cy.volleybolley.profile.domain.UpdateAvatarUseCase
 import cy.volleybolley.profile.domain.UpdatePaymentsUseCase
+import cy.volleybolley.profile.domain.UpdatePersonalDataOnLaunchUseCase
 import cy.volleybolley.profile.domain.UpdatePersonalDataUseCase
 import cy.volleybolley.profile.domain.api.ProfileRepository
 import cy.volleybolley.profile.presentation.ui.screens.about.AboutScreenViewModel
@@ -26,6 +27,7 @@ import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfi
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenViewModel
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
 import cy.volleybolley.profile.presentation.ui.screens.profile.ProfileScreenViewModel
+import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -39,17 +41,22 @@ val profileModule = module {
     single<ProfileRepository> {
         ProfileRepositoryImpl(
             networkClient = get(named(HttpClientQualifier.PROFILE.value)),
+            userStorage = get(),
+            json = Json {
+                explicitNulls = false
+            },
         )
     }
 
     // Domain
     factory { GetPersonalDataFromServerUseCase(repository = get()) }
     factory { GetPaymentsUseCase(repository = get()) }
-    factory { UpdatePersonalDataUseCase(repository = get()) }
+    factory { UpdatePersonalDataUseCase(repository = get(), getPersonalDataUseCase = get()) }
     factory { UpdatePaymentsUseCase(repository = get()) }
     factory { UpdateAvatarUseCase(repository = get()) }
     factory { DeleteProfileUseCase(repository = get()) }
     factory { DeleteAvatarUseCase(repository = get()) }
+    factory { UpdatePersonalDataOnLaunchUseCase(userStorage = get(), getPersonalDataFromServerUseCase = get()) }
 
     // ViewModels Profile flow
     viewModel {

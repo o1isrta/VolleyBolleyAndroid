@@ -118,6 +118,7 @@ private fun PersonalDataScreen(
 
         VolleyButton.ActiveButton(
             enabled = state.buttonEnabled,
+            isLoading = state.isLoading,
             text = stringResource(R.string.update),
             modifier = Modifier
                 .align(Alignment.BottomStart)
