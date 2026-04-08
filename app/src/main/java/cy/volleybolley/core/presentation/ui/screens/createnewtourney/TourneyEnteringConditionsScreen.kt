@@ -1,5 +1,6 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewtourney
 
+/*
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,7 +33,7 @@ import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.Privacy
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.Privacy
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -288,3 +289,4 @@ private fun TourneyEnteringConditionsScreenPreview() {
         )
     }
 }
+*/

@@ -1,9 +1,9 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.model
+package cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model
 
-import cy.volleybolley.core.presentation.ui.model.Level
+/*import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.players.domain.model.Player
 
-object PlayerMapper {
+object PlayerUIMapper {
     fun toUi(domain: Player): PlayerUi {
         return PlayerUi(
             id = domain.id,
@@ -12,7 +12,7 @@ object PlayerMapper {
             avatarUrl = domain.avatarUrl,
             isFavorite = domain.isFavorite,
             level = Level.fromDomainString(domain.level),
-            gender = Gender.fromDomainString(domain.gender)
+            gender = PlayerGender.fromDomainString(domain.gender)
         )
     }
 
@@ -27,4 +27,4 @@ object PlayerMapper {
             level = ui.level.toDomainString()
         )
     }
-}
+}*/

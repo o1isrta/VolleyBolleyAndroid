@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.model
+package cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model
 
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp

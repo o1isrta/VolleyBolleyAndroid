@@ -13,6 +13,9 @@ class GamesNetworkClient : KtorNetworkClient<GamesRequest, GamesResponse>() {
             when (request) {
                 is GamesRequest.CreateGame -> {
                     method = HttpMethod.Post
+                    println("Sending CreateGame request to: ${request.path}")
+                    println("Body: ${request.game}")
+
                     requestConfigure(request.path, body = request.game)
                 }
 

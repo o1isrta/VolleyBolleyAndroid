@@ -1,19 +1,12 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame
+package cy.volleybolley.core.presentation.ui.screens.games.createNewGame
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
-import cy.volleybolley.core.presentation.ui.GENDER_FEMALE
-import cy.volleybolley.core.presentation.ui.GENDER_MALE
-import cy.volleybolley.core.presentation.ui.LEVEL_HIGH
-import cy.volleybolley.core.presentation.ui.LEVEL_LIGHT
-import cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM
-import cy.volleybolley.core.presentation.ui.LEVEL_PRO
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.GameData
-import cy.volleybolley.players.domain.model.Player
-import kotlinx.coroutines.delay
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.GameData
+import cy.volleybolley.core.presentation.ui.screens.games.state.GameDataManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,20 +15,20 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class CreateGameSharedViewModel (
-    private val savedStateHandle: SavedStateHandle,
-    private val dataManager: CreateGameDataManager
+   // private val savedStateHandle: SavedStateHandle,
+    private val dataManager: GameDataManager
 ) : ViewModel() {
-    private val _gameData = MutableStateFlow<GameData?>(null)
-    val gameData: StateFlow<GameData?> = _gameData.asStateFlow()
+    private val _gameData = MutableStateFlow<GameData>(GameData())
+    val gameData: StateFlow<GameData> = _gameData.asStateFlow()
 
-    private val _isSaving = MutableStateFlow(false)
-    val isSaving: StateFlow<Boolean> = _isSaving.asStateFlow()
+    //private val _isSaving = MutableStateFlow(false)
+   // val isSaving: StateFlow<Boolean> = _isSaving.asStateFlow()
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
 
-    init {
-        val savedGameData = savedStateHandle.get<String>("gameData")
+/*    init {
+       // val savedGameData = savedStateHandle.get<String>("gameData")
         _gameData.value = if (savedGameData != null) {
             Json.decodeFromString(savedGameData)
         } else {
@@ -49,24 +42,31 @@ class CreateGameSharedViewModel (
                 }
             }
         }
-    }
+    }*/
 
     fun updateGameData(update: (GameData) -> GameData) {
         _gameData.update { current ->
-            current?.let { update(it) } ?: return
+            update(current) //?: return
         }
     }
 
-    suspend fun saveGame(): VolleyResult<Unit, ErrorType> {
-        val currentGameData = _gameData.value ?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+/*    fun clearGameData() {
+        _gameData.value = null
+        savedStateHandle.remove<String>("gameData")
+    }*/
 
-        _isSaving.value = true
+    suspend fun saveGame(): VolleyResult<Unit, ErrorType> {
+        val currentGameData = _gameData.value //?: return VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
+
+            //_isSaving.value = true
         clearError()
 
         return try {
             when (val result = dataManager.saveGame(currentGameData)) {
                 is VolleyResult.Success -> {
-                    updateGameData { it.copy(gameId = result.data) }
+                    updateGameData { gameData ->
+                        gameData.copy(gameId = result.data)
+                    }
                     VolleyResult.Success(Unit)
                 }
                 is VolleyResult.Failure -> {
@@ -77,9 +77,9 @@ class CreateGameSharedViewModel (
         } catch (e: Exception) {
             _error.value = e.message ?: "Unknown error"
             VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
-        } finally {
-            _isSaving.value = false
-        }
+        } //finally {
+            //_isSaving.value = false
+       // }
     }
 
     fun clearError() {

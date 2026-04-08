@@ -62,7 +62,8 @@ abstract class KtorNetworkClient<SealedRequest, SealedResponse>(
         url {
             takeFrom(BuildConfig.BASE_URL)
             val basePath = encodedPath.removeSuffix("/")
-            encodedPath = "$basePath$path"
+            val normalizedPath = path.removePrefix("/")
+            encodedPath = "$basePath/$normalizedPath"
         }
         body?.let {
             contentType(ContentType.Application.Json)

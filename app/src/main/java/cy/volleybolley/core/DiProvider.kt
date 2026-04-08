@@ -4,7 +4,7 @@ import cy.volleybolley.auth.di.authorizationModule
 import cy.volleybolley.auth.phone.di.authorizationByPhoneModule
 import cy.volleybolley.core.di.coreModule
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.di.launchModule
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameModule
+import cy.volleybolley.core.presentation.ui.screens.games.state.createNewGameModule
 import cy.volleybolley.courts.di.courtsModule
 import cy.volleybolley.games.di.gamesModule
 import cy.volleybolley.jointhegame.di.joinTheGameModule

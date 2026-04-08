@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditionsScreen
+package cy.volleybolley.core.presentation.ui.screens.games.createNewGame.gameConditionsScreen
 
 import android.widget.Toast
 import androidx.compose.foundation.ScrollState
@@ -35,7 +35,7 @@ import cy.volleybolley.core.presentation.ui.VolleyTextFieldAttribute
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.Privacy
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.Privacy
 import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.success.SucceedGame

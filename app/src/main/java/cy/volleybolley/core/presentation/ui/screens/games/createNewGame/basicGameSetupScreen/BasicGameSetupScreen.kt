@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.basicGameSetupScreen
+package cy.volleybolley.core.presentation.ui.screens.games.createNewGame.basicGameSetupScreen
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -45,7 +45,7 @@ import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.Gender
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.GameGender
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
 import org.koin.compose.viewmodel.koinViewModel
@@ -328,8 +328,8 @@ private fun TimeSection(
 
 @Composable
 private fun GenderSection(
-    gender: Gender,
-    onGenderSelected: (Gender) -> Unit
+    gender: GameGender,
+    onGenderSelected: (GameGender) -> Unit
 ) {
     VolleyText.TitleMedium(
         text = stringResource(R.string.gender),
@@ -339,7 +339,7 @@ private fun GenderSection(
 
     Spacer(modifier = Modifier.size(size = 12.dp))
     VolleyButton.SingleChoiceButtonGroup(
-        items = Gender.entries,
+        items = GameGender.entries,
         selected = gender,
         label = { it.displayText },
         onSelect = onGenderSelected

@@ -3,7 +3,7 @@ package cy.volleybolley.core.presentation.ui.screens.createnewtourney
 import cy.volleybolley.core.presentation.base.UiEvent
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.Gender
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.GameGender
 import java.time.LocalDate
 
 sealed interface BasicTourneySetupEvent : UiEvent {
@@ -15,7 +15,7 @@ sealed interface BasicTourneySetupEvent : UiEvent {
     data class MessageChanged(val text: String) : BasicTourneySetupEvent
     data class StartTimeChanged(val time: VolleyTimeStamp?) : BasicTourneySetupEvent
     data class FinishTimeChanged(val time: VolleyTimeStamp?) : BasicTourneySetupEvent
-    data class GenderSelected(val gender: Gender) : BasicTourneySetupEvent
+    data class GenderSelected(val gender: GameGender) : BasicTourneySetupEvent
     data class PlayerLevelSelected(val levels: Set<Level>) : BasicTourneySetupEvent
     data class DateSelected(val date: LocalDate) : BasicTourneySetupEvent
     data class TourneyTypeSelected(val tourneyType: TourneyType) : BasicTourneySetupEvent

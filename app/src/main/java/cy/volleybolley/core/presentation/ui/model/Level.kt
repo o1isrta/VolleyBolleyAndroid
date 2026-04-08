@@ -18,7 +18,7 @@ enum class Level(val id: Int, val displayText: String) {
                 else -> Medium
             }
         }
-        fun fromDomainString(level: String): Level {
+/*        fun fromDomainString(level: String): Level {
             return when (level.uppercase()) {
                 "L" -> Light
                 "M" -> Medium
@@ -26,7 +26,7 @@ enum class Level(val id: Int, val displayText: String) {
                 "P" -> Pro
                 else -> Medium
             }
-        }
+        }*/
     }
     fun toApiString(): String {
         return when (this) {
@@ -36,12 +36,12 @@ enum class Level(val id: Int, val displayText: String) {
             Pro -> "PRO"
         }
     }
-    fun toDomainString(): String {
+/*    fun toDomainString(): String {
         return when (this) {
             Light -> "L"
             Medium -> "M"
             Hard -> "H"
             Pro -> "P"
         }
-    }
+    }*/
 }

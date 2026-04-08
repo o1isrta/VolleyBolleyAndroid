@@ -13,11 +13,8 @@ import cy.volleybolley.auth.chooseMethod.AuthorizationScreen
 import cy.volleybolley.auth.phone.ui.AuthorizationByPhoneScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.launch.LaunchScreen
 import cy.volleybolley.core.presentation.ui.screens.authorization.onboarding.OnboardingScreen
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.basicGameSetupScreen.BasicGameSetupScreen
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditionsScreen.GameConditionsScreen
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.privacyOptionsScreen.PrivacyOptionsScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
-import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
+//import cy.volleybolley.core.presentation.ui.screens.createnewtourney.BasicTourneySetupScreen
+//import cy.volleybolley.core.presentation.ui.screens.createnewtourney.TourneyEnteringConditionsScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.ChooseTeamScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.IndividualPlayersScreen
 import cy.volleybolley.core.presentation.ui.screens.findatourney.InvitePlayersScreen
@@ -27,6 +24,9 @@ import cy.volleybolley.core.presentation.ui.screens.games.archive.archivescreen.
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pastgamescreen.PastGameScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.pasttourneyscreen.PastTourneyScreen
 import cy.volleybolley.core.presentation.ui.screens.games.archive.teamsscreen.TeamsScreen
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.basicGameSetupScreen.BasicGameSetupScreen
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.gameConditionsScreen.GameConditionsScreen
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.privacyOptionsScreen.PrivacyOptionsScreen
 import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.GameInvitesScreen
 import cy.volleybolley.core.presentation.ui.screens.games.gameinvites.JoinTheTourneyScreen
 import cy.volleybolley.core.presentation.ui.screens.games.mygames.changeteam.ChangeTeamScreen
@@ -244,7 +244,7 @@ fun NavHostContainer(
                 )
             }
 
-            // create tourney
+            /*// create tourney
             composable<BasicTourneySetupRoute> {
                 BasicTourneySetupScreen(
                     paddingFromSystemUi = paddingFromSystemUi,
@@ -252,15 +252,15 @@ fun NavHostContainer(
                     onNavigateToNextStep = { navController.navigate(TourneyEnteringConditionsRoute) },
                     onNavigateBack = { navController.popBackStack() }
                 )
-            }
-            composable<TourneyEnteringConditionsRoute> {
+            }*/
+           /* composable<TourneyEnteringConditionsRoute> {
                 TourneyEnteringConditionsScreen(
                     paddingFromSystemUi = paddingFromSystemUi,
                     onNavigateToPayments = { navController.navigate(PaymentsRoute) },
                     onNavigateToChangeTeam = { navController.navigate(ChangeTeamRoute) },
                     onNavigateBack = { navController.popBackStack() }
                 )
-            }
+            }*/
 
             // find game
             composable<JoinTheGameRoute> { backStackEntry ->

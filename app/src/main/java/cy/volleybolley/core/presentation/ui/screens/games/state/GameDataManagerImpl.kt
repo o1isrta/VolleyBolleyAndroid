@@ -1,14 +1,14 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame
+package cy.volleybolley.core.presentation.ui.screens.games.state
 
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.GameData
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.toCreateGame
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.GameData
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.toCreateGame
 import cy.volleybolley.games.domain.api.GamesRepository
 
-class CreateGameDataManagerImpl (
+class GameDataManagerImpl(
     private val gamesRepository: GamesRepository
-) : CreateGameDataManager {
+) : GameDataManager {
 
     override suspend fun saveGame(gameData: GameData): VolleyResult<Int, ErrorType> {
         val createGame = gameData.toCreateGame()

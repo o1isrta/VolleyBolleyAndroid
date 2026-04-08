@@ -1,11 +1,11 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.privacyOptionsScreen
+package cy.volleybolley.core.presentation.ui.screens.games.createNewGame.privacyOptionsScreen
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.R
 import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.CreateGameSharedViewModel
 import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.players.domain.usecase.SearchPlayersUseCase
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 open class PrivacyOptionsViewModel(
-    private val gameRepository: CreateNewGameRepository,
+    private val createGameSharedViewModel: CreateGameSharedViewModel,
     private val searchPlayersUseCase: SearchPlayersUseCase
 ) : BaseViewModel<PrivacyOptionsState, PrivacyOptionsEvent, PrivacyOptionsEffect>(
     PrivacyOptionsState()
@@ -26,10 +26,10 @@ open class PrivacyOptionsViewModel(
 
     init {
         viewModelScope.launch {
-            gameRepository.gameData
-                .collectLatest { gameDataFromRepo ->
+            createGameSharedViewModel.gameData
+                .collectLatest { gameData ->
                     uiStateMutable.update { currentState ->
-                        val selectedPlayers = gameDataFromRepo.players.toSet()
+                        val selectedPlayers = gameData.players.toSet() //?: emptySet() // gameDataFromRepo.players.toSet()
                         currentState.copy(
                             flagFavorites = false,
                             playersSearchResult = emptyList(),
@@ -185,7 +185,8 @@ open class PrivacyOptionsViewModel(
             val updatedSelectedPlayers = if (isPlayerSelected(player)) {
                 currentState.selectedPlayers - player
             } else {
-                if (currentState.selectedPlayers.size < gameRepository.gameData.value.maximumPlayers) {
+                val maximumPlayers = createGameSharedViewModel.gameData.value.maximumPlayers
+                if (currentState.selectedPlayers.size < maximumPlayers) {
                     currentState.selectedPlayers + player
                 } else {
                     currentState.selectedPlayers
@@ -198,7 +199,7 @@ open class PrivacyOptionsViewModel(
 
     private fun onAddSelectedPlayersClick() {
         viewModelScope.launch {
-            gameRepository.updateGameData { currentData ->
+            createGameSharedViewModel.updateGameData { currentData ->
                 currentData.copy(players = uiState.value.selectedPlayers.toList())
             }
         }.invokeOnCompletion { // вызывается, когда корутина завершилась

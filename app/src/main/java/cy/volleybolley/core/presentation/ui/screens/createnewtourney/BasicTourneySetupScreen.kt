@@ -1,5 +1,5 @@
 package cy.volleybolley.core.presentation.ui.screens.createnewtourney
-
+/*
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
@@ -41,7 +41,7 @@ import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.Gender
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.GameGender
 import cy.volleybolley.courts.domain.model.Court
 import cy.volleybolley.courts.domain.model.Location
 import org.koin.compose.viewmodel.koinViewModel
@@ -73,7 +73,7 @@ fun BasicTourneySetupScreen(
             }
 
             is BasicTourneySetupEffect.ShowErrorMessageById -> {
-                val errorMessage = context.getString(currentEffect.messageId)
+                val errorMessage = "error" // context.getString(currentEffect.messageId)
                 Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
             }
 
@@ -394,8 +394,8 @@ private fun TourneyTypeSection(
 
 @Composable
 private fun GenderSection(
-    gender: Gender,
-    onGenderSelected: (Gender) -> Unit
+    gender: GameGender,
+    onGenderSelected: (GameGender) -> Unit
 ) {
     VolleyText.TitleMedium(
         text = stringResource(R.string.gender),
@@ -406,7 +406,7 @@ private fun GenderSection(
     )
 
     VolleyButton.SingleChoiceButtonGroup(
-        items = Gender.entries,
+        items = GameGender.entries,
         selected = gender,
         label = { it.displayText },
         modifier = Modifier.padding(top = 12.dp),
@@ -470,4 +470,4 @@ private fun BasicTourneySetupScreenPreview() {
             eventCallback = {}
         )
     }
-}
+}*/

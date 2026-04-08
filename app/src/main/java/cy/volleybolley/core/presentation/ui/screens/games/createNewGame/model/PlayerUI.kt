@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.model
+package cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model
 
 import cy.volleybolley.core.presentation.ui.model.Level
 
@@ -9,7 +9,7 @@ data class PlayerUi(
     val avatarUrl: String?,
     val isFavorite: Boolean,
     val level: Level,
-    val gender: Gender
+    val gender: GameGender
 ) {
     val fullName: String = "$firstName $lastName"
     val levelDisplayText: String = level.displayText

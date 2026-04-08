@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.privacyOptionsScreen
+package cy.volleybolley.core.presentation.ui.screens.games.createNewGame.privacyOptionsScreen
 
 import android.widget.Toast
 import androidx.compose.foundation.ScrollState
@@ -34,7 +34,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.PlayersFilter
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.Gender
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.PlayerGender
 import cy.volleybolley.players.domain.model.Player
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -171,7 +171,7 @@ private fun PrivacyOptionsScreenPreview() {
                 avatarUrl = null,
                 isFavorite = true,
                 level = Level.Medium.displayText.first().toString(),
-                gender = Gender.Men.displayText.first().toString()
+                gender = PlayerGender.Male.displayText.first().toString()
             ),
             Player(
                 id = 2,
@@ -191,7 +191,7 @@ private fun PrivacyOptionsScreenPreview() {
                 avatarUrl = null,
                 isFavorite = true,
                 level = Level.Medium.displayText.first().toString(),
-                gender = Gender.Men.displayText.first().toString()
+                gender = PlayerGender.Male.displayText.first().toString()
             ),
             Player(
                 id = 2,

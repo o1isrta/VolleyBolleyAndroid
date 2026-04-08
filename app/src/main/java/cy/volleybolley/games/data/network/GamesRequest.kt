@@ -6,7 +6,7 @@ import cy.volleybolley.games.data.dto.RatePlayersDto
 
 sealed interface GamesRequest {
     class CreateGame(
-        val path: String = GAMES,
+        val path: String = "games/", /// GAMES,
         val game: CreateGameDto,
     ) : GamesRequest
 

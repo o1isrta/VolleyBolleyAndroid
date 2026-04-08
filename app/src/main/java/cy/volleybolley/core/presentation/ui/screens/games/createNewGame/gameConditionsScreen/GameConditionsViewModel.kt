@@ -1,8 +1,10 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.gameConditionsScreen
+package cy.volleybolley.core.presentation.ui.screens.games.createNewGame.gameConditionsScreen
 
 import androidx.lifecycle.viewModelScope
+import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.CreateNewGameRepository
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.CreateGameSharedViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.GameData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
@@ -10,22 +12,22 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 open class GameConditionsViewModel(
-    private val gameRepository: CreateNewGameRepository
+    private val createGameSharedViewModel: CreateGameSharedViewModel
 ) : BaseViewModel<GameConditionsState, GameConditionsEvent, GameConditionsEffect>(
     GameConditionsState()
 ) {
     init {
         obtainEvent(GameConditionsEvent.CheckIfAccountExists)
         viewModelScope.launch {
-            gameRepository.gameData
-                .collectLatest { gameDataFromRepo ->
+            createGameSharedViewModel.gameData
+                .collectLatest { gameData ->
                     uiStateMutable.update { currentState ->
                         currentState.copy(
-                            players = gameDataFromRepo.players,
-                            maximumPlayers = gameDataFromRepo.maximumPlayers,
-                            perPerson = gameDataFromRepo.perPerson,
-                            accountNumber = gameDataFromRepo.accountNumber,
-                            isPrivate = gameDataFromRepo.players.isNotEmpty()
+                            players = gameData.players ?: emptyList(),
+                            maximumPlayers = gameData.maximumPlayers ?: GameData().maximumPlayers,
+                            perPerson = gameData.perPerson ?: GameData().perPerson,
+                            accountNumber = gameData.accountNumber,
+                            isPrivate = gameData.players?.isNotEmpty() ?: false
                         )
                     }
                 }
@@ -42,10 +44,12 @@ open class GameConditionsViewModel(
             is GameConditionsEvent.OnManagePlayersClick -> gotoPrivacyOptions()
             is GameConditionsEvent.PerPersonChanged -> {
                 uiStateMutable.update { it.copy(perPerson = event.perPerson) }
+               // updateGameData { it.copy(perPerson = event.perPerson) }
             }
 
             is GameConditionsEvent.MaximumPlayersChanged -> {
                 uiStateMutable.update { it.copy(maximumPlayers = event.maximumPlayers) }
+              //  updateGameData { it.copy(maximumPlayers = event.maximumPlayers) }
             }
 
             is GameConditionsEvent.OnBackClicked -> {
@@ -58,9 +62,15 @@ open class GameConditionsViewModel(
         }
     }
 
+  /*  private fun updateGameData(update: (GameData) -> GameData) {
+        viewModelScope.launch {
+            createGameSharedViewModel.updateGameData(update)
+        }
+    }*/
+
     private fun onPublicSelected() {
         viewModelScope.launch {
-            gameRepository.updateGameData { gameData ->
+            createGameSharedViewModel.updateGameData { gameData ->
                 gameData.copy(players = emptyList())
             }
         }
@@ -75,7 +85,7 @@ open class GameConditionsViewModel(
 
     private fun gotoPrivacyOptions() {
         viewModelScope.launch {
-            gameRepository.updateGameData { gameData ->
+            createGameSharedViewModel.updateGameData { gameData ->
                 gameData.copy(
                     maximumPlayers = uiState.value.maximumPlayers,
                     accountNumber = uiState.value.accountNumber,
@@ -98,6 +108,7 @@ open class GameConditionsViewModel(
                 current.copy(errorMessage = "Invalid player index: $index")
             }
         }
+        // updateGameData { it.copy(players = uiState.value.players) }
     }
 
     private fun saveGame() {
@@ -116,7 +127,8 @@ open class GameConditionsViewModel(
                 sendUiEffect(GameConditionsEffect.ShowErrorMessage(er.message ?: "Failed to save game"))
             }
         ) {
-            gameRepository.updateGameData { gameData ->
+            // Сохраняем данные перед отправкой на сервер
+            createGameSharedViewModel.updateGameData { gameData ->
                 gameData.copy(
                     maximumPlayers = uiState.value.maximumPlayers,
                     accountNumber = uiState.value.accountNumber,
@@ -124,9 +136,23 @@ open class GameConditionsViewModel(
                     players = uiState.value.players
                 )
             }
-            gameRepository.saveGameDataToServer()
-            uiStateMutable.update { it.copy(isLoading = false) }
-            sendUiEffect(GameConditionsEffect.NavigateToSuccess)
+
+            // Вызываем saveGame у SharedViewModel
+            when (val result = createGameSharedViewModel.saveGame()) {
+                is VolleyResult.Success -> {
+                    uiStateMutable.update { it.copy(isLoading = false) }
+                    sendUiEffect(GameConditionsEffect.NavigateToSuccess)
+                }
+
+                is VolleyResult.Failure -> {
+                    uiStateMutable.update { it.copy(isLoading = false, errorMessage = result.error.toString()) }
+                    sendUiEffect(GameConditionsEffect.ShowErrorMessage(result.error.toString()))
+                }
+            }
+
+//            createGameSharedViewModel.saveGameDataToServer()
+//            uiStateMutable.update { it.copy(isLoading = false) }
+//            sendUiEffect(GameConditionsEffect.NavigateToSuccess)
         }
     }
 

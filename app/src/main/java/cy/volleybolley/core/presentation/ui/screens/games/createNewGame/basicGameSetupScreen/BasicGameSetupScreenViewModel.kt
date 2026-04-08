@@ -1,34 +1,35 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.basicGameSetupScreen
+package cy.volleybolley.core.presentation.ui.screens.games.createNewGame.basicGameSetupScreen
 
 import androidx.lifecycle.viewModelScope
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.CreateNewGameRepository
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.model.Gender
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.CreateGameSharedViewModel
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.GameData
+import cy.volleybolley.core.presentation.ui.screens.games.createNewGame.model.GameGender
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class BasicGameSetupScreenViewModel(
-    private val gameRepository: CreateNewGameRepository
+    private val createGameSharedViewModel: CreateGameSharedViewModel,
 ) : BaseViewModel<BasicGameSetupScreenState, BasicGameSetupScreenEvent, BasicGameSetupScreenEffect>(
     initialState = BasicGameSetupScreenState()
 ) {
     init {
         viewModelScope.launch {
-            gameRepository.gameData.collectLatest { gameDataFromRepo ->
+            createGameSharedViewModel.gameData.collectLatest { gameData ->
                 uiStateMutable.update { currentState ->
                     currentState.copy(
-                        placeCourt = gameDataFromRepo.placeCourt,
-                        date = gameDataFromRepo.date,
-                        startTime = gameDataFromRepo.startTime,
-                        finishTime = gameDataFromRepo.finishTime,
-                        gender = gameDataFromRepo.gender,
-                        levels = gameDataFromRepo.levels,
-                        showCalendar = gameDataFromRepo.date != LocalDate.now()
+                        placeCourt = gameData.placeCourt, // ?: GameData().placeCourt,
+                        date = gameData.date, // ?: LocalDate.now(),
+                        startTime = gameData.startTime,
+                        finishTime = gameData.finishTime,
+                        gender = gameData.gender, // ?: GameGender.Mix,
+                        levels = gameData.levels, //?: setOf(Level.Light, Level.Medium, Level.Hard),
+                        showCalendar = gameData.showCalendar //?: false // showCalendar = gameData?.date != LocalDate.now()
                     )
                 }
             }
@@ -51,9 +52,16 @@ class BasicGameSetupScreenViewModel(
         }
     }
 
+/*    private fun updateGameData(update: (GameData) -> GameData) {
+        viewModelScope.launch {
+            createGameSharedViewModel.updateGameData(update)
+        }
+    }*/
+
     private fun messageChanged(text: String) {
         val limited = getLimitedText(MAX_LENGTH, text)
         uiStateMutable.update { it.copy(message = limited) }
+        // updateGameData { it.copy(message = limited) }
     }
 
     private fun onBackClicked() {
@@ -66,10 +74,12 @@ class BasicGameSetupScreenViewModel(
 
     private fun onPickDateClicked() {
         uiStateMutable.update { it.copy(showCalendar = true) }
+        // updateGameData { it.copy(showCalendar = true) }
     }
 
     private fun onTodayClicked() {
         uiStateMutable.update { it.copy(date = LocalDate.now(), showCalendar = false) }
+        // updateGameData { it.copy(date = LocalDate.now(), showCalendar = false) }
     }
 
     private fun dateSelected(date: LocalDate) {
@@ -80,19 +90,28 @@ class BasicGameSetupScreenViewModel(
                     showCalendar = if (date == LocalDate.now()) false else it.showCalendar
                 )
             }
+          /*  updateGameData {
+                it.copy(
+                    date = date,
+                    showCalendar = if (date == LocalDate.now()) false else it.showCalendar
+                )
+            }*/
         }
     }
 
     private fun startTimeChanged(time: VolleyTimeStamp?) {
         uiStateMutable.update { it.copy(startTime = time) }
+       // updateGameData { it.copy(startTime = time) }
     }
 
     private fun finishTimeChanged(time: VolleyTimeStamp?) {
         uiStateMutable.update { it.copy(finishTime = time) }
+       // updateGameData { it.copy(finishTime = time) }
     }
 
-    private fun genderSelected(gender: Gender) {
+    private fun genderSelected(gender: GameGender) {
         uiStateMutable.update { it.copy(gender = gender) }
+       // updateGameData { it.copy(gender = gender) }
     }
 
     private fun playerLevelSelected(levels: Set<Level>) {
@@ -100,6 +119,7 @@ class BasicGameSetupScreenViewModel(
             sendUiEffect(BasicGameSetupScreenEffect.ShowErrorMessageById(R.string.please_select_player_level))
         } else {
             uiStateMutable.update { it.copy(levels = levels) }
+          //  updateGameData { it.copy(levels = levels) }
         }
     }
 
@@ -121,14 +141,15 @@ class BasicGameSetupScreenViewModel(
                 )
             }
         ) {
-            gameRepository.updateGameData { gameData ->
+            createGameSharedViewModel.updateGameData { gameData ->
                 gameData.copy(
                     placeCourt = uiState.value.placeCourt,
                     date = uiState.value.date,
                     startTime = uiState.value.startTime,
                     finishTime = uiState.value.finishTime,
                     gender = uiState.value.gender,
-                    levels = uiState.value.levels
+                    levels = uiState.value.levels,
+                    showCalendar = uiState.value.showCalendar
                 )
             }
             sendUiEffect(BasicGameSetupScreenEffect.NavigateNextStep)

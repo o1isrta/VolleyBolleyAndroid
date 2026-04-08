@@ -5,7 +5,6 @@ import cy.volleybolley.R
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.Level
 import cy.volleybolley.core.presentation.ui.model.VolleyTimeStamp
-import cy.volleybolley.core.presentation.ui.screens.createNewGame.CreateNewGameRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,6 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+/*
 open class BasicTourneySetupViewModel(
     private val gameRepository: CreateNewGameRepository
 ) : BaseViewModel<BasicTourneySetupState, BasicTourneySetupEvent, BasicTourneySetupEffect>(
@@ -207,3 +207,4 @@ open class BasicTourneySetupViewModel(
         const val HOUR = 60
     }
 }
+*/

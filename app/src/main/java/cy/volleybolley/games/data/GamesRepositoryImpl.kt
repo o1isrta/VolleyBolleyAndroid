@@ -19,7 +19,16 @@ class GamesRepositoryImpl(
     override suspend fun createGame(game: CreateGame): VolleyResult<CreatedGame, ErrorType> {
         val response = networkClient.getResponse(GamesRequest.CreateGame(game = game.toData()))
 
+        // Добавьте логирование
+        println("CreateGame request: ${game}")
+        println("Response isSuccess: ${response.isSuccess}")
+        println("Response resultCode: ${response.resultCode}")
+        println("Status code: ${response.resultCode.code}")
+        println("Response body: ${response.body}")
+
         if (!response.isSuccess) {
+            // Логируем ошибку подробнее
+            println("Error response: ${response.resultCode}")
             return VolleyResult.Failure(response.resultCode.mapToErrorType())
         }
 

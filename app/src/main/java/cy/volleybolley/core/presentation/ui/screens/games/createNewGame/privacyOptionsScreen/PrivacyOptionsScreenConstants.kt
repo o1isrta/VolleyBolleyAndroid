@@ -1,4 +1,4 @@
-package cy.volleybolley.core.presentation.ui.screens.createNewGame.privacyOptionsScreen
+package cy.volleybolley.core.presentation.ui.screens.games.createNewGame.privacyOptionsScreen
 
 object PrivacyOptionsScreenConstants {
     const val ALL_PLAYERS = 1
