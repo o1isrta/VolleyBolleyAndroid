@@ -1,11 +1,21 @@
 package cy.volleybolley.referencedata.data.network
 
-sealed class ReferenceDataRequest(
-    val path: String
-) {
-    class CountriesRequest : ReferenceDataRequest("/countries/")
+sealed interface ReferenceDataRequest {
+    class CountriesRequest : ReferenceDataRequest {
+        companion object {
+            const val PATH = "/countries/"
+        }
+    }
 
-    class CurrencyRequest : ReferenceDataRequest("/currencies/")
+    class CurrencyRequest : ReferenceDataRequest {
+        companion object {
+            const val PATH = "/currencies/"
+        }
+    }
 
-    class FaqRequest : ReferenceDataRequest("/faq/")
+    class FaqRequest : ReferenceDataRequest {
+        companion object {
+            const val PATH = "/faq/"
+        }
+    }
 }

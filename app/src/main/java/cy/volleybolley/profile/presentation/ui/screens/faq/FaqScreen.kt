@@ -1,19 +1,27 @@
 package cy.volleybolley.profile.presentation.ui.screens.faq
 
+import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +30,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
+import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.model.VolleyText
@@ -40,10 +50,14 @@ fun FaqScreen(
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
+    val context = LocalContext.current
 
     LaunchedEffect(effect) {
         when (effect) {
             is NavigateFromFaqScreen -> onNavigateBack()
+            is FaqScreenEffect.ShowToast -> {
+                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+            }
             null -> {}
         }
     }
@@ -76,14 +90,69 @@ private fun FaqScreen(
                 onBackClick = { eventCallback(OnBackFromFaqClick) }
             )
 
-            LazyColumn(
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                itemsIndexed(state.faqText) { index, faqString ->
-                    FaqBlock(faqString, index)
+            when (state) {
+                FaqScreenState.Loading -> {
+                    LazyColumn(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                    ) {
+                        item {
+                            Box(
+                                modifier = Modifier.fillParentMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                VolleyProgress.CircularProgress()
+                            }
+                        }
+                    }
+                }
+
+                is FaqScreenState.Error -> {
+                    LazyColumn(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                    ) {
+                        item {
+                            Column(
+                                modifier = Modifier.fillParentMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.iv_error),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(120.dp)
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                VolleyText.TitleMedium(
+                                    text = stringResource(state.messageResId),
+                                    color = VolleyColor.White
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                VolleyButton.ActiveButton(
+                                    text = stringResource(R.string.retry),
+                                    onClick = { eventCallback(FaqScreenEvent.RetryClick) }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                is FaqScreenState.Success -> {
+                    LazyColumn(
+                        horizontalAlignment = Alignment.Start,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                    ) {
+                        itemsIndexed(state.faqText) { index, faqString ->
+                            FaqBlock(faqString, index)
+                        }
+                    }
                 }
             }
         }
@@ -152,7 +221,7 @@ private fun FaqScreenDivider(
 
 @Preview(showBackground = true, showSystemUi = false, heightDp = 1200)
 @Composable
-private fun PreviewAboutScreen() {
+private fun PreviewFaqSuccess() {
     VolleyContainersRootTransparent.Root {
         Box(
             contentAlignment = Alignment.Center,
@@ -160,9 +229,47 @@ private fun PreviewAboutScreen() {
                 .fillMaxSize()
                 .background(VolleyColor.TurquoiseDark)
         ) {
-            val state = FaqScreenState(faqText = VolleyUiUtil.parseMarkdown(VolleyMocks.MOCK_FAQ))
+            val state = FaqScreenState.Success(
+                faqText = VolleyUiUtil.parseMarkdown(VolleyMocks.MOCK_FAQ)
+            )
             FaqScreen(
                 state = state,
+                eventCallback = {},
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = false, heightDp = 1200)
+@Composable
+private fun PreviewFaqLoading() {
+    VolleyContainersRootTransparent.Root {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.TurquoiseDark)
+        ) {
+            FaqScreen(
+                state = FaqScreenState.Loading,
+                eventCallback = {},
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = false, heightDp = 1200)
+@Composable
+private fun PreviewFaqError() {
+    VolleyContainersRootTransparent.Root {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VolleyColor.TurquoiseDark)
+        ) {
+            FaqScreen(
+                state = FaqScreenState.Error(R.string.something_went_wrong),
                 eventCallback = {},
             )
         }

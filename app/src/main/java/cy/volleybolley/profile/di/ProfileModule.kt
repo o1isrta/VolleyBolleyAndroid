@@ -74,7 +74,7 @@ val profileModule = module {
         )
     }
     viewModel { AboutScreenViewModel() }
-    viewModel { FaqScreenViewModel() }
+    viewModel { FaqScreenViewModel(getFaqUseCase = get()) }
     viewModel { ChangePhotoScreenViewModel(updateAvatarUseCase = get(), deleteAvatarUseCase = get()) }
     viewModel { (backPaymentsHolder: BackPaymentsHolder) ->
         PaymentsScreenViewModel(
