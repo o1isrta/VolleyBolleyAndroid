@@ -1,6 +1,7 @@
 package cy.volleybolley.auth.di
 
 import android.content.Context
+import androidx.security.crypto.MasterKey
 import cy.volleybolley.auth.chooseMethod.AuthorizationViewModel
 import cy.volleybolley.auth.data.AuthRepositoryImpl
 import cy.volleybolley.auth.data.LoginDataRepositoryImpl
@@ -10,6 +11,7 @@ import cy.volleybolley.auth.data.network.model.AuthRequest
 import cy.volleybolley.auth.data.network.model.AuthResponse
 import cy.volleybolley.auth.data.storage.TokenStorageImpl
 import cy.volleybolley.auth.data.storage.UserStorageImpl
+import cy.volleybolley.auth.data.storage.createEncryptedSharedPreferences
 import cy.volleybolley.auth.domain.api.AuthRepository
 import cy.volleybolley.auth.domain.api.LoginDataRepository
 import cy.volleybolley.auth.domain.api.RefreshTokenTimestampStorage
@@ -42,14 +44,34 @@ import org.koin.dsl.module
 
 val authorizationModule = module {
     // Prefs
+    single {
+        MasterKey.Builder(get<Context>())
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+    }
+
     single(PrefsQualifier.ENCRYPTED_TOKENS.qualifier) {
-        get<Context>().getSharedPreferences(PrefsQualifier.ENCRYPTED_TOKENS.fileName, Context.MODE_PRIVATE)
+        createEncryptedSharedPreferences(
+            context = get<Context>(),
+            fileName = PrefsQualifier.ENCRYPTED_TOKENS.fileName,
+            masterKey = get()
+        )
     }
+
     single(PrefsQualifier.USER.qualifier) {
-        get<Context>().getSharedPreferences(PrefsQualifier.USER.fileName, Context.MODE_PRIVATE)
+        createEncryptedSharedPreferences(
+            context = get<Context>(),
+            fileName = PrefsQualifier.USER.fileName,
+            masterKey = get()
+        )
     }
+
     single(PrefsQualifier.REFRESH_TOKEN_TIMESTAMP.qualifier) {
-        get<Context>().getSharedPreferences(PrefsQualifier.REFRESH_TOKEN_TIMESTAMP.fileName, Context.MODE_PRIVATE)
+        createEncryptedSharedPreferences(
+            context = get<Context>(),
+            fileName = PrefsQualifier.REFRESH_TOKEN_TIMESTAMP.fileName,
+            masterKey = get()
+        )
     }
     // End prefs
 

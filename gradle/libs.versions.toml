@@ -2,6 +2,7 @@
 # Config
 minSdk = "26"
 compileSdk = "36"
+securityCrypto = "1.1.0-alpha06"
 targetSdk = "36"
 versionName = "1.0.0"
 versionCode = "1"
@@ -47,6 +48,7 @@ accompanist-permissions = { module = "com.google.accompanist:accompanist-permiss
 android-maps-utils = { module = "com.google.maps.android:android-maps-utils", version.ref = "androidMapsUtils" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 compose-calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "composeCalendar" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
