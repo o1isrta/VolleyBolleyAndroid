@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,23 +26,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnAllPlayers
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnBackFromPlayers
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnFavoritePlayers
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnListItem
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnSearchButton
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.SearchTextChanged
-import cy.volleybolley.profile.presentation.ui.screens.players.model.PlayerTemp
 
 @Composable
 fun PlayersScreen(
@@ -139,7 +140,7 @@ private fun PlayersScreen(
 
 @Composable
 private fun PlayersListItem(
-    player: PlayerTemp,
+    player: Player,
     onItemClick: (Int) -> Unit,
 ) {
     Row(
@@ -284,54 +285,51 @@ private fun ChangedBackgroundBox(
     }
 }
 
-@Preview
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewPlayersScreen() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            val mockPlayers: List<PlayerTemp> = listOf(
-                PlayerTemp(
-                    id = 1,
-                    firstName = "Иван",
-                    lastName = "Иванов",
-                    avatarUrl = null,
-                    isFavorite = true,
-                    level = "LIGHT"
-                ),
-                PlayerTemp(
-                    id = 2,
-                    firstName = "Анна",
-                    lastName = "Петрова",
-                    avatarUrl = null,
-                    isFavorite = false,
-                    level = "MEDIUM"
-                ),
-                PlayerTemp(
-                    id = 3,
-                    firstName = "Сергей",
-                    lastName = "Смирнов",
-                    avatarUrl = null,
-                    isFavorite = true,
-                    level = "HARD"
-                ),
-                PlayerTemp(
-                    id = 4,
-                    firstName = "Елена",
-                    lastName = "Васильева",
-                    avatarUrl = null,
-                    isFavorite = false,
-                    level = "PRO"
-                ),
-            )
-            PlayersScreen(
-                state = PlayersScreenState(players = mockPlayers),
-                eventCallback = {}
-            )
-        }
+    RootContainerForPreview(showTopBar = false,showBottomBar = false) {
+        val mockPlayers: List<Player> = listOf(
+            Player(
+                id = 1,
+                firstName = "Иван",
+                lastName = "Иванов",
+                avatarUrl = null,
+                isFavorite = true,
+                level = "LIGHT",
+                gender = "Men"
+            ),
+            Player(
+                id = 2,
+                firstName = "Анна",
+                lastName = "Петрова",
+                avatarUrl = null,
+                isFavorite = false,
+                level = "MEDIUM",
+                gender = "Men"
+            ),
+            Player(
+                id = 3,
+                firstName = "Сергей",
+                lastName = "Смирнов",
+                avatarUrl = null,
+                isFavorite = true,
+                level = "HARD",
+                gender = "Men"
+            ),
+            Player(
+                id = 4,
+                firstName = "Елена",
+                lastName = "Васильева",
+                avatarUrl = null,
+                isFavorite = false,
+                level = "PRO",
+                gender = "Men"
+            ),
+        )
+        PlayersScreen(
+            state = PlayersScreenState(players = mockPlayers),
+            eventCallback = {}
+        )
     }
 }

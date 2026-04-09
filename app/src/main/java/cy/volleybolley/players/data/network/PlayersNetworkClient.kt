@@ -5,7 +5,6 @@ import cy.volleybolley.players.data.dto.PlayerDto
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
-import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 
@@ -19,28 +18,21 @@ class PlayersNetworkClient : KtorNetworkClient<PlayerRequest, PlayerResponse>() 
                 }
             }
 
-            is PlayerRequest.SearchPlayers -> {
-                httpClient.get {
-                    requestConfigure(path = request.path)
-                    parameter("search", request.name)
-                }
-            }
-
             is PlayerRequest.GetPlayerDetail -> {
                 httpClient.get {
-                    requestConfigure(path = request.path)
+                    requestConfigure(path = request.path, body = request.playerId)
                 }
             }
 
             is PlayerRequest.AddToFavorites -> {
                 httpClient.post {
-                    requestConfigure(path = request.path)
+                    requestConfigure(path = request.path, body = request.playerId)
                 }
             }
 
             is PlayerRequest.RemoveFromFavorites -> {
                 httpClient.delete {
-                    requestConfigure(path = request.path)
+                    requestConfigure(path = request.path, body = request.playerId)
                 }
             }
         }
@@ -56,23 +48,13 @@ class PlayersNetworkClient : KtorNetworkClient<PlayerRequest, PlayerResponse>() 
                 PlayerResponse.GetAllPlayers(list)
             }
 
-            is PlayerRequest.SearchPlayers -> {
-                val list = httpResponse.body<List<PlayerDto>>()
-                PlayerResponse.SearchPlayers(list)
-            }
-
             is PlayerRequest.GetPlayerDetail -> {
                 httpResponse.body<PlayerResponse.GetPlayerDetail>()
             }
 
-            is PlayerRequest.AddToFavorites -> {
-                val dto = httpResponse.body<PlayerDto>()
-                PlayerResponse.AddToFavorites(dto)
-            }
+            is PlayerRequest.AddToFavorites -> PlayerResponse.AddToFavorites
 
-            is PlayerRequest.RemoveFromFavorites -> {
-                PlayerResponse.RemoveFromFavorites
-            }
+            is PlayerRequest.RemoveFromFavorites -> PlayerResponse.RemoveFromFavorites
         }
     }
 }

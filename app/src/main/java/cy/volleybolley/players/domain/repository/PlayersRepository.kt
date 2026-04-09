@@ -7,8 +7,7 @@ import cy.volleybolley.players.domain.model.PlayerDetail
 
 interface PlayersRepository {
     suspend fun getAllPlayers(): VolleyResult<List<Player>, ErrorType>
-    suspend fun searchPlayers(query: String): VolleyResult<List<Player>, ErrorType>
     suspend fun getPlayerDetail(playerId: Int): VolleyResult<PlayerDetail, ErrorType>
-    suspend fun addToFavorites(playerId: Int): VolleyResult<Player, ErrorType>
+    suspend fun addToFavorites(playerId: Int): VolleyResult<Unit, ErrorType>
     suspend fun removeFromFavorites(playerId: Int): VolleyResult<Unit, ErrorType>
 }

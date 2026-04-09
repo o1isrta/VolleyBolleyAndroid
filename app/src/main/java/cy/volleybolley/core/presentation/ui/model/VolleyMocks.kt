@@ -6,11 +6,11 @@ import cy.volleybolley.games.domain.model.entity.Host
 import cy.volleybolley.games.domain.model.entity.PlayerShort
 import cy.volleybolley.games.domain.model.entity.Team
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
+import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerActivityTemp
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerDetailTemp
-import cy.volleybolley.profile.presentation.ui.screens.players.model.PlayerTemp
 
 object VolleyMocks {
     const val USER_LEVEL = "PRO"
@@ -69,38 +69,42 @@ object VolleyMocks {
         locationName = "Mueang Phuket District"
     )
 
-    val mockPlayers: List<PlayerTemp> = listOf(
-        PlayerTemp(
+    val mockPlayers: List<Player> = listOf(
+        Player(
             id = 1,
             firstName = "Иван",
             lastName = "Иванов",
             avatarUrl = null,
             isFavorite = true,
-            level = USER_LEVEL
+            level = USER_LEVEL,
+            gender = "Men"
         ),
-        PlayerTemp(
+        Player(
             id = 2,
             firstName = "Анна",
             lastName = "Петрова",
             avatarUrl = null,
             isFavorite = false,
-            level = USER_LEVEL
+            level = USER_LEVEL,
+            gender = "Men"
         ),
-        PlayerTemp(
+        Player(
             id = 3,
             firstName = "Сергей",
             lastName = "Смирнов",
             avatarUrl = null,
             isFavorite = true,
-            level = USER_LEVEL
+            level = USER_LEVEL,
+            gender = "Men"
         ),
-        PlayerTemp(
+        Player(
             id = 4,
             firstName = "Елена",
             lastName = "Васильева",
             avatarUrl = null,
             isFavorite = false,
-            level = USER_LEVEL
+            level = USER_LEVEL,
+            gender = "Men"
         ),
     )
 

@@ -13,12 +13,10 @@ import cy.volleybolley.players.domain.usecase.AddToFavoritesUseCase
 import cy.volleybolley.players.domain.usecase.GetAllPlayersUseCase
 import cy.volleybolley.players.domain.usecase.GetPlayerDetailUseCase
 import cy.volleybolley.players.domain.usecase.RemoveFromFavoritesUseCase
-import cy.volleybolley.players.domain.usecase.SearchPlayersUseCase
 import cy.volleybolley.players.domain.usecase.impl.AddToFavoritesUseCaseImpl
 import cy.volleybolley.players.domain.usecase.impl.GetAllPlayersUseCaseImpl
 import cy.volleybolley.players.domain.usecase.impl.GetPlayerDetailUseCaseImpl
 import cy.volleybolley.players.domain.usecase.impl.RemoveFromFavoritesUseCaseImpl
-import cy.volleybolley.players.domain.usecase.impl.SearchPlayersUseCaseImpl
 import org.koin.dsl.module
 
 val playersModule = module {
@@ -40,7 +38,6 @@ val playersModule = module {
         )*/
 
     single<GetAllPlayersUseCase> { GetAllPlayersUseCaseImpl(get()) }
-    single<SearchPlayersUseCase> { SearchPlayersUseCaseImpl(get()) }
     single<GetPlayerDetailUseCase> { GetPlayerDetailUseCaseImpl(get()) }
     single<AddToFavoritesUseCase> { AddToFavoritesUseCaseImpl(get()) }
     single<RemoveFromFavoritesUseCase> { RemoveFromFavoritesUseCaseImpl(get()) }

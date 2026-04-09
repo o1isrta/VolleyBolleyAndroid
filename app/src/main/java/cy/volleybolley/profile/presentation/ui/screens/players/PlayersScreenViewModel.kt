@@ -3,6 +3,7 @@ package cy.volleybolley.profile.presentation.ui.screens.players
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.navigation.PlayerProfileRoute
+import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEffect.NavigateFromPlayersScreen
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnAllPlayers
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnBackFromPlayers
@@ -11,7 +12,6 @@ import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEven
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnSearchButton
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.SearchTextChanged
 import cy.volleybolley.profile.presentation.ui.screens.players.model.BackPlayerIdHolder
-import cy.volleybolley.profile.presentation.ui.screens.players.model.PlayerTemp
 import kotlinx.coroutines.flow.update
 
 class PlayersScreenViewModel(
@@ -19,8 +19,8 @@ class PlayersScreenViewModel(
 ) : BaseViewModel<PlayersScreenState, PlayersScreenEvent, PlayersScreenEffect>(
     initialState = PlayersScreenState()
 ) {
-    private val originAllPlayers: MutableList<PlayerTemp> = mutableListOf()
-    private val originFavoritePlayers: MutableList<PlayerTemp> = mutableListOf()
+    private val originAllPlayers: MutableList<Player> = mutableListOf()
+    private val originFavoritePlayers: MutableList<Player> = mutableListOf()
 
     init {
         // getPlayers()
@@ -73,7 +73,7 @@ class PlayersScreenViewModel(
 
     private fun clickOnModeSwitchButton(isClickOnAllPlayers: Boolean) {
         val condition: Boolean
-        val playersListToUpdate: List<PlayerTemp>
+        val playersListToUpdate: List<Player>
         val showAllStatus: Boolean
         when (isClickOnAllPlayers) {
             true -> {
@@ -100,7 +100,7 @@ class PlayersScreenViewModel(
         }
     }
 
-    private fun getFavoritePlayers(): List<PlayerTemp> =
+    private fun getFavoritePlayers(): List<Player> =
         originAllPlayers.filter { it.isFavorite }
 
     private fun updateFavoritePlayers() {
@@ -108,7 +108,7 @@ class PlayersScreenViewModel(
         originFavoritePlayers.addAll(getFavoritePlayers())
     }
 
-    private fun isPlayerExistByText(player: PlayerTemp, text: String): Boolean {
+    private fun isPlayerExistByText(player: Player, text: String): Boolean {
         val correctText = text.lowercase()
         val fullName = "${player.firstName} ${player.lastName}".lowercase()
         val textChunks = correctText.split(" ", ignoreCase = true)

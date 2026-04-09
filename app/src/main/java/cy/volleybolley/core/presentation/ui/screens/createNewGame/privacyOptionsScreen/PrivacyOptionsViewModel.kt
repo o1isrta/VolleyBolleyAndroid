@@ -7,7 +7,6 @@ import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.core.presentation.base.BaseViewModel
 import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.CreateNewGameRepository
 import cy.volleybolley.players.domain.model.Player
-import cy.volleybolley.players.domain.usecase.SearchPlayersUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -18,7 +17,7 @@ import kotlinx.coroutines.withContext
 
 open class PrivacyOptionsViewModel(
     private val gameRepository: CreateNewGameRepository,
-    private val searchPlayersUseCase: SearchPlayersUseCase
+//    private val searchPlayersUseCase: SearchPlayersUseCase
 ) : BaseViewModel<PrivacyOptionsState, PrivacyOptionsEvent, PrivacyOptionsEffect>(
     PrivacyOptionsState()
 ) {
@@ -119,7 +118,8 @@ open class PrivacyOptionsViewModel(
             uiStateMutable.update { it.copy(isLoading = true) }
             delay(DEBOUNCE_DELAY_500MS) // Имитируем задержку сети
 
-            val result = searchPlayersUseCase(query)
+//            val result = searchPlayersUseCase(query)
+            val result = VolleyResult.Success<List<Player>, ErrorType>(emptyList())
             processSearchResult(result, query)
         }
     }

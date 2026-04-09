@@ -16,7 +16,8 @@ val createNewGameModule = module {
     // Game creation ViewModels
     viewModel { BasicGameSetupScreenViewModel(get()) }
     viewModel { GameConditionsViewModel(get()) }
-    viewModel { PrivacyOptionsViewModel(get(), get()) }
+//    viewModel { PrivacyOptionsViewModel(get(), get()) }
+    viewModel { PrivacyOptionsViewModel(get()) }
 
     // Tournament creation ViewModels
     viewModel { BasicTourneySetupViewModel(get()) }

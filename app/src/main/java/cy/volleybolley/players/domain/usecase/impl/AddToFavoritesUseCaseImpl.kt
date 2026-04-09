@@ -9,6 +9,6 @@ import cy.volleybolley.players.domain.usecase.AddToFavoritesUseCase
 class AddToFavoritesUseCaseImpl(
     private val repository: PlayersRepository
 ) : AddToFavoritesUseCase {
-    override suspend fun invoke(playerId: Int): VolleyResult<Player, ErrorType> =
+    override suspend fun invoke(playerId: Int): VolleyResult<Unit, ErrorType> =
         repository.addToFavorites(playerId)
 }

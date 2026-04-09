@@ -1,13 +1,13 @@
 package cy.volleybolley.players.data.mapper
 
-import cy.volleybolley.players.data.dto.ActivityDto
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
+import cy.volleybolley.courts.data.dto.toDomain
+import cy.volleybolley.players.data.dto.PlayerActivityDto
+import cy.volleybolley.players.data.dto.PlayerDetailDto
 import cy.volleybolley.players.data.dto.PlayerDto
-import cy.volleybolley.players.data.dto.PlayerDtoDetail
 import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.players.domain.model.PlayerActivity
 import cy.volleybolley.players.domain.model.PlayerDetail
-import cy.volleybolley.courts.domain.model.Location as CourtsLocation
-import cy.volleybolley.players.data.dto.LocationDto as PlayersLocationDto
 
 fun PlayerDto.toDomain(): Player {
     return Player(
@@ -17,11 +17,12 @@ fun PlayerDto.toDomain(): Player {
         avatarUrl = avatarUrl,
         isFavorite = isFavorite,
         level = level,
-        gender = gender
+        // не забыть заменить, когда api поправят
+        gender = Gender.Men.displayText
     )
 }
 
-fun PlayerDtoDetail.toDomain(): PlayerDetail {
+fun PlayerDetailDto.toDomain(): PlayerDetail {
     return PlayerDetail(
         id = id,
         firstName = firstName,
@@ -29,23 +30,15 @@ fun PlayerDtoDetail.toDomain(): PlayerDetail {
         avatarUrl = avatarUrl,
         isFavorite = isFavorite,
         level = level,
-        gender = gender,
+        // не забыть заменить, когда api поправят
+        gender = Gender.Men.displayText,
         latestActivity = latestActivity.map { it.toDomain() }
     )
 }
 
-fun ActivityDto.toDomain(): PlayerActivity {
+fun PlayerActivityDto.toDomain(): PlayerActivity {
     return PlayerActivity(
         eventTimestamp = eventTimestamp,
         courtLocation = courtLocation.toDomain()
-    )
-}
-
-private fun PlayersLocationDto.toDomain(): CourtsLocation {
-    return CourtsLocation(
-        longitude = longitude,
-        latitude = latitude,
-        courtName = courtName,
-        locationName = locationName
     )
 }

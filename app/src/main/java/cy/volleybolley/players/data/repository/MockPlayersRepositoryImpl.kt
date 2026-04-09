@@ -82,14 +82,14 @@ class MockPlayersRepositoryImpl : PlayersRepository {
     override suspend fun getAllPlayers(): VolleyResult<List<Player>, ErrorType> =
         VolleyResult.Success(mockPlayers)
 
-    override suspend fun searchPlayers(query: String): VolleyResult<List<Player>, ErrorType> {
-        if (query.isNullOrEmpty()) return VolleyResult.Success(emptyList())
-        val filteredPlayers = mockPlayers.filter {
-            it.firstName.contains(query, ignoreCase = true) ||
-                it.lastName.contains(query, ignoreCase = true)
-        }
-        return VolleyResult.Success(filteredPlayers)
-    }
+//    override suspend fun searchPlayers(query: String): VolleyResult<List<Player>, ErrorType> {
+//        if (query.isNullOrEmpty()) return VolleyResult.Success(emptyList())
+//        val filteredPlayers = mockPlayers.filter {
+//            it.firstName.contains(query, ignoreCase = true) ||
+//                it.lastName.contains(query, ignoreCase = true)
+//        }
+//        return VolleyResult.Success(filteredPlayers)
+//    }
 
     override suspend fun getPlayerDetail(playerId: Int): VolleyResult<PlayerDetail, ErrorType> {
         return VolleyResult.Success(
@@ -106,18 +106,8 @@ class MockPlayersRepositoryImpl : PlayersRepository {
         )
     }
 
-    override suspend fun addToFavorites(playerId: Int): VolleyResult<Player, ErrorType> {
-        return VolleyResult.Success(
-            Player(
-                id = playerId,
-                firstName = "Mock Name",
-                lastName = "Mock LastName",
-                avatarUrl = null,
-                isFavorite = true,
-                level = "Pro",
-                gender = "Female"
-            )
-        )
+    override suspend fun addToFavorites(playerId: Int): VolleyResult<Unit, ErrorType> {
+        return VolleyResult.Success(Unit)
     }
 
     override suspend fun removeFromFavorites(playerId: Int): VolleyResult<Unit, ErrorType> {
