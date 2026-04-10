@@ -7,4 +7,5 @@ data class PlayersScreenState(
     val searchText: String = "",
     val showAllPlayers: Boolean = true,
     val players: List<Player> = listOf(),
+    val isLoading: Boolean = true
 ) : UiState

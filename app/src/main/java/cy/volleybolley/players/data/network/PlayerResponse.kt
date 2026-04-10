@@ -15,7 +15,9 @@ sealed interface PlayerResponse {
         @SerialName("player") val player: PlayerDetailDto
     ) : PlayerResponse
 
-    object AddToFavorites : PlayerResponse
+    class AddToFavorites(
+        val favoritePlayer: PlayerDto
+    ) : PlayerResponse
 
     object RemoveFromFavorites : PlayerResponse
 }

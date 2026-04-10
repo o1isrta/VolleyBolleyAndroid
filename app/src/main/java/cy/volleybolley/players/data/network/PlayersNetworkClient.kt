@@ -20,19 +20,19 @@ class PlayersNetworkClient : KtorNetworkClient<PlayerRequest, PlayerResponse>() 
 
             is PlayerRequest.GetPlayerDetail -> {
                 httpClient.get {
-                    requestConfigure(path = request.path, body = request.playerId)
+                    requestConfigure(path = request.path)
                 }
             }
 
             is PlayerRequest.AddToFavorites -> {
                 httpClient.post {
-                    requestConfigure(path = request.path, body = request.playerId)
+                    requestConfigure(path = request.path)
                 }
             }
 
             is PlayerRequest.RemoveFromFavorites -> {
                 httpClient.delete {
-                    requestConfigure(path = request.path, body = request.playerId)
+                    requestConfigure(path = request.path)
                 }
             }
         }
@@ -52,7 +52,10 @@ class PlayersNetworkClient : KtorNetworkClient<PlayerRequest, PlayerResponse>() 
                 httpResponse.body<PlayerResponse.GetPlayerDetail>()
             }
 
-            is PlayerRequest.AddToFavorites -> PlayerResponse.AddToFavorites
+            is PlayerRequest.AddToFavorites -> {
+                val player = httpResponse.body<PlayerDto>()
+                PlayerResponse.AddToFavorites(player)
+            }
 
             is PlayerRequest.RemoveFromFavorites -> PlayerResponse.RemoveFromFavorites
         }

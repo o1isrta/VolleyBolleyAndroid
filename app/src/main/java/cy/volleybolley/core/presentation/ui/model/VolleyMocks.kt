@@ -6,7 +6,6 @@ import cy.volleybolley.games.domain.model.entity.Host
 import cy.volleybolley.games.domain.model.entity.PlayerShort
 import cy.volleybolley.games.domain.model.entity.Team
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
-import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerActivityTemp
@@ -69,45 +68,6 @@ object VolleyMocks {
         locationName = "Mueang Phuket District"
     )
 
-    val mockPlayers: List<Player> = listOf(
-        Player(
-            id = 1,
-            firstName = "Иван",
-            lastName = "Иванов",
-            avatarUrl = null,
-            isFavorite = true,
-            level = USER_LEVEL,
-            gender = "Men"
-        ),
-        Player(
-            id = 2,
-            firstName = "Анна",
-            lastName = "Петрова",
-            avatarUrl = null,
-            isFavorite = false,
-            level = USER_LEVEL,
-            gender = "Men"
-        ),
-        Player(
-            id = 3,
-            firstName = "Сергей",
-            lastName = "Смирнов",
-            avatarUrl = null,
-            isFavorite = true,
-            level = USER_LEVEL,
-            gender = "Men"
-        ),
-        Player(
-            id = 4,
-            firstName = "Елена",
-            lastName = "Васильева",
-            avatarUrl = null,
-            isFavorite = false,
-            level = USER_LEVEL,
-            gender = "Men"
-        ),
-    )
-
     val mockPlayerDetails: List<PlayerDetailTemp> = listOf(
         PlayerDetailTemp(
             id = 1,
@@ -116,7 +76,17 @@ object VolleyMocks {
             avatarUrl = null,
             isFavorite = true,
             level = USER_LEVEL,
-            latestActivity = listOf()
+            latestActivity = listOf(
+                PlayerActivityTemp(
+                    eventTimestamp = "2025-07-13T14:23:45Z",
+                    courtLocation = Location(
+                        longitude = 37.6173,
+                        latitude = 55.7558,
+                        courtName = "Спортивный комплекс",
+                        locationName = "Красногорск"
+                    )
+                ),
+            )
         ),
         PlayerDetailTemp(
             id = 2,

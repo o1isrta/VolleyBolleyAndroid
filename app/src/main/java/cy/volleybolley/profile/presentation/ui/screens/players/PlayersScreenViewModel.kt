@@ -1,9 +1,14 @@
 package cy.volleybolley.profile.presentation.ui.screens.players
 
+import androidx.lifecycle.viewModelScope
+import cy.volleybolley.core.domain.model.onFailure
+import cy.volleybolley.core.domain.model.onSuccess
 import cy.volleybolley.core.presentation.base.BaseViewModel
-import cy.volleybolley.core.presentation.ui.model.VolleyMocks
 import cy.volleybolley.core.presentation.ui.navigation.PlayerProfileRoute
+import cy.volleybolley.core.util.VolleyLog
+import cy.volleybolley.core.util.createDebounceMethod
 import cy.volleybolley.players.domain.model.Player
+import cy.volleybolley.players.domain.usecase.GetPlayersInteractor
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEffect.NavigateFromPlayersScreen
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnAllPlayers
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnBackFromPlayers
@@ -16,18 +21,19 @@ import kotlinx.coroutines.flow.update
 
 class PlayersScreenViewModel(
     private val backPlayerIdHolder: BackPlayerIdHolder,
+    private val interactor: GetPlayersInteractor,
 ) : BaseViewModel<PlayersScreenState, PlayersScreenEvent, PlayersScreenEffect>(
     initialState = PlayersScreenState()
 ) {
-    private val originAllPlayers: MutableList<Player> = mutableListOf()
-    private val originFavoritePlayers: MutableList<Player> = mutableListOf()
-
     init {
-        // getPlayers()
-        originAllPlayers.addAll(VolleyMocks.mockPlayers)
-        originFavoritePlayers.addAll(getFavoritePlayers())
-        uiStateMutable.update { it.copy(players = originAllPlayers) }
+        updatePlayers()
     }
+
+    private val searchWithDebounce: (String) -> Unit = createDebounceMethod(
+        delayMillis = SEARCH_DELAY,
+        coroutineScope = viewModelScope,
+        restartActionOnLastParam = true
+    ) { text -> searchByText(text) }
 
     override fun obtainEvent(event: PlayersScreenEvent) {
         when (event) {
@@ -35,39 +41,43 @@ class PlayersScreenViewModel(
 
             is SearchTextChanged -> {
                 uiStateMutable.update { it.copy(searchText = event.text) }
+                searchWithDebounce(event.text)
             }
 
-            is ClickOnSearchButton -> {
-                uiStateMutable.update {
-                    if (it.showAllPlayers) {
-                        it.copy(
-                            players = originAllPlayers.filter { player ->
-                                isPlayerExistByText(player, event.text)
-                            }
-                        )
-                    } else {
-                        it.copy(
-                            players = originFavoritePlayers.filter { player ->
-                                isPlayerExistByText(player, event.text)
-                            }
-                        )
-                    }
-                }
-            }
+            is ClickOnSearchButton -> searchByText(event.text)
 
-            ClickOnAllPlayers -> {
-                clickOnModeSwitchButton(isClickOnAllPlayers = true)
-            }
+            ClickOnAllPlayers -> clickOnModeSwitchButton(isClickOnAllPlayers = true)
 
-            ClickOnFavoritePlayers -> {
-                clickOnModeSwitchButton(isClickOnAllPlayers = false)
-            }
+            ClickOnFavoritePlayers -> clickOnModeSwitchButton(isClickOnAllPlayers = false)
 
             is ClickOnListItem -> sendUiEffect(
                 NavigateFromPlayersScreen(
                     PlayerProfileRoute(event.playerId)
                 )
             )
+        }
+    }
+
+    private fun updatePlayers() {
+        launchSafe(
+            getErrorLogMessage = {
+                "PlayersScreen >>> updatePlayers() >>> error: ${it.message}"
+            },
+            onError = {
+                sendUiEffect(PlayersScreenEffect.ShowToast("Update players failed with error: ${it.message}"))
+            }
+        ) {
+            if (!uiState.value.isLoading) uiStateMutable.update { it.copy(isLoading = true) }
+
+            interactor.updatePlayers(showAllPlayers = uiState.value.showAllPlayers)
+                .onSuccess { players ->
+                    uiStateMutable.update { it.copy(players = players, isLoading = false) }
+                }
+                .onFailure { errorType ->
+                    VolleyLog.e(tag, "PlayersScreen >>> updatePlayers(): $errorType")
+                    uiStateMutable.update { it.copy(isLoading = false) }
+                    sendUiEffect(PlayersScreenEffect.ShowToast("Update players failed!"))
+                }
         }
     }
 
@@ -78,13 +88,13 @@ class PlayersScreenViewModel(
         when (isClickOnAllPlayers) {
             true -> {
                 condition = !uiState.value.showAllPlayers
-                playersListToUpdate = originAllPlayers
+                playersListToUpdate = interactor.fetchCachedPlayers()
                 showAllStatus = true
             }
 
             else -> {
                 condition = uiState.value.showAllPlayers
-                playersListToUpdate = originFavoritePlayers
+                playersListToUpdate = interactor.fetchCachedFavoritePlayers()
                 showAllStatus = false
             }
         }
@@ -100,12 +110,25 @@ class PlayersScreenViewModel(
         }
     }
 
-    private fun getFavoritePlayers(): List<Player> =
-        originAllPlayers.filter { it.isFavorite }
-
-    private fun updateFavoritePlayers() {
-        originFavoritePlayers.clear()
-        originFavoritePlayers.addAll(getFavoritePlayers())
+    private fun searchByText(text: String) {
+        uiStateMutable.update { it.copy(isLoading = true) }
+        uiStateMutable.update {
+            if (it.showAllPlayers) {
+                it.copy(
+                    players = interactor.fetchCachedPlayers().filter { player ->
+                        isPlayerExistByText(player, text)
+                    },
+                    isLoading = false
+                )
+            } else {
+                it.copy(
+                    players = interactor.fetchCachedFavoritePlayers().filter { player ->
+                        isPlayerExistByText(player, text)
+                    },
+                    isLoading = false
+                )
+            }
+        }
     }
 
     private fun isPlayerExistByText(player: Player, text: String): Boolean {
@@ -128,14 +151,18 @@ class PlayersScreenViewModel(
     }
 
     fun handleBackPlayerId() {
-        backPlayerIdHolder.getPlayerId()?.let { idForChangeFavoriteStatus ->
-            val changesIndex = originAllPlayers.indexOfFirst { it.id == idForChangeFavoriteStatus }
-            if (changesIndex != -1) {
-                val newFavoriteStatus = !originAllPlayers[changesIndex].isFavorite
-                originAllPlayers[changesIndex] = originAllPlayers[changesIndex].copy(isFavorite = newFavoriteStatus)
-                updateFavoritePlayers()
-            }
-            backPlayerIdHolder.clearBackPlayerId()
-        }
+//        backPlayerIdHolder.getPlayerId()?.let { idForChangeFavoriteStatus ->
+//            val changesIndex = originAllPlayers.indexOfFirst { it.id == idForChangeFavoriteStatus }
+//            if (changesIndex != -1) {
+//                val newFavoriteStatus = !originAllPlayers[changesIndex].isFavorite
+//                originAllPlayers[changesIndex] = originAllPlayers[changesIndex].copy(isFavorite = newFavoriteStatus)
+//                updateFavoritePlayers()
+//            }
+//            backPlayerIdHolder.clearBackPlayerId()
+//        }
+    }
+
+    companion object {
+        const val SEARCH_DELAY = 1500L
     }
 }

@@ -106,11 +106,19 @@ class MockPlayersRepositoryImpl : PlayersRepository {
         )
     }
 
-    override suspend fun addToFavorites(playerId: Int): VolleyResult<Unit, ErrorType> {
-        return VolleyResult.Success(Unit)
+    override suspend fun addToFavorites(playerId: Int): VolleyResult<Player, ErrorType> {
+        return VolleyResult.Success(mockPlayers.first())
     }
 
     override suspend fun removeFromFavorites(playerId: Int): VolleyResult<Unit, ErrorType> {
         return VolleyResult.Success(Unit)
     }
+
+    // Эти три метода тут ни о чем, просто пришлось пока имплементить, потому что расширил интерфейс.
+    override fun getCachedAllPlayers(): List<Player> = emptyList()
+
+    override fun getCachedFavoritePlayers(): List<Player> = emptyList()
+
+    override suspend fun getFavoritePlayers(): VolleyResult<List<Player>, ErrorType> =
+        VolleyResult.Success(mockPlayers)
 }

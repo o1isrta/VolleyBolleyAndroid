@@ -15,7 +15,34 @@ class PlayersRepositoryImpl(
     private val networkClient: NetworkClient<PlayerRequest, PlayerResponse>
 ) : PlayersRepository {
 
+    private var cachedAllPlayers: List<Player>? = null
+    private var cachedFavoritePlayers: List<Player>? = null
+    private var cachedTimestamp: Long = 0
+
+    override fun getCachedAllPlayers(): List<Player> = cachedAllPlayers ?: emptyList()
+    override fun getCachedFavoritePlayers(): List<Player> = cachedFavoritePlayers ?: emptyList()
+
     override suspend fun getAllPlayers(): VolleyResult<List<Player>, ErrorType> {
+        val elapsedTime = System.currentTimeMillis() - cachedTimestamp
+        return if (cachedAllPlayers != null && elapsedTime < GET_PLAYERS_DELAY) {
+            VolleyResult.Success(cachedAllPlayers!!)
+        } else {
+            getPlayersFromServer()
+        }
+    }
+
+    override suspend fun getFavoritePlayers(): VolleyResult<List<Player>, ErrorType> {
+        val elapsedTime = System.currentTimeMillis() - cachedTimestamp
+        return if (cachedFavoritePlayers != null && elapsedTime < GET_PLAYERS_DELAY) {
+            VolleyResult.Success(cachedFavoritePlayers!!)
+        } else {
+            getPlayersFromServer(justFavoriteOnReturn = true)
+        }
+    }
+
+    private suspend fun getPlayersFromServer(
+        justFavoriteOnReturn: Boolean = false
+    ): VolleyResult<List<Player>, ErrorType> {
         val response = networkClient.getResponse(PlayerRequest.GetAllPlayers())
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
         val body = response.body as? PlayerResponse.GetAllPlayers
@@ -23,7 +50,13 @@ class PlayersRepositoryImpl(
         return when {
             error != null -> VolleyResult.Failure(error)
             body == null -> VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
-            else -> VolleyResult.Success(body.players.map { it.toDomain() })
+            else -> {
+                cachedAllPlayers = body.players.map { it.toDomain() }
+                cachedFavoritePlayers = cachedAllPlayers!!.filter { it.isFavorite }
+                VolleyResult.Success(
+                    data = if (justFavoriteOnReturn) cachedFavoritePlayers!! else cachedAllPlayers!!
+                )
+            }
         }
     }
 
@@ -39,7 +72,7 @@ class PlayersRepositoryImpl(
         }
     }
 
-    override suspend fun addToFavorites(playerId: Int): VolleyResult<Unit, ErrorType> {
+    override suspend fun addToFavorites(playerId: Int): VolleyResult<Player, ErrorType> {
         val response = networkClient.getResponse(PlayerRequest.AddToFavorites(playerId = playerId))
         val error = if (!response.isSuccess) response.resultCode.mapToErrorType() else null
         val body = response.body as? PlayerResponse.AddToFavorites
@@ -47,7 +80,7 @@ class PlayersRepositoryImpl(
         return when {
             error != null -> VolleyResult.Failure(error)
             body == null -> VolleyResult.Failure(ErrorType.UNKNOWN_ERROR)
-            else -> VolleyResult.Success(Unit)
+            else -> VolleyResult.Success(body.favoritePlayer.toDomain())
         }
     }
 
@@ -60,5 +93,9 @@ class PlayersRepositoryImpl(
         } else {
             VolleyResult.Success(Unit)
         }
+    }
+
+    companion object {
+        const val GET_PLAYERS_DELAY: Long = 300_000L
     }
 }

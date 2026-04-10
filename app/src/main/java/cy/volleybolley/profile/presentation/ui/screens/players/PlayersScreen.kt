@@ -1,5 +1,6 @@
 package cy.volleybolley.profile.presentation.ui.screens.players
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
@@ -36,6 +38,7 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.VolleyTextFieldGradient
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
+import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.players.domain.model.Player
@@ -57,6 +60,7 @@ fun PlayersScreen(
         viewModel.handleBackPlayerId()
     }
 
+    val context = LocalContext.current
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val effect = viewModel.uiEffect.collectAsStateWithLifecycle(null).value
 
@@ -70,6 +74,11 @@ fun PlayersScreen(
                     else -> onNavigateBack()
                 }
             }
+
+            is PlayersScreenEffect.ShowToast -> {
+                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+            }
+
             null -> {}
         }
     }
@@ -120,18 +129,30 @@ private fun PlayersScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            if (state.players.isEmpty()) {
-                VolleyText.BodyRegular(
-                    text = stringResource(R.string.no_players_found),
-                    color = VolleyColor.White,
-                    maxLines = 1,
-                )
-            } else {
-                LazyColumn {
-                    itemsIndexed(state.players) { index, player ->
-                        PlayersListItem(player) { playerId -> eventCallback(ClickOnListItem(playerId)) }
-                        if (index < state.players.lastIndex) Spacer(Modifier.height(16.dp))
+            when (state.isLoading) {
+                false -> {
+                    if (state.players.isEmpty()) {
+                        VolleyText.BodyRegular(
+                            text = stringResource(R.string.no_players_found),
+                            color = VolleyColor.White,
+                            maxLines = 1,
+                        )
+                    } else {
+                        LazyColumn {
+                            itemsIndexed(state.players) { index, player ->
+                                PlayersListItem(player) { playerId -> eventCallback(ClickOnListItem(playerId)) }
+                                if (index < state.players.lastIndex) Spacer(Modifier.height(16.dp))
+                            }
+                        }
                     }
+                }
+
+                else -> {
+                    VolleyProgress.CircularProgress(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(16.dp)
+                    )
                 }
             }
         }
@@ -328,7 +349,7 @@ private fun PreviewPlayersScreen() {
             ),
         )
         PlayersScreen(
-            state = PlayersScreenState(players = mockPlayers),
+            state = PlayersScreenState(players = mockPlayers, isLoading = false),
             eventCallback = {}
         )
     }
