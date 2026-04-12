@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,10 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.RootContainerForPreview
 import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
@@ -269,52 +270,45 @@ private fun FavoriteManagementButton(
     }
 }
 
-@Preview
+@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewPlayerProfileScreen() {
-    VolleyContainersRootTransparent.Root {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VolleyColor.TurquoiseDark)
-        ) {
-            val state = PlayerProfileScreenState(
-                playerDetail = PlayerDetailTemp(
-                    id = 3,
-                    firstName = "Some",
-                    lastName = "Player",
-                    avatarUrl = null,
-                    isFavorite = false,
-                    level = "HARD",
-                    latestActivity = listOf(
-                        PlayerActivityTemp(
-                            eventTimestamp = "2025-08-16T14:30:45Z",
-                            courtLocation = Location(
-                                longitude = 37.6156,
-                                latitude = 55.7536,
-                                courtName = "Спорт-площадка 18",
-                                locationName = "Московкая область, г. Химки"
-                            )
-                        ),
-                        PlayerActivityTemp(
-                            eventTimestamp = "2025-07-14T23:23:45Z",
-                            courtLocation = Location(
-                                longitude = 37.6194,
-                                latitude = 55.7523,
-                                courtName = "Арена Восток",
-                                locationName = "Казань"
-                            )
+    RootContainerForPreview(showTopBar = false, showBottomBar = false) {
+        val state = PlayerProfileScreenState(
+            playerDetail = PlayerDetailTemp(
+                id = 3,
+                firstName = "Some",
+                lastName = "Player",
+                avatarUrl = null,
+                isFavorite = false,
+                level = "HARD",
+                latestActivity = listOf(
+                    PlayerActivityTemp(
+                        eventTimestamp = "2025-08-16T14:30:45Z",
+                        courtLocation = Location(
+                            longitude = 37.6156,
+                            latitude = 55.7536,
+                            courtName = "Спорт-площадка 18",
+                            locationName = "Московкая область, г. Химки"
+                        )
+                    ),
+                    PlayerActivityTemp(
+                        eventTimestamp = "2025-07-14T23:23:45Z",
+                        courtLocation = Location(
+                            longitude = 37.6194,
+                            latitude = 55.7523,
+                            courtName = "Арена Восток",
+                            locationName = "Казань"
                         )
                     )
                 )
             )
+        )
 
-            PlayerProfileScreen(
-                state = state,
-                userHoursOffset = 3,
-                eventCallback = {}
-            )
-        }
+        PlayerProfileScreen(
+            state = state,
+            userHoursOffset = 3,
+            eventCallback = {}
+        )
     }
 }

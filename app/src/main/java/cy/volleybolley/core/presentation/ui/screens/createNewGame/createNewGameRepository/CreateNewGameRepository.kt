@@ -9,7 +9,6 @@ import cy.volleybolley.core.presentation.ui.LEVEL_LIGHT
 import cy.volleybolley.core.presentation.ui.LEVEL_MEDIUM
 import cy.volleybolley.core.presentation.ui.LEVEL_PRO
 import cy.volleybolley.players.domain.model.Player
-import cy.volleybolley.players.domain.usecase.SearchPlayersUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -96,20 +95,20 @@ private const val ANTON_ID = 3
 private const val ALEKSANDR_ID = 4
 private const val MARIA_ID = 5
 
-class FakeSearchPlayersUseCase : SearchPlayersUseCase {
-    override suspend fun invoke(query: String): VolleyResult<List<Player>, ErrorType> {
-        // Возвращаем тестовые данные
-        val samplePlayers = listOf(
-            Player(KRISTINA_ID, "Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
-            Player(POLINA_ID, "Polina", "Vasylyeva", null, false, GENDER_FEMALE, LEVEL_PRO),
-            Player(ANTON_ID, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
-            Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH),
-            Player(MARIA_ID, "Maria", "Novak", null, false, GENDER_FEMALE, LEVEL_PRO)
-        )
-
-        val filteredPlayers = samplePlayers.filter { player ->
-            player.lastName.contains(query, ignoreCase = true) && player.isFavorite
-        }
-        return VolleyResult.Success(filteredPlayers)
-    }
-}
+// class FakeSearchPlayersUseCase : SearchPlayersUseCase {
+//    override suspend fun invoke(query: String): VolleyResult<List<Player>, ErrorType> {
+//        // Возвращаем тестовые данные
+//        val samplePlayers = listOf(
+//            Player(KRISTINA_ID, "Kristina", "Popova", null, true, GENDER_FEMALE, LEVEL_MEDIUM),
+//            Player(POLINA_ID, "Polina", "Vasylyeva", null, false, GENDER_FEMALE, LEVEL_PRO),
+//            Player(ANTON_ID, "Anton", "Ivanov", null, true, GENDER_MALE, LEVEL_LIGHT),
+//            Player(ALEKSANDR_ID, "Aleksandr", "Abramov", null, false, GENDER_MALE, LEVEL_HIGH),
+//            Player(MARIA_ID, "Maria", "Novak", null, false, GENDER_FEMALE, LEVEL_PRO)
+//        )
+//
+//        val filteredPlayers = samplePlayers.filter { player ->
+//            player.lastName.contains(query, ignoreCase = true) && player.isFavorite
+//        }
+//        return VolleyResult.Success(filteredPlayers)
+//    }
+// }

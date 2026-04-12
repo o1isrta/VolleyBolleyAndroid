@@ -4,11 +4,11 @@ import cy.volleybolley.core.domain.model.ErrorType
 import cy.volleybolley.core.domain.model.VolleyResult
 import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.players.domain.repository.PlayersRepository
-import cy.volleybolley.players.domain.usecase.SearchPlayersUseCase
+import cy.volleybolley.players.domain.usecase.GetFavoritePlayersUseCase
 
-class SearchPlayersUseCaseImpl(
+class GetFavoritePlayersUseCaseImpl(
     private val repository: PlayersRepository
-) : SearchPlayersUseCase {
-    override suspend fun invoke(query: String): VolleyResult<List<Player>, ErrorType> =
-        repository.searchPlayers(query)
+) : GetFavoritePlayersUseCase {
+    override suspend fun invoke(): VolleyResult<List<Player>, ErrorType> =
+        repository.getFavoritePlayers()
 }

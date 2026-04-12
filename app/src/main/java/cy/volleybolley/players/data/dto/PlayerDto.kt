@@ -11,5 +11,6 @@ data class PlayerDto(
     @SerialName("avatar") val avatarUrl: String? = null,
     @SerialName("is_favorite") val isFavorite: Boolean,
     @SerialName("level") val level: String,
-    @SerialName("gender") val gender: String
+    // Пока в api ручку не поправят
+//    @SerialName("gender") val gender: String
 )

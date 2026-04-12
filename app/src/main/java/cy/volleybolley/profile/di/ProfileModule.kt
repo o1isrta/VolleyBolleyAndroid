@@ -95,6 +95,7 @@ val profileModule = module {
     viewModel { (backPlayerHolder: BackPlayerIdHolder) ->
         PlayersScreenViewModel(
             backPlayerIdHolder = backPlayerHolder,
+            interactor = get(),
         )
     }
     viewModel { (playerId: Int) ->

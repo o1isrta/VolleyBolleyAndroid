@@ -4,22 +4,21 @@ sealed class PlayerRequest(
     val path: String
 ) {
     class GetAllPlayers : PlayerRequest(
-        path = "players"
-    )
-
-    class SearchPlayers(val name: String) : PlayerRequest(
-        path = "players"
+        path = PLAYERS
     )
 
     class GetPlayerDetail(val playerId: Int) : PlayerRequest(
-        path = "players/$playerId"
+        path = "$PLAYERS$playerId/"
     )
 
     class AddToFavorites(val playerId: Int) : PlayerRequest(
-        path = "players/$playerId/favorite"
+        path = "$PLAYERS$playerId$FAVORITE"
     )
 
     class RemoveFromFavorites(val playerId: Int) : PlayerRequest(
-        path = "players/$playerId/favorite"
+        path = "$PLAYERS$playerId$FAVORITE"
     )
 }
+
+private const val PLAYERS = "/players/"
+private const val FAVORITE = "/favorite/"
