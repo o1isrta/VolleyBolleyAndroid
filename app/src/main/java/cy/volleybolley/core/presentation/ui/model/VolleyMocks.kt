@@ -1,15 +1,16 @@
 package cy.volleybolley.core.presentation.ui.model
 
 import cy.volleybolley.core.domain.model.LevelType
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
 import cy.volleybolley.courts.domain.model.Location
 import cy.volleybolley.games.domain.model.entity.Host
 import cy.volleybolley.games.domain.model.entity.PlayerShort
 import cy.volleybolley.games.domain.model.entity.Team
 import cy.volleybolley.games.domain.model.event.tournament.TournamentDetails
+import cy.volleybolley.players.domain.model.PlayerActivity
+import cy.volleybolley.players.domain.model.PlayerDetail
 import cy.volleybolley.profile.domain.model.Payment
 import cy.volleybolley.profile.domain.model.PaymentType
-import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerActivityTemp
-import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerDetailTemp
 
 object VolleyMocks {
     const val USER_LEVEL = "PRO"
@@ -68,16 +69,17 @@ object VolleyMocks {
         locationName = "Mueang Phuket District"
     )
 
-    val mockPlayerDetails: List<PlayerDetailTemp> = listOf(
-        PlayerDetailTemp(
+    val mockPlayerDetails: List<PlayerDetail> = listOf(
+        PlayerDetail(
             id = 1,
             firstName = "Иван",
             lastName = "Иванов",
             avatarUrl = null,
             isFavorite = true,
             level = USER_LEVEL,
+            gender = Gender.Men.displayText,
             latestActivity = listOf(
-                PlayerActivityTemp(
+                PlayerActivity(
                     eventTimestamp = "2025-07-13T14:23:45Z",
                     courtLocation = Location(
                         longitude = 37.6173,
@@ -88,15 +90,16 @@ object VolleyMocks {
                 ),
             )
         ),
-        PlayerDetailTemp(
+        PlayerDetail(
             id = 2,
             firstName = "Анна",
             lastName = "Петрова",
             avatarUrl = null,
             isFavorite = false,
             level = USER_LEVEL,
+            gender = Gender.Men.displayText,
             latestActivity = listOf(
-                PlayerActivityTemp(
+                PlayerActivity(
                     eventTimestamp = "2025-07-13T14:23:45Z",
                     courtLocation = Location(
                         longitude = 37.6173,
@@ -107,15 +110,16 @@ object VolleyMocks {
                 ),
             )
         ),
-        PlayerDetailTemp(
+        PlayerDetail(
             id = 3,
             firstName = "Сергей",
             lastName = "Смирнов",
             avatarUrl = null,
             isFavorite = true,
             level = USER_LEVEL,
+            gender = Gender.Men.displayText,
             latestActivity = listOf(
-                PlayerActivityTemp(
+                PlayerActivity(
                     eventTimestamp = "2025-08-16T14:23:45Z",
                     courtLocation = Location(
                         longitude = 37.6156,
@@ -124,7 +128,7 @@ object VolleyMocks {
                         locationName = "Химки"
                     )
                 ),
-                PlayerActivityTemp(
+                PlayerActivity(
                     eventTimestamp = "2025-08-14T23:23:45Z",
                     courtLocation = Location(
                         longitude = 37.6194,
@@ -135,15 +139,16 @@ object VolleyMocks {
                 ),
             )
         ),
-        PlayerDetailTemp(
+        PlayerDetail(
             id = 4,
             firstName = "Елена",
             lastName = "Васильева",
             avatarUrl = null,
             isFavorite = false,
             level = USER_LEVEL,
+            gender = Gender.Men.displayText,
             latestActivity = listOf(
-                PlayerActivityTemp(
+                PlayerActivity(
                     eventTimestamp = "2025-08-16T14:23:45Z",
                     courtLocation = Location(
                         longitude = 37.6176,

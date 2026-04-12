@@ -37,12 +37,14 @@ import cy.volleybolley.core.presentation.ui.component.VolleyButton
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
 import cy.volleybolley.courts.domain.model.Location
+import cy.volleybolley.players.domain.model.PlayerActivity
+import cy.volleybolley.players.domain.model.PlayerDetail
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnActivityMapButton
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnBackFromPlayerDetails
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnFavoriteManagementButton
-import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerActivityTemp
-import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerDetailTemp
+
 
 @Composable
 fun PlayerProfileScreen(
@@ -86,74 +88,102 @@ private fun PlayerProfileScreen(
             modifier = Modifier
                 .padding(20.dp)
         ) {
-            VolleySimpleComponent.TitleWithBackArrow(
-                title = "${state.playerDetail.firstName} ${state.playerDetail.lastName}",
-                modifier = Modifier.fillMaxWidth(),
-                onBackClick = { eventCallback(ClickOnBackFromPlayerDetails) }
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                VolleyAvatar.CircularAvatar(
-                    avatar = state.playerDetail.avatarUrl,
-                    size = 100.dp
+            when (state) {
+                is PlayerProfileScreenState.ShowPlayerDetails -> ShowPlayersDetails(
+                    state = state,
+                    userHoursOffset = userHoursOffset,
+                    eventCallback = eventCallback
                 )
 
-                Spacer(Modifier.height(4.dp))
+                is PlayerProfileScreenState.Loading -> ShowLoading(state)
 
-                VolleyText.BodyBoldGradient(
-                    text = state.playerDetail.level,
-                    textAlign = TextAlign.Center,
-                    maxLines = 1,
-                )
+                else -> ShowError(state)
             }
-
-            Spacer(Modifier.height(12.dp))
-
-            if (state.playerDetail.latestActivity.isNotEmpty()) {
-                VolleyText.BodyBold(
-                    text = stringResource(R.string.latest_activity),
-                    color = VolleyColor.White,
-                    maxLines = 1
-                )
-                Spacer(Modifier.height(16.dp))
-
-                LazyColumn {
-                    val countOfActivities = state.playerDetail.latestActivity.size
-                    itemsIndexed(state.playerDetail.latestActivity) { index, activity ->
-                        PlayerActivityItem(
-                            locationName = activity.courtLocation.locationName,
-                            courtName = activity.courtLocation.courtName,
-                            dateStamp = activity.eventTimestamp,
-                            userHoursOffset = userHoursOffset,
-                            onMapClick = { eventCallback(ClickOnActivityMapButton) }
-                        )
-
-                        if (index < countOfActivities - 1) {
-                            Spacer(Modifier.height(16.dp))
-                        }
-                    }
-                }
-            } else {
-                VolleyText.BodyBold(
-                    text = stringResource(R.string.player_profile_no_activity),
-                    color = VolleyColor.White,
-                    maxLines = 1
-                )
-            }
-
-            Spacer(Modifier.height(12.dp))
-
-            FavoriteManagementButton(
-                isFavorite = state.playerDetail.isFavorite,
-                onClick = { eventCallback(ClickOnFavoriteManagementButton(!state.playerDetail.isFavorite)) }
-            )
         }
     }
+}
+
+@Composable
+private fun ShowPlayersDetails(
+    state: PlayerProfileScreenState.ShowPlayerDetails,
+    userHoursOffset: Int,
+    eventCallback: (PlayerProfileScreenEvent) -> Unit,
+) {
+    VolleySimpleComponent.TitleWithBackArrow(
+        title = "${state.playerDetail.firstName} ${state.playerDetail.lastName}",
+        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+        onBackClick = { eventCallback(ClickOnBackFromPlayerDetails) }
+    )
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        VolleyAvatar.CircularAvatar(
+            avatar = state.playerDetail.avatarUrl,
+            size = 100.dp
+        )
+
+        VolleyText.BodyBoldGradient(
+            modifier = Modifier.padding(top = 4.dp, bottom = 12.dp),
+            text = state.playerDetail.level,
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+        )
+    }
+
+    if (state.playerDetail.latestActivity.isNotEmpty()) {
+        VolleyText.BodyBold(
+            modifier = Modifier.padding(bottom = 16.dp),
+            text = stringResource(R.string.latest_activity),
+            color = VolleyColor.White,
+            maxLines = 1
+        )
+
+        LazyColumn {
+            val countOfActivities = state.playerDetail.latestActivity.size
+            itemsIndexed(state.playerDetail.latestActivity) { index, activity ->
+                PlayerActivityItem(
+                    locationName = activity.courtLocation.locationName,
+                    courtName = activity.courtLocation.courtName,
+                    dateStamp = activity.eventTimestamp,
+                    userHoursOffset = userHoursOffset,
+                    onMapClick = { eventCallback(ClickOnActivityMapButton) }
+                )
+
+                if (index < countOfActivities - 1) {
+                    Spacer(Modifier.height(16.dp))
+                }
+            }
+        }
+    } else {
+        VolleyText.BodyBold(
+            text = stringResource(R.string.player_profile_no_activity),
+            color = VolleyColor.White,
+            maxLines = 1
+        )
+    }
+
+    Spacer(Modifier.height(12.dp))
+
+    FavoriteManagementButton(
+        isFavorite = state.playerDetail.isFavorite,
+        onClick = { eventCallback(ClickOnFavoriteManagementButton(!state.playerDetail.isFavorite)) }
+    )
+}
+
+@Composable
+private fun ShowLoading(
+    state: PlayerProfileScreenState,
+) {
+
+}
+
+@Composable
+private fun ShowError(
+    state: PlayerProfileScreenState,
+) {
+
 }
 
 @Composable
@@ -274,39 +304,59 @@ private fun FavoriteManagementButton(
 @Composable
 private fun PreviewPlayerProfileScreen() {
     RootContainerForPreview(showTopBar = false,showBottomBar = false) {
-        val state = PlayerProfileScreenState(
-            playerDetail = PlayerDetailTemp(
-                id = 3,
-                firstName = "Some",
-                lastName = "Player",
-                avatarUrl = null,
-                isFavorite = false,
-                level = "HARD",
-                latestActivity = listOf(
-                    PlayerActivityTemp(
-                        eventTimestamp = "2025-08-16T14:30:45Z",
-                        courtLocation = Location(
-                            longitude = 37.6156,
-                            latitude = 55.7536,
-                            courtName = "Спорт-площадка 18",
-                            locationName = "Московкая область, г. Химки"
-                        )
-                    ),
-                    PlayerActivityTemp(
-                        eventTimestamp = "2025-07-14T23:23:45Z",
-                        courtLocation = Location(
-                            longitude = 37.6194,
-                            latitude = 55.7523,
-                            courtName = "Арена Восток",
-                            locationName = "Казань"
-                        )
+        val noActivitiesDetails = PlayerDetail(
+            id = 3,
+            firstName = "No",
+            lastName = "Name",
+            avatarUrl = null,
+            isFavorite = false,
+            level = "HARD",
+            gender = Gender.Men.displayText,
+            latestActivity = emptyList()
+        )
+
+        val fullDetails = PlayerDetail(
+            id = 3,
+            firstName = "Some",
+            lastName = "Player",
+            avatarUrl = null,
+            isFavorite = false,
+            level = "HARD",
+            gender = Gender.Men.displayText,
+            latestActivity = listOf(
+                PlayerActivity(
+                    eventTimestamp = "2025-08-16T14:30:45Z",
+                    courtLocation = Location(
+                        longitude = 37.6156,
+                        latitude = 55.7536,
+                        courtName = "Спорт-площадка 18",
+                        locationName = "Московкая область, г. Химки"
+                    )
+                ),
+                PlayerActivity(
+                    eventTimestamp = "2025-07-14T23:23:45Z",
+                    courtLocation = Location(
+                        longitude = 37.6194,
+                        latitude = 55.7523,
+                        courtName = "Арена Восток",
+                        locationName = "Казань"
                     )
                 )
             )
         )
 
+        val noActivityState = PlayerProfileScreenState.ShowPlayerDetails(
+            playerDetail = noActivitiesDetails,
+            isUpdateFavStatus = false
+        )
+
+        val fullState = PlayerProfileScreenState.ShowPlayerDetails(
+            playerDetail = fullDetails,
+            isUpdateFavStatus = false
+        )
+
         PlayerProfileScreen(
-            state = state,
+            state = fullState,
             userHoursOffset = 3,
             eventCallback = {}
         )

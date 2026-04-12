@@ -107,11 +107,9 @@ private fun PlayersScreen(
         ) {
             VolleySimpleComponent.TitleWithBackArrow(
                 title = stringResource(R.string.players),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
                 onBackClick = { eventCallback(ClickOnBackFromPlayers) }
             )
-
-            Spacer(Modifier.height(16.dp))
 
             VolleyTextFieldGradient.SearchField(
                 text = state.searchText,
@@ -119,15 +117,12 @@ private fun PlayersScreen(
                 actionOnInputComplete = { playerName -> eventCallback(ClickOnSearchButton(playerName.trim())) }
             )
 
-            Spacer(Modifier.height(16.dp))
-
             PlayersListModeSwitch(
+                paddingValues = PaddingValues(vertical = 16.dp),
                 showAllPlayers = state.showAllPlayers,
                 onAllClick = { eventCallback(ClickOnAllPlayers) },
                 onFavoriteClick = { eventCallback(ClickOnFavoritePlayers) },
             )
-
-            Spacer(Modifier.height(16.dp))
 
             when (state.isLoading) {
                 false -> {

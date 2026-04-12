@@ -6,23 +6,12 @@ import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfi
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnActivityMapButton
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnBackFromPlayerDetails
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnFavoriteManagementButton
-import cy.volleybolley.profile.presentation.ui.screens.playerprofile.model.PlayerDetailTemp
 import kotlinx.coroutines.flow.update
 
 class PlayerProfileScreenViewModel(
     playerId: Int,
 ) : BaseViewModel<PlayerProfileScreenState, PlayerProfileScreenEvent, PlayerProfileScreenEffect>(
-    initialState = PlayerProfileScreenState(
-        playerDetail = PlayerDetailTemp(
-            id = -1,
-            firstName = "",
-            lastName = "",
-            avatarUrl = null,
-            isFavorite = false,
-            level = "LIGHT",
-            latestActivity = listOf()
-        )
-    )
+    initialState = PlayerProfileScreenState.ShowPlayerDetails()
 ) {
     private val originFavoriteStatus: Boolean
 
@@ -32,26 +21,29 @@ class PlayerProfileScreenViewModel(
             it.id == playerId
         } ?: VolleyMocks.mockPlayerDetails[0]
         originFavoriteStatus = details.isFavorite
-        uiStateMutable.update { it.copy(playerDetail = details) }
+        uiStateMutable.update { PlayerProfileScreenState.ShowPlayerDetails(playerDetail = details) }
     }
 
     override fun obtainEvent(event: PlayerProfileScreenEvent) {
-        when (event) {
-            ClickOnBackFromPlayerDetails -> sendUiEffect(
-                if (uiState.value.playerDetail.isFavorite == originFavoriteStatus) {
-                    NavigateFromPlayerDetailScreen(null)
-                } else {
-                    NavigateFromPlayerDetailScreen(uiState.value.playerDetail.id)
-                }
-            )
-
-            ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/
-            }
-
-            is ClickOnFavoriteManagementButton -> uiStateMutable.update {
-                it.copy(
-                    playerDetail = it.playerDetail.copy(isFavorite = event.isFavorite)
+        val currentState = uiState.value
+        if (currentState is PlayerProfileScreenState.ShowPlayerDetails) {
+            when (event) {
+                ClickOnBackFromPlayerDetails -> sendUiEffect(
+                    if (currentState.playerDetail.isFavorite == originFavoriteStatus) {
+                        NavigateFromPlayerDetailScreen(null)
+                    } else {
+                        NavigateFromPlayerDetailScreen(currentState.playerDetail.id)
+                    }
                 )
+
+                ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/
+                }
+
+                is ClickOnFavoriteManagementButton -> uiStateMutable.update {
+                    currentState.copy(
+                        playerDetail = currentState.playerDetail.copy(isFavorite = event.isFavorite)
+                    )
+                }
             }
         }
     }
