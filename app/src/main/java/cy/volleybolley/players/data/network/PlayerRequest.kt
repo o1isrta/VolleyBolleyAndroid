@@ -8,15 +8,15 @@ sealed class PlayerRequest(
     )
 
     class GetPlayerDetail(val playerId: Int) : PlayerRequest(
-        path = "${PLAYERS}$playerId/"
+        path = "$PLAYERS$playerId/"
     )
 
     class AddToFavorites(val playerId: Int) : PlayerRequest(
-        path = "${PLAYERS}$playerId${FAVORITE}"
+        path = "$PLAYERS$playerId$FAVORITE"
     )
 
     class RemoveFromFavorites(val playerId: Int) : PlayerRequest(
-        path = "${PLAYERS}$playerId${FAVORITE}"
+        path = "$PLAYERS$playerId$FAVORITE"
     )
 }
 

@@ -41,6 +41,7 @@ import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
+import cy.volleybolley.core.presentation.ui.screens.createNewGame.createNewGameRepository.Gender
 import cy.volleybolley.players.domain.model.Player
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnAllPlayers
 import cy.volleybolley.profile.presentation.ui.screens.players.PlayersScreenEvent.ClickOnBackFromPlayers
@@ -309,7 +310,7 @@ private fun ChangedBackgroundBox(
 @Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewPlayersScreen() {
-    RootContainerForPreview(showTopBar = false,showBottomBar = false) {
+    RootContainerForPreview(showTopBar = false, showBottomBar = false) {
         val mockPlayers: List<Player> = listOf(
             Player(
                 id = 1,
@@ -318,7 +319,7 @@ private fun PreviewPlayersScreen() {
                 avatarUrl = null,
                 isFavorite = true,
                 level = "LIGHT",
-                gender = "Men"
+                gender = Gender.Men.displayText
             ),
             Player(
                 id = 2,
@@ -327,7 +328,7 @@ private fun PreviewPlayersScreen() {
                 avatarUrl = null,
                 isFavorite = false,
                 level = "MEDIUM",
-                gender = "Men"
+                gender = Gender.Men.displayText
             ),
             Player(
                 id = 3,
@@ -336,7 +337,7 @@ private fun PreviewPlayersScreen() {
                 avatarUrl = null,
                 isFavorite = true,
                 level = "HARD",
-                gender = "Men"
+                gender = Gender.Men.displayText
             ),
             Player(
                 id = 4,
@@ -345,7 +346,7 @@ private fun PreviewPlayersScreen() {
                 avatarUrl = null,
                 isFavorite = false,
                 level = "PRO",
-                gender = "Men"
+                gender = Gender.Men.displayText
             ),
         )
         PlayersScreen(

@@ -95,7 +95,7 @@ private const val ANTON_ID = 3
 private const val ALEKSANDR_ID = 4
 private const val MARIA_ID = 5
 
-//class FakeSearchPlayersUseCase : SearchPlayersUseCase {
+// class FakeSearchPlayersUseCase : SearchPlayersUseCase {
 //    override suspend fun invoke(query: String): VolleyResult<List<Player>, ErrorType> {
 //        // Возвращаем тестовые данные
 //        val samplePlayers = listOf(
@@ -111,4 +111,4 @@ private const val MARIA_ID = 5
 //        }
 //        return VolleyResult.Success(filteredPlayers)
 //    }
-//}
+// }

@@ -273,7 +273,7 @@ private fun FavoriteManagementButton(
 @Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_9_PRO)
 @Composable
 private fun PreviewPlayerProfileScreen() {
-    RootContainerForPreview(showTopBar = false,showBottomBar = false) {
+    RootContainerForPreview(showTopBar = false, showBottomBar = false) {
         val state = PlayerProfileScreenState(
             playerDetail = PlayerDetailTemp(
                 id = 3,
