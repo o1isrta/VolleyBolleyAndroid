@@ -34,6 +34,7 @@ import cy.volleybolley.core.presentation.ui.VolleyContainersRootTransparent
 import cy.volleybolley.core.presentation.ui.VolleySimpleComponent
 import cy.volleybolley.core.presentation.ui.component.VolleyAvatar
 import cy.volleybolley.core.presentation.ui.component.VolleyButton
+import cy.volleybolley.core.presentation.ui.component.VolleyProgress
 import cy.volleybolley.core.presentation.ui.model.VolleyColor
 import cy.volleybolley.core.presentation.ui.model.VolleyText
 import cy.volleybolley.core.presentation.ui.model.VolleyUiUtil
@@ -95,9 +96,9 @@ private fun PlayerProfileScreen(
                     eventCallback = eventCallback
                 )
 
-                is PlayerProfileScreenState.Loading -> ShowLoading(state)
+                is PlayerProfileScreenState.Loading -> ShowLoading( eventCallback)
 
-                else -> ShowError(state)
+                else -> ShowError(eventCallback)
             }
         }
     }
@@ -168,22 +169,53 @@ private fun ShowPlayersDetails(
 
     FavoriteManagementButton(
         isFavorite = state.playerDetail.isFavorite,
-        onClick = { eventCallback(ClickOnFavoriteManagementButton(!state.playerDetail.isFavorite)) }
+        isLoading = state.isLoadingFavStatus,
+        onClick = { eventCallback(ClickOnFavoriteManagementButton) }
     )
 }
 
 @Composable
 private fun ShowLoading(
-    state: PlayerProfileScreenState,
+    eventCallback: (PlayerProfileScreenEvent) -> Unit,
 ) {
+    VolleySimpleComponent.TitleWithBackArrow(
+        title = stringResource(R.string.player_detail_loading),
+        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+        onBackClick = { eventCallback(ClickOnBackFromPlayerDetails) }
+    )
 
+    VolleyProgress.CircularProgress(
+        modifier = Modifier.fillMaxWidth().padding(16.dp)
+    )
 }
 
 @Composable
 private fun ShowError(
-    state: PlayerProfileScreenState,
+    eventCallback: (PlayerProfileScreenEvent) -> Unit,
 ) {
+    VolleySimpleComponent.TitleWithBackArrow(
+        title = stringResource(R.string.player_detail_failure),
+        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+        onBackClick = { eventCallback(ClickOnBackFromPlayerDetails) }
+    )
 
+    Box(
+        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        VolleyAvatar.CircularAvatar(
+            avatar = null,
+            size = 100.dp
+        )
+    }
+
+    VolleyText.BodyBold(
+        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+        textAlign = TextAlign.Center,
+        text = stringResource(R.string.player_detail_failure_message),
+        color = VolleyColor.White,
+        maxLines = 1
+    )
 }
 
 @Composable
@@ -263,6 +295,7 @@ private fun LocationSection(
 private fun FavoriteManagementButton(
     modifier: Modifier = Modifier,
     isFavorite: Boolean,
+    isLoading: Boolean,
     onClick: () -> Unit,
 ) {
     val buttonText = stringResource(
@@ -289,14 +322,18 @@ private fun FavoriteManagementButton(
             .clickable(
                 interactionSource = null,
                 indication = null,
-                onClick = onClick
+                onClick = onClick.takeIf { !isLoading } ?: {}
             )
     ) {
-        VolleyText.ButtonText(
-            text = buttonText,
-            color = textColor,
-            maxLines = 1,
-        )
+        if (isLoading) {
+            VolleyProgress.SmallCircularProgress(colorTint = textColor)
+        } else {
+            VolleyText.ButtonText(
+                text = buttonText,
+                color = textColor,
+                maxLines = 1,
+            )
+        }
     }
 }
 
@@ -345,14 +382,17 @@ private fun PreviewPlayerProfileScreen() {
             )
         )
 
+        val loadingState = PlayerProfileScreenState.Loading
+        val errorState = PlayerProfileScreenState.Error
+
         val noActivityState = PlayerProfileScreenState.ShowPlayerDetails(
             playerDetail = noActivitiesDetails,
-            isUpdateFavStatus = false
+            isLoadingFavStatus = false
         )
 
         val fullState = PlayerProfileScreenState.ShowPlayerDetails(
             playerDetail = fullDetails,
-            isUpdateFavStatus = false
+            isLoadingFavStatus = false
         )
 
         PlayerProfileScreen(

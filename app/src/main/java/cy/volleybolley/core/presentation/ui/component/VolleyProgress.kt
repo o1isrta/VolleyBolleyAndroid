@@ -12,11 +12,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cy.volleybolley.R
+import cy.volleybolley.core.presentation.ui.component.VolleyProgress.DefaultSize
+import cy.volleybolley.core.presentation.ui.component.VolleyProgress.SmallSize
+import cy.volleybolley.core.presentation.ui.model.VolleyColor
 
 object VolleyProgress {
     /**
@@ -40,7 +45,8 @@ object VolleyProgress {
     fun CircularProgress(
         modifier: Modifier = Modifier,
         size: Dp = DefaultSize,
-        durationMillis: Int = 1000
+        durationMillis: Int = 1000,
+        colorTint: Color = VolleyColor.White
     ) {
         val rotation = remember { Animatable(0f) }
 
@@ -59,6 +65,7 @@ object VolleyProgress {
 
         Image(
             painter = painterResource(id = R.drawable.ic_ball),
+            colorFilter = ColorFilter.tint(colorTint),
             contentDescription = null,
             modifier = modifier
                 .size(size)
@@ -76,12 +83,14 @@ object VolleyProgress {
     @Composable
     fun SmallCircularProgress(
         modifier: Modifier = Modifier,
-        durationMillis: Int = 600
+        durationMillis: Int = 600,
+        colorTint: Color = VolleyColor.White
     ) {
         CircularProgress(
             modifier = modifier,
             size = SmallSize,
-            durationMillis = durationMillis
+            durationMillis = durationMillis,
+            colorTint = colorTint
         )
     }
 }

@@ -21,7 +21,8 @@ sealed interface PlayerProfileScreenState : UiState {
             gender = Gender.Men.displayText,
             latestActivity = listOf()
         ),
-        val isUpdateFavStatus: Boolean = false
+        val isLoadingFavStatus: Boolean = false
     ) : PlayerProfileScreenState
 
 }
+

@@ -325,4 +325,8 @@
     <string name="player_demo_3">Anya Levan</string>
     <string name="player_demo_4">Alina Lyubimova</string>
     <string name="player_demo_5">Tatiana Kalinina</string>
+
+    <string name="player_detail_loading">Loading</string>
+    <string name="player_detail_failure">No details</string>
+    <string name="player_detail_failure_message">Loading player details is failure</string>
 </resources>

@@ -6,45 +6,71 @@ import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfi
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnActivityMapButton
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnBackFromPlayerDetails
 import cy.volleybolley.profile.presentation.ui.screens.playerprofile.PlayerProfileScreenEvent.ClickOnFavoriteManagementButton
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 
 class PlayerProfileScreenViewModel(
     playerId: Int,
 ) : BaseViewModel<PlayerProfileScreenState, PlayerProfileScreenEvent, PlayerProfileScreenEffect>(
-    initialState = PlayerProfileScreenState.ShowPlayerDetails()
+    initialState = PlayerProfileScreenState.Loading
 ) {
-    private val originFavoriteStatus: Boolean
+    private var originFavoriteStatus: Boolean = false
 
     init {
-        // getPlayerDetails(playerId)
-        val details = VolleyMocks.mockPlayerDetails.find {
-            it.id == playerId
-        } ?: VolleyMocks.mockPlayerDetails[0]
-        originFavoriteStatus = details.isFavorite
-        uiStateMutable.update { PlayerProfileScreenState.ShowPlayerDetails(playerDetail = details) }
+        getMockDetails(playerId)
+    }
+
+    private fun getMockDetails(playerId: Int) {
+        launchSafe(
+            onError = {},
+            getErrorLogMessage = { error -> "${error.message}" },
+        ) {
+            val whatStateShow = (0..1).random()
+            val details = VolleyMocks.mockPlayerDetails.find {
+                it.id == playerId
+            } ?: VolleyMocks.mockPlayerDetails[0]
+            originFavoriteStatus = details.isFavorite
+            delay(1500)
+            when (whatStateShow) {
+                0 -> uiStateMutable.update { PlayerProfileScreenState.ShowPlayerDetails(playerDetail = details) }
+                else -> uiStateMutable.update { PlayerProfileScreenState.Error }
+            }
+        }
     }
 
     override fun obtainEvent(event: PlayerProfileScreenEvent) {
-        val currentState = uiState.value
-        if (currentState is PlayerProfileScreenState.ShowPlayerDetails) {
-            when (event) {
-                ClickOnBackFromPlayerDetails -> sendUiEffect(
-                    if (currentState.playerDetail.isFavorite == originFavoriteStatus) {
-                        NavigateFromPlayerDetailScreen(null)
-                    } else {
-                        NavigateFromPlayerDetailScreen(currentState.playerDetail.id)
-                    }
-                )
+        when (val currentState = uiState.value) {
+            is PlayerProfileScreenState.ShowPlayerDetails -> manageEventsOnDetails(currentState, event)
+            is PlayerProfileScreenState.Loading -> manageEventsOnLoadingOrError(event)
+            is PlayerProfileScreenState.Error -> manageEventsOnLoadingOrError(event)
+        }
+    }
 
-                ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/
+    private fun manageEventsOnDetails(
+        state: PlayerProfileScreenState.ShowPlayerDetails,
+        event: PlayerProfileScreenEvent
+    ) {
+        when (event) {
+            ClickOnBackFromPlayerDetails -> sendUiEffect(
+                if (state.playerDetail.isFavorite == originFavoriteStatus) {
+                    NavigateFromPlayerDetailScreen(null)
+                } else {
+                    NavigateFromPlayerDetailScreen(state.playerDetail.id)
                 }
+            )
 
-                is ClickOnFavoriteManagementButton -> uiStateMutable.update {
-                    currentState.copy(
-                        playerDetail = currentState.playerDetail.copy(isFavorite = event.isFavorite)
-                    )
-                }
+            ClickOnActivityMapButton -> { /*пока не ясно что тут должно быть*/ }
+
+            is ClickOnFavoriteManagementButton -> uiStateMutable.update {
+                state.copy(isLoadingFavStatus = true)
             }
+        }
+    }
+
+    private fun manageEventsOnLoadingOrError(event: PlayerProfileScreenEvent) {
+        when (event) {
+            ClickOnBackFromPlayerDetails -> sendUiEffect(NavigateFromPlayerDetailScreen(null))
+            else -> {}
         }
     }
 }

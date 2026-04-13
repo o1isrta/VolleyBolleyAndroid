@@ -75,7 +75,7 @@ object VolleyMocks {
             firstName = "Иван",
             lastName = "Иванов",
             avatarUrl = null,
-            isFavorite = true,
+            isFavorite = false,
             level = USER_LEVEL,
             gender = Gender.Men.displayText,
             latestActivity = listOf(
