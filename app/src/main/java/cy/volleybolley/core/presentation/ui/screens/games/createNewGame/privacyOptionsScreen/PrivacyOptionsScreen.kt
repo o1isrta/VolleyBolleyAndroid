@@ -45,11 +45,31 @@ fun PrivacyOptionsScreen(
     viewModel: PrivacyOptionsViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
+   // val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     val context = LocalContext.current
     val resources = LocalResources.current
 
-    LaunchedEffect(effect) {
+    LaunchedEffect(Unit) {
+        viewModel.uiEffect.collect { currentEffect ->
+            when (currentEffect) {
+                is PrivacyOptionsEffect.ShowErrorMessage -> {
+                    Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_LONG).show()
+                }
+
+                is PrivacyOptionsEffect.ShowErrorMessageById -> {
+                    val errorMessage = resources.getString(currentEffect.messageId)
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                }
+
+                is PrivacyOptionsEffect.NavigateBack -> {
+                    onNavigateBack()
+                }
+
+                null -> {}
+            }
+        }
+    }
+   /* LaunchedEffect(effect) {
         when (val currentEffect = effect) {
             is PrivacyOptionsEffect.ShowErrorMessage -> {
                 Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_LONG).show()
@@ -66,7 +86,7 @@ fun PrivacyOptionsScreen(
 
             null -> {}
         }
-    }
+    }*/
 
     PrivacyOptionsScreen(
         state = state,

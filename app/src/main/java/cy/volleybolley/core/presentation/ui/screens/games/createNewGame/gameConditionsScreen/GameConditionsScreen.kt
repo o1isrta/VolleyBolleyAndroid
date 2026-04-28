@@ -52,10 +52,24 @@ fun GameConditionsScreen(
     viewModel: GameConditionsViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
+    // val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     val context = LocalContext.current
 
-    LaunchedEffect(effect) {
+    LaunchedEffect(Unit) {
+        viewModel.uiEffect.collect { currentEffect ->
+            when (currentEffect) {
+                is GameConditionsEffect.ShowErrorMessage -> {
+                    Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_SHORT).show()
+                }
+                is GameConditionsEffect.NavigateToPayments -> onNavigateToPayments()
+                is GameConditionsEffect.NavigateBack -> onNavigateBack()
+                is GameConditionsEffect.NavigateToSuccess -> onNavigateToSuccess(createSucceedGame())
+                is GameConditionsEffect.NavigateToPrivacy -> onNavigateToPrivacyOptions()
+                null -> {}
+            }
+        }
+    }
+   /* LaunchedEffect(effect) {
         when (val currentEffect = effect) {
             is GameConditionsEffect.ShowErrorMessage -> {
                 Toast.makeText(context, "Error: ${currentEffect.message}", Toast.LENGTH_SHORT).show()
@@ -66,7 +80,7 @@ fun GameConditionsScreen(
             is GameConditionsEffect.NavigateToPrivacy -> onNavigateToPrivacyOptions()
             null -> {}
         }
-    }
+    }*/
 
     GameConditionsScreen(
         state = state,

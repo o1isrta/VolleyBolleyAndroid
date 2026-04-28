@@ -23,6 +23,7 @@ class BasicGameSetupScreenViewModel(
             createGameSharedViewModel.gameData.collectLatest { gameData ->
                 uiStateMutable.update { currentState ->
                     currentState.copy(
+                        //message = gameData.message,
                         placeCourt = gameData.placeCourt, // ?: GameData().placeCourt,
                         date = gameData.date, // ?: LocalDate.now(),
                         startTime = gameData.startTime,
@@ -115,11 +116,13 @@ class BasicGameSetupScreenViewModel(
     }
 
     private fun playerLevelSelected(levels: Set<Level>) {
-        if (levels.isEmpty()) {
+/*        if (levels.isEmpty()) {
             sendUiEffect(BasicGameSetupScreenEffect.ShowErrorMessageById(R.string.please_select_player_level))
         } else {
             uiStateMutable.update { it.copy(levels = levels) }
-          //  updateGameData { it.copy(levels = levels) }
+        }*/
+        if(!levels.isEmpty()) {
+            uiStateMutable.update { it.copy(levels = levels) }
         }
     }
 
@@ -143,6 +146,7 @@ class BasicGameSetupScreenViewModel(
         ) {
             createGameSharedViewModel.updateGameData { gameData ->
                 gameData.copy(
+                    message = uiState.value.message,
                     placeCourt = uiState.value.placeCourt,
                     date = uiState.value.date,
                     startTime = uiState.value.startTime,

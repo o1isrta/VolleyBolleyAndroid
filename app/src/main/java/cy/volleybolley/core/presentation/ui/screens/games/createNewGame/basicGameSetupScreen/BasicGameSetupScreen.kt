@@ -59,6 +59,40 @@ fun BasicGameSetupScreen(
     viewModel: BasicGameSetupScreenViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val resources = LocalResources.current
+
+    // Правильный способ собрать эффекты из Channel (Flow)
+    LaunchedEffect(Unit) {
+        viewModel.uiEffect.collect { currentEffect ->
+            when (currentEffect) {
+                is BasicGameSetupScreenEffect.NavigateBack -> onNavigateBack()
+                is BasicGameSetupScreenEffect.NavigateNextStep -> onNavigateToNextStep()
+                is BasicGameSetupScreenEffect.ShowErrorMessage -> {
+                    Toast.makeText(context, currentEffect.message, Toast.LENGTH_SHORT).show()
+                }
+                is BasicGameSetupScreenEffect.ShowErrorMessageById -> {
+                    val errorMessage = resources.getString(currentEffect.messageId)
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                }
+                null -> { /* ignore */ }
+            }
+        }
+    }
+
+    BasicGameSetupScreen(
+        state = state,
+        paddingFromSystemUi = paddingFromSystemUi,
+        eventCallback = { viewModel.obtainEvent(it) }
+    )
+}
+/*fun BasicGameSetupScreen(
+    paddingFromSystemUi: PaddingValues,
+    onNavigateToNextStep: () -> Unit,
+    onNavigateBack: () -> Unit,
+    viewModel: BasicGameSetupScreenViewModel = koinViewModel()
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val effect by viewModel.uiEffect.collectAsStateWithLifecycle(null)
     val context = LocalContext.current
     val resources = LocalResources.current
@@ -83,7 +117,7 @@ fun BasicGameSetupScreen(
         paddingFromSystemUi = paddingFromSystemUi,
         eventCallback = { viewModel.obtainEvent(it) }
     )
-}
+}*/
 
 @Stable
 @Composable
